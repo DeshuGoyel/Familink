@@ -1,12 +1,15 @@
 import { useStore } from '../store/useStore';
-import Sidebar from '../components/layout/Sidebar';
 import { Shield, Users, KeyRound, Plus, Wallet, Bot } from 'lucide-react';
 import StatCard from '../components/ui/StatCard';
 import Button from '../components/ui/Button';
 import LegacyScoreGauge from '../components/dashboard/LegacyScoreGauge';
+import ProofOfLifeCard from '../components/dashboard/ProofOfLifeCard';
 import AssetDonutChart from '../components/dashboard/AssetDonutChart';
 import ActivityFeed from '../components/dashboard/ActivityFeed';
 import AIInsightBanner from '../components/dashboard/AIInsightBanner';
+import FutureProjectionCard from '../components/dashboard/FutureProjectionCard';
+import VaultNotarizationCard from '../components/dashboard/VaultNotarizationCard';
+import DeathSimulator from '../components/dashboard/DeathSimulator';
 import { Canvas } from '@react-three/fiber';
 import VaultScene from '../components/3d/VaultScene';
 import { motion } from 'framer-motion';
@@ -21,9 +24,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-secondary">
-      <Sidebar />
-      
-      <main className="md:pl-64 pt-6 px-4 sm:px-6 lg:px-8 pb-24 md:pb-8">
+<main className="pt-6 px-4 sm:px-6 lg:px-8 pb-24 md:pb-8">
         <div className="max-w-7xl mx-auto space-y-8">
           
           <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -74,42 +75,55 @@ export default function Dashboard() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }} 
-              animate={{ opacity: 1, scale: 1 }} 
-              transition={{ delay: 0.5 }}
-              className="lg:col-span-2 glassmorphism rounded-2xl p-6 relative overflow-hidden cursor-pointer group hover:border-primary/30 hover:shadow-[0_8px_30px_rgba(79,92,255,0.12)] transition-all duration-300"
-              onClick={() => navigate('/assets')}
-            >
-              <div className="flex justify-between items-start mb-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-text">Your Secure Vault</h3>
-                  <p className="text-muted text-sm mt-1">Total value protected: ${totalValue.toLocaleString()}</p>
+            <div className="lg:col-span-2 space-y-6">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }} 
+                animate={{ opacity: 1, scale: 1 }} 
+                transition={{ delay: 0.5 }}
+                className="glassmorphism rounded-2xl p-6 relative overflow-hidden cursor-pointer group hover:border-primary/30 hover:shadow-[0_8px_30px_rgba(79,92,255,0.12)] transition-all duration-300"
+                onClick={() => navigate('/assets')}
+              >
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-text">Your Secure Vault</h3>
+                    <p className="text-muted text-sm mt-1">Total value protected: ${totalValue.toLocaleString()}</p>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); navigate('/assets'); }}>
+                      View All
+                    </Button>
+                    <Button size="sm" onClick={(e) => { e.stopPropagation(); navigate('/assets'); }}>
+                      <Plus size={16} className="mr-1" /> Add
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex space-x-2">
-                  <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); navigate('/assets'); }}>
-                    View All
-                  </Button>
-                  <Button size="sm" onClick={(e) => { e.stopPropagation(); }}>
-                    <Plus size={16} className="mr-1" /> Add
-                  </Button>
-                </div>
-              </div>
-              
-              <div className="h-80 w-full rounded-xl bg-gradient-to-b from-surface/50 to-surface border border-border/50 relative">
-                <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
-                  <VaultScene score={user.score} />
-                </Canvas>
                 
-                <div className="absolute bottom-4 left-0 right-0 flex justify-center pointer-events-none">
-                  <span className="px-4 py-1.5 rounded-full bg-surface/80 backdrop-blur border border-border text-xs font-medium text-muted">
-                    Interactive 3D Vault
-                  </span>
+                <div className="h-80 w-full rounded-xl bg-gradient-to-b from-surface/50 to-surface border border-border/50 relative">
+                  <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
+                    <VaultScene score={user.score} />
+                  </Canvas>
+                  
+                  <div className="absolute bottom-4 left-0 right-0 flex justify-center pointer-events-none">
+                    <span className="px-4 py-1.5 rounded-full bg-surface/80 backdrop-blur border border-border text-xs font-medium text-muted">
+                      Interactive 3D Vault
+                    </span>
+                  </div>
                 </div>
+              </motion.div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FutureProjectionCard />
+                <VaultNotarizationCard />
               </div>
-            </motion.div>
+            </div>
 
             <div className="space-y-6">
+              <ProofOfLifeCard />
+              
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.55 }}>
+                <DeathSimulator />
+              </motion.div>
+              
               <motion.div 
                 initial={{ opacity: 0, x: 20 }} 
                 animate={{ opacity: 1, x: 0 }} 
@@ -128,7 +142,7 @@ export default function Dashboard() {
               >
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold text-text">Recent Activity</h3>
-                  <button className="text-sm text-primary hover:text-primary/80 transition">View all</button>
+                  <button onClick={() => navigate('/assets')} className="text-sm text-primary hover:text-primary/80 transition">View all</button>
                 </div>
                 <ActivityFeed />
               </motion.div>

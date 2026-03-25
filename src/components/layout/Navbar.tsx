@@ -7,9 +7,8 @@ import { cn } from '../../utils/cn';
 import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
-  const { user, toggleNotifications, notifications } = useStore();
+  const { user, toggleNotifications, notifications, isMobileSidebarOpen, toggleMobileSidebar, toggleSidebar } = useStore();
   const { scrollY } = useScroll();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const bgOpacity = useTransform(scrollY, [0, 50], [0, 0.4]);
   const blur = useTransform(scrollY, [0, 50], ["blur(0px)", "blur(12px)"]);
@@ -29,12 +28,21 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center space-x-2">
-            <Shield className="w-8 h-8 text-primary" />
-            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500">
-              LinkKey
-            </span>
-          </Link>
+          <div className="flex items-center space-x-3">
+            <button 
+              onClick={toggleSidebar} 
+              className="hidden md:flex p-2 text-muted hover:text-text rounded-md hover:bg-surface border border-transparent hover:border-border transition-colors focus:outline-none"
+              title="Toggle Sidebar"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <Link to="/" className="flex items-center space-x-2">
+              <Shield className="w-8 h-8 text-primary" />
+              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500">
+                LinkKey
+              </span>
+            </Link>
+          </div>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-8">
@@ -62,23 +70,13 @@ export default function Navbar() {
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-muted hover:text-text">
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            <button onClick={toggleMobileSidebar} className="text-muted hover:text-text">
+              {isMobileSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-surface border-b border-border px-4 pt-2 pb-4 space-y-1">
-          <Link to="/dashboard" className="block px-3 py-2 rounded-md text-base font-medium text-text hover:bg-border">Dashboard</Link>
-          <Link to="/assets" className="block px-3 py-2 rounded-md text-base font-medium text-text hover:bg-border">Assets</Link>
-          <Link to="/trust" className="block px-3 py-2 rounded-md text-base font-medium text-text hover:bg-border">Trust Center</Link>
-          <Link to="/ai-planner" className="block px-3 py-2 rounded-md text-base font-medium text-primary hover:bg-border">AI Planner</Link>
-          <button onClick={toggleNotifications} className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-text hover:bg-border">Notifications ({unreadCount})</button>
-        </div>
-      )}
     </motion.nav>
   );
 }

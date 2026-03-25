@@ -1,4 +1,3 @@
-import Sidebar from '../components/layout/Sidebar';
 import { CheckCircle2, Shield, Lock, EyeOff } from 'lucide-react';
 import Card from '../components/ui/Card';
 import { Canvas } from '@react-three/fiber';
@@ -7,8 +6,7 @@ import { Float } from '@react-three/drei';
 export default function TrustCenter() {
   return (
     <div className="min-h-screen bg-secondary">
-      <Sidebar />
-      <main className="md:pl-64 pt-6 px-4 sm:px-6 lg:px-8 pb-24 md:pb-8">
+<main className="pt-6 px-4 sm:px-6 lg:px-8 pb-24 md:pb-8">
         <div className="max-w-7xl mx-auto space-y-8">
           
           <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">

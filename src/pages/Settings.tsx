@@ -1,19 +1,21 @@
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
-import Sidebar from '../components/layout/Sidebar';
-import { User, Shield, Bell, Palette, AlertTriangle } from 'lucide-react';
+import { User, Shield, Bell, Palette, AlertTriangle, Activity } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import toast from 'react-hot-toast';
+import { useTheme } from 'next-themes';
 
 export default function Settings() {
-  const { user, theme, toggleTheme } = useStore();
+  const { user } = useStore();
+  const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('Profile');
   const [deleteConfirm, setDeleteConfirm] = useState('');
 
   const tabs = [
     { name: 'Profile', icon: User },
     { name: 'Security', icon: Shield },
+    { name: 'Recovery', icon: Activity },
     { name: 'Notifications', icon: Bell },
     { name: 'Appearance', icon: Palette },
     { name: 'Danger Zone', icon: AlertTriangle },
@@ -33,8 +35,7 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen bg-secondary">
-      <Sidebar />
-      <main className="md:pl-64 pt-6 px-4 sm:px-6 lg:px-8 pb-24 md:pb-8">
+<main className="pt-6 px-4 sm:px-6 lg:px-8 pb-24 md:pb-8">
         <div className="max-w-4xl mx-auto space-y-8">
           
           <header>
@@ -128,6 +129,36 @@ export default function Settings() {
                   </div>
                 )}
 
+                {activeTab === 'Recovery' && (
+                  <div className="space-y-8">
+                     <h2 className="text-xl font-bold text-text mb-6">Recovery Triggers</h2>
+                     <p className="text-sm text-muted mb-6">Configure how and when your legacy vault is unlocked for your heirs.</p>
+                     
+                     <div className="space-y-4">
+                       <h3 className="text-lg font-medium text-text border-b border-border pb-2">Proof of Life Pulse</h3>
+                       <div className="p-4 bg-surface rounded-xl border border-border space-y-4">
+                          <p className="text-sm text-text">If you don't check in within this time, recovery is initiated.</p>
+                          <select className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-text outline-none focus:border-primary">
+                            <option value="7">Every 7 Days</option>
+                            <option value="14">Every 14 Days</option>
+                            <option value="30">Every 30 Days</option>
+                            <option value="90">Every 90 Days</option>
+                          </select>
+                       </div>
+                     </div>
+
+                     <div className="space-y-4">
+                       <h3 className="text-lg font-medium text-text border-b border-border pb-2">Death Certificate Upload</h3>
+                       <div className="p-6 bg-surface/50 rounded-xl border border-dashed border-border/60 text-center space-y-3">
+                           <Shield className="mx-auto text-primary opacity-50 mb-2" size={32}/>
+                           <p className="font-medium text-text">Verify Status</p>
+                           <p className="text-sm text-muted max-w-sm mx-auto">Upload an official death certificate to bypass the waiting period. Requires manual admin or AI verification.</p>
+                           <Button variant="secondary" className="mt-4 text-xs font-medium border-primary/20 text-primary">Upload Certificate (PDF)</Button>
+                       </div>
+                     </div>
+                  </div>
+                )}
+
                 {activeTab === 'Notifications' && (
                   <div className="space-y-6">
                     <h2 className="text-xl font-bold text-text mb-6">Notification Preferences</h2>
@@ -161,10 +192,10 @@ export default function Settings() {
                     <div>
                       <h3 className="font-medium text-text mb-3">Theme</h3>
                       <div className="flex space-x-4">
-                        <button onClick={toggleTheme} className={`flex-1 py-4 border rounded-xl flex items-center justify-center ${theme === 'dark' ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-surface text-muted'}`}>
+                        <button onClick={() => setTheme('dark')} className={`flex-1 py-4 border rounded-xl flex items-center justify-center transition-colors ${theme === 'dark' ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-surface text-muted hover:border-primary/50'}`}>
                           Dark Mode
                         </button>
-                        <button onClick={toggleTheme} disabled className={`flex-1 py-4 border rounded-xl flex items-center justify-center opacity-50 cursor-not-allowed ${theme === 'light' ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-surface text-muted'}`}>
+                        <button onClick={() => setTheme('light')} className={`flex-1 py-4 border rounded-xl flex items-center justify-center transition-colors ${theme === 'light' ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-surface text-muted hover:border-primary/50'}`}>
                           Light Mode
                         </button>
                       </div>

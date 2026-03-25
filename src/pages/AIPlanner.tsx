@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { useStore } from '../store/useStore';
-import Sidebar from '../components/layout/Sidebar';
 import { Bot, ArrowRight, ShieldAlert, Lightbulb, ShieldCheck, Send } from 'lucide-react';
 import Card from '../components/ui/Card';
 import { motion } from 'framer-motion';
@@ -72,8 +71,7 @@ export default function AIPlanner() {
 
   return (
     <div className="min-h-screen bg-secondary">
-      <Sidebar />
-      <main className="md:pl-64 pt-6 px-4 sm:px-6 lg:px-8 pb-24 md:pb-8">
+<main className="pt-6 px-4 sm:px-6 lg:px-8 pb-24 md:pb-8">
         <div className="max-w-7xl mx-auto space-y-8">
           
           <header className="flex items-center space-x-4">

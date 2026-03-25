@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
-import Sidebar from '../components/layout/Sidebar';
-import { Wallet, Plus, Edit2, Trash2, Box } from 'lucide-react';
+import { Wallet, Plus, Edit2, Trash2, Box, TrendingUp, Briefcase } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import Modal from '../components/ui/Modal';
@@ -14,6 +13,7 @@ import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
 import { Float } from '@react-three/drei';
+import { calculateProjection } from '../utils/mathUtils';
 
 const assetSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -27,7 +27,7 @@ export default function Assets() {
   const [activeTab, setActiveTab] = useState('All');
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  const tabs = ['All', 'Crypto', 'NFTs', 'Documents', 'Account', 'Other'];
+  const tabs = ['All', 'Crypto', 'NFTs', 'Documents', 'Account', 'Retirement', 'Other'];
   
   const filteredAssets = activeTab === 'All' 
     ? assets 
@@ -51,11 +51,23 @@ export default function Assets() {
     reset();
   };
 
+  const handleQuickAddRetirement = () => {
+    addAsset({
+      name: 'Family Retirement Fund',
+      type: 'Retirement',
+      value: 150000,
+      growthRate: 0.08,
+      status: 'Protected',
+      date: new Date().toISOString().split('T')[0],
+      tags: ['retirement', 'savings', 'long-term'],
+      notes: 'Contains 401(k), IRAs, and index funds. Managed by Vanguard.'
+    } as any);
+    toast.success('Retirement template added');
+  };
+
   return (
     <div className="min-h-screen bg-secondary">
-      <Sidebar />
-      
-      <main className="md:pl-64 pt-6 px-4 sm:px-6 lg:px-8 pb-24 md:pb-8">
+<main className="pt-6 px-4 sm:px-6 lg:px-8 pb-24 md:pb-8">
         <div className="max-w-7xl mx-auto space-y-8 relative">
           
           <div className="absolute top-0 right-0 w-32 h-32 pointer-events-none opacity-50 hidden md:block">
@@ -75,9 +87,14 @@ export default function Assets() {
               <h1 className="text-3xl font-bold text-text">Asset Vault</h1>
               <p className="text-muted mt-1">{assets.length} assets protected · ${totalValue.toLocaleString()} estimated value</p>
             </div>
-            <Button onClick={() => setIsModalOpen(true)} className="glow-blue">
-              <Plus size={18} className="mr-2" /> Add Asset
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => handleQuickAddRetirement()} variant="secondary" className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10">
+                <Briefcase size={18} className="mr-2" /> Add Retirement Vault
+              </Button>
+              <Button onClick={() => setIsModalOpen(true)} className="glow-blue">
+                <Plus size={18} className="mr-2" /> Add Asset
+              </Button>
+            </div>
           </header>
 
           <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
@@ -110,6 +127,7 @@ export default function Assets() {
                     <div className="p-3 bg-surface rounded-xl border border-border group-hover:bg-primary/10 group-hover:border-primary/30 group-hover:text-primary transition-colors">
                       {asset.type === 'Crypto' ? <Wallet size={20} className="text-orange-500" /> :
                        asset.type === 'NFT' ? <Box size={20} className="text-pink-500" /> :
+                       asset.type === 'Retirement' ? <Briefcase size={20} className="text-emerald-500" /> :
                        <Wallet size={20} className="text-blue-500" />}
                     </div>
                     <div>
@@ -122,7 +140,17 @@ export default function Assets() {
                   </Badge>
                 </div>
                 
-                <div className="mt-4 pt-4 border-t border-border flex justify-between items-center">
+                {/* Projected Future Value Chip */}
+                {((asset as any).growthRate || asset.type === 'Retirement' || asset.type === 'Crypto') && (
+                  <div className="mb-4">
+                    <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/20 flex items-center w-fit gap-1 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                      <TrendingUp size={12}/> 
+                      Projected (10y): ${calculateProjection(asset.value || 0, (asset as any).growthRate || 0.08, 10).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    </span>
+                  </div>
+                )}
+                
+                <div className="mt-auto pt-4 border-t border-border flex justify-between items-center">
                   <div>
                     <p className="text-sm font-medium text-text">${asset.value?.toLocaleString() || '0'}</p>
                     <p className="text-[10px] text-muted">Updated {asset.date}</p>
@@ -154,6 +182,7 @@ export default function Assets() {
               { value: '', label: 'Select Type' },
               { value: 'Crypto', label: 'Crypto Wallet' },
               { value: 'NFT', label: 'NFT Collection' },
+              { value: 'Retirement', label: 'Retirement Profile' },
               { value: 'Document', label: 'Legal Document' },
               { value: 'Account', label: 'Online Account' },
             ]}

@@ -5,8 +5,10 @@ interface User {
   name: string;
   email: string;
   avatar: string | null;
-  score: number;
+  score: number; // Used as legacy health score
   plan: string;
+  nextCheckInDate: string;
+  checkInHistory: { date: string, method: string }[];
 }
 
 interface AppState {
@@ -19,6 +21,8 @@ interface AppState {
   theme: string;
   accentColor: string;
   isNotificationOpen: boolean;
+  isSidebarCollapsed: boolean;
+  isMobileSidebarOpen: boolean;
   
   addAsset: (asset: any) => void;
   updateAsset: (id: string, data: any) => void;
@@ -31,6 +35,9 @@ interface AppState {
   updateScore: (score: number) => void;
   toggleTheme: () => void;
   toggleNotifications: () => void;
+  performCheckIn: (method: string) => void;
+  toggleSidebar: () => void;
+  toggleMobileSidebar: () => void;
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -39,7 +46,11 @@ export const useStore = create<AppState>((set) => ({
     email: "john@linkkey.com",
     avatar: null,
     score: 72,
-    plan: "Family"
+    plan: "Family",
+    nextCheckInDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    checkInHistory: [
+      { date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), method: 'App Tap' }
+    ]
   },
   assets: [...mockAssets],
   guardians: [...mockGuardians],
@@ -49,6 +60,8 @@ export const useStore = create<AppState>((set) => ({
   theme: "dark",
   accentColor: "#4F5CFF",
   isNotificationOpen: false,
+  isSidebarCollapsed: false,
+  isMobileSidebarOpen: false,
 
   addAsset: (asset) => set((state) => ({ assets: [...state.assets, { ...asset, id: Date.now().toString() }] })),
   updateAsset: (id, data) => set((state) => ({
@@ -74,5 +87,14 @@ export const useStore = create<AppState>((set) => ({
   })),
   updateScore: (score) => set((state) => ({ user: { ...state.user, score } })),
   toggleTheme: () => set((state) => ({ theme: state.theme === 'dark' ? 'light' : 'dark' })),
-  toggleNotifications: () => set((state) => ({ isNotificationOpen: !state.isNotificationOpen }))
+  toggleNotifications: () => set((state) => ({ isNotificationOpen: !state.isNotificationOpen })),
+  performCheckIn: (method) => set((state) => ({
+    user: {
+      ...state.user,
+      nextCheckInDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      checkInHistory: [{ date: new Date().toISOString(), method }, ...state.user.checkInHistory]
+    }
+  })),
+  toggleSidebar: () => set((state) => ({ isSidebarCollapsed: !state.isSidebarCollapsed })),
+  toggleMobileSidebar: () => set((state) => ({ isMobileSidebarOpen: !state.isMobileSidebarOpen }))
 }));
