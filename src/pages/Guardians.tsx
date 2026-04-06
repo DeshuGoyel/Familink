@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
-import { UserPlus, Trash2, Mail, Info, ShieldCheck } from 'lucide-react';
+import { UserPlus, Trash2, Mail, Info, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import Modal from '../components/ui/Modal';
@@ -20,7 +20,7 @@ const guardianSchema = z.object({
 });
 
 export default function Guardians() {
-  const { guardians, addGuardian, removeGuardian } = useStore();
+  const { guardians, addGuardian, removeGuardian, confirmGuardian } = useStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [template, setTemplate] = useState('Formal');
 
@@ -119,13 +119,22 @@ export default function Guardians() {
                   <Badge variant={g.status === 'Confirmed' ? 'success' : 'warning'}>{g.status}</Badge>
                   <div className="flex space-x-2">
                     {g.status === 'Pending' && (
-                      <button 
-                        onClick={() => toast.success('Invite resent')}
-                        className="p-2 text-muted hover:text-primary transition bg-surface rounded-md"
-                        title="Resend Invite"
-                      >
-                        <Mail size={16} />
-                      </button>
+                      <div className="flex space-x-2">
+                        <button 
+                          onClick={() => { confirmGuardian(g.id); toast.success('Guardian confirmed (Simulation)'); }}
+                          className="p-2 text-emerald-500 hover:text-emerald-400 transition bg-emerald-500/10 hover:bg-emerald-500/20 rounded-md"
+                          title="Simulate Confirmation"
+                        >
+                          <CheckCircle2 size={16} />
+                        </button>
+                        <button 
+                          onClick={() => toast.success('Invite resent')}
+                          className="p-2 text-muted hover:text-primary transition bg-surface rounded-md"
+                          title="Resend Invite"
+                        >
+                          <Mail size={16} />
+                        </button>
+                      </div>
                     )}
                     <button 
                       onClick={() => { removeGuardian(g.id); toast.success('Guardian removed'); }}

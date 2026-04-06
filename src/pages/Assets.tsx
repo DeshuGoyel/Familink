@@ -23,9 +23,10 @@ const assetSchema = z.object({
 });
 
 export default function Assets() {
-  const { assets, addAsset, deleteAsset } = useStore();
+  const { assets, addAsset, updateAsset, deleteAsset } = useStore();
   const [activeTab, setActiveTab] = useState('All');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   
   const tabs = ['All', 'Crypto', 'NFTs', 'Documents', 'Account', 'Retirement', 'Other'];
   
@@ -40,15 +41,33 @@ export default function Assets() {
   });
 
   const onSubmit = (data: any) => {
-    addAsset({
-      ...data,
-      status: 'Protected',
-      date: new Date().toISOString().split('T')[0],
-      tags: [data.type.toLowerCase()]
-    });
-    toast.success('Asset added successfully');
+    if (editingId) {
+      updateAsset(editingId, { ...data, date: new Date().toISOString().split('T')[0] });
+      toast.success('Asset updated successfully');
+    } else {
+      addAsset({
+        ...data,
+        status: 'Protected',
+        date: new Date().toISOString().split('T')[0],
+        tags: [data.type.toLowerCase()]
+      });
+      toast.success('Asset added successfully');
+    }
     setIsModalOpen(false);
+    setEditingId(null);
     reset();
+  };
+
+  const openAddModal = () => {
+    setEditingId(null);
+    reset({ name: '', type: '', value: undefined, notes: '' });
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (asset: any) => {
+    setEditingId(asset.id);
+    reset(asset);
+    setIsModalOpen(true);
   };
 
   const handleQuickAddRetirement = () => {
@@ -91,7 +110,7 @@ export default function Assets() {
               <Button onClick={() => handleQuickAddRetirement()} variant="secondary" className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10">
                 <Briefcase size={18} className="mr-2" /> Add Retirement Vault
               </Button>
-              <Button onClick={() => setIsModalOpen(true)} className="glow-blue">
+              <Button onClick={openAddModal} className="glow-blue">
                 <Plus size={18} className="mr-2" /> Add Asset
               </Button>
             </div>
@@ -156,7 +175,7 @@ export default function Assets() {
                     <p className="text-[10px] text-muted">Updated {asset.date}</p>
                   </div>
                   <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button className="p-2 bg-surface hover:bg-surface/80 rounded-md text-muted transition"><Edit2 size={16} /></button>
+                    <button onClick={() => openEditModal(asset)} className="p-2 bg-surface hover:bg-surface/80 rounded-md text-muted transition"><Edit2 size={16} /></button>
                     <button onClick={() => { deleteAsset(asset.id); toast.success('Deleted asset'); }} className="p-2 bg-danger/10 hover:bg-danger/20 rounded-md text-danger transition"><Trash2 size={16} /></button>
                   </div>
                 </div>
@@ -172,7 +191,7 @@ export default function Assets() {
         </div>
       </main>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Add Asset">
+      <Modal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false); setEditingId(null); reset(); }} title={editingId ? "Edit Asset" : "Add Asset"}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Select 
             label="Asset Type"

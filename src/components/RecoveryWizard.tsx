@@ -7,12 +7,18 @@ import ReactConfetti from 'react-confetti';
 import { Canvas } from '@react-three/fiber';
 import RisingKey from './3d/RisingKey';
 
+import { useStore } from '../store/useStore';
+
 interface Props {
   heirName: string;
   onClose: () => void;
 }
 
 export default function RecoveryWizard({ heirName, onClose }: Props) {
+  const { guardians } = useStore();
+  const displayGuardians = guardians.length >= 3 
+    ? guardians.slice(0, 3).map(g => g.name) 
+    : ['Sarah Chen', 'Michael Rodriguez', 'David Kim'];
   const [step, setStep] = useState(1);
   const [isSimulating, setIsSimulating] = useState(false);
   const totalSteps = 4;
@@ -70,7 +76,7 @@ export default function RecoveryWizard({ heirName, onClose }: Props) {
                 <p className="text-muted mb-8">LinkKey requires 2 out of 3 assigned guardians to approve this recovery request.</p>
                 
                 <div className="space-y-4 mb-8">
-                  {['Sarah Chen', 'Michael Rodriguez', 'David Kim'].map((g, i) => (
+                  {displayGuardians.map((g, i) => (
                     <div key={i} className="flex items-center justify-between p-4 bg-surface rounded-xl border border-border">
                       <span className="text-text font-medium">{g}</span>
                       {isSimulating ? (
@@ -103,7 +109,7 @@ export default function RecoveryWizard({ heirName, onClose }: Props) {
             {step === 4 && (
               <motion.div key="4" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-2xl text-center relative z-50">
                 <div className="fixed inset-0 pointer-events-none z-[-1]">
-                  <ReactConfetti width={1920} height={1080} recycle={false} numberOfPieces={500} colors={['#4F5CFF', '#22C55E', '#EC4899', '#F59E0B']} />
+                  <ReactConfetti width={window.innerWidth} height={window.innerHeight} recycle={false} numberOfPieces={500} colors={['#4F5CFF', '#22C55E', '#EC4899', '#F59E0B']} />
                 </div>
                 <div className="w-24 h-24 bg-accent/20 rounded-full flex items-center justify-center text-accent mx-auto mb-6 glow-green relative z-10">
                   <CheckCircle2 size={48} />

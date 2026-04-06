@@ -183,7 +183,7 @@ export default function CheckInCenter() {
 
           <div className="glassmorphism rounded-2xl p-6 border-red-500/20">
             <h3 className="font-semibold text-text mb-4 text-sm flex items-center gap-2"><Bell size={16}/> Developer Tools</h3>
-            <Button variant="outline" className="w-full text-red-500 border-red-500/30 hover:bg-red-500/10" onClick={() => simulateMissedCheckin()}>
+            <Button variant="secondary" className="w-full text-red-500 border-red-500/30 hover:bg-red-500/10" onClick={() => simulateMissedCheckin()}>
               Simulate Missed Check-In
             </Button>
           </div>

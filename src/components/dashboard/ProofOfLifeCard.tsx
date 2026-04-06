@@ -1,14 +1,19 @@
 import { motion } from 'framer-motion';
 import { ShieldAlert, ShieldCheck, Clock } from 'lucide-react';
-import { useStore } from '../../store/useStore';
+import { useCheckinStore } from '../../store/useCheckinStore';
 import Button from '../ui/Button';
 
 export default function ProofOfLifeCard() {
-  const { user, performCheckIn } = useStore();
+  const { checkinSettings, completeCheckin } = useCheckinStore();
   
-  const nextCheckIn = new Date(user.nextCheckInDate);
+  const last = checkinSettings.lastCheckinAt ? new Date(checkinSettings.lastCheckinAt) : new Date(Date.now() - 86400000);
+  let nextDue = new Date(last);
+  if (checkinSettings.frequency === 'weekly') nextDue.setDate(nextDue.getDate() + 7);
+  if (checkinSettings.frequency === 'biweekly') nextDue.setDate(nextDue.getDate() + 14);
+  if (checkinSettings.frequency === 'monthly') nextDue.setMonth(nextDue.getMonth() + 1);
+
   const now = new Date();
-  const daysUntilNext = Math.ceil((nextCheckIn.getTime() - now.getTime()) / (1000 * 3600 * 24));
+  const daysUntilNext = Math.ceil((nextDue.getTime() - now.getTime()) / (1000 * 3600 * 24));
   
   const isUrgent = daysUntilNext <= 2;
   const isOverdue = daysUntilNext < 0;
@@ -53,15 +58,15 @@ export default function ProofOfLifeCard() {
         <div className="flex justify-between items-center text-sm">
           <span className="text-muted">Last check-in</span>
           <span className="text-text font-medium">
-            {new Date(user.checkInHistory[0]?.date || Date.now()).toLocaleDateString()}
+            {checkinSettings.lastCheckinAt ? new Date(checkinSettings.lastCheckinAt).toLocaleDateString() : 'Never'}
           </span>
         </div>
       </div>
 
       <Button 
         className="w-full relative group overflow-hidden" 
-        variant={isOverdue ? 'primary' : 'outline'}
-        onClick={() => performCheckIn('App Tap')}
+        variant={isOverdue ? 'primary' : 'secondary'}
+        onClick={() => completeCheckin('tap')}
       >
         <div className="absolute inset-0 bg-primary/10 group-hover:bg-primary/20 transition-colors" />
         <span className="relative z-10 font-bold">I am still here</span>

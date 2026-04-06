@@ -5,10 +5,10 @@ import { AuroraScene } from '../components/obituary/AuroraScene';
 import { useObituaryStore, ObituaryEntry } from '../store/useObituaryStore';
 import { useStore } from '../store/useStore';
 import Button from '../components/ui/Button';
-import { Scroll, Sparkles, Video, Mic, Heart, Feather, BookOpen, Clock, Lock, X, Eye } from 'lucide-react';
+import { Sparkles, Video, Mic, Feather, BookOpen, Clock, Lock, X, Eye } from 'lucide-react';
 
 export default function DigitalObituary() {
-  const { entries, createEntry, sealEntry, deleteEntry } = useObituaryStore();
+  const { entries, createEntry, deleteEntry } = useObituaryStore();
   const { heirs } = useStore();
   const [hasSeenIntro, setHasSeenIntro] = useState(entries.length > 0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -268,7 +268,12 @@ export default function DigitalObituary() {
                  ) : <div></div>}
                  
                  {step < 5 ? (
-                   <Button variant="primary" onClick={() => setStep(step + 1)} className="bg-purple-600 hover:bg-purple-700 text-white border-none min-w-[120px]">
+                   <Button 
+                     variant="primary" 
+                     onClick={() => setStep(step + 1)} 
+                     className="bg-purple-600 hover:bg-purple-700 text-white border-none min-w-[120px] disabled:opacity-50 disabled:cursor-not-allowed"
+                     disabled={step === 3 && !newEntry.content}
+                   >
                      {step === 4 ? 'Looks Good' : 'Next'}
                    </Button>
                  ) : (

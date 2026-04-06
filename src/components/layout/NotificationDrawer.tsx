@@ -7,7 +7,7 @@ const icons: Record<string, any> = {
 };
 
 export default function NotificationDrawer() {
-  const { notifications, isNotificationOpen, toggleNotifications } = useStore();
+  const { notifications, isNotificationOpen, toggleNotifications, markNotificationAsRead } = useStore();
 
   return (
     <AnimatePresence>
@@ -33,14 +33,18 @@ export default function NotificationDrawer() {
               notifications.map((n) => {
                 const Icon = icons[n.icon] || AlertTriangle;
                 return (
-                  <div key={n.id} className={`p-4 rounded-xl glassmorphism flex items-start space-x-3 ${!n.read ? 'border-primary/50 bg-primary/5' : ''}`}>
+                  <button 
+                    key={n.id} 
+                    onClick={() => !n.read && markNotificationAsRead(n.id)}
+                    className={`p-4 rounded-xl glassmorphism flex items-start space-x-3 w-full text-left transition-colors ${!n.read ? 'border-primary/50 bg-primary/5 hover:bg-primary/10' : 'hover:bg-surface'}`}
+                  >
                     <div className={`p-2 rounded-full ${!n.read ? 'bg-primary/20 text-primary' : 'bg-surface text-muted'}`}>
                       <Icon size={16} />
                     </div>
                     <div className="flex-1">
                       <p className={`text-sm ${!n.read ? 'text-text font-medium' : 'text-muted'}`}>{n.message}</p>
                     </div>
-                  </div>
+                  </button>
                 );
               })
             )}

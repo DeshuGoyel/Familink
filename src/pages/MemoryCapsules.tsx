@@ -347,7 +347,16 @@ export default function MemoryCapsules() {
                  ) : <div></div>}
                  
                  {step < 5 ? (
-                   <Button variant="primary" onClick={() => setStep(step + 1)} className="flex items-center gap-2">
+                   <Button 
+                     variant="primary" 
+                     onClick={() => setStep(step + 1)} 
+                     className="flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                     disabled={
+                       (step === 2 && !newCapsule.title) ||
+                       (step === 3 && !newCapsule.content) ||
+                       (step === 4 && newCapsule.unlockCondition === 'on_date' && !newCapsule.unlockDate)
+                     }
+                   >
                      Next <ChevronRight size={16}/>
                    </Button>
                  ) : (

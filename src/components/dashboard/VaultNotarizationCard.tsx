@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ShieldCheck, ExternalLink, Shield } from 'lucide-react';
 import { useNotarizationStore } from '../../store/useNotarizationStore';
 import Button from '../ui/Button';
 import { toast } from 'react-hot-toast';
 
 export default function VaultNotarizationCard() {
-  const { vaultHashes, notarizeVault, getLatestHash } = useNotarizationStore();
+  const { notarizeVault, getLatestHash } = useNotarizationStore();
   const [isNotarizing, setIsNotarizing] = useState(false);
   const latestHash = getLatestHash();
 

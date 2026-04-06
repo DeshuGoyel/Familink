@@ -85,7 +85,7 @@ export default function DeveloperPortal() {
                           </h3>
                           <p className="text-sm text-muted mt-1">Institutions with authorized vault access.</p>
                         </div>
-                        <Button onClick={handleConnectBank} variant="outline" className="text-xs border-primary/30 hover:bg-primary/10">
+                        <Button onClick={handleConnectBank} variant="secondary" className="text-xs border-primary/30 hover:bg-primary/10">
                           <Plus size={14} className="mr-1"/> Add Institution
                         </Button>
                       </div>

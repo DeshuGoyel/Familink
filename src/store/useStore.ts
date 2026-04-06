@@ -1,6 +1,21 @@
 import { create } from 'zustand';
 import { mockAssets, mockGuardians, mockHeirs, mockActivity, mockNotifications } from '../data/mockData';
 
+export interface Charity {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+}
+
+export interface Allocation {
+  id: string;
+  assetId: string;
+  recipientId: string;
+  type: 'heir' | 'charity';
+  percentage: number;
+}
+
 interface User {
   name: string;
   email: string;
@@ -16,6 +31,8 @@ interface AppState {
   assets: any[];
   guardians: any[];
   heirs: any[];
+  charities: Charity[];
+  allocations: Allocation[];
   activity: any[];
   notifications: any[];
   theme: string;
@@ -35,9 +52,13 @@ interface AppState {
   updateScore: (score: number) => void;
   toggleTheme: () => void;
   toggleNotifications: () => void;
+  markNotificationAsRead: (id: string) => void;
   performCheckIn: (method: string) => void;
   toggleSidebar: () => void;
   toggleMobileSidebar: () => void;
+  addAllocation: (allocation: Omit<Allocation, 'id'>) => void;
+  updateAllocation: (id: string, percentage: number) => void;
+  removeAllocation: (id: string) => void;
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -55,6 +76,13 @@ export const useStore = create<AppState>((set) => ({
   assets: [...mockAssets],
   guardians: [...mockGuardians],
   heirs: [...mockHeirs],
+  charities: [
+    { id: 'c1', name: 'GiveWell', description: 'Maximum impact, evidence-based charities.', category: 'Global Health' },
+    { id: 'c2', name: 'Electronic Frontier Foundation', description: 'Defending digital privacy and free speech.', category: 'Digital Rights' },
+    { id: 'c3', name: 'Internet Archive', description: 'Universal access to all knowledge.', category: 'Education' },
+    { id: 'c4', name: 'Red Cross', description: 'Emergency assistance and disaster relief.', category: 'Humanitarian' }
+  ],
+  allocations: [],
   activity: [...mockActivity],
   notifications: [...mockNotifications],
   theme: "dark",
@@ -88,6 +116,9 @@ export const useStore = create<AppState>((set) => ({
   updateScore: (score) => set((state) => ({ user: { ...state.user, score } })),
   toggleTheme: () => set((state) => ({ theme: state.theme === 'dark' ? 'light' : 'dark' })),
   toggleNotifications: () => set((state) => ({ isNotificationOpen: !state.isNotificationOpen })),
+  markNotificationAsRead: (id) => set((state) => ({
+    notifications: state.notifications.map(n => n.id === id ? { ...n, read: true } : n)
+  })),
   performCheckIn: (method) => set((state) => ({
     user: {
       ...state.user,
@@ -96,5 +127,14 @@ export const useStore = create<AppState>((set) => ({
     }
   })),
   toggleSidebar: () => set((state) => ({ isSidebarCollapsed: !state.isSidebarCollapsed })),
-  toggleMobileSidebar: () => set((state) => ({ isMobileSidebarOpen: !state.isMobileSidebarOpen }))
+  toggleMobileSidebar: () => set((state) => ({ isMobileSidebarOpen: !state.isMobileSidebarOpen })),
+  addAllocation: (allocation) => set((state) => ({
+    allocations: [...state.allocations, { ...allocation, id: Date.now().toString() }]
+  })),
+  updateAllocation: (id, percentage) => set((state) => ({
+    allocations: state.allocations.map(a => a.id === id ? { ...a, percentage } : a)
+  })),
+  removeAllocation: (id) => set((state) => ({
+    allocations: state.allocations.filter(a => a.id !== id)
+  }))
 }));

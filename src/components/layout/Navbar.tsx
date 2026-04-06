@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useStore } from '../../store/useStore';
-import { Shield, Bell, Menu, X, User } from 'lucide-react';
-import { useState } from 'react';
+import { Bell, Menu, X, User } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import ThemeToggle from './ThemeToggle';
 
@@ -36,10 +35,19 @@ export default function Navbar() {
             >
               <Menu className="w-5 h-5" />
             </button>
-            <Link to="/" className="flex items-center space-x-2">
-              <Shield className="w-8 h-8 text-primary" />
+            <Link to="/" className="flex items-center space-x-3 group">
+              <img 
+                src="/logo-dark.png" 
+                alt="Transfer Legacy Logo" 
+                className="w-10 h-10 object-contain hidden dark:block group-hover:scale-105 transition-transform duration-300"
+              />
+              <img 
+                src="/logo-light.png" 
+                alt="Transfer Legacy Logo" 
+                className="w-10 h-10 object-contain block dark:hidden group-hover:scale-105 transition-transform duration-300"
+              />
               <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500">
-                LinkKey
+                Transfer Legacy
               </span>
             </Link>
           </div>

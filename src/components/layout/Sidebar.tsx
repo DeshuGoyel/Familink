@@ -1,12 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useStore } from '../../store/useStore';
 import { useCheckinStore } from '../../store/useCheckinStore';
-import { LayoutDashboard, Wallet, Users, KeyRound, Bot, ShieldCheck, Settings as SettingsIcon, LogOut, Activity, Heart, Scroll, IdCard, Terminal, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { LayoutDashboard, Wallet, Users, KeyRound, Bot, ShieldCheck, Settings as SettingsIcon, LogOut, Activity, Heart, Scroll, IdCard, Terminal, ChevronLeft, ChevronRight, X, PieChart } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
 const navItems = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
   { name: 'Assets', path: '/assets', icon: Wallet },
+  { name: 'Smart Allocations', path: '/allocations', icon: PieChart },
   { name: 'Guardians', path: '/guardians', icon: Users },
   { name: 'Heirs', path: '/heirs', icon: KeyRound },
   { name: 'Proof of Life', path: '/checkin', icon: Activity },
