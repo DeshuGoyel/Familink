@@ -58,19 +58,16 @@ export function WaitlistForm() {
         return;
       }
 
-      // Insert new
-      const { error: insertError } = await supabase
+      // Insert new and return the auto-incremented position
+      const { data: insertedData, error: insertError } = await supabase
         .from('waitlist')
-        .insert([{ email: data.email }]);
+        .insert([{ email: data.email }])
+        .select('position')
+        .single();
 
       if (insertError) throw insertError;
 
-      // Get count to determine position roughly
-      const { count } = await supabase
-        .from('waitlist')
-        .select('*', { count: 'exact', head: true });
-
-      const finalPosition = (count || 0) + 1;
+      const finalPosition = insertedData?.position || 1;
       setPosition(finalPosition);
       setIsSuccess(true);
       triggerConfetti();
