@@ -12,9 +12,22 @@ const navLinks = [
 export default function LandingNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20);
+
+      const sections = navLinks.map(l => document.querySelector(l.href)).filter(Boolean) as HTMLElement[];
+      let current = '';
+      for (const section of sections) {
+        // Offset by 300px to trigger highlighting slightly before it hits the very top
+        if (window.scrollY >= section.offsetTop - 300) {
+          current = '#' + section.id;
+        }
+      }
+      setActiveSection(current);
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -53,7 +66,9 @@ export default function LandingNavbar() {
               <button
                 key={link.label}
                 onClick={() => scrollTo(link.href)}
-                className="text-sm font-medium text-[#8B949E] hover:text-white transition-colors"
+                className={`text-sm font-medium transition-colors ${
+                  activeSection === link.href ? 'text-gold drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]' : 'text-[#8B949E] hover:text-white'
+                }`}
               >
                 {link.label}
               </button>

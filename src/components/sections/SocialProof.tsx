@@ -75,9 +75,13 @@ export default function SocialProof() {
           {/* Counter + Progress */}
           <div>
             <div className="flex items-end gap-3 mb-2">
-              <span className="text-6xl font-display font-bold text-white">
+              <motion.span 
+                animate={{ scale: count === 2417 ? [1, 1.1, 1] : 1 }}
+                transition={{ duration: 0.4, type: 'spring' }}
+                className="text-6xl font-display font-bold text-white inline-block origin-bottom"
+              >
                 {count.toLocaleString()}
-              </span>
+              </motion.span>
               <span className="text-2xl font-bold text-indigo-400 mb-2">+</span>
             </div>
             <p className="text-[#8B949E] text-lg mb-8">
