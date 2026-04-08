@@ -80,6 +80,95 @@
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-primary/50;
   }
+
+  /* AI Landing Utilities */
+  .bg-grid-white {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  
+  .bg-dot-matrix {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  .ai-glass {
+    @apply bg-black/40 backdrop-blur-xl border border-white/10;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .conic-border-wrap {
+    position: relative;
+    overflow: hidden;
+    padding: 1px;
+    border-radius: inherit;
+  }
+  
+  .conic-border-wrap::before {
+    content: "";
+    position: absolute;
+    inset: -100%;
+    animation: spin 4s linear infinite;
+    background: conic-gradient(from 0deg, transparent 0 340deg, theme('colors.indigo.500') 360deg);
+  }
+  
+  .conic-border-content {
+    background: #020409;
+    border-radius: inherit;
+    position: relative;
+    z-index: 10;
+  }
+
+  .scanning-line {
+    position: relative;
+    overflow: hidden;
+  }
+  .scanning-line::after {
+    content: '';
+    position: absolute;
+    top: -100px; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(to right, transparent, theme('colors.indigo.400'), transparent);
+    box-shadow: 0 0 15px theme('colors.indigo.500');
+    animation: scan 3s infinite linear;
+    z-index: 20;
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .typewriter-cursor::after {
+    content: '|';
+    animation: blink 1s step-end infinite;
+    color: theme('colors.indigo.400');
+  }
+
+  .glitch-text {
+    animation: glitch 1s linear infinite;
+  }
+  .glitch-text-hover:hover {
+    animation: glitch 0.2s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100px); }
+  100% { transform: translateY(600px); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes glitch {
+  2%, 64% { transform: translate(2px, 0) skew(0deg); }
+  4%, 60% { transform: translate(-2px, 0) skew(0deg); }
+  62% { transform: translate(0, 0) skew(5deg); }
 }
 
 @keyframes shimmer {

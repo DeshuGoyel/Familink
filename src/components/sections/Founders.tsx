@@ -1,74 +1,95 @@
 import { motion } from 'framer-motion';
+import { ExternalLink } from 'lucide-react';
 
 const founders = [
   {
     name: 'Deshu Goyel',
-    role: 'Founder',
-    bio: 'Pioneering zero-knowledge digital inheritance.',
-    image: 'https://ui-avatars.com/api/?name=Deshu+Goyel&background=4F5CFF&color=fff&size=200'
+    role: 'Founder & CEO',
+    bio: `Deshu spent three years watching crypto wealth become permanently inaccessible after unexpected deaths in his extended family. He started Transfer Legacy to solve the problem he knew was coming for millions of families — before it's too late.`,
+    quote: `"The hardest part isn't building the vault. It's explaining to a grieving family why they can't access what was left for them."`,
+    image: '/images/founder_deshu.png',
+    accent: 'border-indigo-500/30',
+    gradient: 'from-indigo-900/20 to-transparent',
+    links: { twitter: '#', linkedin: '#' },
   },
   {
     name: 'Vikash Kumar Singh',
-    role: 'Co-Founder',
-    bio: 'Architecting secure decentralization protocols.',
-    image: 'https://ui-avatars.com/api/?name=Vikash+Kumar+Singh&background=D4AF37&color=000&size=200'
-  }
+    role: 'Co-Founder & CTO',
+    bio: `Vikash has worked on cryptographic protocols and distributed systems for the last 5 years. He designed the zero-knowledge architecture behind Transfer Legacy — ensuring no server, no employee, and no hacker can ever read your vault.`,
+    quote: `"We built a system where the word 'trust' is replaced by the word 'proof'. Math doesn't lie."`,
+    image: '/images/founder_vikash.png',
+    accent: 'border-amber-500/30',
+    gradient: 'from-amber-900/20 to-transparent',
+    links: { twitter: '#', linkedin: '#' },
+  },
 ];
 
 export default function Founders() {
   return (
-    <section id="founders" className="py-24 bg-[#020409] relative overflow-hidden">
-      {/* Background flare */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[100px] pointer-events-none" />
-      
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="text-center mb-16">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-display font-bold text-white mb-6"
-          >
-            Built by <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">Security Experts</span>
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-[#8B949E] text-lg max-w-2xl mx-auto"
-          >
-            We are deeply committed to ensuring your family's digital wealth is never lost.
-          </motion.p>
-        </div>
+    <section id="founders" className="py-28 bg-[#020409]">
+      <div className="max-w-7xl mx-auto px-6">
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16"
+        >
+          <p className="text-xs font-bold tracking-[0.2em] uppercase text-indigo-400 mb-5">The Team</p>
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
+            Built by people who've felt this problem.
+          </h2>
+          <p className="text-[#8B949E] text-lg max-w-2xl">
+            Not a team of generalists chasing a trend — two founders who got tired of waiting for someone else to solve this.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {founders.map((founder, i) => (
             <motion.div
               key={founder.name}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
-              className="group bg-[#0D1117] border border-white/10 hover:border-indigo-500/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6 transition-all hover:bg-[#111620]"
+              transition={{ delay: i * 0.15, duration: 0.7 }}
+              className={`group rounded-3xl border ${founder.accent} bg-[#0D1117] overflow-hidden flex flex-col`}
             >
-              <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-indigo-400/50 transition-colors flex-shrink-0">
-                <img 
-                  src={founder.image} 
+              {/* Photo banner */}
+              <div className="relative h-64 overflow-hidden">
+                <div className={`absolute inset-0 bg-gradient-to-b ${founder.gradient} z-10`} />
+                <img
+                  src={founder.image}
                   alt={founder.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
                 />
               </div>
-              <div className="text-center sm:text-left">
-                <h3 className="text-2xl font-bold text-white font-display mb-1">
-                  {founder.name}
-                </h3>
-                <p className="text-gold font-medium mb-3 uppercase tracking-wider text-sm">
-                  {founder.role}
-                </p>
-                <p className="text-[#8B949E] text-sm">
-                  {founder.bio}
-                </p>
+
+              {/* Content */}
+              <div className="p-8 flex flex-col gap-5 flex-1">
+                <div>
+                  <h3 className="text-2xl font-display font-bold text-white">{founder.name}</h3>
+                  <p className="text-sm font-semibold text-indigo-400 uppercase tracking-wider mt-1">{founder.role}</p>
+                </div>
+
+                <p className="text-[#8B949E] text-sm leading-relaxed flex-1">{founder.bio}</p>
+
+                {/* Pull quote */}
+                <blockquote className="border-l-2 border-indigo-500/40 pl-4 italic text-[#F0F6FC]/60 text-sm leading-relaxed">
+                  {founder.quote}
+                </blockquote>
+
+                {/* Social links */}
+                <div className="flex items-center gap-3 pt-2 border-t border-white/5">
+                  <a href={founder.links.twitter} className="flex items-center gap-2 text-xs text-[#8B949E] hover:text-white transition-colors">
+                    <ExternalLink size={13} /> Twitter
+                  </a>
+                  <a href={founder.links.linkedin} className="flex items-center gap-2 text-xs text-[#8B949E] hover:text-white transition-colors">
+                    <ExternalLink size={13} /> LinkedIn
+                  </a>
+                </div>
               </div>
             </motion.div>
           ))}

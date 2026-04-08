@@ -2,60 +2,86 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
-const faqs = [
+type Category = 'security' | 'inheritance' | 'technical' | 'pricing';
+
+const categoryColors: Record<Category, string> = {
+  security: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20',
+  inheritance: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+  technical: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
+  pricing: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+};
+
+const categoryBorder: Record<Category, string> = {
+  security: 'border-l-indigo-500',
+  inheritance: 'border-l-amber-500',
+  technical: 'border-l-purple-500',
+  pricing: 'border-l-emerald-500',
+};
+
+const faqs: { q: string; a: string; category: Category }[] = [
   {
-    q: "What happens to my data if Transfer Legacy shuts down?",
-    a: "Your vault is encrypted before it ever leaves your device. Additionally, we provide an open-source local recovery tool you can download right now. Even if our servers permanently disappear, your family can still run the recovery tool offline and perfectly reassemble your legacy using their guardian keys."
-  },
-  {
+    category: 'security',
     q: "Can Transfer Legacy employees see my vault?",
-    a: "Absolutely not. We use a strict zero-knowledge architecture. Your master password never leaves your browser, meaning we physically cannot decrypt your vault items. We store only mathematically scrambled ciphertext."
+    a: "Absolutely not. We use a strict zero-knowledge architecture. Your master password never leaves your browser, meaning we physically cannot decrypt your vault items. We store only mathematically scrambled ciphertext — even if our servers were breached, there's nothing useful to steal."
   },
   {
-    q: "How does the dead man's switch actually work?",
-    a: "We monitor your activity through check-ins, app usage, and optional integrations (like your calendar or social activity). If you miss your check-in thresholds and don't respond to warning prompts, your vault enters 'Transfer Mode' automatically."
+    category: 'security',
+    q: "What happens to my data if Transfer Legacy shuts down?",
+    a: "Your vault is encrypted before it ever leaves your device. We also provide a downloadable open-source recovery tool. Even if our servers permanently disappear, your family can run the tool offline and reassemble your legacy using guardian keys."
   },
   {
-    q: "What cryptocurrencies and assets do you support?",
-    a: "Because your vault stores encrypted text, you can secure absolutely any asset. We provide optimized templates for BTC, ETH, and SOL wallets, comprehensive seed phrase backups, passwords to centralized exchanges, and legal legacy documents."
+    category: 'inheritance',
+    q: "How does the dead man\'s switch actually work?",
+    a: "We monitor your check-ins. If you miss your threshold, you receive escalating warnings via email and SMS. Guardians are then asked to contact you physically. Only after all escalation steps fail does your vault enter Transfer Mode — and that's after a customizable delay you set."
   },
   {
+    category: 'inheritance',
     q: "What if I'm still alive but temporarily inactive?",
-    a: "We have fail-safes. Before your vault initiates any transfer, you will receive multiple urgent notifications via email and SMS. Your guardians will also be instructed to attempt physical contact with you. The trigger period is entirely customizable, up to 12 months."
+    a: "Multiple fail-safes are in place. Before any transfer begins, you'll get urgent notifications and guardians will be instructed to attempt contact. The trigger period is fully customizable — anywhere from 7 days to 12 months, and you can check in at any time to reset the clock."
   },
   {
+    category: 'inheritance',
     q: "How do my guardians receive my assets?",
-    a: "Guardians never receive your exact assets directly. Instead, they receive unique cryptographic 'shards'. When your vault triggers, they come together on our portal and combine their shards to recreate your decrypt key, guided by our automated process."
+    a: "Guardians never receive your actual assets. They each receive unique cryptographic shards. When your vault triggers, they combine their shards on our secure portal — guided step by step — to regenerate the decrypt key and access exactly what you designated for them."
   },
   {
-    q: "Is Transfer Legacy legal in my country?",
-    a: "We provide an encryption protocol and storage mechanism, which is legal to use globally. However, inheritance laws surrounding your decrypted digital assets vary by jurisdiction. We recommend storing a digital copy of your formal will alongside your assets."
+    category: 'technical',
+    q: "What cryptocurrencies and assets do you support?",
+    a: "Because your vault stores encrypted text, you can protect any asset. We provide optimized templates for BTC, ETH, SOL wallets, hardware wallet seed phrases, exchange accounts, social media credentials, and legal documents."
   },
   {
+    category: 'technical',
     q: "How is this different from a hardware wallet backup?",
-    a: "Hardware wallets protect against hackers, but they don't protect against life. If you lose your metal phrase plate, or your family doesn't know the PIN or even what a wallet is, your crypto is permanently lost. We ensure the right people get access exactly when needed, with zero technical expertise."
-  }
+    a: "Hardware wallets protect against hackers — not against life. If your family doesn't know what a wallet is, doesn't have the PIN, or can't locate the seed phrase, your assets are gone regardless. We ensure the right people get access exactly when needed, with zero technical knowledge required."
+  },
+  {
+    category: 'pricing',
+    q: "Is Transfer Legacy legal in my country?",
+    a: "We provide an encryption and storage protocol, legal to use globally. Inheritance laws around decrypted digital assets vary by jurisdiction. We recommend storing a digital copy of your formal will alongside your assets."
+  },
 ];
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="py-28 bg-[#0D1117]">
+    <section id="faq" className="py-28 bg-[#0A0D18]">
       <div className="max-w-4xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="text-center mb-16"
+          className="mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-[#F0F6FC] mb-5">
-            Everything You Need to Know
+          <p className="text-xs font-bold tracking-[0.2em] uppercase text-indigo-400 mb-5">FAQ</p>
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-[#F0F6FC] mb-4">
+            Real questions from real people.
           </h2>
+          <p className="text-[#8B949E] text-lg">No marketing fluff — just honest answers.</p>
         </motion.div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           {faqs.map((faq, i) => {
             const isOpen = openIndex === i;
             return (
@@ -64,31 +90,38 @@ export default function FAQ() {
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                className={`bg-[#020409] border transition-colors duration-300 rounded-2xl overflow-hidden ${
-                  isOpen ? 'border-indigo-500/40' : 'border-white/5 hover:border-white/10'
+                transition={{ delay: i * 0.06, duration: 0.5 }}
+                className={`bg-[#0D1117] border border-l-4 transition-colors duration-300 rounded-2xl overflow-hidden ${
+                  isOpen
+                    ? `border-white/10 ${categoryBorder[faq.category]}`
+                    : 'border-white/5 border-l-white/10 hover:border-white/10'
                 }`}
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : i)}
-                  className="w-full flex items-center justify-between p-6 text-left"
+                  className="w-full flex items-start justify-between p-6 text-left gap-4"
                 >
-                  <span className="text-lg font-bold text-[#F0F6FC] pr-8">{faq.q}</span>
-                  <ChevronDown 
-                    size={20} 
-                    className={`text-[#8B949E] transition-transform duration-300 ${isOpen ? 'rotate-180 text-indigo-400' : ''}`} 
+                  <div className="flex items-start gap-4">
+                    <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-md border whitespace-nowrap mt-0.5 ${categoryColors[faq.category]}`}>
+                      {faq.category}
+                    </span>
+                    <span className="text-base font-semibold text-[#F0F6FC] leading-snug">{faq.q}</span>
+                  </div>
+                  <ChevronDown
+                    size={18}
+                    className={`text-[#8B949E] transition-transform duration-300 flex-shrink-0 mt-1 ${isOpen ? 'rotate-180 text-indigo-400' : ''}`}
                   />
                 </button>
-                
+
                 <AnimatePresence>
                   {isOpen && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+                      transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
                     >
-                      <div className="px-6 pb-6 pt-0 text-[#8B949E] leading-relaxed text-base">
+                      <div className="px-6 pb-6 pt-0 text-[#8B949E] leading-relaxed text-sm ml-[calc(theme(spacing.4)+52px)]">
                         {faq.a}
                       </div>
                     </motion.div>

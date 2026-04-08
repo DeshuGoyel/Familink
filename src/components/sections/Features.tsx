@@ -1,33 +1,28 @@
 import { motion } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { Torus, Sphere } from '@react-three/drei';
-import { Shield, Users, Bitcoin, Wallet, Key } from 'lucide-react';
-import * as THREE from 'three';
-import { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { Shield, Users, Zap, Key, Database, Bot } from 'lucide-react';
 
-function OrbitRings() {
-  const ringsRef = useRef<THREE.Group>(null);
-  
-  useFrame((state) => {
-    if (ringsRef.current) {
-      ringsRef.current.rotation.x = state.clock.elapsedTime * 0.5;
-      ringsRef.current.rotation.y = state.clock.elapsedTime * 0.3;
-    }
-  });
 
+function TimelineVisual() {
+  const events = [
+    { label: 'Active', color: 'bg-emerald-500', done: true },
+    { label: 'Missed check-in', color: 'bg-amber-500', done: true },
+    { label: 'Warning sent', color: 'bg-orange-500', done: true },
+    { label: 'Transfer Mode', color: 'bg-red-500 animate-pulse', done: false },
+  ];
   return (
-    <group ref={ringsRef}>
-      <Torus args={[1.5, 0.05, 16, 100]} rotation={[Math.PI / 2, 0, 0]}>
-        <meshBasicMaterial color="#4F5CFF" transparent opacity={0.5} wireframe />
-      </Torus>
-      <Torus args={[2, 0.05, 16, 100]} rotation={[0, Math.PI / 2, 0]}>
-        <meshBasicMaterial color="#4F5CFF" transparent opacity={0.3} wireframe />
-      </Torus>
-      <Sphere args={[0.5, 32, 32]}>
-        <meshStandardMaterial color="#4F5CFF" emissive="#4F5CFF" emissiveIntensity={2} />
-      </Sphere>
-    </group>
+    <div className="flex items-center gap-2 mt-6 w-full overflow-x-auto pb-2">
+      {events.map((e, i) => (
+        <div key={i} className="flex items-center gap-2 shrink-0">
+          <div className="flex flex-col items-center gap-1.5">
+            <div className={`w-3 h-3 rounded-full ${e.color}`} />
+            <span className="text-[10px] text-[#8B949E] whitespace-nowrap">{e.label}</span>
+          </div>
+          {i < events.length - 1 && (
+            <div className="w-8 h-px bg-white/15 shrink-0 mb-3" />
+          )}
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -42,177 +37,201 @@ export default function Features() {
           transition={{ duration: 0.7 }}
           className="mb-16"
         >
-          <span className="inline-block text-indigo-400 text-sm font-bold tracking-widest uppercase mb-4">
-            Features
-          </span>
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-[#F0F6FC] mb-5">
-            Everything Your Family Needs.<br/>
-            <span className="text-[#8B949E]">Nothing They Don't.</span>
+          <p className="text-xs font-bold tracking-[0.2em] uppercase text-indigo-400 mb-5">Features</p>
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-[#F0F6FC] mb-3">
+            Everything your family needs.
           </h2>
+          <p className="text-xl text-[#8B949E]">And nothing they don't.</p>
         </motion.div>
 
-        {/* ASYMMETRIC BENTO GRID */}
-        {/*
-          Row 1: 1 large card (60%) + 1 tall card (40%)
-          Row 2: 1 wide card (40%) + 1 large card (60%)
-          We can achieve this with a 5-column grid on desktop:
-          R1: span 3 + span 2 (tall)
-          R2: span 2 + span 3
-        */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 auto-rows-[300px]">
+        {/* BENTO GRID */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 auto-rows-[minmax(260px,auto)]">
 
-          {/* Feature 1: ZERO-KNOWLEDGE SECURITY (Large = span 3, row 1) */}
+          {/* Zero-Knowledge Security — large */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1, duration: 0.6 }}
-            className="lg:col-span-3 bg-[#0D1117] border border-indigo-500/20 hover:border-indigo-500/40 rounded-3xl p-8 flex flex-col md:flex-row relative overflow-hidden group transition-all duration-300 hover:shadow-[0_0_40px_rgba(79,92,255,0.1)]"
+            className="lg:col-span-3 bg-[#0D1117] border border-indigo-500/20 hover:border-indigo-500/40 rounded-3xl p-8 flex flex-col md:flex-row relative overflow-hidden group transition-all duration-300 hover:bg-[#111827]"
           >
             <div className="flex-1 flex flex-col z-10">
-              <div className="inline-flex px-3 py-1 rounded-full text-[10px] font-bold tracking-widest w-fit mb-5 bg-indigo-500/20 text-indigo-300">
-                LIVE AT LAUNCH
+              <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6 group-hover:bg-indigo-500/20 transition-colors">
+                <Shield size={22} className="text-indigo-400" />
               </div>
-              <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-2 uppercase tracking-wide">
-                Zero-Knowledge Security
+              <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-3">
+                Zero-Knowledge Privacy
               </h3>
-              <p className="text-[#8B949E] text-base leading-relaxed max-w-sm">
-                We can't see your secrets. Not even us.
+              <p className="text-[#8B949E] leading-relaxed mb-4 max-w-sm">
+                Not even our engineers can see what you've stored. Your data is encrypted before it ever leaves your device.
+              </p>
+              <p className="text-xs text-indigo-300/70 font-mono bg-indigo-500/5 border border-indigo-500/10 rounded-lg px-3 py-2 w-fit">
+                → We are mathematically incapable of reading your vault.
               </p>
             </div>
-            {/* Visual: Animated lock with orbit rings */}
-            <div className="flex-1 h-48 md:h-full relative pointer-events-none">
-              <Canvas camera={{ position: [0, 0, 5] }}>
-                <ambientLight intensity={0.5} />
-                <pointLight position={[10, 10, 10]} />
-                <OrbitRings />
-              </Canvas>
-              <div className="absolute inset-0 flex items-center justify-center z-20">
-                 <Shield size={48} className="text-[#F0F6FC] opacity-90 drop-shadow-[0_0_15px_rgba(79,92,255,0.8)]" />
-              </div>
+            {/* Decorative lock SVG */}
+            <div className="flex-shrink-0 flex items-center justify-center w-full md:w-48 mt-8 md:mt-0">
+              <svg viewBox="0 0 80 100" className="w-28 h-28 text-indigo-500/30 group-hover:text-indigo-500/50 transition-colors" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="10" y="40" width="60" height="50" rx="8" />
+                <path d="M25 40V28a15 15 0 0 1 30 0v12" />
+                <circle cx="40" cy="63" r="5" fill="currentColor" />
+                <line x1="40" y1="68" x2="40" y2="76" />
+              </svg>
             </div>
           </motion.div>
 
-          {/* Feature 2: MULTI-GUARDIAN RECOVERY (Tall = span 2, spans 2 rows) */}
+          {/* Multi-Guardian Recovery — tall */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="lg:col-span-2 lg:row-span-2 bg-[#0D1117] border border-gold/20 hover:border-gold/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:shadow-[0_0_40px_rgba(212,175,55,0.1)]"
+            className="lg:col-span-2 lg:row-span-2 bg-[#0D1117] border border-amber-500/20 hover:border-amber-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#111510]"
           >
-            <div className="z-10 mb-8">
-              <div className="inline-flex px-3 py-1 rounded-full text-[10px] font-bold tracking-widest w-fit mb-5 bg-yellow-500/20 text-yellow-300">
-                LIVE AT LAUNCH
-              </div>
-              <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-2 uppercase tracking-wide">
-                Multi-Guardian Recovery
-              </h3>
-              <p className="text-[#8B949E] text-base leading-relaxed">
-                Split secret architecture. No single point of failure.
-              </p>
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6 group-hover:bg-amber-500/20 transition-colors">
+              <Users size={22} className="text-amber-400" />
             </div>
-            
-            {/* Visual: Network of avatar nodes */}
-            <div className="flex-1 mt-auto flex justify-center items-center relative min-h-[250px]">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 bg-[#020409] border-2 border-gold rounded-full flex items-center justify-center z-20 shadow-[0_0_20px_rgba(212,175,55,0.4)]">
-                   <Key size={24} className="text-gold" />
-                </div>
-                {/* Connecting lines and nodes */}
-                {[0, 120, 240].map((deg, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute top-1/2 left-1/2 w-24 h-px origin-left flex justify-end"
-                    style={{ transform: `translateY(-50%) rotate(${deg}deg)` }}
-                  >
-                    <div className="w-full h-px bg-gradient-to-r from-gold/50 to-transparent absolute inset-0" />
-                    <motion.div 
-                       animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
-                       transition={{ duration: 2, repeat: Infinity, delay: i * 0.5 }}
-                       className="w-10 h-10 bg-[#0D1117] border border-white/20 rounded-full flex items-center justify-center -translate-y-1/2 mt-[0.5px] z-10"
-                       style={{ transform: `translateX(50%) translateY(-50%) rotate(-${deg}deg)` }}
-                    >
-                      <Users size={16} className="text-[#F0F6FC]" />
-                    </motion.div>
-                  </motion.div>
-                ))}
+            <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-3">
+              Multi-Guardian Recovery
+            </h3>
+            <p className="text-[#8B949E] leading-relaxed mb-3">
+              Trusted people each hold a fragment. No single person holds everything — no single point of failure.
+            </p>
+            <p className="text-xs text-amber-300/70 font-mono bg-amber-500/5 border border-amber-500/10 rounded-lg px-3 py-2 w-fit text-wrap">
+              → Based on military-grade secret splitting.
+            </p>
+
+            {/* Guardian network diagram */}
+            <div className="flex-1 flex items-center justify-center mt-8 relative">
+              {/* Center key */}
+              <div className="w-14 h-14 rounded-full bg-[#020409] border-2 border-amber-500/40 flex items-center justify-center z-10 shadow-[0_0_20px_rgba(217,119,6,0.2)]">
+                <Key size={20} className="text-amber-400" />
               </div>
+              {/* Orbiting guardians */}
+              {[0, 120, 240].map((deg, i) => {
+                const rad = (deg * Math.PI) / 180;
+                const x = Math.cos(rad) * 60;
+                const y = Math.sin(rad) * 60;
+                return (
+                  <div
+                    key={i}
+                    className="absolute w-10 h-10 bg-[#111] border border-amber-500/20 rounded-full flex items-center justify-center text-white text-xs font-bold"
+                    style={{ transform: `translate(${x}px, ${y}px)` }}
+                  >
+                    <div className="w-5 h-5 rounded-full bg-amber-500/20 flex items-center justify-center">
+                      <Users size={10} className="text-amber-400" />
+                    </div>
+                  </div>
+                );
+              })}
+              {/* Lines */}
+              <svg className="absolute inset-0 w-full h-full pointer-events-none" overflow="visible">
+                {[0, 120, 240].map((deg, i) => {
+                  const rad = (deg * Math.PI) / 180;
+                  const cx = 0, cy = 0;
+                  const ex = cx + Math.cos(rad) * 60;
+                  const ey = cy + Math.sin(rad) * 60;
+                  return (
+                    <line
+                      key={i}
+                      x1="50%" y1="50%"
+                      x2={`calc(50% + ${ex}px)`}
+                      y2={`calc(50% + ${ey}px)`}
+                      stroke="rgba(217,119,6,0.2)"
+                      strokeWidth="1"
+                      strokeDasharray="4 4"
+                    />
+                  );
+                })}
+              </svg>
             </div>
           </motion.div>
 
-          {/* Feature 3: BITCOIN & CRYPTO NATIVE (Wide = span 2, row 2) */}
+          {/* Bitcoin & Crypto Native — small */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="lg:col-span-2 bg-[#0D1117] border border-amber-500/20 hover:border-amber-500/40 rounded-3xl p-8 flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:shadow-[0_0_40px_rgba(245,158,11,0.1)]"
+            className="lg:col-span-2 bg-[#0D1117] border border-orange-500/20 hover:border-orange-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#12100A]"
           >
-            <div className="z-10">
-              <div className="inline-flex px-3 py-1 rounded-full text-[10px] font-bold tracking-widest w-fit mb-5 bg-amber-500/20 text-amber-300">
-                COMING IN BETA
-              </div>
-              <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-2 uppercase tracking-wide">
-                Bitcoin & Crypto Native
-              </h3>
-              <p className="text-[#8B949E] text-sm leading-relaxed mb-6">
-                Supports BTC, ETH, SOL, seed phrases, and hardware wallets.
-              </p>
+            <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-6 group-hover:bg-orange-500/20 transition-colors">
+              <Key size={22} className="text-orange-400" />
             </div>
-            
-            {/* Visual: Row of crypto logos with gold glow treatment */}
-            <div className="flex gap-4 items-center">
-               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500/20 to-transparent border border-amber-500/40 flex items-center justify-center group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(245,158,11,0.2)]">
-                 <Bitcoin size={24} className="text-amber-400" />
-               </div>
-               <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform delay-75">
-                 <Wallet size={24} className="text-[#F0F6FC]" />
-               </div>
-               <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform delay-150">
-                 <Key size={24} className="text-[#F0F6FC]" />
-               </div>
+            <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-3">
+              Crypto Native
+            </h3>
+            <p className="text-[#8B949E] text-sm leading-relaxed mb-4">
+              BTC, ETH, SOL, seed phrases, hardware wallets. Templates for 50+ wallet types.
+            </p>
+            <div className="flex gap-2 flex-wrap">
+              {['Bitcoin', 'Ethereum', 'Solana', 'Ledger', 'Trezor'].map(t => (
+                <span key={t} className="text-[10px] font-semibold text-orange-400/70 bg-orange-500/10 border border-orange-500/15 px-2 py-1 rounded-md">
+                  {t}
+                </span>
+              ))}
             </div>
           </motion.div>
 
-          {/* Feature 4: DEAD MAN'S SWITCH (Large = span 3, row 2) */}
+          {/* Dead Man's Switch — large */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="lg:col-span-3 bg-[#0D1117] border border-red-500/20 hover:border-red-500/40 rounded-3xl p-8 flex flex-col md:flex-row items-center relative overflow-hidden group transition-all duration-300 hover:shadow-[0_0_40px_rgba(239,68,68,0.08)]"
+            className="lg:col-span-3 bg-[#0D1117] border border-red-500/20 hover:border-red-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#130B0B]"
           >
-            <div className="flex-1 z-10 w-full mb-6 md:mb-0 pr-0 md:pr-8">
-              <div className="inline-flex px-3 py-1 rounded-full text-[10px] font-bold tracking-widest w-fit mb-5 bg-red-500/20 text-red-300">
-                LIVE AT LAUNCH
-              </div>
-              <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-2 uppercase tracking-wide">
-                Dead Man's Switch
-              </h3>
-              <p className="text-[#8B949E] text-base leading-relaxed">
-                Smart activity detection. Your vault self-activates exactly when your family needs it.
-              </p>
+            <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-6 group-hover:bg-red-500/20 transition-colors">
+              <Zap size={22} className="text-red-400" />
             </div>
-            
-            {/* Visual: Timeline bar with pulse animation */}
-            <div className="flex-1 w-full flex flex-col items-center justify-center px-4">
-               <div className="w-full flex items-center justify-between text-xs text-[#8B949E] font-bold uppercase mb-3 px-1">
-                 <span>Active</span>
-                 <span className="text-red-400 animate-pulse">Inactive</span>
-                 <span>Transfer</span>
-               </div>
-               <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden relative">
-                 <motion.div 
-                   className="absolute top-0 left-0 bottom-0 bg-gradient-to-r from-indigo-500 max-w-[66%] min-w-[33%]"
-                   animate={{ width: ['33%', '66%', '100%'], backgroundColor: ['#4F5CFF', '#EF4444', '#D4AF37'] }}
-                   transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                 />
-                 <div className="absolute inset-0 w-full h-full bg-[linear-gradient(90deg,transparent_20%,rgba(255,255,255,0.1)_50%,transparent_80%)] animate-[shimmer_2s_infinite]" />
-               </div>
-            </div>
+            <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-3">
+              Dead Man's Switch
+            </h3>
+            <p className="text-[#8B949E] text-sm leading-relaxed mb-2 max-w-lg">
+              Smart inactivity detection with multiple escalation stages — warnings first, guardians contacted, then automatic transfer. Fully customizable from 7 days to 12 months.
+            </p>
+            <TimelineVisual />
           </motion.div>
 
+          {/* All Digital Assets */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+            className="lg:col-span-2 bg-[#0D1117] border border-purple-500/20 hover:border-purple-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#0E0A12]"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-6 group-hover:bg-purple-500/20 transition-colors">
+              <Database size={22} className="text-purple-400" />
+            </div>
+            <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-3">
+              All Your Digital Assets
+            </h3>
+            <p className="text-[#8B949E] text-sm leading-relaxed">
+              Crypto, NFTs, social accounts, email, legal documents — everything in one encrypted place.
+            </p>
+          </motion.div>
+
+          {/* AI Planner */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+            className="lg:col-span-3 bg-[#0D1117] border border-cyan-500/20 hover:border-cyan-500/40 rounded-3xl p-8 flex flex-col md:flex-row gap-6 items-start relative overflow-hidden group transition-all duration-300 hover:bg-[#090F12]"
+          >
+            <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center group-hover:bg-cyan-500/20 transition-colors">
+              <Bot size={22} className="text-cyan-400" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-3">
+                AI Legacy Planner
+              </h3>
+              <p className="text-[#8B949E] text-sm leading-relaxed">
+                Proactively spots gaps in your inheritance plan and tells you exactly what to fix — before it's too late.
+              </p>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>

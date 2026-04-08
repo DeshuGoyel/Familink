@@ -6,19 +6,29 @@ const stats = [
     prefix: '$',
     value: 140,
     suffix: 'B+',
-    desc: 'Lost crypto annually',
+    desc: 'in crypto lost permanently each year',
+    color: 'text-red-400',
+    accent: 'border-red-500/30',
+    bg: 'bg-red-500/5',
   },
   {
     prefix: '',
     value: 89,
     suffix: '%',
-    desc: 'Families locked out of digital assets',
+    desc: 'of families locked out of digital assets after a death',
+    color: 'text-amber-400',
+    accent: 'border-amber-500/30',
+    bg: 'bg-amber-500/5',
+    showBar: true,
   },
   {
     prefix: '',
     value: 3,
     suffix: ' min',
-    desc: 'Average time to protect your legacy with Transfer Legacy',
+    desc: 'to protect your entire legacy with Transfer Legacy',
+    color: 'text-emerald-400',
+    accent: 'border-emerald-500/30',
+    bg: 'bg-emerald-500/5',
   },
 ];
 
@@ -45,11 +55,21 @@ function StatCard({ stat, visible }: { stat: typeof stats[0]; visible: boolean }
   }, [visible, stat.value]);
 
   return (
-    <div className="bg-[#0D1117] border border-indigo-500/20 shadow-[0_0_20px_rgba(79,92,255,0.08)] hover:shadow-[0_0_30px_rgba(79,92,255,0.15)] hover:border-indigo-500/40 transition-all rounded-2xl p-8 flex flex-col gap-2">
-      <div className="text-5xl font-display font-bold text-[#F0F6FC]">
+    <div className={`${stat.bg} border ${stat.accent} rounded-2xl p-8 flex flex-col gap-3 hover:scale-[1.02] transition-transform duration-300`}>
+      <div className={`text-5xl md:text-6xl font-display font-black ${stat.color} leading-none`}>
         {stat.prefix}{count}{stat.suffix}
       </div>
-      <p className="text-[#8B949E] font-medium">{stat.desc}</p>
+      {stat.showBar && (
+        <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden mt-1">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: visible ? `${stat.value}%` : 0 }}
+            transition={{ duration: 2, ease: 'easeOut', delay: 0.3 }}
+            className="h-full rounded-full bg-amber-400/60"
+          />
+        </div>
+      )}
+      <p className="text-[#8B949E] text-sm leading-relaxed">{stat.desc}</p>
     </div>
   );
 }
@@ -70,24 +90,24 @@ export default function Problem() {
   return (
     <section id="problem" ref={ref} className="py-28 bg-[#020409]">
       <div className="max-w-7xl mx-auto px-6">
+
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="mb-16 max-w-4xl"
+          className="mb-16 max-w-3xl"
         >
-          <span className="inline-block text-indigo-400 text-sm font-bold tracking-widest uppercase mb-4">
-            WHY THIS MATTERS
-          </span>
+          <p className="text-xs font-bold tracking-[0.2em] uppercase text-indigo-400 mb-5">The Problem</p>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-[#F0F6FC] leading-[1.1]">
-            $140 Billion in crypto is permanently lost every year.<br />
-            <span className="text-[#8B949E]">Most of it because no one told their family.</span>
+            $140 Billion in crypto disappears every year.{' '}
+            <span className="text-[#8B949E] font-normal">Most of it because no one told their family.</span>
           </h2>
         </motion.div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+        {/* Stats — distinct cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20">
           {stats.map((stat, i) => (
             <motion.div
               key={i}
@@ -101,43 +121,59 @@ export default function Problem() {
           ))}
         </div>
 
-        {/* 2-Column Story / Illustration */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center bg-[#0D1117] rounded-3xl p-8 md:p-12 border border-white/5">
-           <motion.div
-             initial={{ opacity: 0, x: -20 }}
-             whileInView={{ opacity: 1, x: 0 }}
-             viewport={{ once: true }}
-           >
-             <h3 className="text-2xl font-bold text-white mb-4">The Real Risk Isn't Hackers.</h3>
-             <p className="text-[#8B949E] text-lg leading-relaxed">
-               Imagine building a life-changing portfolio over years, securing it meticulously on an offline hardware wallet, and then suddenly becoming inactive. Your family sees the ledger, but without the PIN, the seed phrase, or the knowledge of how to use it, your wealth is trapped forever. What was meant to be generational wealth becomes a permanent digital ghost.
-             </p>
-           </motion.div>
-           <motion.div
-             initial={{ opacity: 0, x: 20 }}
-             whileInView={{ opacity: 1, x: 0 }}
-             viewport={{ once: true }}
-             className="flex justify-center"
-           >
-             {/* Simple hand-drawn SVG illustration of confused family at computer */}
-             <svg viewBox="0 0 400 300" className="w-full max-w-sm" fill="none" stroke="currentColor">
-               <path d="M100 200 L300 200 L280 100 L120 100 Z" stroke="#8B949E" strokeWidth="4" strokeLinejoin="round" />
-               <path d="M120 100 L120 50 C120 40 130 30 140 30 L260 30 C270 30 280 40 280 50 L280 100" fill="none" stroke="#8B949E" strokeWidth="4" />
-               <rect x="140" y="50" width="120" height="40" rx="4" stroke="#4F5CFF" strokeWidth="3" opacity="0.6"/>
-               <path d="M150 70 L250 70" stroke="#4F5CFF" strokeWidth="3" strokeDasharray="5,5" opacity="0.6" />
-               
-               {/* People silhouetes */}
-               <circle cx="80" cy="120" r="25" stroke="#FFFFFF" strokeWidth="4"/>
-               <path d="M40 220 Q80 150 120 220" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round"/>
-               
-               <circle cx="320" cy="140" r="20" stroke="#FFFFFF" strokeWidth="4"/>
-               <path d="M290 220 Q320 160 350 220" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round"/>
-               
-               {/* Question Marks */}
-               <path d="M200 130 C200 100 220 100 220 120 C220 140 200 150 200 150 M200 165 L200 170" stroke="#D4AF37" strokeLinecap="round" strokeWidth="4" />
-             </svg>
-           </motion.div>
-        </div>
+        {/* Narrative story */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-3xl border border-white/5 overflow-hidden"
+        >
+          {/* Left — the painful reality */}
+          <div className="bg-[#0D1117] p-10 md:p-14 flex flex-col justify-center border-r border-white/5">
+            <div className="inline-block text-xs font-bold tracking-widest uppercase text-red-400 bg-red-500/10 px-3 py-1.5 rounded-full mb-6 w-fit">
+              Without Transfer Legacy
+            </div>
+            <div className="space-y-5">
+              {[
+                'Family discovers wallets but has no seed phrase',
+                'Exchange accounts frozen — no death certificate accepted',
+                'Years pass. Lawyers charge thousands. Access denied.',
+                'Your life\'s work: gone.',
+              ].map((step, i) => (
+                <div key={i} className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-red-500/20 border border-red-500/30 flex items-center justify-center mt-0.5">
+                    <div className="w-2 h-2 rounded-full bg-red-500" />
+                  </div>
+                  <p className="text-[#8B949E] text-sm leading-relaxed">{step}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right — the solution */}
+          <div className="bg-[#010208] p-10 md:p-14 flex flex-col justify-center">
+            <div className="inline-block text-xs font-bold tracking-widest uppercase text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full mb-6 w-fit">
+              With Transfer Legacy
+            </div>
+            <div className="space-y-5">
+              {[
+                'Your vault is set up in 3 minutes',
+                'Trusted guardians receive their key fragments securely',
+                'When you\'re inactive, your family gets guided access',
+                'Your legacy transfers exactly as you intended.',
+              ].map((step, i) => (
+                <div key={i} className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mt-0.5">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                  </div>
+                  <p className="text-[#F0F6FC] text-sm leading-relaxed">{step}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
       </div>
     </section>
   );
