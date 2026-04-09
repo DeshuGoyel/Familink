@@ -8,15 +8,19 @@ const steps = [
     title: 'Encrypt everything in 3 minutes',
     desc: 'Add your seed phrases, wallet passwords, exchange accounts, and documents. Everything is encrypted locally — it never leaves your device in plaintext.',
     detail: 'Works with BTC, ETH, SOL, hardware wallets, password managers, and any text secret.',
-    side: 'left',
+    accentColor: '#f97316',
+    glowColor: 'rgba(249,115,22,0.12)',
+    borderColor: 'rgba(249,115,22,0.2)',
   },
   {
     number: '02',
     icon: Users,
     title: 'Choose people you trust',
     desc: 'Assign guardians — close friends or family — who each hold a unique fragment. No single person holds everything. No single point of failure.',
-    detail: 'Based on Shamir\'s Secret Sharing. Even if one guardian is compromised, your vault stays safe.',
-    side: 'right',
+    detail: "Based on Shamir's Secret Sharing. Even if one guardian is compromised, your vault stays safe.",
+    accentColor: '#c084fc',
+    glowColor: 'rgba(192,132,252,0.12)',
+    borderColor: 'rgba(192,132,252,0.2)',
   },
   {
     number: '03',
@@ -24,89 +28,131 @@ const steps = [
     title: 'Your family inherits — automatically',
     desc: 'If you stop checking in, your vault enters transfer mode. Guardians receive guided instructions in plain English. No blockchain knowledge required.',
     detail: 'Multiple fail-safes and escalation delays ensure false triggers are impossible.',
-    side: 'left',
+    accentColor: '#34d399',
+    glowColor: 'rgba(52,211,153,0.12)',
+    borderColor: 'rgba(52,211,153,0.2)',
   },
 ];
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-20 bg-[#11151F]">
-      <div className="max-w-6xl mx-auto px-6">
+    <section id="how-it-works" className="relative py-28 overflow-hidden" style={{ background: '#090B14' }}>
+      {/* Left gradient bar */}
+      <div
+        className="absolute left-0 top-0 bottom-0 w-px"
+        style={{ background: 'linear-gradient(to bottom, transparent, rgba(249,115,22,0.4), rgba(192,132,252,0.4), transparent)' }}
+      />
 
+      <div className="max-w-6xl mx-auto px-6">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
           className="text-center mb-24"
         >
-          <p className="text-xs font-bold tracking-[0.2em] uppercase text-indigo-400 mb-5">How It Works</p>
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-[#F0F6FC]">
+          <p
+            className="text-xs font-bold tracking-[0.22em] uppercase mb-5"
+            style={{
+              background: 'linear-gradient(135deg, #c084fc, #818cf8)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            How It Works
+          </p>
+          <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
             Three steps. Three minutes.
           </h2>
-          <p className="text-xl text-[#8B949E] mt-4 max-w-xl mx-auto">
+          <p className="text-lg text-white/40 max-w-md mx-auto">
             Built for humans, not cryptographers.
           </p>
         </motion.div>
 
-        {/* Steps — alternating editorial layout */}
+        {/* Steps */}
         <div className="flex flex-col gap-0">
           {steps.map((step, i) => {
             const Icon = step.icon;
-            const isRight = step.side === 'right';
+            const isRight = i % 2 === 1;
+
             return (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ delay: 0.1, duration: 0.7, ease: 'easeOut' }}
-                className={`relative grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-16 ${
-                  i < steps.length - 1 ? 'border-b border-white/5' : ''
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ delay: 0.1, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                className={`relative grid grid-cols-1 lg:grid-cols-2 gap-10 items-center py-20 ${
+                  i < steps.length - 1 ? 'border-b border-white/[0.05]' : ''
                 }`}
               >
-                {/* Number background watermark */}
+                {/* Watermark number */}
                 <div
-                  className={`absolute ${isRight ? 'right-0 lg:right-8' : 'left-0 lg:left-8'} top-1/2 -translate-y-1/2 text-[160px] md:text-[200px] font-black text-white/[0.025] select-none pointer-events-none leading-none font-display`}
+                  className={`absolute ${isRight ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-[180px] font-black select-none pointer-events-none leading-none`}
+                  style={{ color: 'rgba(255,255,255,0.025)' }}
                 >
                   {step.number}
                 </div>
 
-                {/* Text side */}
+                {/* Text */}
                 <div className={`relative z-10 ${isRight ? 'lg:order-2' : ''}`}>
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
-                      <Icon size={22} className="text-indigo-400" />
+                  <div className="flex items-center gap-4 mb-7">
+                    <div
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center border"
+                      style={{ background: step.glowColor, borderColor: step.borderColor }}
+                    >
+                      <Icon size={22} style={{ color: step.accentColor }} />
                     </div>
-                    <span className="text-sm font-bold text-indigo-400/60 font-mono">Step {step.number}</span>
+                    <span className="text-xs font-bold font-mono tracking-wider" style={{ color: `${step.accentColor}80` }}>
+                      Step {step.number}
+                    </span>
                   </div>
-                  <h3 className="text-2xl md:text-3xl font-display font-bold text-[#F0F6FC] mb-4 leading-tight">
+
+                  <h3 className="text-2xl md:text-3xl font-black text-white mb-5 leading-tight tracking-tight">
                     {step.title}
                   </h3>
-                  <p className="text-[#8B949E] text-base leading-relaxed mb-5">
+                  <p className="text-white/45 text-base leading-relaxed mb-5">
                     {step.desc}
                   </p>
-                  <p className="text-sm text-indigo-300/60 bg-indigo-500/5 border border-indigo-500/15 rounded-xl px-4 py-3">
-                    {step.detail}
-                  </p>
+                  <div
+                    className="text-sm leading-relaxed px-4 py-3 rounded-xl border"
+                    style={{ color: `${step.accentColor}90`, background: step.glowColor, borderColor: step.borderColor }}
+                  >
+                    → {step.detail}
+                  </div>
                 </div>
 
-                {/* Visual side */}
+                {/* Visual */}
                 <div className={`relative z-10 ${isRight ? 'lg:order-1' : ''} flex justify-center`}>
-                  <div className="w-full max-w-sm aspect-square rounded-3xl bg-[#090C18] border border-white/5 flex items-center justify-center relative overflow-hidden">
-                    {/* Ambient glow */}
+                  <div
+                    className="w-full max-w-[340px] aspect-square rounded-3xl border flex items-center justify-center relative overflow-hidden group"
+                    style={{ background: '#0E1118', borderColor: 'rgba(255,255,255,0.06)' }}
+                  >
+                    {/* Hover glow */}
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                      style={{ background: `radial-gradient(circle at 50% 50%, ${step.glowColor}, transparent 70%)` }}
+                    />
+                    {/* Ambient center glow */}
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className="w-48 h-48 bg-indigo-500/10 rounded-full blur-2xl" />
+                      <div className="w-40 h-40 rounded-full blur-3xl" style={{ background: step.glowColor }} />
                     </div>
-                    {/* Step icon — large */}
-                    <div className="relative z-10 flex flex-col items-center gap-4">
-                      <div className="w-24 h-24 rounded-3xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
-                        <Icon size={44} className="text-indigo-400" strokeWidth={1.5} />
+                    {/* Icon */}
+                    <div className="relative z-10 flex flex-col items-center gap-5">
+                      <div
+                        className="w-24 h-24 rounded-3xl border flex items-center justify-center"
+                        style={{ background: step.glowColor, borderColor: step.borderColor }}
+                      >
+                        <Icon size={46} style={{ color: step.accentColor }} strokeWidth={1.4} />
                       </div>
-                      <div className="text-xs font-mono text-indigo-400/50 tracking-wider">
+                      <span
+                        className="text-xs font-mono tracking-wider font-bold"
+                        style={{ color: `${step.accentColor}50` }}
+                      >
                         [{step.number}] {step.title.split(' ').slice(0, 2).join(' ').toUpperCase()}
-                      </div>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -115,6 +161,12 @@ export default function HowItWorks() {
           })}
         </div>
       </div>
+
+      {/* Bottom line */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-px"
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(249,115,22,0.3), transparent)' }}
+      />
     </section>
   );
 }

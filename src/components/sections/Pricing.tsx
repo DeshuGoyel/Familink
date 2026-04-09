@@ -7,49 +7,35 @@ const plans = [
     monthlyPrice: 0,
     yearlyPrice: 0,
     desc: 'Try it free. No credit card.',
-    features: [
-      '1 encrypted vault',
-      '2 guardians',
-      'Up to 10 items',
-      'Email delivery',
-    ],
+    features: ['1 encrypted vault', '2 guardians', 'Up to 10 items', 'Email delivery'],
     cta: 'Join Waitlist Free',
     highlighted: false,
+    accent: '#818cf8',
   },
   {
     name: 'Legacy',
     monthlyPrice: 24,
     yearlyPrice: 12,
     desc: 'For serious asset protection.',
-    features: [
-      'Unlimited vault items',
-      '5 guardians',
-      'Crypto & hardware wallets',
-      'AI Legacy Planner',
-      'Priority support',
-    ],
+    features: ['Unlimited vault items', '5 guardians', 'Crypto & hardware wallets', 'AI Legacy Planner', 'Priority support'],
     cta: 'Claim Founding Price',
     highlighted: true,
     badge: 'Most Popular — Founding Rate',
+    accent: '#f97316',
   },
   {
     name: 'Dynasty',
     monthlyPrice: 49,
     yearlyPrice: 29,
     desc: 'For families and estates.',
-    features: [
-      'Everything in Legacy',
-      'Family accounts',
-      'Attorney delivery',
-      'API access',
-      'White-glove onboarding',
-    ],
+    features: ['Everything in Legacy', 'Family accounts', 'Attorney delivery', 'API access', 'White-glove onboarding'],
     cta: 'Contact Us',
     highlighted: false,
+    accent: '#c084fc',
   },
 ];
 
-const TOTAL_SPOTS = 5000;
+const TOTAL = 5000;
 const CLAIMED = 2417;
 
 export default function Pricing() {
@@ -58,42 +44,51 @@ export default function Pricing() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold: 0.2 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+    const ob = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.2 });
+    if (ref.current) ob.observe(ref.current);
+    return () => ob.disconnect();
   }, []);
 
-  const progress = Math.round((CLAIMED / TOTAL_SPOTS) * 100);
+  const progress = Math.round((CLAIMED / TOTAL) * 100);
 
   return (
-    <section id="pricing" ref={ref} className="py-20 bg-[#11151F]">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="pricing" ref={ref} className="relative py-28 overflow-hidden" style={{ background: '#090B14' }}>
+      <div
+        className="absolute top-0 left-0 right-0 h-px"
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(249,115,22,0.5), transparent)' }}
+      />
 
-        {/* Founding spots progress — above heading */}
+      {/* Ambient gradient */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[120px] pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(249,115,22,0.06), transparent 70%)' }}
+      />
+
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Founding spots bar */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-md mb-12"
+          className="max-w-md mb-14"
         >
-          <div className="flex items-center justify-between text-sm mb-2">
-            <span className="text-[#8B949E]">Founding spots claimed</span>
-            <span className="text-amber-400 font-bold">{CLAIMED.toLocaleString()} / {TOTAL_SPOTS.toLocaleString()}</span>
+          <div className="flex items-center justify-between text-sm mb-3">
+            <span className="text-white/40">Founding spots claimed</span>
+            <span className="font-bold" style={{ color: '#fb923c' }}>{CLAIMED.toLocaleString()} / {TOTAL.toLocaleString()}</span>
           </div>
-          <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden border border-white/5">
+          <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: visible ? `${progress}%` : 0 }}
               transition={{ duration: 2, ease: 'easeOut', delay: 0.3 }}
-              className="h-full rounded-full bg-gradient-to-r from-amber-500 to-amber-400"
+              className="h-full rounded-full"
+              style={{ background: 'linear-gradient(90deg, #f97316, #fb923c)' }}
             />
           </div>
-          <p className="text-xs text-[#8B949E] mt-2">{TOTAL_SPOTS - CLAIMED} founding spots remaining at this price.</p>
+          <p className="text-xs text-white/30 mt-2">{TOTAL - CLAIMED} founding spots remaining at this price.</p>
         </motion.div>
 
+        {/* Header + toggle */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -101,29 +96,51 @@ export default function Pricing() {
           transition={{ duration: 0.7 }}
           className="mb-12"
         >
-          <p className="text-xs font-bold tracking-[0.2em] uppercase text-indigo-400 mb-5">Pricing</p>
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-[#F0F6FC] mb-4">
+          <p
+            className="text-xs font-bold tracking-[0.22em] uppercase mb-5"
+            style={{
+              background: 'linear-gradient(135deg, #fb923c, #f97316)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            Pricing
+          </p>
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
             Founding Member Pricing
           </h2>
-          <p className="text-[#8B949E] text-lg mb-8">
-            Lock in your rate forever before public launch.
-          </p>
+          <p className="text-white/40 text-lg mb-8">Lock in your rate forever before public launch.</p>
 
           {/* Toggle */}
-          <div className="inline-flex items-center bg-[#151A25] border border-white/10 rounded-full p-1.5">
-            <button
-              onClick={() => setYearly(false)}
-              className={`px-5 py-2 rounded-full text-sm font-bold transition-all ${!yearly ? 'bg-[#F0F6FC] text-[#020409]' : 'text-[#8B949E] hover:text-[#F0F6FC]'}`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setYearly(true)}
-              className={`px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${yearly ? 'bg-indigo-500 text-white' : 'text-[#8B949E] hover:text-[#F0F6FC]'}`}
-            >
-              Yearly
-              <span className="text-[10px] font-black bg-indigo-300/20 px-2 py-0.5 rounded-full">SAVE 40%</span>
-            </button>
+          <div
+            className="inline-flex items-center rounded-full p-1.5 border"
+            style={{ background: '#131722', borderColor: 'rgba(255,255,255,0.08)' }}
+          >
+            {['Monthly', 'Yearly'].map((label) => {
+              const active = yearly ? label === 'Yearly' : label === 'Monthly';
+              return (
+                <button
+                  key={label}
+                  onClick={() => setYearly(label === 'Yearly')}
+                  className="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-all duration-250"
+                  style={active
+                    ? { background: 'linear-gradient(135deg, #f97316, #fb923c)', color: 'white' }
+                    : { color: 'rgba(255,255,255,0.35)' }
+                  }
+                >
+                  {label}
+                  {label === 'Yearly' && (
+                    <span
+                      className="text-[10px] font-black px-2 py-0.5 rounded-full"
+                      style={active ? { background: 'rgba(255,255,255,0.2)' } : { background: 'rgba(249,115,22,0.15)', color: '#f97316' }}
+                    >
+                      SAVE 40%
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </motion.div>
 
@@ -135,70 +152,101 @@ export default function Pricing() {
               initial={{ opacity: 0, y: 32 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.15, duration: 0.6 }}
-              className={`relative rounded-3xl border p-8 flex flex-col transition-all duration-300 ${
-                plan.highlighted
-                  ? 'border-indigo-500/50 bg-[#151A25] shadow-[0_0_50px_rgba(79,92,255,0.15)]'
-                  : 'border-white/10 bg-[#151A25] hover:border-white/20 hover:-translate-y-1'
-              }`}
+              transition={{ delay: i * 0.13, duration: 0.65 }}
+              className="relative rounded-3xl border flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1"
+              style={{
+                background: plan.highlighted
+                  ? 'linear-gradient(160deg, #1a1008 0%, #131722 100%)'
+                  : '#131722',
+                borderColor: plan.highlighted ? `${plan.accent}50` : 'rgba(255,255,255,0.07)',
+                boxShadow: plan.highlighted ? `0 0 50px ${plan.accent}18` : undefined,
+              }}
             >
+              {/* Popular badge */}
               {plan.highlighted && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-indigo-500 text-white text-[10px] font-black px-4 py-1.5 rounded-full whitespace-nowrap font-mono tracking-wide shadow-[0_0_15px_rgba(79,92,255,0.5)]">
+                <div
+                  className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-[10px] font-black px-4 py-1.5 rounded-full whitespace-nowrap tracking-wide"
+                  style={{
+                    background: 'linear-gradient(135deg, #f97316, #fb923c)',
+                    color: '#fff',
+                    boxShadow: '0 0 20px rgba(249,115,22,0.5)',
+                  }}
+                >
                   {plan.badge}
                 </div>
               )}
 
-              <div className="mb-6">
-                <h3 className="text-xl font-display font-bold text-[#F0F6FC]">{plan.name}</h3>
-                <p className="text-xs text-[#8B949E] mt-1">{plan.desc}</p>
-              </div>
+              {/* Top accent bar */}
+              <div className="h-0.5 w-full" style={{ background: `linear-gradient(90deg, transparent, ${plan.accent}, transparent)` }} />
 
-              <div className="mb-8">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={yearly ? 'y' : 'm'}
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 5 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex items-end gap-1"
+              <div className="p-8 flex flex-col flex-1">
+                <div className="mb-6">
+                  <h3
+                    className="text-xl font-black tracking-tight"
+                    style={{ color: plan.highlighted ? plan.accent : 'white' }}
                   >
-                    <span className="text-5xl font-display font-black text-[#F0F6FC]">
-                      ${yearly ? plan.yearlyPrice : plan.monthlyPrice}
-                    </span>
-                    <span className="text-[#8B949E] mb-2 text-sm">/mo</span>
-                  </motion.div>
-                </AnimatePresence>
-                {yearly && plan.monthlyPrice > plan.yearlyPrice && (
-                  <p className="text-xs text-emerald-400 mt-1 font-medium">
-                    Billed annually — was ${plan.monthlyPrice}/mo
-                  </p>
-                )}
+                    {plan.name}
+                  </h3>
+                  <p className="text-xs text-white/35 mt-1">{plan.desc}</p>
+                </div>
+
+                {/* Price */}
+                <div className="mb-8">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={yearly ? 'y' : 'm'}
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 6 }}
+                      transition={{ duration: 0.2 }}
+                      className="flex items-end gap-1"
+                    >
+                      <span className="text-5xl font-black text-white">
+                        ${yearly ? plan.yearlyPrice : plan.monthlyPrice}
+                      </span>
+                      <span className="text-white/30 mb-2 text-sm">/mo</span>
+                    </motion.div>
+                  </AnimatePresence>
+                  {yearly && plan.monthlyPrice > plan.yearlyPrice && (
+                    <p className="text-xs text-emerald-400 mt-1 font-medium">
+                      Billed annually — was ${plan.monthlyPrice}/mo
+                    </p>
+                  )}
+                </div>
+
+                {/* Features */}
+                <ul className="space-y-3.5 mb-8 flex-1">
+                  {plan.features.map((feat, idx) => (
+                    <li key={idx} className="flex items-center gap-3 text-sm text-white/45">
+                      <span className="text-base leading-none" style={{ color: plan.accent }}>✓</span>
+                      {feat}
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  className="w-full py-3.5 rounded-xl text-sm font-bold transition-all duration-300"
+                  style={plan.highlighted
+                    ? {
+                        background: 'linear-gradient(135deg, #f97316, #fb923c)',
+                        color: 'white',
+                        boxShadow: '0 0 20px rgba(249,115,22,0.35)',
+                      }
+                    : {
+                        background: 'rgba(255,255,255,0.05)',
+                        color: 'rgba(255,255,255,0.7)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                      }
+                  }
+                >
+                  {plan.cta}
+                </button>
               </div>
-
-              <ul className="space-y-3.5 mb-8 flex-1">
-                {plan.features.map((f, idx) => (
-                  <li key={idx} className="flex items-center gap-3 text-sm text-[#8B949E]">
-                    <span className="text-indigo-400 text-base leading-none">✓</span>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-
-              <button
-                className={`w-full py-3.5 rounded-xl text-sm font-bold transition-all ${
-                  plan.highlighted
-                    ? 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-[0_0_15px_rgba(79,92,255,0.3)]'
-                    : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'
-                }`}
-              >
-                {plan.cta}
-              </button>
             </motion.div>
           ))}
         </div>
 
-        <p className="text-center text-xs text-[#8B949E] mt-8 font-medium">
+        <p className="text-center text-xs text-white/25 mt-8 font-medium">
           Cancel any time. Price locks in at founding rate. No auto-upgrades.
         </p>
       </div>

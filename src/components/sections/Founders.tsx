@@ -8,87 +8,137 @@ const founders = [
     bio: `Deshu spent three years watching crypto wealth become permanently inaccessible after unexpected deaths in his extended family. He started Transfer Legacy to solve the problem he knew was coming for millions of families — before it's too late.`,
     quote: `"The hardest part isn't building the vault. It's explaining to a grieving family why they can't access what was left for them."`,
     image: '/images/founder_deshu.png',
-    accent: 'border-indigo-500/30',
-    gradient: 'from-indigo-900/20 to-transparent',
-    links: { twitter: '#', linkedin: '#' },
+    initials: 'DG',
+    accent: '#818cf8',
+    gradientFrom: '#3730a3',
+    gradientTo: '#6366f1',
   },
   {
     name: 'Vikash Kumar Singh',
     role: 'Co-Founder & CTO',
-    bio: `Vikash has worked on cryptographic protocols and distributed systems for the last 5 years. He designed the zero-knowledge architecture behind Transfer Legacy — ensuring no server, no employee, and no hacker can ever read your vault.`,
-    quote: `"We built a system where the word 'trust' is replaced by the word 'proof'. Math doesn't lie."`,
+    bio: `Vikash has worked on cryptographic protocols and distributed systems for 5 years. He designed the zero-knowledge architecture behind Transfer Legacy — ensuring no server, no employee, and no hacker can ever read your vault.`,
+    quote: `"We built a system where 'trust' is replaced by 'proof'. Math doesn't lie."`,
     image: '/images/founder_vikash.png',
-    accent: 'border-amber-500/30',
-    gradient: 'from-amber-900/20 to-transparent',
-    links: { twitter: '#', linkedin: '#' },
+    initials: 'VK',
+    accent: '#fb923c',
+    gradientFrom: '#7c2d12',
+    gradientTo: '#f97316',
   },
 ];
 
 export default function Founders() {
   return (
-    <section id="founders" className="py-20 bg-[#0B0E14]">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="founders" className="relative py-28 overflow-hidden" style={{ background: '#0C0E18' }}>
+      <div
+        className="absolute top-0 left-0 right-0 h-px"
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(251,146,60,0.4), transparent)' }}
+      />
 
+      <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mb-16"
         >
-          <p className="text-xs font-bold tracking-[0.2em] uppercase text-indigo-400 mb-5">The Team</p>
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
+          <p
+            className="text-xs font-bold tracking-[0.22em] uppercase mb-5"
+            style={{
+              background: 'linear-gradient(135deg, #f9a8d4, #f97316)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            The Team
+          </p>
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
             Built by people who've felt this problem.
           </h2>
-          <p className="text-[#8B949E] text-lg max-w-2xl">
+          <p className="text-white/40 text-lg max-w-2xl">
             Not a team of generalists chasing a trend — two founders who got tired of waiting for someone else to solve this.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {founders.map((founder, i) => (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {founders.map((f, i) => (
             <motion.div
-              key={founder.name}
+              key={f.name}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15, duration: 0.7 }}
-              className={`group rounded-3xl border ${founder.accent} bg-[#151A25] overflow-hidden flex flex-col`}
+              className="group rounded-3xl overflow-hidden border transition-all duration-300 hover:-translate-y-1"
+              style={{ background: '#131722', borderColor: `${f.accent}25` }}
             >
-              {/* Photo banner */}
-              <div className="relative h-64 overflow-hidden">
-                <div className={`absolute inset-0 bg-gradient-to-b ${founder.gradient} z-10`} />
-                <img
-                  src={founder.image}
-                  alt={founder.name}
-                  className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
+              {/* Photo / gradient banner */}
+              <div
+                className="relative h-56 overflow-hidden flex items-end"
+                style={{ background: `linear-gradient(135deg, ${f.gradientFrom}, ${f.gradientTo})` }}
+              >
+                {/* Texture */}
+                <div
+                  className="absolute inset-0 opacity-20 mix-blend-overlay"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+                    backgroundSize: '180px',
                   }}
                 />
+                {/* Bottom fade */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#131722] via-transparent to-transparent" />
+
+                {/* Real photo (falls back gracefully) */}
+                <img
+                  src={f.image}
+                  alt={f.name}
+                  className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                />
+
+                {/* Initials fallback (always shown behind the image) */}
+                <div
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full border-2 border-white/20 flex items-center justify-center text-white text-3xl font-black select-none"
+                  style={{ background: 'rgba(0,0,0,0.25)' }}
+                >
+                  {f.initials}
+                </div>
               </div>
 
               {/* Content */}
-              <div className="p-8 flex flex-col gap-5 flex-1">
+              <div className="p-8 flex flex-col gap-5">
                 <div>
-                  <h3 className="text-2xl font-display font-bold text-white">{founder.name}</h3>
-                  <p className="text-sm font-semibold text-indigo-400 uppercase tracking-wider mt-1">{founder.role}</p>
+                  <h3 className="text-2xl font-black text-white tracking-tight">{f.name}</h3>
+                  <p
+                    className="text-sm font-bold uppercase tracking-wider mt-1"
+                    style={{ color: f.accent }}
+                  >
+                    {f.role}
+                  </p>
                 </div>
 
-                <p className="text-[#8B949E] text-sm leading-relaxed flex-1">{founder.bio}</p>
+                <p className="text-white/40 text-sm leading-relaxed">{f.bio}</p>
 
-                {/* Pull quote */}
-                <blockquote className="border-l-2 border-indigo-500/40 pl-4 italic text-[#F0F6FC]/60 text-sm leading-relaxed">
-                  {founder.quote}
+                <blockquote
+                  className="border-l-2 pl-4 italic text-white/55 text-sm leading-relaxed"
+                  style={{ borderColor: `${f.accent}50` }}
+                >
+                  {f.quote}
                 </blockquote>
 
-                {/* Social links */}
-                <div className="flex items-center gap-3 pt-2 border-t border-white/5">
-                  <a href={founder.links.twitter} className="flex items-center gap-2 text-xs text-[#8B949E] hover:text-white transition-colors">
-                    <ExternalLink size={13} /> Twitter
-                  </a>
-                  <a href={founder.links.linkedin} className="flex items-center gap-2 text-xs text-[#8B949E] hover:text-white transition-colors">
-                    <ExternalLink size={13} /> LinkedIn
-                  </a>
+                <div
+                  className="flex items-center gap-4 pt-4 border-t"
+                  style={{ borderColor: 'rgba(255,255,255,0.05)' }}
+                >
+                  {['Twitter', 'LinkedIn'].map((link) => (
+                    <a
+                      key={link}
+                      href="#"
+                      className="flex items-center gap-1.5 text-xs font-medium text-white/30 hover:text-white transition-colors"
+                    >
+                      <ExternalLink size={12} />
+                      {link}
+                    </a>
+                  ))}
                 </div>
               </div>
             </motion.div>

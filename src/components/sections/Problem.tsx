@@ -2,111 +2,68 @@ import { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 const stats = [
-  {
-    prefix: '$',
-    value: 140,
-    suffix: 'B+',
-    desc: 'in crypto lost permanently each year',
-    color: 'text-red-400',
-    accent: 'border-red-500/30',
-    bg: 'bg-red-500/5',
-  },
-  {
-    prefix: '',
-    value: 89,
-    suffix: '%',
-    desc: 'of families locked out of digital assets after a death',
-    color: 'text-amber-400',
-    accent: 'border-amber-500/30',
-    bg: 'bg-amber-500/5',
-    showBar: true,
-  },
-  {
-    prefix: '',
-    value: 3,
-    suffix: ' min',
-    desc: 'to protect your entire legacy with Transfer Legacy',
-    color: 'text-emerald-400',
-    accent: 'border-emerald-500/30',
-    bg: 'bg-emerald-500/5',
-  },
+  { prefix: '$', value: 140, suffix: 'B+', desc: 'in crypto lost permanently each year', color: '#f87171', glow: 'rgba(248,113,113,0.15)' },
+  { prefix: '', value: 89, suffix: '%',  desc: 'of families locked out of digital assets after a death', color: '#fb923c', glow: 'rgba(251,146,60,0.15)', showBar: true },
+  { prefix: '', value: 3,  suffix: ' min', desc: 'to protect your entire legacy with Transfer Legacy', color: '#34d399', glow: 'rgba(52,211,153,0.15)' },
 ];
 
-function StatCard({ stat, visible }: { stat: typeof stats[0]; visible: boolean }) {
+function AnimatedCounter({ target, delay }: { target: number; delay: number }) {
   const [count, setCount] = useState(0);
+  const [started, setStarted] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    if (!visible) return;
-    const target = stat.value;
-    const duration = 2000;
-    const step = 20;
-    const increment = Math.max(1, Math.ceil((target / duration) * step));
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        setCount(target);
-        clearInterval(timer);
-      } else {
-        setCount(current);
-      }
-    }, step);
-    return () => clearInterval(timer);
-  }, [visible, stat.value]);
-
-  return (
-    <div className={`${stat.bg} border ${stat.accent} rounded-2xl p-8 flex flex-col gap-3 hover:scale-[1.02] transition-transform duration-300`}>
-      <div className={`text-5xl md:text-6xl font-display font-black ${stat.color} leading-tight`}>
-        {stat.prefix}{count}{stat.suffix}
-      </div>
-      {stat.showBar && (
-        <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden mt-1">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: visible ? `${stat.value}%` : 0 }}
-            transition={{ duration: 2, ease: 'easeOut', delay: 0.3 }}
-            className="h-full rounded-full bg-amber-400/60"
-          />
-        </div>
-      )}
-      <p className="text-[#8B949E] text-sm leading-relaxed">{stat.desc}</p>
-    </div>
-  );
-}
-
-export default function Problem() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold: 0.2 }
-    );
+    const observer = new IntersectionObserver(([e]) => { if (e.isIntersecting) setStarted(true); }, { threshold: 0.5 });
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
 
-  return (
-    <section id="problem" ref={ref} className="py-16 bg-[#0B0E14]">
-      <div className="max-w-7xl mx-auto px-6">
+  useEffect(() => {
+    if (!started) return;
+    const timer = setTimeout(() => {
+      let cur = 0;
+      const step = setInterval(() => {
+        cur += Math.ceil(target / 50);
+        if (cur >= target) { setCount(target); clearInterval(step); }
+        else setCount(cur);
+      }, 30);
+      return () => clearInterval(step);
+    }, delay * 1000);
+    return () => clearTimeout(timer);
+  }, [started, target, delay]);
 
-        {/* Header */}
+  return <span ref={ref}>{count}</span>;
+}
+
+export default function Problem() {
+  return (
+    <section id="problem" className="relative py-28 overflow-hidden" style={{ background: '#0C0E18' }}>
+      {/* Gradient accent top */}
+      <div className="absolute top-0 left-0 right-0 h-px"
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(249,115,22,0.4), transparent)' }}
+      />
+
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Section header */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="mb-16 max-w-3xl"
+          className="mb-20 max-w-3xl"
         >
-          <p className="text-xs font-bold tracking-[0.2em] uppercase text-indigo-400 mb-5">The Problem</p>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-[#F0F6FC] leading-[1.1]">
-            $140 Billion in crypto disappears every year.{' '}
-            <span className="text-[#8B949E] font-normal">Most of it because no one told their family.</span>
+          <p className="text-xs font-bold tracking-[0.22em] uppercase mb-5"
+            style={{ background: 'linear-gradient(135deg, #f9a8d4, #f97316)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+          >
+            The Problem
+          </p>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.08] tracking-tight">
+            $140 Billion in crypto vanishes every year.{' '}
+            <span className="text-white/30 font-light">No one told their family.</span>
           </h2>
         </motion.div>
 
-        {/* Stats — distinct cards */}
+        {/* Stat cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20">
           {stats.map((stat, i) => (
             <motion.div
@@ -114,50 +71,75 @@ export default function Problem() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.15, duration: 0.6 }}
+              transition={{ delay: i * 0.14, duration: 0.65 }}
+              className="relative rounded-3xl p-8 border border-white/[0.07] overflow-hidden group hover:-translate-y-1 transition-all duration-300"
+              style={{ background: '#151A28' }}
             >
-              <StatCard stat={stat} visible={visible} />
+              {/* Glow */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ background: `radial-gradient(circle at 30% 30%, ${stat.glow}, transparent 70%)` }}
+              />
+              <div className="text-6xl md:text-7xl font-black leading-none mb-3" style={{ color: stat.color }}>
+                {stat.prefix}<AnimatedCounter target={stat.value} delay={i * 0.15} />{stat.suffix}
+              </div>
+              {stat.showBar && (
+                <motion.div className="w-full h-1 rounded-full mb-3 overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${stat.value}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 2, ease: 'easeOut', delay: 0.4 }}
+                    className="h-full rounded-full"
+                    style={{ background: stat.color }}
+                  />
+                </motion.div>
+              )}
+              <p className="text-white/40 text-sm leading-relaxed relative z-10">{stat.desc}</p>
             </motion.div>
           ))}
         </div>
 
-        {/* Narrative story */}
+        {/* Narrative split */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-3xl border border-white/5 overflow-hidden"
+          className="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-3xl overflow-hidden border border-white/[0.06]"
         >
-          {/* Left — the painful reality */}
-          <div className="bg-[#151A25]/50 backdrop-blur-sm p-10 md:p-14 flex flex-col justify-center border-r border-white/5 relative overflow-hidden group hover:border-white/10 transition-colors">
-            <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-            <div className="inline-block text-xs font-bold tracking-widest uppercase text-red-400 bg-red-500/10 px-3 py-1.5 rounded-full mb-6 w-fit">
+          {/* Without */}
+          <div className="relative p-10 md:p-14 border-r border-white/[0.06] group overflow-hidden" style={{ background: '#130F14' }}>
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              style={{ background: 'radial-gradient(circle at 20% 20%, rgba(239,68,68,0.06), transparent 60%)' }}
+            />
+            <span className="inline-block text-xs font-bold tracking-widest uppercase text-red-400 bg-red-500/10 border border-red-500/15 px-3 py-1.5 rounded-full mb-7">
               Without Transfer Legacy
-            </div>
+            </span>
             <div className="space-y-5">
               {[
                 'Family discovers wallets but has no seed phrase',
                 'Exchange accounts frozen — no death certificate accepted',
-                'Years pass. Lawyers charge thousands. Access denied.',
+                'Years of lawyers. Thousands in fees. Access denied.',
                 'Your life\'s work: gone.',
               ].map((step, i) => (
                 <div key={i} className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-red-500/20 border border-red-500/30 flex items-center justify-center mt-0.5">
+                  <div className="flex-shrink-0 w-5 h-5 rounded-full border border-red-500/40 flex items-center justify-center mt-0.5">
                     <div className="w-2 h-2 rounded-full bg-red-500" />
                   </div>
-                  <p className="text-[#8B949E] text-sm leading-relaxed">{step}</p>
+                  <p className="text-white/40 text-sm leading-relaxed">{step}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right — the solution */}
-          <div className="bg-[#090C12]/50 backdrop-blur-sm p-10 md:p-14 flex flex-col justify-center relative overflow-hidden group hover:border-white/10 transition-colors">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-            <div className="inline-block text-xs font-bold tracking-widest uppercase text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full mb-6 w-fit">
+          {/* With */}
+          <div className="relative p-10 md:p-14 group overflow-hidden" style={{ background: '#0B1210' }}>
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              style={{ background: 'radial-gradient(circle at 80% 20%, rgba(52,211,153,0.06), transparent 60%)' }}
+            />
+            <span className="inline-block text-xs font-bold tracking-widest uppercase text-emerald-400 bg-emerald-500/10 border border-emerald-500/15 px-3 py-1.5 rounded-full mb-7">
               With Transfer Legacy
-            </div>
+            </span>
             <div className="space-y-5">
               {[
                 'Your vault is set up in 3 minutes',
@@ -166,17 +148,21 @@ export default function Problem() {
                 'Your legacy transfers exactly as you intended.',
               ].map((step, i) => (
                 <div key={i} className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mt-0.5">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <div className="flex-shrink-0 w-5 h-5 rounded-full border border-emerald-500/40 flex items-center justify-center mt-0.5">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400" />
                   </div>
-                  <p className="text-[#F0F6FC] text-sm leading-relaxed">{step}</p>
+                  <p className="text-white/75 text-sm leading-relaxed">{step}</p>
                 </div>
               ))}
             </div>
           </div>
         </motion.div>
-
       </div>
+
+      {/* Bottom gradient line */}
+      <div className="absolute bottom-0 left-0 right-0 h-px"
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(192,132,252,0.3), transparent)' }}
+      />
     </section>
   );
 }

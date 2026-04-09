@@ -137,6 +137,14 @@
     pointer-events: none;
   }
 
+  .animate-ping-slow {
+    animation: ping-slow 2.8s ease-out infinite;
+  }
+
+  .animate-float-slow {
+    animation: float-slow 5s ease-in-out infinite;
+  }
+
   .typewriter-cursor::after {
     content: '|';
     animation: blink 1s step-end infinite;

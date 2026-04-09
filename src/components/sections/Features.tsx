@@ -1,237 +1,240 @@
 import { motion } from 'framer-motion';
 import { Shield, Users, Zap, Key, Database, Bot } from 'lucide-react';
 
+const features = [
+  {
+    icon: Shield,
+    title: 'Zero-Knowledge Privacy',
+    desc: "Not even our engineers can see what you've stored. Your data is encrypted before it ever leaves your device.",
+    sub: '\u2192 We are mathematically incapable of reading your vault.',
+    accent: '#818cf8',
+    glow: 'rgba(129,140,248,0.1)',
+    border: 'rgba(129,140,248,0.18)',
+    span: 'lg:col-span-3',
+  },
+  {
+    icon: Users,
+    title: 'Multi-Guardian Recovery',
+    desc: "Trusted people each hold a fragment. No single point of failure.",
+    sub: '\u2192 Based on military-grade secret splitting.',
+    accent: '#fb923c',
+    glow: 'rgba(251,146,60,0.1)',
+    border: 'rgba(251,146,60,0.18)',
+    span: 'lg:col-span-2 lg:row-span-2',
+    tall: true,
+  },
+  {
+    icon: Key,
+    title: 'Crypto Native',
+    desc: 'BTC, ETH, SOL, seed phrases, hardware wallets. Templates for 50+ wallet types.',
+    tags: ['Bitcoin', 'Ethereum', 'Solana', 'Ledger', 'Trezor'],
+    accent: '#f97316',
+    glow: 'rgba(249,115,22,0.1)',
+    border: 'rgba(249,115,22,0.18)',
+    span: 'lg:col-span-2',
+  },
+  {
+    icon: Zap,
+    title: "Dead Man's Switch",
+    desc: "Smart inactivity detection with escalation stages \u2014 warnings first, then automatic transfer. Fully customisable from 7 days to 12 months.",
+    timeline: true,
+    accent: '#f43f5e',
+    glow: 'rgba(244,63,94,0.1)',
+    border: 'rgba(244,63,94,0.18)',
+    span: 'lg:col-span-3',
+  },
+  {
+    icon: Database,
+    title: 'All Digital Assets',
+    desc: 'Crypto, NFTs, social accounts, email, legal documents — one encrypted place.',
+    accent: '#c084fc',
+    glow: 'rgba(192,132,252,0.1)',
+    border: 'rgba(192,132,252,0.18)',
+    span: 'lg:col-span-2',
+  },
+  {
+    icon: Bot,
+    title: 'AI Legacy Planner',
+    desc: "Proactively spots gaps in your inheritance plan and tells you exactly what to fix — before it's too late.",
+    accent: '#22d3ee',
+    glow: 'rgba(34,211,238,0.1)',
+    border: 'rgba(34,211,238,0.18)',
+    span: 'lg:col-span-3',
+  },
+];
 
-function TimelineVisual() {
-  const events = [
-    { label: 'Active', color: 'bg-emerald-500', done: true },
-    { label: 'Missed check-in', color: 'bg-amber-500', done: true },
-    { label: 'Warning sent', color: 'bg-orange-500', done: true },
-    { label: 'Transfer Mode', color: 'bg-red-500 animate-pulse', done: false },
-  ];
-  return (
-    <div className="flex items-center gap-2 mt-6 w-full overflow-x-auto pb-2">
-      {events.map((e, i) => (
-        <div key={i} className="flex items-center gap-2 shrink-0">
-          <div className="flex flex-col items-center gap-1.5">
-            <div className={`w-3 h-3 rounded-full ${e.color}`} />
-            <span className="text-[10px] text-[#8B949E] whitespace-nowrap">{e.label}</span>
-          </div>
-          {i < events.length - 1 && (
-            <div className="w-8 h-px bg-white/15 shrink-0 mb-3" />
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
+const timelineEvents = [
+  { label: 'Active', color: '#34d399' },
+  { label: 'Missed check-in', color: '#fb923c' },
+  { label: 'Warning sent', color: '#f97316' },
+  { label: 'Transfer Mode', color: '#f43f5e', pulse: true },
+];
+
+const guardianDegrees = [0, 120, 240];
 
 export default function Features() {
   return (
-    <section className="py-20 bg-[#0B0E14]">
+    <section className="relative py-28 overflow-hidden" style={{ background: '#0C0E18' }}>
       <div className="max-w-7xl mx-auto px-6">
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
           className="mb-16"
         >
-          <p className="text-xs font-bold tracking-[0.2em] uppercase text-indigo-400 mb-5">Features</p>
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-[#F0F6FC] mb-3">
+          <p
+            className="text-xs font-bold tracking-[0.22em] uppercase mb-5"
+            style={{
+              background: 'linear-gradient(135deg, #fb923c, #f43f5e)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            Features
+          </p>
+          <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-2">
             Everything your family needs.
           </h2>
-          <p className="text-xl text-[#8B949E]">And nothing they don't.</p>
+          <p className="text-xl text-white/35">And nothing they don't.</p>
         </motion.div>
 
-        {/* BENTO GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 auto-rows-[minmax(260px,auto)]">
+        {/* Bento grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 auto-rows-[minmax(240px,auto)]">
+          {features.map((f, i) => {
+            const Icon = f.icon;
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08, duration: 0.6 }}
+                className={`relative ${f.span} rounded-3xl border overflow-hidden group transition-all duration-300 hover:-translate-y-1`}
+                style={{ background: '#131722', borderColor: f.border }}
+              >
+                {/* Hover glow */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={{ background: `radial-gradient(circle at 20% 20%, ${f.glow.replace('0.1)', '0.25)')}, transparent 65%)` }}
+                />
 
-          {/* Zero-Knowledge Security — large */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1, duration: 0.6 }}
-            className="lg:col-span-3 bg-[#151A25] border border-indigo-500/20 hover:border-indigo-500/40 rounded-3xl p-8 flex flex-col md:flex-row relative overflow-hidden group transition-all duration-300 hover:bg-[#111827]"
-          >
-            <div className="flex-1 flex flex-col z-10">
-              <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6 group-hover:bg-indigo-500/20 transition-colors">
-                <Shield size={22} className="text-indigo-400" />
-              </div>
-              <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-3">
-                Zero-Knowledge Privacy
-              </h3>
-              <p className="text-[#8B949E] leading-relaxed mb-4 max-w-sm">
-                Not even our engineers can see what you've stored. Your data is encrypted before it ever leaves your device.
-              </p>
-              <p className="text-xs text-indigo-300/70 font-mono bg-indigo-500/5 border border-indigo-500/10 rounded-lg px-3 py-2 w-fit">
-                → We are mathematically incapable of reading your vault.
-              </p>
-            </div>
-            {/* Decorative lock SVG */}
-            <div className="flex-shrink-0 flex items-center justify-center w-full md:w-48 mt-8 md:mt-0">
-              <svg viewBox="0 0 80 100" className="w-28 h-28 text-indigo-500/30 group-hover:text-indigo-500/50 transition-colors" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="10" y="40" width="60" height="50" rx="8" />
-                <path d="M25 40V28a15 15 0 0 1 30 0v12" />
-                <circle cx="40" cy="63" r="5" fill="currentColor" />
-                <line x1="40" y1="68" x2="40" y2="76" />
-              </svg>
-            </div>
-          </motion.div>
-
-          {/* Multi-Guardian Recovery — tall */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="lg:col-span-2 lg:row-span-2 bg-[#151A25] border border-amber-500/20 hover:border-amber-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#111510]"
-          >
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6 group-hover:bg-amber-500/20 transition-colors">
-              <Users size={22} className="text-amber-400" />
-            </div>
-            <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-3">
-              Multi-Guardian Recovery
-            </h3>
-            <p className="text-[#8B949E] leading-relaxed mb-3">
-              Trusted people each hold a fragment. No single person holds everything — no single point of failure.
-            </p>
-            <p className="text-xs text-amber-300/70 font-mono bg-amber-500/5 border border-amber-500/10 rounded-lg px-3 py-2 w-fit text-wrap">
-              → Based on military-grade secret splitting.
-            </p>
-
-            {/* Guardian network diagram */}
-            <div className="flex-1 flex items-center justify-center mt-8 relative">
-              {/* Center key */}
-              <div className="w-14 h-14 rounded-full bg-[#0B0E14] border-2 border-amber-500/40 flex items-center justify-center z-10 shadow-[0_0_20px_rgba(217,119,6,0.2)]">
-                <Key size={20} className="text-amber-400" />
-              </div>
-              {/* Orbiting guardians */}
-              {[0, 120, 240].map((deg, i) => {
-                const rad = (deg * Math.PI) / 180;
-                const x = Math.cos(rad) * 60;
-                const y = Math.sin(rad) * 60;
-                return (
+                <div className="relative z-10 p-8 h-full flex flex-col">
                   <div
-                    key={i}
-                    className="absolute w-10 h-10 bg-[#111] border border-amber-500/20 rounded-full flex items-center justify-center text-white text-xs font-bold"
-                    style={{ transform: `translate(${x}px, ${y}px)` }}
+                    className="w-11 h-11 rounded-2xl border flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110"
+                    style={{ background: f.glow, borderColor: f.border }}
                   >
-                    <div className="w-5 h-5 rounded-full bg-amber-500/20 flex items-center justify-center">
-                      <Users size={10} className="text-amber-400" />
-                    </div>
+                    <Icon size={20} style={{ color: f.accent }} />
                   </div>
-                );
-              })}
-              {/* Lines */}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none" overflow="visible">
-                {[0, 120, 240].map((deg, i) => {
-                  const rad = (deg * Math.PI) / 180;
-                  const cx = 0, cy = 0;
-                  const ex = cx + Math.cos(rad) * 60;
-                  const ey = cy + Math.sin(rad) * 60;
-                  return (
-                    <line
-                      key={i}
-                      x1="50%" y1="50%"
-                      x2={`calc(50% + ${ex}px)`}
-                      y2={`calc(50% + ${ey}px)`}
-                      stroke="rgba(217,119,6,0.2)"
-                      strokeWidth="1"
-                      strokeDasharray="4 4"
-                    />
-                  );
-                })}
-              </svg>
-            </div>
-          </motion.div>
 
-          {/* Bitcoin & Crypto Native — small */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="lg:col-span-2 bg-[#151A25] border border-orange-500/20 hover:border-orange-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#12100A]"
-          >
-            <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-6 group-hover:bg-orange-500/20 transition-colors">
-              <Key size={22} className="text-orange-400" />
-            </div>
-            <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-3">
-              Crypto Native
-            </h3>
-            <p className="text-[#8B949E] text-sm leading-relaxed mb-4">
-              BTC, ETH, SOL, seed phrases, hardware wallets. Templates for 50+ wallet types.
-            </p>
-            <div className="flex gap-2 flex-wrap">
-              {['Bitcoin', 'Ethereum', 'Solana', 'Ledger', 'Trezor'].map(t => (
-                <span key={t} className="text-[10px] font-semibold text-orange-400/70 bg-orange-500/10 border border-orange-500/15 px-2 py-1 rounded-md">
-                  {t}
-                </span>
-              ))}
-            </div>
-          </motion.div>
+                  <h3 className="text-xl font-black text-white mb-3 tracking-tight">{f.title}</h3>
+                  <p className="text-white/40 text-sm leading-relaxed mb-4">{f.desc}</p>
 
-          {/* Dead Man's Switch — large */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="lg:col-span-3 bg-[#151A25] border border-red-500/20 hover:border-red-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#130B0B]"
-          >
-            <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-6 group-hover:bg-red-500/20 transition-colors">
-              <Zap size={22} className="text-red-400" />
-            </div>
-            <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-3">
-              Dead Man's Switch
-            </h3>
-            <p className="text-[#8B949E] text-sm leading-relaxed mb-2 max-w-lg">
-              Smart inactivity detection with multiple escalation stages — warnings first, guardians contacted, then automatic transfer. Fully customizable from 7 days to 12 months.
-            </p>
-            <TimelineVisual />
-          </motion.div>
+                  {f.sub && (
+                    <p
+                      className="text-xs px-3 py-2 rounded-xl border font-mono w-fit mt-auto"
+                      style={{ color: `${f.accent}90`, background: f.glow, borderColor: f.border }}
+                    >
+                      {f.sub}
+                    </p>
+                  )}
 
-          {/* All Digital Assets */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-            className="lg:col-span-2 bg-[#151A25] border border-purple-500/20 hover:border-purple-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#0E0A12]"
-          >
-            <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-6 group-hover:bg-purple-500/20 transition-colors">
-              <Database size={22} className="text-purple-400" />
-            </div>
-            <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-3">
-              All Your Digital Assets
-            </h3>
-            <p className="text-[#8B949E] text-sm leading-relaxed">
-              Crypto, NFTs, social accounts, email, legal documents — everything in one encrypted place.
-            </p>
-          </motion.div>
+                  {/* Tags (Crypto Native) */}
+                  {f.tags && (
+                    <div className="flex flex-wrap gap-2 mt-auto">
+                      {f.tags.map(t => (
+                        <span
+                          key={t}
+                          className="text-[10px] font-bold px-2.5 py-1 rounded-lg border"
+                          style={{ color: `${f.accent}80`, background: f.glow, borderColor: f.border }}
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  )}
 
-          {/* AI Planner */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.6, duration: 0.6 }}
-            className="lg:col-span-3 bg-[#151A25] border border-cyan-500/20 hover:border-cyan-500/40 rounded-3xl p-8 flex flex-col md:flex-row gap-6 items-start relative overflow-hidden group transition-all duration-300 hover:bg-[#090F12]"
-          >
-            <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center group-hover:bg-cyan-500/20 transition-colors">
-              <Bot size={22} className="text-cyan-400" />
-            </div>
-            <div>
-              <h3 className="text-2xl font-display font-bold text-[#F0F6FC] mb-3">
-                AI Legacy Planner
-              </h3>
-              <p className="text-[#8B949E] text-sm leading-relaxed">
-                Proactively spots gaps in your inheritance plan and tells you exactly what to fix — before it's too late.
-              </p>
-            </div>
-          </motion.div>
+                  {/* Timeline (Dead Man's Switch) */}
+                  {f.timeline && (
+                    <div className="flex items-center gap-3 mt-6 overflow-x-auto pb-1">
+                      {timelineEvents.map((e, idx) => (
+                        <div key={idx} className="flex items-center gap-2 shrink-0">
+                          <div className="flex flex-col items-center gap-1.5">
+                            <div
+                              className="w-3 h-3 rounded-full"
+                              style={{
+                                backgroundColor: e.color,
+                                boxShadow: e.pulse ? `0 0 12px ${e.color}` : undefined,
+                                animation: e.pulse ? 'pulse 1.5s infinite' : undefined,
+                              }}
+                            />
+                            <span className="text-[10px] text-white/35 whitespace-nowrap">{e.label}</span>
+                          </div>
+                          {idx < timelineEvents.length - 1 && (
+                            <div className="w-10 h-px mb-3" style={{ background: 'rgba(255,255,255,0.1)' }} />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Guardian diagram (Multi-Guardian, tall cell) */}
+                  {f.tall && (
+                    <div className="flex-1 flex items-center justify-center mt-4 relative min-h-[160px]">
+                      <div
+                        className="w-14 h-14 rounded-full border-2 flex items-center justify-center z-10"
+                        style={{
+                          background: '#0C0E18',
+                          borderColor: f.border,
+                          boxShadow: `0 0 20px ${f.glow}`,
+                        }}
+                      >
+                        <Key size={20} style={{ color: f.accent }} />
+                      </div>
+                      {guardianDegrees.map((deg, idx) => {
+                        const rad = (deg * Math.PI) / 180;
+                        const x = Math.cos(rad) * 64;
+                        const y = Math.sin(rad) * 64;
+                        return (
+                          <div
+                            key={idx}
+                            className="absolute w-10 h-10 rounded-full border flex items-center justify-center"
+                            style={{
+                              background: '#0C0E18',
+                              borderColor: f.border,
+                              transform: `translate(${x}px, ${y}px)`,
+                            }}
+                          >
+                            <Users size={14} style={{ color: f.accent }} />
+                          </div>
+                        );
+                      })}
+                      <svg className="absolute inset-0 w-full h-full pointer-events-none" overflow="visible">
+                        {guardianDegrees.map((deg, idx) => {
+                          const rad = (deg * Math.PI) / 180;
+                          const ex = Math.cos(rad) * 64;
+                          const ey = Math.sin(rad) * 64;
+                          return (
+                            <line
+                              key={idx}
+                              x1="50%" y1="50%"
+                              x2={`calc(50% + ${ex}px)`}
+                              y2={`calc(50% + ${ey}px)`}
+                              stroke={f.border}
+                              strokeWidth="1"
+                              strokeDasharray="4 4"
+                            />
+                          );
+                        })}
+                      </svg>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
