@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://qpzogixvyfkdsdwtwsjo.supabase.co';
-const supabaseKey = 'sb_publishable_tNKc0yAwkGR21MtanQBj6Q_9XrJOGDv';
+const supabaseUrl = 'https://fwfxgweiggqmtdmwlhnz.supabase.co';
+const supabaseKey = 'sb_publishable_fI-X5oQu8bMaW7SXEQJaag_fMpxXFyY';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function checkConnection() {
