@@ -56,7 +56,7 @@ function StatCard({ stat, visible }: { stat: typeof stats[0]; visible: boolean }
 
   return (
     <div className={`${stat.bg} border ${stat.accent} rounded-2xl p-8 flex flex-col gap-3 hover:scale-[1.02] transition-transform duration-300`}>
-      <div className={`text-5xl md:text-6xl font-display font-black ${stat.color} leading-none`}>
+      <div className={`text-5xl md:text-6xl font-display font-black ${stat.color} leading-tight`}>
         {stat.prefix}{count}{stat.suffix}
       </div>
       {stat.showBar && (
@@ -88,7 +88,7 @@ export default function Problem() {
   }, []);
 
   return (
-    <section id="problem" ref={ref} className="py-28 bg-[#020409]">
+    <section id="problem" ref={ref} className="py-16 bg-[#0B0E14]">
       <div className="max-w-7xl mx-auto px-6">
 
         {/* Header */}
@@ -130,7 +130,8 @@ export default function Problem() {
           className="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-3xl border border-white/5 overflow-hidden"
         >
           {/* Left — the painful reality */}
-          <div className="bg-[#0D1117] p-10 md:p-14 flex flex-col justify-center border-r border-white/5">
+          <div className="bg-[#151A25]/50 backdrop-blur-sm p-10 md:p-14 flex flex-col justify-center border-r border-white/5 relative overflow-hidden group hover:border-white/10 transition-colors">
+            <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             <div className="inline-block text-xs font-bold tracking-widest uppercase text-red-400 bg-red-500/10 px-3 py-1.5 rounded-full mb-6 w-fit">
               Without Transfer Legacy
             </div>
@@ -152,7 +153,8 @@ export default function Problem() {
           </div>
 
           {/* Right — the solution */}
-          <div className="bg-[#010208] p-10 md:p-14 flex flex-col justify-center">
+          <div className="bg-[#090C12]/50 backdrop-blur-sm p-10 md:p-14 flex flex-col justify-center relative overflow-hidden group hover:border-white/10 transition-colors">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             <div className="inline-block text-xs font-bold tracking-widest uppercase text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full mb-6 w-fit">
               With Transfer Legacy
             </div>

@@ -4,10 +4,81 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>Familink | Secure Digital Inheritance Vault</title>
+    <meta name="title" content="Familink | Secure Digital Inheritance Vault" />
+    <meta name="description" content="Transfer the access. Protect the legacy. The only platform that securely and automatically transfers your crypto and digital assets to your family." />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://familink.io/" />
+    <meta property="og:title" content="Familink | Secure Digital Inheritance Vault" />
+    <meta property="og:description" content="Transfer the access. Protect the legacy. The only platform that securely and automatically transfers your crypto and digital assets to your family." />
+    <!-- TODO: Update with real deployed asset URL -->
+    <meta property="og:image" content="https://familink.io/og-image.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://familink.io/" />
+    <meta property="twitter:title" content="Familink | Secure Digital Inheritance Vault" />
+    <meta property="twitter:description" content="Transfer the access. Protect the legacy. The only platform that securely and automatically transfers your crypto and digital assets to your family." />
+    <meta property="twitter:image" content="https://familink.io/og-image.png" />
+
+    <!-- Initial Load & Flash of Unstyled Content Prevention -->
+    <style>
+      body {
+        margin: 0;
+        background-color: #020409;
+        color: #F0F6FC;
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      .app-preloader {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #020409;
+        z-index: 9999;
+      }
+      .app-preloader .spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid rgba(79, 92, 255, 0.2);
+        border-top-color: #4F5CFF;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+
+    <!-- Schema.org JSON-LD Markup for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Familink",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Transfer the access. Protect the legacy. Secure digital inheritance vault for cryptocurrency and assets."
+    }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Loader is instantly unmounted by React upon hydration -->
+      <div class="app-preloader">
+        <div class="spinner"></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -21,11 +21,11 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen pt-20 flex items-center overflow-hidden bg-[#020409]">
+    <section className="relative min-h-screen pt-20 flex items-center overflow-hidden bg-[#0B0E14]">
       {/* Subtle ambient background — NOT the whole canvas */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/3 w-[700px] h-[700px] bg-indigo-800/8 rounded-full blur-[140px]" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-900/8 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 left-1/3 w-[700px] h-[700px] bg-indigo-600/15 rounded-full blur-[140px]" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-[120px]" />
       </div>
 
       {/* 3D Scene — ambient, lower opacity, desktop only */}
@@ -36,7 +36,7 @@ export default function Hero() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 w-full relative z-10">
-        <div className="w-full lg:w-[55%] flex flex-col justify-center py-20 lg:py-32">
+        <div className="w-full lg:w-[55%] flex flex-col justify-center py-16 lg:py-24">
 
           {/* Social proof badge — real, human */}
           <motion.div
@@ -49,7 +49,7 @@ export default function Hero() {
               {avatars.map((a) => (
                 <div
                   key={a.initials}
-                  className={`w-8 h-8 rounded-full ${a.bg} border-2 border-[#020409] flex items-center justify-center text-white text-[10px] font-bold`}
+                  className={`w-8 h-8 rounded-full ${a.bg} border-2 border-[#0B0E14] flex items-center justify-center text-white text-[10px] font-bold`}
                 >
                   {a.initials}
                 </div>

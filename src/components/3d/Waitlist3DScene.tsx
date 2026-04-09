@@ -37,11 +37,11 @@ export function Waitlist3DScene() {
   return (
     <div className="w-full h-full absolute inset-0">
       <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
-        <color attach="background" args={['#020409']} />
-        
         {/* Environment Lights */}
-        <ambientLight intensity={0.2} />
-        <pointLight position={[-10, 10, 10]} intensity={2} color="#4F5CFF" /> {/* Indigo point from top-left */}
+        <ambientLight intensity={1} />
+        <directionalLight position={[5, 5, 5]} intensity={2.5} color="#e0e7ff" />
+        <pointLight position={[-10, 10, 10]} intensity={4} color="#4F5CFF" />
+        <pointLight position={[10, -10, 5]} intensity={3} color="#a855f7" />
         
         {/* Floating Particles */}
         <ParticleField count={200} isMobile={isMobile} />
@@ -55,7 +55,7 @@ export function Waitlist3DScene() {
         {/* Circuit board grid on ground */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -4, 0]}>
           <planeGeometry args={[50, 50, 50, 50]} />
-          <meshBasicMaterial color="#4F5CFF" wireframe opacity={0.03} transparent />
+          <meshBasicMaterial color="#8b5cf6" wireframe opacity={0.15} transparent />
         </mesh>
 
         {/* Minimal interaction to prevent breaking the layout, but allow slight view change */}

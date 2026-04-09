@@ -73,7 +73,7 @@ export default function SocialProof() {
   const progress = Math.round((2417 / 5000) * 100);
 
   return (
-    <section ref={ref} className="py-20 bg-[#0D1117] border-y border-white/5">
+    <section ref={ref} className="py-12 bg-[#151A25] border-y border-white/5 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-16">
 
@@ -115,7 +115,7 @@ export default function SocialProof() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.5 }}
-                className={`bg-[#020409] border border-white/5 border-l-4 ${testimonials[active].accentColor} rounded-2xl p-8 relative`}
+                className={`bg-[#0B0E14] border border-white/5 border-l-4 ${testimonials[active].accentColor} rounded-2xl p-8 relative`}
               >
                 {testimonials[active].verified && (
                   <div className="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full mb-4">

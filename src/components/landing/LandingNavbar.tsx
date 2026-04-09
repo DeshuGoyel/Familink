@@ -43,7 +43,7 @@ export default function LandingNavbar() {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-[#020409]/90 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/40'
+            ? 'bg-[#0B0E14]/90 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/40'
             : 'bg-transparent'
         }`}
       >
@@ -103,7 +103,7 @@ export default function LandingNavbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'tween', duration: 0.3 }}
-            className="fixed inset-0 z-[100] bg-[#020409] flex flex-col px-8 pt-24 pb-12"
+            className="fixed inset-0 z-[100] bg-[#0B0E14] flex flex-col px-8 pt-24 pb-12"
           >
             <button
               className="absolute top-6 right-6 text-white"

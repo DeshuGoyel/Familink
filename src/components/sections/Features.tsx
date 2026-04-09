@@ -28,7 +28,7 @@ function TimelineVisual() {
 
 export default function Features() {
   return (
-    <section className="py-28 bg-[#020409]">
+    <section className="py-20 bg-[#0B0E14]">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -53,7 +53,7 @@ export default function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1, duration: 0.6 }}
-            className="lg:col-span-3 bg-[#0D1117] border border-indigo-500/20 hover:border-indigo-500/40 rounded-3xl p-8 flex flex-col md:flex-row relative overflow-hidden group transition-all duration-300 hover:bg-[#111827]"
+            className="lg:col-span-3 bg-[#151A25] border border-indigo-500/20 hover:border-indigo-500/40 rounded-3xl p-8 flex flex-col md:flex-row relative overflow-hidden group transition-all duration-300 hover:bg-[#111827]"
           >
             <div className="flex-1 flex flex-col z-10">
               <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6 group-hover:bg-indigo-500/20 transition-colors">
@@ -86,7 +86,7 @@ export default function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="lg:col-span-2 lg:row-span-2 bg-[#0D1117] border border-amber-500/20 hover:border-amber-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#111510]"
+            className="lg:col-span-2 lg:row-span-2 bg-[#151A25] border border-amber-500/20 hover:border-amber-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#111510]"
           >
             <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6 group-hover:bg-amber-500/20 transition-colors">
               <Users size={22} className="text-amber-400" />
@@ -104,7 +104,7 @@ export default function Features() {
             {/* Guardian network diagram */}
             <div className="flex-1 flex items-center justify-center mt-8 relative">
               {/* Center key */}
-              <div className="w-14 h-14 rounded-full bg-[#020409] border-2 border-amber-500/40 flex items-center justify-center z-10 shadow-[0_0_20px_rgba(217,119,6,0.2)]">
+              <div className="w-14 h-14 rounded-full bg-[#0B0E14] border-2 border-amber-500/40 flex items-center justify-center z-10 shadow-[0_0_20px_rgba(217,119,6,0.2)]">
                 <Key size={20} className="text-amber-400" />
               </div>
               {/* Orbiting guardians */}
@@ -153,7 +153,7 @@ export default function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="lg:col-span-2 bg-[#0D1117] border border-orange-500/20 hover:border-orange-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#12100A]"
+            className="lg:col-span-2 bg-[#151A25] border border-orange-500/20 hover:border-orange-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#12100A]"
           >
             <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-6 group-hover:bg-orange-500/20 transition-colors">
               <Key size={22} className="text-orange-400" />
@@ -179,7 +179,7 @@ export default function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="lg:col-span-3 bg-[#0D1117] border border-red-500/20 hover:border-red-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#130B0B]"
+            className="lg:col-span-3 bg-[#151A25] border border-red-500/20 hover:border-red-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#130B0B]"
           >
             <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-6 group-hover:bg-red-500/20 transition-colors">
               <Zap size={22} className="text-red-400" />
@@ -199,7 +199,7 @@ export default function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.5, duration: 0.6 }}
-            className="lg:col-span-2 bg-[#0D1117] border border-purple-500/20 hover:border-purple-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#0E0A12]"
+            className="lg:col-span-2 bg-[#151A25] border border-purple-500/20 hover:border-purple-500/40 rounded-3xl p-8 flex flex-col relative overflow-hidden group transition-all duration-300 hover:bg-[#0E0A12]"
           >
             <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-6 group-hover:bg-purple-500/20 transition-colors">
               <Database size={22} className="text-purple-400" />
@@ -218,7 +218,7 @@ export default function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.6, duration: 0.6 }}
-            className="lg:col-span-3 bg-[#0D1117] border border-cyan-500/20 hover:border-cyan-500/40 rounded-3xl p-8 flex flex-col md:flex-row gap-6 items-start relative overflow-hidden group transition-all duration-300 hover:bg-[#090F12]"
+            className="lg:col-span-3 bg-[#151A25] border border-cyan-500/20 hover:border-cyan-500/40 rounded-3xl p-8 flex flex-col md:flex-row gap-6 items-start relative overflow-hidden group transition-all duration-300 hover:bg-[#090F12]"
           >
             <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center group-hover:bg-cyan-500/20 transition-colors">
               <Bot size={22} className="text-cyan-400" />

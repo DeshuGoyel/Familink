@@ -10,7 +10,7 @@ const trustBadges = [
 
 export default function FinalCTA() {
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center bg-[#020409] overflow-hidden py-32">
+    <section className="relative min-h-[70vh] flex items-center justify-center bg-[#0B0E14] overflow-hidden py-24">
       {/* Noise + radial glow background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.03]"

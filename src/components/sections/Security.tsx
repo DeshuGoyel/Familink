@@ -119,7 +119,7 @@ export default function Security() {
   }, []);
 
   return (
-    <section id="security" ref={ref} className="py-28 bg-[#0A0D18]">
+    <section id="security" ref={ref} className="py-20 bg-[#11151F]">
       <div className="max-w-7xl mx-auto px-6">
 
         {/* Top */}
@@ -150,7 +150,7 @@ export default function Security() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.12, duration: 0.5 }}
-                  className="flex items-start gap-5 p-5 rounded-2xl bg-[#0D1117] border border-white/5 hover:border-indigo-500/20 transition-colors"
+                  className="flex items-start gap-5 p-5 rounded-2xl bg-[#151A25] border border-white/5 hover:border-indigo-500/20 transition-colors"
                 >
                   <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
                     <CheckCircle2 size={18} className="text-indigo-400" />

@@ -69,7 +69,7 @@ export default function Pricing() {
   const progress = Math.round((CLAIMED / TOTAL_SPOTS) * 100);
 
   return (
-    <section id="pricing" ref={ref} className="py-28 bg-[#0A0D18]">
+    <section id="pricing" ref={ref} className="py-20 bg-[#11151F]">
       <div className="max-w-7xl mx-auto px-6">
 
         {/* Founding spots progress — above heading */}
@@ -110,7 +110,7 @@ export default function Pricing() {
           </p>
 
           {/* Toggle */}
-          <div className="inline-flex items-center bg-[#0D1117] border border-white/10 rounded-full p-1.5">
+          <div className="inline-flex items-center bg-[#151A25] border border-white/10 rounded-full p-1.5">
             <button
               onClick={() => setYearly(false)}
               className={`px-5 py-2 rounded-full text-sm font-bold transition-all ${!yearly ? 'bg-[#F0F6FC] text-[#020409]' : 'text-[#8B949E] hover:text-[#F0F6FC]'}`}
@@ -138,8 +138,8 @@ export default function Pricing() {
               transition={{ delay: i * 0.15, duration: 0.6 }}
               className={`relative rounded-3xl border p-8 flex flex-col transition-all duration-300 ${
                 plan.highlighted
-                  ? 'border-indigo-500/50 bg-[#0D1117] shadow-[0_0_50px_rgba(79,92,255,0.15)]'
-                  : 'border-white/10 bg-[#0D1117] hover:border-white/20 hover:-translate-y-1'
+                  ? 'border-indigo-500/50 bg-[#151A25] shadow-[0_0_50px_rgba(79,92,255,0.15)]'
+                  : 'border-white/10 bg-[#151A25] hover:border-white/20 hover:-translate-y-1'
               }`}
             >
               {plan.highlighted && (

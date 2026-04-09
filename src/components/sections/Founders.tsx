@@ -26,7 +26,7 @@ const founders = [
 
 export default function Founders() {
   return (
-    <section id="founders" className="py-28 bg-[#020409]">
+    <section id="founders" className="py-20 bg-[#0B0E14]">
       <div className="max-w-7xl mx-auto px-6">
 
         <motion.div
@@ -52,7 +52,7 @@ export default function Founders() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15, duration: 0.7 }}
-              className={`group rounded-3xl border ${founder.accent} bg-[#0D1117] overflow-hidden flex flex-col`}
+              className={`group rounded-3xl border ${founder.accent} bg-[#151A25] overflow-hidden flex flex-col`}
             >
               {/* Photo banner */}
               <div className="relative h-64 overflow-hidden">

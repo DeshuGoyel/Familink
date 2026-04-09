@@ -66,7 +66,7 @@ const testimonials = [
 
 function TestimonialCard({ t }: { t: typeof testimonials[0] }) {
   return (
-    <div className={`shrink-0 bg-[#0D1117] border border-white/5 hover:border-indigo-500/20 rounded-2xl p-6 flex flex-col transition-colors ${t.size === 'tall' ? 'w-[360px]' : 'w-[320px]'}`}>
+    <div className={`shrink-0 bg-[#151A25] border border-white/5 hover:border-indigo-500/20 rounded-2xl p-6 flex flex-col transition-colors ${t.size === 'tall' ? 'w-[360px]' : 'w-[320px]'}`}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-1">
           {[...Array(t.stars)].map((_, i) => (
@@ -99,7 +99,7 @@ export default function Testimonials() {
   const doubled = [...testimonials, ...testimonials];
 
   return (
-    <section className="py-28 bg-[#020409] overflow-hidden">
+    <section className="py-20 bg-[#0B0E14] overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 mb-14">
         <motion.div
           initial={{ opacity: 0, y: 24 }}

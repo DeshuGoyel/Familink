@@ -65,7 +65,7 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="py-28 bg-[#0A0D18]">
+    <section id="faq" className="py-20 bg-[#11151F]">
       <div className="max-w-4xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -91,7 +91,7 @@ export default function FAQ() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.06, duration: 0.5 }}
-                className={`bg-[#0D1117] border border-l-4 transition-colors duration-300 rounded-2xl overflow-hidden ${
+                className={`bg-[#151A25] border border-l-4 transition-colors duration-300 rounded-2xl overflow-hidden ${
                   isOpen
                     ? `border-white/10 ${categoryBorder[faq.category]}`
                     : 'border-white/5 border-l-white/10 hover:border-white/10'
