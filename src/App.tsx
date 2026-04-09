@@ -4,7 +4,9 @@ import MainWebsite from './pages/MainWebsite';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from 'react-hot-toast';
 
-const SHOW_LANDING = import.meta.env.VITE_SHOW_LANDING === 'true';
+// Show landing page until May 15 2026, then switch to full app automatically
+const LAUNCH_DATE = new Date('2026-05-15T00:00:00Z');
+const SHOW_LANDING = new Date() < LAUNCH_DATE;
 
 class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean, error: any}> {
   constructor(props: {children: React.ReactNode}) {
@@ -26,7 +28,7 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasErr
         </div>
       );
     }
-    return this.props.children; 
+    return this.props.children;
   }
 }
 
@@ -35,16 +37,16 @@ export default function App() {
     return (
       <ErrorBoundary>
         <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
-           <React.Suspense fallback={<div style={{color:'white'}}>Loading...</div>}>
-             <LandingPage />
-           </React.Suspense>
-           <Toaster position="top-right" toastOptions={{
-             style: {
-               background: '#0D1117',
-               color: '#F0F6FC',
-               border: '1px solid rgba(79,92,255,0.2)'
-             }
-           }}/>
+          <React.Suspense fallback={<div style={{ color: 'white' }}>Loading...</div>}>
+            <LandingPage />
+          </React.Suspense>
+          <Toaster position="top-right" toastOptions={{
+            style: {
+              background: '#0D1117',
+              color: '#F0F6FC',
+              border: '1px solid rgba(79,92,255,0.2)',
+            },
+          }} />
         </ThemeProvider>
       </ErrorBoundary>
     );
