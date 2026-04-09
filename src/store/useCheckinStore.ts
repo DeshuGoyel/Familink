@@ -110,7 +110,7 @@ export const useCheckinStore = create<CheckinState>()(
       }))
     }),
     {
-      name: 'linkkey_checkins_store', // Maps to the requested localStorage data concept
+      name: 'transfer_legacy_checkins_store', // Maps to the requested localStorage data concept
     }
   )
 );

@@ -106,7 +106,7 @@ export const useB2BStore = create<B2BState>()(
       }))
     }),
     {
-      name: 'linkkey_b2b_api_keys',
+      name: 'transfer_legacy_b2b_api_keys',
     }
   )
 );

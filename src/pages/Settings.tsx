@@ -227,7 +227,7 @@ export default function Settings() {
                     <div>
                       <h2 className="text-xl font-bold text-danger mb-2">Delete Account</h2>
                       <p className="text-muted text-sm">
-                        Permanently delete your LinkKey account and all data. Your vault will be destroyed and cryptographic keys purged. This action cannot be undone.
+                        Permanently delete your Transfer Legacy account and all data. Your vault will be destroyed and cryptographic keys purged. This action cannot be undone.
                       </p>
                     </div>
 

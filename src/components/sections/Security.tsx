@@ -5,28 +5,28 @@ import { CheckCircle2 } from 'lucide-react';
 const comparisonRows = [
   {
     factor: 'If you die unexpectedly',
-    linkkey: 'Automatic guided transfer to your heirs',
+    transferLegacy: 'Automatic guided transfer to your heirs',
     hardware: 'Lost forever without PIN & phrase',
     paper: 'Lost if the paper is lost or hidden',
     manager: 'Account locked — no death verification',
   },
   {
     factor: 'Technical knowledge required',
-    linkkey: 'None — AI guides heirs step by step',
+    transferLegacy: 'None — AI guides heirs step by step',
     hardware: 'Full blockchain knowledge needed',
     paper: 'Must know what a wallet even is',
     manager: 'Still need master password & 2FA device',
   },
   {
     factor: 'Theft protection',
-    linkkey: 'Zero-knowledge, no single point of failure',
+    transferLegacy: 'Zero-knowledge, no single point of failure',
     hardware: 'Physical theft can mean full loss',
     paper: 'Anyone who finds the paper has everything',
     manager: 'Single point of failure — one password',
   },
   {
     factor: 'Family access after death',
-    linkkey: '✓ Purpose-built for inheritance',
+    transferLegacy: '✓ Purpose-built for inheritance',
     hardware: '✗ Not designed for this',
     paper: '~ Only if they find and read it',
     manager: '✗ Requires your device & recovery codes',
@@ -232,7 +232,7 @@ export default function Security() {
                     }}
                   >
                     <td className="py-4 px-6 text-white/35 text-xs leading-relaxed font-medium">{row.factor}</td>
-                    <td className="py-4 px-6 text-center text-xs font-semibold" style={{ color: '#34d399' }}>{row.linkkey}</td>
+                    <td className="py-4 px-6 text-center text-xs font-semibold" style={{ color: '#34d399' }}>{row.transferLegacy}</td>
                     <td className="py-4 px-6 text-center text-xs text-white/30">{row.hardware}</td>
                     <td className="py-4 px-6 text-center text-xs text-white/30">{row.paper}</td>
                     <td className="py-4 px-6 text-center text-xs text-white/30">{row.manager}</td>

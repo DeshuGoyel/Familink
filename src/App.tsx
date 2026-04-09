@@ -5,8 +5,7 @@ import { ThemeProvider } from 'next-themes';
 import { Toaster } from 'react-hot-toast';
 
 // Show landing page until May 15 2026, then switch to full app automatically
-const LAUNCH_DATE = new Date('2026-05-15T00:00:00Z');
-const SHOW_LANDING = new Date() < LAUNCH_DATE;
+const SHOW_LANDING = new Date() < new Date('2026-05-15T00:00:00Z');
 
 class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean, error: any}> {
   constructor(props: {children: React.ReactNode}) {

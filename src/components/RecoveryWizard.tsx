@@ -73,7 +73,7 @@ export default function RecoveryWizard({ heirName, onClose }: Props) {
                   <Users size={32} />
                 </div>
                 <h3 className="text-3xl font-bold text-text mb-4">Guardian Approval</h3>
-                <p className="text-muted mb-8">LinkKey requires 2 out of 3 assigned guardians to approve this recovery request.</p>
+                <p className="text-muted mb-8">Transfer Legacy requires 2 out of 3 assigned guardians to approve this recovery request.</p>
                 
                 <div className="space-y-4 mb-8">
                   {displayGuardians.map((g, i) => (

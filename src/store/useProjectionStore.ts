@@ -39,7 +39,7 @@ export const useProjectionStore = create<ProjectionState>()(
       }
     }),
     {
-      name: 'linkkey_projections',
+      name: 'transfer_legacy_projections',
     }
   )
 );

@@ -53,7 +53,7 @@ export default function Onboarding() {
         <AnimatePresence mode="wait">
           {step === 1 && (
             <motion.div key="1" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="w-full max-w-md text-center">
-              <h1 className="text-4xl font-bold text-text mb-4">Welcome to LinkKey</h1>
+              <h1 className="text-4xl font-bold text-text mb-4">Welcome to Transfer Legacy</h1>
               <p className="text-xl text-muted mb-8">Let's protect your digital legacy in 5 minutes.</p>
               <Button size="lg" onClick={nextStep} fullWidth className="py-4 text-lg">
                 Let's Go <ArrowRight className="ml-2 inline" />

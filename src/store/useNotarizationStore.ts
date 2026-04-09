@@ -45,7 +45,7 @@ export const useNotarizationStore = create<NotarizationState>()(
       }
     }),
     {
-      name: 'linkkey_vault_hashes',
+      name: 'transfer_legacy_vault_hashes',
     }
   )
 );

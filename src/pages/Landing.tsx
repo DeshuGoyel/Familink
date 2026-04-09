@@ -46,7 +46,7 @@ export default function Landing() {
             transition={{ delay: 0.8, duration: 1 }}
             className="text-lg md:text-xl text-muted max-w-2xl mb-10"
           >
-            LinkKey uses AI and zero-knowledge cryptography to secure your crypto, NFTs, and digital assets for the people you love.
+            Transfer Legacy uses AI and zero-knowledge cryptography to secure your crypto, NFTs, and digital assets for the people you love.
           </motion.p>
           
           <motion.div 
@@ -156,7 +156,7 @@ export default function Landing() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { title: 'Zero-Knowledge Privacy', icon: Fingerprint, desc: 'Not even LinkKey can see your keys or data. We mathematically cannot access your vault.' },
+              { title: 'Zero-Knowledge Privacy', icon: Fingerprint, desc: 'Not even Transfer Legacy can see your keys or data. We mathematically cannot access your vault.' },
               { title: 'Multi-Guardian Recovery', icon: ShieldCheck, desc: 'Shamir\'s Secret Sharing ensures distributed trust. No single person can access your assets alone.' },
               { title: 'Family-Friendly Heirs', icon: Users, desc: 'AI guides non-technical heirs step by step, shielding them from blockchain complexity.' },
               { title: 'Multi-Asset Support', icon: Database, desc: 'Protect Crypto, NFTs, Seed Phrases, Email accounts, Socials, and Legal Documents.' },

@@ -52,7 +52,7 @@ export const usePassportStore = create<PassportState>()(
           blood: state.passport.bloodGroup,
           emergency: state.passport.emergencyContact
         };
-        const qrString = `linkkey:passport:${btoa(JSON.stringify(publicData))}`;
+        const qrString = `transfer_legacy:passport:${btoa(JSON.stringify(publicData))}`;
         return { passport: { ...state.passport, qrCodeData: qrString, lastUpdated: new Date().toISOString() } };
       }),
       
@@ -61,7 +61,7 @@ export const usePassportStore = create<PassportState>()(
       }))
     }),
     {
-      name: 'linkkey_identity_passport',
+      name: 'transfer_legacy_identity_passport',
     }
   )
 );

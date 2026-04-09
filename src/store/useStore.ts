@@ -64,7 +64,7 @@ interface AppState {
 export const useStore = create<AppState>((set) => ({
   user: {
     name: "John Asha",
-    email: "john@linkkey.com",
+    email: "john@transferlegacy.com",
     avatar: null,
     score: 72,
     plan: "Family",

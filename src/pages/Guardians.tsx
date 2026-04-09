@@ -29,9 +29,9 @@ export default function Guardians() {
   });
 
   const templates = {
-    Formal: "I am adding you as a guardian to my LinkKey Vault to secure my digital legacy.",
+    Formal: "I am adding you as a guardian to my Transfer Legacy Vault to secure my digital legacy.",
     Personal: "Hey! I'm setting up my digital inheritance and chosen you to be one of my trusted guardians.",
-    Brief: "Please accept this invitation to be my digital guardian on LinkKey."
+    Brief: "Please accept this invitation to be my digital guardian on Transfer Legacy."
   };
 
   const handleTemplateSelect = (t: string) => {
@@ -89,7 +89,7 @@ export default function Guardians() {
             
             <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 flex flex-col justify-center items-center text-center">
                <p className="text-sm text-primary mb-2 font-medium">Build the Trust Network</p>
-               <p className="text-xs text-muted mb-3">Invite family members to join LinkKey and earn Legacy Points.</p>
+               <p className="text-xs text-muted mb-3">Invite family members to join Transfer Legacy and earn Legacy Points.</p>
                <Button variant="secondary" className="text-xs h-8 border-primary/30 hover:bg-primary/20 text-primary w-full">Copy Invite Link</Button>
             </div>
           </div>
@@ -185,7 +185,7 @@ export default function Guardians() {
              <div className="bg-[#fdfbf7] text-[#2a2a2a] p-5 rounded-xl text-sm font-sans shadow-inner transform rotate-[0.5deg]">
                  <div className="border-b border-gray-200 pb-2 mb-3 flex items-center gap-2">
                      <span className="w-6 h-6 rounded bg-[#4F5CFF] flex items-center justify-center text-white"><ShieldCheck size={14}/></span>
-                     <p className="font-semibold text-lg text-[#4F5CFF]">LinkKey Protocol</p>
+                     <p className="font-semibold text-lg text-[#4F5CFF]">Transfer Legacy Protocol</p>
                  </div>
                  <p className="font-semibold mb-3">Dear {watch('name') || 'Trusted Guardian'},</p>
                  <p className="mb-4 whitespace-pre-wrap">{watch('message') || templates[template as keyof typeof templates]}</p>
@@ -193,7 +193,7 @@ export default function Guardians() {
                     You have been chosen for a critical role. Your cryptographic confirmation is required to lock the vault. 
                  </div>
                  <button type="button" className="bg-[#4F5CFF] text-white px-4 py-2.5 rounded-lg font-medium w-full mb-3 pointer-events-none shadow-md">Accept Guardian Duty</button>
-                 <p className="text-[10px] text-gray-400 text-center uppercase tracking-widest">Secured by LinkKey</p>
+                 <p className="text-[10px] text-gray-400 text-center uppercase tracking-widest">Secured by Transfer Legacy</p>
              </div>
           </div>
           

@@ -164,7 +164,7 @@ export default function DeveloperPortal() {
                     <Network size={48} className="text-primary/40 mb-4" />
                     <h3 className="text-xl font-semibold text-text mb-2">Zero-Knowledge Architecture Overview</h3>
                     <p className="text-muted max-w-lg mb-6 leading-relaxed">
-                      LinkKey uses a decentralized nodal network where your data is encrypted locally using PBKDF2 and AES-GCM before reaching our servers. We never store your raw master password.
+                      Transfer Legacy uses a decentralized nodal network where your data is encrypted locally using PBKDF2 and AES-GCM before reaching our servers. We never store your raw master password.
                     </p>
                     <Button variant="primary" className="glow-blue gap-2"><ExternalLink size={16}/> Read Whitepaper</Button>
                  </div>
@@ -178,7 +178,7 @@ export default function DeveloperPortal() {
 <pre>{`// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-contract LinkKeyVault {
+contract TransferLegacyVault {
     address public owner;
     address[] public designatedHeirs;
     uint256 public heartbeatTimeout;

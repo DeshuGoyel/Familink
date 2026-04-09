@@ -9,7 +9,7 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-1">
             <Link to="/" className="flex items-center space-x-2 mb-4">
               <Shield className="w-6 h-6 text-primary" />
-              <span className="text-lg font-bold text-text">LinkKey</span>
+              <span className="text-lg font-bold text-text">Transfer Legacy</span>
             </Link>
             <p className="text-muted text-sm mb-4">
               Zero-knowledge cryptography to secure your digital assets for the people you love.
@@ -53,7 +53,7 @@ export default function Footer() {
         
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center">
           <p className="text-muted text-sm">
-            © 2026 LinkKey Global. Zero-knowledge. Zero compromise.
+            © 2026 Transfer Legacy Global. Zero-knowledge. Zero compromise.
           </p>
         </div>
       </div>

@@ -46,7 +46,7 @@ export const useObituaryStore = create<ObituaryState>()(
       }))
     }),
     {
-      name: 'linkkey_obituary',
+      name: 'transfer_legacy_obituary',
     }
   )
 );

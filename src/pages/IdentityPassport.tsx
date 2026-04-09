@@ -107,7 +107,7 @@ export default function IdentityPassportPage() {
 
             <div className="flex justify-between items-start border-b border-border/50 pb-3 mb-4">
               <div>
-                <h3 className="text-primary font-bold tracking-widest text-sm mb-1 uppercase">LinkKey Digital Passport</h3>
+                <h3 className="text-primary font-bold tracking-widest text-sm mb-1 uppercase">Transfer Legacy Digital Passport</h3>
                 <p className="text-[10px] text-muted font-mono">ID: {passport.fullName.toUpperCase().replace(/\s/g, '')}-{calculateAge(passport.dateOfBirth)}</p>
               </div>
               <div className="w-12 h-12 rounded-lg bg-surface border border-border flex items-center justify-center">
@@ -145,7 +145,7 @@ export default function IdentityPassportPage() {
               
               <div className="w-24 flex flex-col items-end gap-3 shrink-0">
                 <div className="p-1 bg-white rounded-lg">
-                  <QRCodeSVG value={passport.qrCodeData || 'linkkey'} size={88} />
+                  <QRCodeSVG value={passport.qrCodeData || 'transfer_legacy'} size={88} />
                 </div>
                 <div className="w-full">
                   <p className="text-[8px] text-muted text-right font-mono truncate">{passport.qrCodeData}</p>

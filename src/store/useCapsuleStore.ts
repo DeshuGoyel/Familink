@@ -44,7 +44,7 @@ export const useCapsuleStore = create<CapsuleState>()(
       }))
     }),
     {
-      name: 'linkkey_capsules',
+      name: 'transfer_legacy_capsules',
     }
   )
 );
