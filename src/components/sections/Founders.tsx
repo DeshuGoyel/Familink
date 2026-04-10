@@ -14,9 +14,9 @@ const founders = [
     gradientTo: '#6366f1',
   },
   {
-    name: 'Vikas Kumar Singh',
+    name: 'Vikash Kumar Singh',
     role: 'Co-Founder & CTO',
-    bio: `B.Tech graduate, backend developer, and Web3 expert. Vikas specializes in building scalable decentralized systems and secure infrastructure for the future of digital inheritance.`,
+    bio: `B.Tech graduate, backend developer, and Web3 expert. Vikash specializes in building scalable decentralized systems and secure infrastructure for the future of digital inheritance.`,
     quote: `"We built a system where 'trust' is replaced by 'proof'. Math doesn't lie."`,
     image: '/images/founder_vikash.png',
     initials: 'VK',
@@ -73,8 +73,11 @@ export default function Founders() {
             >
               {/* Photo / gradient banner */}
               <div
-                className="relative h-56 overflow-hidden flex items-end"
-                style={{ background: `linear-gradient(135deg, ${f.gradientFrom}, ${f.gradientTo})` }}
+                className="relative overflow-hidden"
+                style={{ 
+                  height: '400px',
+                  background: `linear-gradient(135deg, ${f.gradientFrom}, ${f.gradientTo})` 
+                }}
               >
                 {/* Texture */}
                 <div
@@ -85,14 +88,17 @@ export default function Founders() {
                   }}
                 />
                 {/* Bottom fade */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#131722] via-transparent to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#131722] to-transparent z-20" />
 
                 {/* Real photo (falls back gracefully) */}
                 <img
                   src={f.image}
                   alt={f.name}
-                  className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-10"
+                  style={{ objectPosition: 'center 20%' }}
+                  onError={(e) => { 
+                    console.error('Failed to load image:', f.image);
+                  }}
                 />
 
                 {/* Removed initials fallback as requested */}

@@ -109,7 +109,7 @@ export default function FinalCTA() {
             </p>
             <p className="text-white/20 text-xs font-medium flex items-center justify-center gap-2">
               <ArrowRight size={11} style={{ color: '#f97316' }} />
-              Deshu & Vikas, Transfer Legacy
+              Deshu & Vikash, Transfer Legacy
             </p>
           </div>
         </motion.div>
