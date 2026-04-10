@@ -36,7 +36,7 @@ export default function LandingPage() {
         {/* 6. Security — points + legacy score gauge */}
         <Security />
 
-        {/* 7. Founders — Deshu and Vikash */}
+        {/* 7. Founders — Deshu and Vikas */}
         <Founders />
 
         {/* 8. Pricing — monthly/yearly toggle + 3 tiers */}

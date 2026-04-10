@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Shield } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 const navLinks = [
   { label: 'How It Works', href: '#how-it-works' },
@@ -46,8 +46,8 @@ export default function LandingNavbar() {
         <div className="max-w-7xl mx-auto px-6 h-[72px] flex items-center justify-between">
           {/* Logo */}
           <a href="#" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-rose-400 via-orange-400 to-purple-500 flex items-center justify-center shadow-lg group-hover:shadow-rose-500/30 transition-all duration-300">
-              <Shield size={18} className="text-white" strokeWidth={2} />
+            <div className="w-10 h-10 overflow-hidden flex items-center justify-center">
+              <img src="/logo-dark.png" alt="Transfer Legacy" className="w-full h-full object-contain" />
             </div>
             <span className="font-bold text-[17px] tracking-tight text-white">
               Transfer{' '}

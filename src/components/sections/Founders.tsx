@@ -5,7 +5,7 @@ const founders = [
   {
     name: 'Deshu Goyel',
     role: 'Founder & CEO',
-    bio: `Deshu spent three years watching crypto wealth become permanently inaccessible after unexpected deaths in his extended family. He started Transfer Legacy to solve the problem he knew was coming for millions of families — before it's too late.`,
+    bio: `Post-graduate in Computer Application and Marketing, Market Analyst, and expert in the discrepagraphic field. Deshu focuses on investment, management, and R&D, bridging strategic thinking with secure digital infrastructure.`,
     quote: `"The hardest part isn't building the vault. It's explaining to a grieving family why they can't access what was left for them."`,
     image: '/images/founder_deshu.png',
     initials: 'DG',
@@ -14,9 +14,9 @@ const founders = [
     gradientTo: '#6366f1',
   },
   {
-    name: 'Vikash Kumar Singh',
+    name: 'Vikas Kumar Singh',
     role: 'Co-Founder & CTO',
-    bio: `Vikash has worked on cryptographic protocols and distributed systems for 5 years. He designed the zero-knowledge architecture behind Transfer Legacy — ensuring no server, no employee, and no hacker can ever read your vault.`,
+    bio: `B.Tech graduate, backend developer, and Web3 expert. Vikas specializes in building scalable decentralized systems and secure infrastructure for the future of digital inheritance.`,
     quote: `"We built a system where 'trust' is replaced by 'proof'. Math doesn't lie."`,
     image: '/images/founder_vikash.png',
     initials: 'VK',
@@ -95,13 +95,7 @@ export default function Founders() {
                   onError={(e) => { e.currentTarget.style.display = 'none'; }}
                 />
 
-                {/* Initials fallback (always shown behind the image) */}
-                <div
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full border-2 border-white/20 flex items-center justify-center text-white text-3xl font-black select-none"
-                  style={{ background: 'rgba(0,0,0,0.25)' }}
-                >
-                  {f.initials}
-                </div>
+                {/* Removed initials fallback as requested */}
               </div>
 
               {/* Content */}

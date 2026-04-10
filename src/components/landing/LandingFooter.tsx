@@ -1,4 +1,4 @@
-import { Shield } from 'lucide-react';
+// Removed Shield import
 
 const footerLinks = {
   Product: ['How It Works', 'Security', 'Pricing', 'Roadmap'],
@@ -28,11 +28,8 @@ export default function LandingFooter() {
           <div className="md:col-span-2">
             {/* Logo */}
             <div className="flex items-center gap-3 mb-5">
-              <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, #f9a8d4 0%, #f97316 50%, #c084fc 100%)' }}
-              >
-                <Shield size={18} className="text-white" strokeWidth={2} />
+              <div className="w-10 h-10 overflow-hidden flex items-center justify-center">
+                <img src="/logo-dark.png" alt="Transfer Legacy" className="w-full h-full object-contain" />
               </div>
               <span className="font-bold text-[17px] tracking-tight text-white">
                 Transfer{' '}
