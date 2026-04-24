@@ -2,12 +2,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
-import { supabase } from '../../lib/supabase';
 import { waitlistSchema, WaitlistFormData } from '../../lib/validations';
 import Button from './Button';
 import toast from 'react-hot-toast';
 import confetti from 'canvas-confetti';
 import { Lock, Loader2, ShieldCheck, CheckCircle2 } from 'lucide-react';
+
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
 export function WaitlistForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -15,7 +16,6 @@ export function WaitlistForm() {
   const [position, setPosition] = useState<number | null>(null);
   const [isFocused, setIsFocused] = useState(false);
 
-  // 3D Tilt Logic
   const mouseX = useMotionValue(200);
   const mouseY = useMotionValue(200);
   const rotateX = useTransform(mouseY, [0, 400], [8, -8]);
@@ -52,69 +52,28 @@ export function WaitlistForm() {
   const onSubmit = async (data: WaitlistFormData) => {
     setIsSubmitting(true);
     try {
-      if (!import.meta.env.VITE_SUPABASE_URL) {
-        setTimeout(() => {
-          setIsSubmitting(false);
-          setIsSuccess(true);
-          setPosition(Math.floor(Math.random() * 1000) + 2400);
-          triggerConfetti();
-        }, 1200); // artificially slightly longer so they see the securing state
-        return;
+      const response = await fetch(`${API_BASE_URL}/api/waitlist`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: data.email })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Something went wrong');
       }
 
-      const { data: existing } = await supabase
-        .from('waitlist')
-        .select('position')
-        .eq('email', data.email)
-        .single();
-
-      if (existing) {
-        setIsSubmitting(false);
-        setIsSuccess(true);
-        setPosition(existing.position);
-        toast('You are already on the list!', { icon: '👋' });
-        return;
-      }
-
-      const { data: insertedData, error: insertError } = await supabase
-        .from('waitlist')
-        .insert([{ email: data.email }])
-        .select('position')
-        .single();
-
-      if (insertError) throw insertError;
-
-      const finalPosition = insertedData?.position || 1;
-      setPosition(finalPosition);
+      setPosition(result.position);
       setIsSuccess(true);
       triggerConfetti();
-      toast.success('Successfully joined waitlist!');
-
-      const resendApiKey = import.meta.env.VITE_RESEND_API_KEY;
-      if (resendApiKey && resendApiKey !== 'your_key') {
-        const emailHtml = `
-          <div style="font-family: sans-serif; color: #111;">
-            <p>Hi,</p>
-            <p>You're <strong>#${finalPosition}</strong> on the Transfer Legacy waitlist.</p>
-            <p>We'll notify you the moment beta opens.</p>
-            <p>Share your referral link to move up: <a href="https://transferlegacy.com?ref=${finalPosition}">https://transferlegacy.com?ref=${finalPosition}</a></p>
-            <br/>
-            <p>— The Transfer Legacy Team</p>
-          </div>
-        `;
-        await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${resendApiKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            from: 'Transfer Legacy <waitlist@transferlegacy.com>',
-            to: [data.email],
-            subject: "You're on the Transfer Legacy waitlist 🔑",
-            html: emailHtml
-          })
-        }).catch(err => console.error("Email send failed", err));
+      
+      if (result.isNew) {
+        toast.success('Successfully joined waitlist!');
+      } else {
+        toast('You are already on the list!', { icon: '👋' });
       }
 
     } catch (error: any) {
@@ -161,7 +120,6 @@ export function WaitlistForm() {
             style={{ transform: "translateZ(30px)" }}
             className="w-full bg-[#0D1117]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-[0_0_40px_rgba(0,0,0,0.5)] group relative overflow-hidden"
           >
-            {/* Subtle internal glow matching focus state */}
             <motion.div 
               animate={{ opacity: isFocused ? 1 : 0 }}
               className="absolute inset-0 bg-gradient-to-tr from-indigo-500/10 to-transparent pointer-events-none transition-opacity duration-300"
