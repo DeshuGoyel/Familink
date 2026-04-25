@@ -24,6 +24,12 @@ Transfer the access. Protect the legacy. The only platform that securely and aut
 3. Copy `.env.example` to `.env` and add your Supabase credentials.
 4. Start the dev server: `npm run dev`
 
+## Temp Waitlist Backend
+
+Temporary waitlist API (Supabase + Resend):
+
+`git@github-vikash:ItsMeVikashKumarSingh/tl-temp-backend.git`
+
 ## License
 
-© 2026 Transfer Legacy Global. All rights reserved.
+(c) 2026 Transfer Legacy Global. All rights reserved.

@@ -62,7 +62,7 @@
   }
 
   /* Custom Cursor reset (app only) */
-  body:not(.landing-page) * {
+  body:not(.landing-page):not(.allow-cursor) * {
     cursor: none;
   }
 
