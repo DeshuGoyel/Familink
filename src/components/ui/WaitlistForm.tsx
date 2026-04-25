@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import confetti from 'canvas-confetti';
 import { Lock, Loader2, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/\/$/, '');
 
 export function WaitlistForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
