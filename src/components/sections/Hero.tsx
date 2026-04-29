@@ -1,7 +1,10 @@
 import { useRef } from 'react';
 import { Suspense } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { Environment } from '@react-three/drei';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Shield, Users, Lock, Sparkles, ChevronDown, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Users, Lock, Sparkles, ChevronDown, ShieldCheck } from 'lucide-react';
+import LandingVaultObject from '../3d/LandingVaultObject';
 import { WaitlistForm } from '../ui/WaitlistForm';
 import { CountdownTimer } from '../ui/CountdownTimer';
 
@@ -269,7 +272,7 @@ export default function Hero() {
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.55, duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-48 h-48 flex items-center justify-center"
+            className="relative w-[360px] h-[360px] xl:w-[430px] xl:h-[430px] flex items-center justify-center"
           >
             {/* Pulse rings */}
             <motion.div
@@ -283,11 +286,19 @@ export default function Hero() {
               transition={{ duration: 3, delay: 0.5, repeat: Infinity, ease: 'easeOut' }}
             />
             {/* Static rings */}
-            <div className="absolute inset-3 rounded-full border border-white/15" />
-            <div className="absolute inset-7 rounded-full border border-white/20" />
-            {/* Icon box */}
-            <div className="relative w-24 h-24 rounded-[22px] bg-white/[0.18] backdrop-blur-2xl border border-white/35 flex items-center justify-center shadow-[0_8px_40px_rgba(0,0,0,0.3)]">
-              <Shield className="w-12 h-12 text-white" strokeWidth={1.5} />
+            <div className="absolute inset-10 rounded-full border border-white/15" />
+            <div className="absolute inset-20 rounded-full border border-white/20" />
+            <div className="absolute inset-0 rounded-full bg-black/10 blur-3xl" />
+            <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 7.5], fov: 42 }}>
+              <ambientLight intensity={0.65} />
+              <Suspense fallback={null}>
+                <LandingVaultObject />
+                <Environment preset="city" />
+              </Suspense>
+            </Canvas>
+            <div className="pointer-events-none absolute left-1/2 top-[52%] h-28 w-56 -translate-x-1/2 rounded-full bg-black/25 blur-2xl" />
+            <div className="absolute left-1/2 top-[72%] -translate-x-1/2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold text-white/80 shadow-2xl backdrop-blur-xl">
+              Guardian vault armed
               {/* Sparkle badge */}
               <div className="absolute -top-3 -right-3 w-7 h-7 bg-yellow-400 rounded-xl flex items-center justify-center shadow-lg shadow-yellow-500/40">
                 <Sparkles className="w-4 h-4 text-yellow-900" />

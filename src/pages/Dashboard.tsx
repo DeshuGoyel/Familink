@@ -98,8 +98,8 @@ export default function Dashboard() {
                   </div>
                 </div>
                 
-                <div className="h-80 w-full rounded-xl bg-gradient-to-b from-surface/50 to-surface border border-border/50 relative">
-                  <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
+                <div className="h-64 sm:h-72 lg:h-80 w-full rounded-xl bg-gradient-to-b from-surface/50 to-surface border border-border/50 relative">
+                  <Canvas dpr={[1, 1.25]} camera={{ position: [0, 0, 8], fov: 45 }}>
                     <VaultScene score={user.score} />
                   </Canvas>
                   

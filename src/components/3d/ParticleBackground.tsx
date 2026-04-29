@@ -3,7 +3,10 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 function Particles() {
-  const count = 1500;
+  const count = useMemo(() => {
+    if (typeof window === 'undefined') return 500;
+    return window.innerWidth < 768 ? 160 : 500;
+  }, []);
   const mesh = useRef<THREE.InstancedMesh>(null);
   
   const dummy = useMemo(() => new THREE.Object3D(), []);
@@ -21,18 +24,18 @@ function Particles() {
 
   useFrame((state) => {
     if (!mesh.current) return;
+    const mouseX = (state.pointer.x * state.viewport.width) / 2;
+    const mouseY = (state.pointer.y * state.viewport.height) / 2;
+
     particles.forEach((particle, i) => {
       particle.y += particle.speed;
       if (particle.y > 20) particle.y = -20;
-      
-      const mouseX = (state.pointer.x * state.viewport.width) / 2;
-      const mouseY = (state.pointer.y * state.viewport.height) / 2;
-      
+
       const dx = particle.x - mouseX;
       const dy = particle.y - mouseY;
       const dist = Math.sqrt(dx * dx + dy * dy);
       
-      if (dist < 3) {
+      if (dist > 0 && dist < 3) {
         const force = (3 - dist) / 3;
         particle.x += (dx / dist) * force * 0.15;
         particle.y += (dy / dist) * force * 0.15;
@@ -51,7 +54,7 @@ function Particles() {
 
   return (
     <instancedMesh ref={mesh} args={[undefined, undefined, count]}>
-      <sphereGeometry args={[0.02, 8, 8]} />
+      <sphereGeometry args={[0.02, 6, 6]} />
       <meshBasicMaterial color="#ffffff" transparent opacity={0.4} />
     </instancedMesh>
   );
@@ -60,7 +63,7 @@ function Particles() {
 export default function ParticleBackground() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-secondary/80">
-      <Canvas camera={{ position: [0, 0, 15], fov: 60 }}>
+      <Canvas dpr={[1, 1.25]} camera={{ position: [0, 0, 15], fov: 60 }}>
         <Particles />
       </Canvas>
     </div>

@@ -4,32 +4,26 @@ import { Shield, ChevronDown, Lock, Users, Bot, KeyRound, CheckCircle2, ShieldCh
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import { Canvas } from '@react-three/fiber';
-import VaultScene from '../components/3d/VaultScene';
-import BrokenKey from '../components/3d/BrokenKey';
-import RisingKey from '../components/3d/RisingKey';
+import { Environment } from '@react-three/drei';
+import LandingVaultObject from '../components/3d/LandingVaultObject';
+import LegacyTransferObject from '../components/3d/LegacyTransferObject';
 
 export default function Landing() {
   const words = "Your Digital Legacy, Protected Forever.".split(" ");
 
   return (
-    <div className="bg-secondary text-text min-h-screen font-sans -mt-16">
+    <div className="bg-secondary text-text min-h-screen font-sans">
       
       {/* Hero Section */}
-      <section className="relative h-screen flex flex-col items-center justify-center pt-16 overflow-hidden">
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <Canvas camera={{ position: [0, 0, 10], fov: 45 }}>
-            <VaultScene />
-          </Canvas>
-        </div>
-        
-        <div className="z-10 text-center max-w-4xl px-4 flex flex-col items-center mt-[-10vh]">
+      <section className="relative min-h-screen overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_42%,rgba(79,92,255,0.2),transparent_34%),radial-gradient(circle_at_18%_70%,rgba(34,197,94,0.12),transparent_28%)]" />
+
+        <div className="relative z-10 grid min-h-screen items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-12 xl:px-20">
+        <div className="relative z-20 mx-auto flex max-w-3xl flex-col items-center text-center lg:items-start lg:text-left">
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
             {words.map((word, i) => (
-              <motion.span
+              <span
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1, duration: 0.8, ease: "easeOut" }}
                 className="inline-block mr-3"
               >
                 {word === "Legacy," || word === "Protected" ? (
@@ -37,22 +31,16 @@ export default function Landing() {
                 ) : (
                   word
                 )}
-              </motion.span>
+              </span>
             ))}
           </h1>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 1 }}
+          <p
             className="text-lg md:text-xl text-muted max-w-2xl mb-10"
           >
             Transfer Legacy uses AI and zero-knowledge cryptography to secure your crypto, NFTs, and digital assets for the people you love.
-          </motion.p>
+          </p>
           
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.5 }}
+          <div
             className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
           >
             <Link to="/onboarding">
@@ -64,9 +52,24 @@ export default function Landing() {
             <Button variant="ghost" size="lg" className="w-full sm:w-auto text-lg py-4 px-8 border border-border">
               Watch 90s Demo
             </Button>
+          </div>
+        </div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ delay: 0.35, duration: 0.9, ease: "easeOut" }}
+            className="relative z-10 mx-auto h-[360px] w-full max-w-[560px] sm:h-[440px] lg:h-[620px] lg:max-w-none"
+          >
+            <div className="absolute inset-8 rounded-full bg-primary/10 blur-3xl" />
+            <Canvas dpr={[1, 1.3]} camera={{ position: [0, 0, 8.8], fov: 38 }}>
+              <ambientLight intensity={0.55} />
+              <LandingVaultObject />
+              <Environment preset="city" />
+            </Canvas>
           </motion.div>
         </div>
-        
+
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -98,12 +101,38 @@ export default function Landing() {
               </motion.div>
             </div>
           </div>
-          <div className="lg:w-1/2 h-[500px] w-full pointer-events-none">
-            <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
-              <ambientLight intensity={0.5} />
-              <pointLight position={[10, 10, 10]} intensity={1} />
-              <BrokenKey />
-            </Canvas>
+          <div className="lg:w-1/2 w-full">
+            <div className="relative mx-auto max-w-lg overflow-hidden rounded-[2rem] border border-border bg-[#0B1020] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.35)]">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_15%,rgba(239,68,68,0.18),transparent_32%),radial-gradient(circle_at_20%_90%,rgba(79,92,255,0.16),transparent_28%)]" />
+              <div className="relative rounded-3xl border border-white/10 bg-black/30 p-6">
+                <div className="mb-6 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-300/80">Recovery risk</p>
+                    <p className="mt-2 text-3xl font-bold text-white">$140B+</p>
+                  </div>
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/10 text-red-300 ring-1 ring-red-400/30">
+                    <Lock size={30} />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {[
+                    ['Seed phrase missing', 'Critical'],
+                    ['No guardian assigned', 'High'],
+                    ['Heirs cannot recover wallet', 'High'],
+                  ].map(([label, status]) => (
+                    <div key={label} className="flex items-center justify-between rounded-2xl border border-white/8 bg-white/[0.04] px-4 py-3">
+                      <span className="text-sm font-medium text-white/80">{label}</span>
+                      <span className="rounded-full bg-red-500/10 px-3 py-1 text-xs font-semibold text-red-300">{status}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 rounded-2xl border border-yellow-400/20 bg-yellow-400/10 px-4 py-3 text-sm text-yellow-100">
+                  Without a transfer plan, access can disappear permanently.
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -238,20 +267,26 @@ export default function Landing() {
       </section>
 
       {/* Footer CTA */}
-      <section className="relative py-32 overflow-hidden bg-[#0A0B1A]">
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
-             <RisingKey />
-          </Canvas>
-        </div>
-        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-5xl md:text-6xl font-bold text-text mb-6">Don't Let Your Legacy Disappear.</h2>
-          <p className="text-2xl text-muted mb-10">Set up your vault in 5 minutes. Free forever.</p>
-          <Link to="/onboarding">
-            <Button size="lg" className="text-xl py-6 px-12 glow-blue rounded-full">
-              Protect My Legacy <ChevronDown className="inline ml-2 -rotate-90" />
-            </Button>
-          </Link>
+      <section className="relative overflow-hidden bg-[#0A0B1A] py-24 lg:py-32">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_45%,rgba(34,197,94,0.14),transparent_32%)]" />
+        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
+          <div className="max-w-2xl text-center lg:text-left">
+            <h2 className="text-5xl md:text-6xl font-bold text-text mb-6">Don't Let Your Legacy Disappear.</h2>
+            <p className="text-2xl text-muted mb-10">Set up your vault in 5 minutes. Free forever.</p>
+            <Link to="/onboarding">
+              <Button size="lg" className="inline-flex items-center justify-center gap-3 text-xl py-6 px-12 glow-blue rounded-full">
+                Protect My Legacy <ChevronDown className="h-6 w-6 -rotate-90" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="pointer-events-none hidden h-[420px] lg:block">
+            <Canvas dpr={[1, 1.35]} camera={{ position: [0, 0, 6.8], fov: 40 }}>
+               <ambientLight intensity={0.5} />
+               <LegacyTransferObject />
+               <Environment preset="city" />
+            </Canvas>
+          </div>
         </div>
       </section>
     </div>

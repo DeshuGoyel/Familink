@@ -30,7 +30,7 @@ export default function Sidebar() {
       {/* Mobile Backdrop Overlay */}
       {isMobileSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-x-0 top-16 bottom-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
           onClick={toggleMobileSidebar}
         />
       )}
@@ -38,13 +38,11 @@ export default function Sidebar() {
       {/* Main Sidebar */}
       <aside 
         className={cn(
-          "fixed inset-y-0 left-0 pt-16 bg-surface border-r border-border z-50 flex flex-col transition-all duration-300 ease-in-out",
-          // Desktop specific classes
-          "md:translate-x-0 hidden md:flex",
-          isSidebarCollapsed ? "w-20" : "w-64",
-          // Mobile specific classes (overrides hidden with dynamic sliding)
-          "!flex md:!flex transform",
-          isMobileSidebarOpen ? "translate-x-0 !w-64" : "-translate-x-full md:translate-x-0"
+          "fixed left-0 top-16 bottom-0 bg-surface/95 backdrop-blur-xl border-r border-border flex flex-col transition-[width,transform] duration-300 ease-out",
+          "z-50 w-72 max-w-[82vw]",
+          "md:sticky md:top-16 md:z-20 md:h-[calc(100vh-4rem)] md:max-w-none md:translate-x-0 md:shrink-0",
+          isSidebarCollapsed ? "md:w-20" : "md:w-64",
+          isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         {/* Toggle Arrow (Desktop only) / Close Button (Mobile only) */}
@@ -61,7 +59,7 @@ export default function Sidebar() {
         {/* Mobile Close Button (shown only on mobile) */}
         <button 
           onClick={toggleMobileSidebar}
-          className="md:hidden absolute right-4 top-20 p-2 text-muted hover:text-text"
+          className="md:hidden absolute right-4 top-4 p-2 text-muted hover:text-text"
         >
           <X size={20} />
         </button>
@@ -128,7 +126,7 @@ export default function Sidebar() {
       </aside>
 
       {/* Bottom Nav on Mobile overrides Sidebar bottom, keeping 5 primary items for quick access */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-md border-t border-border z-40 px-6 py-3 flex justify-between">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-surface/95 backdrop-blur-md border-t border-border z-30 px-2 py-2 grid grid-cols-5 gap-1">
         {navItems.slice(0, 5).map((item) => {
           const isActive = location.pathname === item.path;
           const Icon = item.icon;
@@ -137,19 +135,19 @@ export default function Sidebar() {
               key={item.path}
               to={item.path}
               className={cn(
-                "flex flex-col items-center justify-center space-y-1 p-2 transition-colors",
+                "flex min-w-0 flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 transition-colors",
                 isActive ? "text-primary" : "text-muted hover:text-text"
               )}
             >
               <Icon size={20} />
-              <span className="text-[10px] font-medium">{item.name}</span>
+              <span className="w-full truncate text-center text-[10px] font-medium leading-tight">{item.name}</span>
             </Link>
           );
         })}
       </nav>
 
       {/* Global Top-Right Action Block (Master Key / Web3 Wallet) */}
-      <div className="fixed top-4 right-4 sm:right-6 lg:right-8 z-50 flex items-center space-x-3 pointer-events-auto">
+      <div className="fixed top-4 right-4 sm:right-6 lg:right-8 z-40 hidden items-center space-x-3 pointer-events-auto xl:flex">
          <button className="hidden sm:flex items-center justify-center w-10 h-10 bg-surface/80 backdrop-blur-md border border-primary/30 rounded-full hover:bg-primary/10 transition-colors shadow-lg shadow-primary/5">
              <span className="relative flex h-2 w-2">
                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>

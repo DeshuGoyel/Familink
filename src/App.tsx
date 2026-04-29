@@ -1,7 +1,8 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from 'react-hot-toast';
+import CustomCursor from './components/CustomCursor';
 
 // Lazy load components
 const LandingPage = lazy(() => import('./pages/LandingPage'));
@@ -9,8 +10,9 @@ const MainWebsite = lazy(() => import('./pages/MainWebsite'));
 const OpsPortal = lazy(() => import('./pages/ops/OpsPortal'));
 const OpsLogin = lazy(() => import('./pages/ops/Login'));
 
-// Show landing page until May 15 2026, then switch to full app automatically
-const SHOW_LANDING_GATED = new Date() < new Date('2026-05-15T00:00:00Z');
+// Show landing page until a specific date, then switch to full app automatically.
+// Set to a past date so the app (dashboard) shows now.
+const SHOW_LANDING_GATED = new Date() < new Date('2026-04-01T00:00:00Z');
 
 class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean, error: any}> {
   constructor(props: {children: React.ReactNode}) {
@@ -46,6 +48,7 @@ export default function App() {
               {/* Operations Portal Routes - Higher priority, bypassing gate */}
               <Route path="/ops/login" element={<OpsLogin />} />
               <Route path="/ops/*" element={<OpsPortal />} />
+              <Route path="/waitlist" element={<LandingPage />} />
 
               {/* Main Entrance / Landing Gate */}
               <Route 
@@ -60,6 +63,7 @@ export default function App() {
               />
             </Routes>
           </Suspense>
+          <CustomCursor />
           <Toaster position="top-right" toastOptions={{
             style: {
               background: '#0D1117',
