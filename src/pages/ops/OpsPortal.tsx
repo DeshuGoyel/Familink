@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Menu, 
   X, 
   Shield, 
   ChevronRight,
   LogOut,
   ScrollText, 
   FileText, 
-  ClipboardCheck, 
   LayoutDashboard, 
   Users, 
   ShieldCheck, 
-  Settings as SettingsIcon 
+  Settings as SettingsIcon,
+  Palette,
+  Phone
 } from 'lucide-react';
 import { useOpsStore } from '../../store/useOpsStore';
 import { cn } from '../../utils/cn';
@@ -26,6 +26,8 @@ import SystemSettings from './modules/SystemSettings';
 import AdminMgmt from './modules/AdminMgmt';
 import LeanCMS from './modules/LeanCMS';
 import AuditLogs from './modules/AuditLogs';
+import BrandingStudio from './modules/Branding';
+import ContactSettings from './modules/ContactSettings';
 
 const NAV_GROUPS = [
   {
@@ -45,7 +47,9 @@ const NAV_GROUPS = [
     name: 'System',
     items: [
       { name: 'Lean CMS', path: '/ops/cms', icon: FileText },
+      { name: 'Visual Identity', path: '/ops/branding', icon: Palette },
       { name: 'Configuration', path: '/ops/settings', icon: SettingsIcon },
+      { name: 'Contact Setup', path: '/ops/contact', icon: Phone },
       { name: 'Audit Logs', path: '/ops/audit', icon: ScrollText },
     ]
   }
@@ -196,6 +200,8 @@ export default function OpsPortal() {
               <Route path="waitlist" element={<WaitlistManager />} />
               <Route path="admins" element={<AdminMgmt />} />
               <Route path="settings" element={<SystemSettings />} />
+              <Route path="branding" element={<BrandingStudio />} />
+              <Route path="contact" element={<ContactSettings />} />
               <Route path="cms" element={<LeanCMS />} />
               <Route path="audit" element={<AuditLogs />} />
               <Route path="*" element={<Navigate to="/ops/dashboard" replace />} />

@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from 'react-hot-toast';
@@ -7,12 +7,14 @@ import CustomCursor from './components/CustomCursor';
 // Lazy load components
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const MainWebsite = lazy(() => import('./pages/MainWebsite'));
+const ContactUs = lazy(() => import('./pages/ContactUs'));
 const OpsPortal = lazy(() => import('./pages/ops/OpsPortal'));
 const OpsLogin = lazy(() => import('./pages/ops/Login'));
 
-// Show landing page until a specific date, then switch to full app automatically.
-// Set to a past date so the app (dashboard) shows now.
-const SHOW_LANDING_GATED = new Date() < new Date('2026-04-01T00:00:00Z');
+interface AppConfig {
+  waitlist_enabled: boolean;
+  brand_name: string;
+}
 
 class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean, error: any}> {
   constructor(props: {children: React.ReactNode}) {
@@ -38,6 +40,40 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasErr
   }
 }
 
+function MainEntrance() {
+  const [config, setConfig] = useState<AppConfig | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchConfig() {
+      try {
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/v1';
+        const res = await fetch(`${API_URL}/app/config`);
+        if (res.ok) {
+          const data = await res.json();
+          setConfig(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch app config', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchConfig();
+  }, []);
+
+  if (loading) {
+    return <div className="min-h-screen bg-[#0B0E14] flex items-center justify-center text-indigo-500">Initializing...</div>;
+  }
+
+  // If waitlist is enabled, default landing is the LandingPage (Waitlist)
+  if (config?.waitlist_enabled) {
+    return <LandingPage />;
+  }
+
+  return <MainWebsite />;
+}
+
 export default function App() {
   return (
     <ErrorBoundary>
@@ -48,19 +84,13 @@ export default function App() {
               {/* Operations Portal Routes - Higher priority, bypassing gate */}
               <Route path="/ops/login" element={<OpsLogin />} />
               <Route path="/ops/*" element={<OpsPortal />} />
+              
+              {/* Public Routes */}
               <Route path="/waitlist" element={<LandingPage />} />
+              <Route path="/contact" element={<ContactUs />} />
 
               {/* Main Entrance / Landing Gate */}
-              <Route 
-                path="*" 
-                element={
-                  SHOW_LANDING_GATED ? (
-                    <LandingPage />
-                  ) : (
-                    <MainWebsite />
-                  )
-                } 
-              />
+              <Route path="*" element={<MainEntrance />} />
             </Routes>
           </Suspense>
           <CustomCursor />
