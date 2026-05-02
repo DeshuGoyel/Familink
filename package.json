@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "if [ \"$CF_PAGES_BRANCH\" = \"master\" ]; then vite build --mode production; else vite build --mode staging; fi",
     "lint": "eslint .",
     "preview": "vite preview"
   },
