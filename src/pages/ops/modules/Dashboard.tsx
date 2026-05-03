@@ -81,7 +81,7 @@ export default function OpsDashboard() {
         </div>
         <div className="flex gap-3">
           <Link to="/ops/waitlist">
-            <Button variant="default" className="rounded-xl border-slate-800 bg-slate-900/50">
+            <Button variant="secondary" className="rounded-xl border-slate-800 bg-slate-900/50">
               View Analytics
             </Button>
           </Link>

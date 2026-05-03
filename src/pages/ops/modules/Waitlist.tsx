@@ -71,7 +71,7 @@ export default function WaitlistManager() {
         </div>
         <div className="flex gap-3">
           <Button 
-            variant="default" 
+            variant="secondary" 
             className="rounded-xl flex items-center gap-2 border-slate-800"
             onClick={handleExport}
           >

@@ -48,9 +48,11 @@ function MainEntrance() {
     async function fetchConfig() {
       try {
         const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/v1';
-        const res = await fetch(`${API_URL}/app/config`);
+        const res = await fetch(`${API_URL}/app/branding`);
         if (res.ok) {
-          const data = await res.json();
+          const json = await res.json();
+          // The real backend returns SuccessEnvelope { data: T }, temp backend returns T
+          const data = json.data || json;
           setConfig(data);
         }
       } catch (err) {

@@ -117,7 +117,7 @@ export default function LeanCMS() {
             <div className="flex items-center justify-between mb-2">
               <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">FAQ Items</label>
               <Button 
-                variant="default" 
+                variant="secondary" 
                 size="sm" 
                 className="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 py-1"
                 onClick={() => updateField('items', [...faqItems, { q: 'New Question', a: 'New Answer' }])}
@@ -170,7 +170,7 @@ export default function LeanCMS() {
             <div className="flex items-center justify-between mb-2">
               <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Site Features</label>
               <Button 
-                variant="default" 
+                variant="secondary" 
                 size="sm" 
                 className="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 py-1"
                 onClick={() => updateField('items', [...featItems, { title: 'New Feature', description: 'Description' }])}
@@ -223,7 +223,7 @@ export default function LeanCMS() {
             <div className="flex items-center justify-between mb-2">
               <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Team Members</label>
               <Button 
-                variant="default" 
+                variant="secondary" 
                 size="sm" 
                 className="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 py-1"
                 onClick={() => updateField('items', [...teamItems, { name: 'Full Name', role: 'Job Title', bio: 'Short bio...', imageUrl: '' }])}

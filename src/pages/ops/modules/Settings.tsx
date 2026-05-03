@@ -168,7 +168,7 @@ export default function GlobalSettings() {
         </Card>
 
         <div className="flex justify-end gap-3 pt-4">
-          <Button variant="default" type="button" onClick={fetchSettings} className="border-slate-800">
+          <Button variant="secondary" type="button" onClick={fetchSettings} className="border-slate-800">
             Discard
           </Button>
           <Button variant="primary" type="submit" className="px-10" disabled={isSaving}>

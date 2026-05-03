@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UserPlus, Trash2, Shield, Search,  ShieldCheck, 
+import { 
+  UserPlus, 
+  Trash2, 
+  Shield, 
+  Search,  
+  ShieldCheck, 
   Calendar, 
   Settings as SettingsIcon,
-  Check,
-  Plus
+  Check
 } from 'lucide-react';
 import { opsApi } from '../../../lib/opsApi';
 import { useOpsStore } from '../../../store/useOpsStore';
@@ -129,6 +133,7 @@ export default function AdminMgmt() {
     }
   };
 
+  const openRoleModal = (role?: any) => {
     if (role) {
       setEditingRole(role);
       setRoleForm({
@@ -144,8 +149,8 @@ export default function AdminMgmt() {
   };
 
   const filteredAdmins = admins.filter(a => 
-    a.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    a.role_name.toLowerCase().includes(searchQuery.toLowerCase())
+    (a.email || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (a.role_name || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -373,7 +378,7 @@ export default function AdminMgmt() {
             </select>
           </div>
           <div className="pt-4 flex justify-end gap-3">
-            <Button type="button" variant="default" onClick={() => setIsModalOpen(false)}>
+            <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>
               Cancel
             </Button>
             <Button type="submit" variant="primary" className="px-8">
@@ -448,7 +453,7 @@ export default function AdminMgmt() {
           </div>
           
           <div className="pt-4 flex justify-end gap-3">
-            <Button type="button" variant="default" onClick={() => setIsRoleModalOpen(false)}>
+            <Button type="button" variant="secondary" onClick={() => setIsRoleModalOpen(false)}>
               Cancel
             </Button>
             <Button type="submit" variant="primary" className="px-8">
