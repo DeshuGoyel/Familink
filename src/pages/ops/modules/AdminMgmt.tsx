@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UserPlus, Trash2, Shield, Search, ShieldCheck, Calendar, Settings as SettingsIcon } from 'lucide-react';
+import { UserPlus, Trash2, Shield, Search,  ShieldCheck, 
+  Calendar, 
+  Settings as SettingsIcon,
+  Check,
+  Plus
+} from 'lucide-react';
 import { opsApi } from '../../../lib/opsApi';
 import { useOpsStore } from '../../../store/useOpsStore';
 import Button from '../../../components/ui/Button';
@@ -10,6 +15,17 @@ import Card from '../../../components/ui/Card';
 import Modal from '../../../components/ui/Modal';
 import toast from 'react-hot-toast';
 import { cn } from '../../../utils/cn';
+
+const AVAILABLE_PERMISSIONS = [
+  { id: 'read', label: 'Global Read', desc: 'View all basic resources' },
+  { id: 'write', label: 'Global Write', desc: 'Create/Modify resources' },
+  { id: 'delete', label: 'Global Delete', desc: 'Permanently remove items' },
+  { id: 'cms.manage', label: 'Manage CMS', desc: 'Create and edit pages/content' },
+  { id: 'admins.manage', label: 'Manage Admins', desc: 'User and role management' },
+  { id: 'settings.manage', label: 'System Settings', desc: 'Branding and configuration' },
+  { id: 'waitlist.manage', label: 'Waitlist', desc: 'Manage subscribers and status' },
+  { id: 'audit.read', label: 'View Logs', desc: 'Access system activity logs' },
+];
 
 type Tab = 'admins' | 'roles';
 
@@ -32,11 +48,10 @@ export default function AdminMgmt() {
     role_id: '',
   });
 
-  // Form state for role
   const [roleForm, setRoleForm] = useState({
     name: '',
     description: '',
-    permissions: '', // Comma separated for input
+    permissions: [] as string[],
   });
 
   useEffect(() => {
@@ -95,7 +110,7 @@ export default function AdminMgmt() {
       const payload = {
         name: roleForm.name,
         description: roleForm.description,
-        permissions: roleForm.permissions.split(',').map(p => p.trim()).filter(p => p !== ''),
+        permissions: roleForm.permissions,
       };
 
       if (editingRole) {
@@ -114,17 +129,16 @@ export default function AdminMgmt() {
     }
   };
 
-  const openRoleModal = (role?: any) => {
     if (role) {
       setEditingRole(role);
       setRoleForm({
         name: role.name,
         description: role.description || '',
-        permissions: role.permissions.join(', '),
+        permissions: role.permissions || [],
       });
     } else {
       setEditingRole(null);
-      setRoleForm({ name: '', description: '', permissions: 'read, write' });
+      setRoleForm({ name: '', description: '', permissions: ['read'] });
     }
     setIsRoleModalOpen(true);
   };
@@ -393,14 +407,44 @@ export default function AdminMgmt() {
               placeholder="What can this role do?"
             />
           </div>
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-muted">Permissions (comma separated)</label>
-            <textarea
-              className="w-full bg-[#0D1117] border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500/50 font-mono text-xs h-32 resize-none"
-              value={roleForm.permissions}
-              onChange={(e) => setRoleForm(prev => ({ ...prev, permissions: e.target.value }))}
-              placeholder="read, write, delete, app.users.read..."
-            />
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-muted">Select Permissions</label>
+            <div className="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+              {AVAILABLE_PERMISSIONS.map((perm) => {
+                const isSelected = roleForm.permissions.includes(perm.id);
+                return (
+                  <button
+                    key={perm.id}
+                    type="button"
+                    onClick={() => {
+                      const newPerms = isSelected
+                        ? roleForm.permissions.filter(p => p !== perm.id)
+                        : [...roleForm.permissions, perm.id];
+                      setRoleForm({ ...roleForm, permissions: newPerms });
+                    }}
+                    className={cn(
+                      "flex items-start gap-3 p-3 rounded-xl border text-left transition-all",
+                      isSelected 
+                        ? "bg-indigo-500/10 border-indigo-500/50" 
+                        : "bg-slate-950 border-slate-800 hover:border-slate-700"
+                    )}
+                  >
+                    <div className={cn(
+                      "mt-0.5 w-4 h-4 rounded border flex items-center justify-center transition-colors",
+                      isSelected ? "bg-indigo-500 border-indigo-500" : "bg-transparent border-slate-700"
+                    )}>
+                      {isSelected && <Check className="w-3 h-3 text-white" />}
+                    </div>
+                    <div>
+                      <p className={cn("text-xs font-bold", isSelected ? "text-indigo-400" : "text-slate-300")}>
+                        {perm.label}
+                      </p>
+                      <p className="text-[10px] text-slate-500 mt-0.5">{perm.desc}</p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
           
           <div className="pt-4 flex justify-end gap-3">

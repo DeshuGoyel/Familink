@@ -13,7 +13,8 @@ import {
   ShieldCheck, 
   Settings as SettingsIcon,
   Palette,
-  Phone
+  Phone,
+  Menu
 } from 'lucide-react';
 import { useOpsStore } from '../../store/useOpsStore';
 import { cn } from '../../utils/cn';
@@ -61,6 +62,12 @@ export default function OpsPortal() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
 
   // Protected route check - Wait for hydration to avoid flash-redirect
   useEffect(() => {
@@ -87,12 +94,41 @@ export default function OpsPortal() {
   };
 
   return (
-    <div className="min-h-screen bg-[#020409] text-slate-200 flex overflow-hidden font-sans">
+    <div className="min-h-screen bg-[#020409] text-slate-200 flex flex-col md:flex-row overflow-hidden font-sans">
+      {/* Mobile Header */}
+      <div className="md:hidden h-16 bg-[#0B0E14] border-b border-slate-800 flex items-center justify-between px-6 z-[60]">
+        <div className="flex items-center gap-3">
+          <Shield className="w-6 h-6 text-indigo-500" />
+          <span className="font-bold text-white">Ops Center</span>
+        </div>
+        <button 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="p-2 text-slate-400 hover:text-white"
+        >
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
+      {/* Sidebar Backdrop (Mobile) */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[40] md:hidden"
+          />
+        )}
+      </AnimatePresence>
+
       {/* Sidebar */}
       <aside 
         className={cn(
           "fixed inset-y-0 left-0 z-50 bg-[#0B0E14] border-r border-slate-800 transition-all duration-300",
-          isSidebarOpen ? "w-64" : "w-20"
+          "md:translate-x-0 md:sticky md:top-0",
+          isSidebarOpen ? "w-64" : "w-20",
+          isMobileMenuOpen ? "translate-x-0 w-64" : "-translate-x-full md:translate-x-0"
         )}
       >
         <div className="flex flex-col h-full">
@@ -189,8 +225,7 @@ export default function OpsPortal() {
       {/* Main Content */}
       <main 
         className={cn(
-          "flex-1 transition-all duration-300 overflow-y-auto bg-[#020409]",
-          isSidebarOpen ? "ml-64" : "ml-20"
+          "flex-1 transition-all duration-300 overflow-y-auto bg-[#020409] h-[calc(100vh-4rem)] md:h-screen",
         )}
       >
         <div className="p-8 max-w-7xl mx-auto">
