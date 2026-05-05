@@ -21,6 +21,21 @@ import Card from '../../../components/ui/Card';
 import Button from '../../../components/ui/Button';
 import toast from 'react-hot-toast';
 import { cn } from '../../../utils/cn';
+ 
+interface CMSItem {
+  title?: string;
+  description?: string;
+  q?: string;
+  a?: string;
+  [key: string]: any;
+}
+ 
+interface CMSFormData {
+  title?: string;
+  subtitle?: string;
+  items?: CMSItem[];
+  [key: string]: any;
+}
 
 const DEFAULT_SLUGS = ['hero', 'faqs', 'features', 'team'];
 
@@ -33,7 +48,7 @@ const DEFAULT_STRUCTURES: Record<string, any> = {
 
 export default function LeanCMS() {
   const [selectedSlug, setSelectedSlug] = useState<string>(DEFAULT_SLUGS[0]);
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<CMSFormData>({});
   const [currentVersion, setCurrentVersion] = useState<number>(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -46,7 +61,7 @@ export default function LeanCMS() {
   const fetchContent = async () => {
     setIsLoading(true);
     try {
-      const data = await opsApi.get<any>(`/app/content/${selectedSlug}`);
+      const data = await opsApi.get<CMSFormData>(`/app/content/${selectedSlug}`);
       setFormData(data.body || DEFAULT_STRUCTURES[selectedSlug] || {});
       setCurrentVersion(data.version || 1);
     } catch (err) {
@@ -78,7 +93,7 @@ export default function LeanCMS() {
   };
 
   const updateField = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev: CMSFormData) => ({ ...prev, [field]: value }));
   };
 
   const filteredSlugs = DEFAULT_SLUGS.filter(s => s.includes(searchQuery.toLowerCase()));
