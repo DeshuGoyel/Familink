@@ -13,6 +13,7 @@ const OpsLogin = lazy(() => import('./pages/ops/Login'));
 
 interface AppConfig {
   waitlist_enabled: boolean;
+  maintenance_mode: boolean;
   brand_name: string;
 }
 
@@ -68,8 +69,8 @@ function MainEntrance() {
     return <div className="min-h-screen bg-[#0B0E14] flex items-center justify-center text-indigo-500">Initializing...</div>;
   }
 
-  // Force waitlist if config fetch failed or if enabled
-  if (!config || config.waitlist_enabled) {
+  // Force landing page if config fetch failed, if maintenance is on, or if waitlist is enabled
+  if (!config || config.maintenance_mode || config.waitlist_enabled) {
     return <LandingPage />;
   }
 
