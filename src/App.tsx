@@ -16,8 +16,8 @@ interface AppConfig {
   brand_name: string;
 }
 
-class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean, error: any}> {
-  constructor(props: {children: React.ReactNode}) {
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean, error: any }> {
+  constructor(props: { children: React.ReactNode }) {
     super(props);
     this.state = { hasError: false, error: null };
   }
@@ -68,8 +68,8 @@ function MainEntrance() {
     return <div className="min-h-screen bg-[#0B0E14] flex items-center justify-center text-indigo-500">Initializing...</div>;
   }
 
-  // If waitlist is enabled, default landing is the LandingPage (Waitlist)
-  if (config?.waitlist_enabled) {
+  // Force waitlist if config fetch failed or if enabled
+  if (!config || config.waitlist_enabled) {
     return <LandingPage />;
   }
 
