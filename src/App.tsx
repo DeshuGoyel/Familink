@@ -48,16 +48,23 @@ function MainEntrance() {
   useEffect(() => {
     async function fetchConfig() {
       try {
-        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/v1';
+        // Default to the production API if env var is missing
+        const API_URL = import.meta.env.VITE_API_URL || 'https://waitlist-api.transferlegacy.com/v1';
+        console.log('Fetching app config from:', API_URL);
+        
         const res = await fetch(`${API_URL}/app/branding`);
         if (res.ok) {
           const json = await res.json();
-          // The real backend returns SuccessEnvelope { data: T }, temp backend returns T
+          // Log the response to debug 'on/off' detection
+          console.log('App Config Received:', json);
+          
           const data = json.data || json;
           setConfig(data);
+        } else {
+          console.warn('Config fetch failed with status:', res.status);
         }
       } catch (err) {
-        console.error('Failed to fetch app config', err);
+        console.error('Failed to fetch app config:', err);
       } finally {
         setLoading(false);
       }
