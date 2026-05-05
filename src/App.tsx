@@ -41,38 +41,6 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
 }
 
 function MainEntrance() {
-  const [config, setConfig] = useState<AppConfig | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchConfig() {
-      try {
-        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/v1';
-        const res = await fetch(`${API_URL}/app/branding`);
-        if (res.ok) {
-          const json = await res.json();
-          // The real backend returns SuccessEnvelope { data: T }, temp backend returns T
-          const data = json.data || json;
-          setConfig(data);
-        }
-      } catch (err) {
-        console.error('Failed to fetch app config', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchConfig();
-  }, []);
-
-  if (loading) {
-    return <div className="min-h-screen bg-[#0B0E14] flex items-center justify-center text-indigo-500">Initializing...</div>;
-  }
-
-  // Force waitlist if config fetch failed or if enabled
-  if (!config || config.waitlist_enabled) {
-    return <LandingPage />;
-  }
-
   return <MainWebsite />;
 }
 

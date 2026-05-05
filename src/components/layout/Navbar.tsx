@@ -56,6 +56,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/dashboard" className="text-muted hover:text-text transition">Dashboard</Link>
             <Link to="/assets" className="text-muted hover:text-text transition">Assets</Link>
+            <Link to="/resources" className="text-muted hover:text-text transition">Resources</Link>
             <Link to="/trust" className="text-muted hover:text-text transition">Trust</Link>
             <Link to="/ai-planner" className="flex items-center space-x-1 text-primary hover:text-primary/80 transition">
               <span>AI Planner</span>

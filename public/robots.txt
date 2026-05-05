@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://transferlegacy.com/sitemap.xml

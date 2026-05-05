@@ -22,31 +22,31 @@ export default function Footer() {
           </div>
           
           <div>
-            <h3 className="text-text font-semibold mb-4">Product</h3>
+            <h3 className="text-text font-semibold mb-4">Solutions</h3>
             <ul className="space-y-2 text-sm text-muted">
-              <li><Link to="/assets" className="hover:text-primary transition">Vault</Link></li>
-              <li><Link to="/guardians" className="hover:text-primary transition">Guardians</Link></li>
-              <li><Link to="/ai-planner" className="hover:text-primary transition">AI Planner</Link></li>
-              <li><Link to="/pricing" className="hover:text-primary transition">Pricing</Link></li>
+              <li><Link to="/crypto-inheritance" className="hover:text-primary transition">Crypto Inheritance</Link></li>
+              <li><Link to="/digital-will" className="hover:text-primary transition">Digital Wills</Link></li>
+              <li><Link to="/seed-phrase-inheritance" className="hover:text-primary transition">Seed Phrase Security</Link></li>
+              <li><Link to="/store-important-documents-for-family" className="hover:text-primary transition">Document Storage</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="text-text font-semibold mb-4">Resources</h3>
             <ul className="space-y-2 text-sm text-muted">
-              <li><a href="#" className="hover:text-primary transition">Documentation</a></li>
-              <li><a href="#" className="hover:text-primary transition">Help Center</a></li>
-              <li><a href="#" className="hover:text-primary transition">Blog</a></li>
+              <li><Link to="/resources" className="hover:text-primary transition">Resource Hub</Link></li>
+              <li><Link to="/crypto-inheritance-calculator" className="hover:text-primary transition">Inheritance Calculator</Link></li>
+              <li><Link to="/what-happens-to-crypto-when-you-die" className="hover:text-primary transition">Death & Crypto Guide</Link></li>
               <li><Link to="/trust" className="hover:text-primary transition">Trust Center</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-text font-semibold mb-4">Legal</h3>
+            <h3 className="text-text font-semibold mb-4">Compare & Legal</h3>
             <ul className="space-y-2 text-sm text-muted">
+              <li><Link to="/transfer-legacy-vs-dglegacy" className="hover:text-primary transition">vs. DGLegacy</Link></li>
+              <li><Link to="/transfer-legacy-vs-inheriti" className="hover:text-primary transition">vs. Inheriti</Link></li>
               <li><a href="#" className="hover:text-primary transition">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-primary transition">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-primary transition">Cookie Policy</a></li>
             </ul>
           </div>
         </div>
