@@ -61,16 +61,18 @@ export function WaitlistForm() {
       });
 
       const result = await response.json();
+      // Handle both Rust (enveloped) and Worker (direct) responses
+      const apiData = result.data || result;
 
       if (!response.ok) {
-        throw new Error(result.message || 'Something went wrong');
+        throw new Error(apiData.message || 'Something went wrong');
       }
 
-      setPosition(result.position);
+      setPosition(apiData.position);
       setIsSuccess(true);
       triggerConfetti();
       
-      if (result.isNew) {
+      if (apiData.isNew) {
         toast.success('Successfully joined waitlist!');
       } else {
         // More prominent notification for existing users
