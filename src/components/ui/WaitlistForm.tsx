@@ -73,7 +73,17 @@ export function WaitlistForm() {
       if (result.isNew) {
         toast.success('Successfully joined waitlist!');
       } else {
-        toast('You are already on the list!', { icon: '👋' });
+        // More prominent notification for existing users
+        toast.error('You are already on the list!', {
+          duration: 5000,
+          icon: '⚠️',
+          style: {
+            border: '1px solid #f97316',
+            padding: '16px',
+            color: '#fff',
+            background: '#1a1d23',
+          },
+        });
       }
 
     } catch (error: any) {
