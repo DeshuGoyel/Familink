@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Users, 
@@ -24,10 +24,12 @@ export default function OpsDashboard() {
     adminCount: 0,
     systemStatus: 'Operational',
   });
-  const [isLoading, setIsLoading] = useState(true);
+  const [logs, setLogs] = useState<any[]>([]);
+  const [isLogsLoading, setIsLogsLoading] = useState(true);
 
   useEffect(() => {
     fetchStats();
+    fetchLogs();
   }, []);
 
   const fetchStats = async () => {
@@ -43,9 +45,43 @@ export default function OpsDashboard() {
       });
     } catch (err) {
       console.error('Failed to fetch stats');
-    } finally {
-      setIsLoading(false);
     }
+  };
+
+  const fetchLogs = async () => {
+    try {
+      const data = await opsApi.get<any[]>('/ops/logs?limit=5');
+      setLogs(data);
+    } catch (err) {
+      console.error('Failed to fetch audit logs');
+    } finally {
+      setIsLogsLoading(false);
+    }
+  };
+
+  const formatAction = (action: string) => {
+    const map: Record<string, string> = {
+      update_branding: 'Branding Configuration Update',
+      update_content: 'CMS Content Update',
+      update_cms: 'Page Content Update',
+      update_contact_config: 'Contact Settings Update',
+      delete_contact_message: 'Contact Message Deleted',
+      login: 'Admin Security Login',
+      create_admin: 'New System Admin Created',
+      delete_admin: 'System Admin Removed',
+      manual_review_decision: 'Manual Review Decision',
+    };
+    return map[action] || action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+
+  const formatTime = (date: string) => {
+    const now = new Date();
+    const then = new Date(date);
+    const diff = Math.floor((now.getTime() - then.getTime()) / 1000);
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+    return then.toLocaleDateString();
   };
 
   const container = {
@@ -142,20 +178,32 @@ export default function OpsDashboard() {
             </h3>
             <button className="text-xs text-indigo-400 font-bold hover:underline">View Audit Log</button>
           </div>
-          <Card className="bg-slate-950 border-slate-800 p-0 overflow-hidden divide-y divide-slate-800/50">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="p-4 flex items-center justify-between group hover:bg-slate-900/40 transition-colors">
+          <Card className="bg-slate-950 border-slate-800 p-0 overflow-hidden divide-y divide-slate-800/50 min-h-[300px]">
+            {isLogsLoading ? (
+               <div className="flex items-center justify-center py-20">
+                  <div className="w-8 h-8 border-2 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
+               </div>
+            ) : logs.length === 0 ? (
+               <div className="flex flex-col items-center justify-center py-20 text-slate-500">
+                  <Activity className="w-10 h-10 mb-2 opacity-20" />
+                  <p className="text-sm">No recent activity logs found</p>
+               </div>
+            ) : logs.map((log) => (
+              <div key={log.id} className="p-4 flex items-center justify-between group hover:bg-slate-900/40 transition-colors">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-500 group-hover:text-indigo-400 group-hover:border-indigo-500/30 transition-all">
                     <TrendingUp className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white">Branding Configuration Update</p>
-                    <p className="text-xs text-slate-500">System updated by admin@transferlegacy.com</p>
+                    <p className="text-sm font-medium text-white">{formatAction(log.action)}</p>
+                    <p className="text-xs text-slate-500">
+                      {log.admin_email || 'System Operation'} 
+                      {log.entity_type && log.entity_id && ` • ${log.entity_type}: ${log.entity_id}`}
+                    </p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-slate-400">2h ago</p>
+                  <p className="text-xs text-slate-400">{formatTime(log.created_at)}</p>
                   <Badge variant="success" className="text-[9px] mt-1">success</Badge>
                 </div>
               </div>
