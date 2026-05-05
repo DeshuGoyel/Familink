@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+
 import { 
   FileText, 
   Search, 
   Save, 
   RefreshCw, 
-  ExternalLink,
   Layout,
   Type,
   HelpCircle,
-  AlertCircle,
   Users,
   Plus,
   Trash2,
-  Image as ImageIcon,
   User
 } from 'lucide-react';
 import { opsApi } from '../../../lib/opsApi';

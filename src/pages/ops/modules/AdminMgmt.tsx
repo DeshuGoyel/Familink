@@ -8,7 +8,11 @@ import {
   ShieldCheck, 
   Calendar, 
   Settings as SettingsIcon,
-  Check
+  Check,
+  Key,
+  RefreshCcw,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { opsApi } from '../../../lib/opsApi';
 import { useOpsStore } from '../../../store/useOpsStore';
@@ -57,6 +61,17 @@ export default function AdminMgmt() {
     description: '',
     permissions: [] as string[],
   });
+  const [showPassword, setShowPassword] = useState(false);
+
+  const generatePassword = () => {
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+';
+    let pass = '';
+    for (let i = 0; i < 12; i++) {
+      pass += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    setNewAdmin(prev => ({ ...prev, password: pass }));
+    setShowPassword(true);
+  };
 
   useEffect(() => {
     fetchData();
@@ -357,14 +372,35 @@ export default function AdminMgmt() {
             required
             className="bg-slate-950 border-slate-800"
           />
-          <Input
-            label="Initial Password"
-            type="password"
-            value={newAdmin.password}
-            onChange={(e) => setNewAdmin(prev => ({ ...prev, password: e.target.value }))}
-            required
-            className="bg-slate-950 border-slate-800"
-          />
+          <div className="relative group">
+            <Input
+              label="Initial Password"
+              type={showPassword ? "text" : "password"}
+              value={newAdmin.password}
+              onChange={(e) => setNewAdmin(prev => ({ ...prev, password: e.target.value }))}
+              required
+              className="bg-slate-950 border-slate-800 pr-24"
+            />
+            <div className="absolute right-2 bottom-1.5 flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="p-1.5 text-slate-500 hover:text-white transition-colors"
+                title={showPassword ? "Hide Password" : "Show Password"}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+              <button
+                type="button"
+                onClick={generatePassword}
+                className="p-1.5 text-indigo-500 hover:text-indigo-400 hover:bg-indigo-500/10 rounded-lg transition-all flex items-center gap-1.5"
+                title="Generate Random Password"
+              >
+                <Key size={16} />
+                <span className="text-[10px] font-bold uppercase tracking-wider">Auto</span>
+              </button>
+            </div>
+          </div>
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-muted font-sans">Assign Role</label>
             <select

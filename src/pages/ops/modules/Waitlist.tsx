@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Mail, Search, Download, Trash2, Tag, Calendar, MoreHorizontal } from 'lucide-react';
+import { Users, Mail, Search, Download, Calendar, MoreHorizontal } from 'lucide-react';
 import { opsApi } from '../../../lib/opsApi';
 import Card from '../../../components/ui/Card';
 import Button from '../../../components/ui/Button';
