@@ -101,7 +101,8 @@ export default function App() {
               <Route path="/waitlist" element={<LandingPage />} />
               <Route path="/contact" element={<ContactUs />} />
 
-              {/* Main Entrance / Landing Gate */}
+              {/* Main Entrance / Landing Gate - Forced to LandingPage by default */}
+              <Route path="/" element={<LandingPage />} />
               <Route path="*" element={<MainEntrance />} />
             </Routes>
           </Suspense>
