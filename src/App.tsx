@@ -48,20 +48,20 @@ function MainEntrance() {
   useEffect(() => {
     async function fetchConfig() {
       try {
-        // Default to the production API if env var is missing
-        const API_URL = import.meta.env.VITE_API_URL || 'https://waitlist-api.transferlegacy.com/v1';
-        console.log('Fetching app config from:', API_URL);
-        
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/v1';
         const res = await fetch(`${API_URL}/app/branding`);
         if (res.ok) {
           const json = await res.json();
-          // Log the response to debug 'on/off' detection
-          console.log('App Config Received:', json);
-          
           const data = json.data || json;
-          setConfig(data);
-        } else {
-          console.warn('Config fetch failed with status:', res.status);
+          
+          // Ensure we parse these as booleans even if the DB returns them as strings/numbers
+          const parsedConfig = {
+            ...data,
+            waitlist_enabled: String(data.waitlist_enabled) === 'true' || data.waitlist_enabled === true,
+            maintenance_mode: String(data.maintenance_mode) === 'true' || data.maintenance_mode === true
+          };
+          
+          setConfig(parsedConfig);
         }
       } catch (err) {
         console.error('Failed to fetch app config:', err);
@@ -77,7 +77,9 @@ function MainEntrance() {
   }
 
   // Force landing page if config fetch failed, if maintenance is on, or if waitlist is enabled
-  if (!config || config.maintenance_mode || config.waitlist_enabled) {
+  const isWaiting = !config || config.maintenance_mode || config.waitlist_enabled;
+  
+  if (isWaiting) {
     return <LandingPage />;
   }
 
