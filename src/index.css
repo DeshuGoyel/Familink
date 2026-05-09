@@ -61,8 +61,8 @@
     cursor: pointer;
   }
 
-  /* Custom cursor is enabled only while the index page is mounted. */
-  body.custom-cursor-active * {
+  /* Custom Cursor reset (app only) */
+  body:not(.landing-page):not(.allow-cursor) * {
     cursor: none;
   }
 
