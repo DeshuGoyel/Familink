@@ -4,36 +4,57 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { usePassportStore, IdentityPassport } from '../store/usePassportStore';
 import { useStore } from '../store/useStore';
 import Button from '../components/ui/Button';
-import { ShieldCheck, Share2, Download, Edit3, X, QrCode, Sparkles } from 'lucide-react';
+import Card from '../components/ui/Card';
+import { ShieldCheck, Share2, Download, Edit3, X, QrCode, Sparkles, ChevronRight, Fingerprint, Globe, User, ShieldAlert } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import * as THREE from 'three';
+import { toast } from 'react-hot-toast';
 
 // Minimal 3D Card
 function Passport3DCard({ isFlipped }: { isFlipped: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null);
   
-  useFrame(() => {
+  const holographicMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({
+    color: '#0a0a0c',
+    metalness: 0.9,
+    roughness: 0.1,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.1,
+    iridescence: 1.0,
+    iridescenceIOR: 1.3,
+    transmission: 0.1,
+  }), []);
+
+  useFrame((state) => {
     if (meshRef.current) {
       const targetRotation = isFlipped ? Math.PI : 0;
-      // Smooth interpolation
       meshRef.current.rotation.y += (targetRotation - meshRef.current.rotation.y) * 0.1;
+      
+      // Suble tilt based on mouse
+      meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, (state.mouse.y * Math.PI) / 10, 0.1);
     }
   });
   
   return (
     <group>
       <ambientLight intensity={0.5} />
-      <directionalLight position={[5, 5, 5]} intensity={1.5} />
-      <directionalLight position={[-5, -5, -5]} intensity={0.5} color="#4F5CFF" />
+      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={2} />
+      <pointLight position={[-10, -10, -10]} intensity={1} color="#4F5CFF" />
       
-      <mesh ref={meshRef}>
+      <mesh ref={meshRef} material={holographicMaterial}>
         <boxGeometry args={[3.2, 2, 0.05]} />
-        <meshStandardMaterial color="#1a1b26" metalness={0.8} roughness={0.2} />
       </mesh>
     </group>
   );
 }
+
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 15 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+});
 
 export default function IdentityPassportPage() {
   const { passport, updatePassport, generateQRData, generateSummary } = usePassportStore();
@@ -55,7 +76,7 @@ export default function IdentityPassportPage() {
   const simulateAiSummary = () => {
     setIsGenerating(true);
     const totalValue = assets.reduce((acc, a) => acc + (a.value || 0), 0);
-    const newSummary = `This user has ${assets.length} protected digital assets worth approximately $${totalValue.toLocaleString()}, ${guardians.filter(g=>g.status==='confirmed').length} confirmed guardians, and ${heirs.length} designated heirs.`;
+    const newSummary = `This sovereign user has ${assets.length} protected digital assets worth approximately $${totalValue.toLocaleString()}, ${guardians.filter(g=>g.status==='confirmed').length} confirmed institutional guardians, and ${heirs.length} designated beneficiaries. The protocol is fully synchronized.`;
     
     setTimeout(() => {
       generateSummary(newSummary);
@@ -71,225 +92,291 @@ export default function IdentityPassportPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-10">
-      <header className="flex flex-col items-center justify-center text-center pt-4">
-        <h1 className="text-3xl font-bold text-text flex items-center gap-3 mb-2">
-          Your Digital Identity Passport
-        </h1>
-        <p className="text-muted max-w-lg">
-          Everything anyone needs in an emergency. Shareable. Verifiable. Yours.
-        </p>
-      </header>
-
-      {/* 3D Scene representing the card */}
-      <div 
-        className="h-64 w-full cursor-pointer relative" 
-        onMouseEnter={() => setIsFlipped(true)}
-        onMouseLeave={() => setIsFlipped(false)}
-        onClick={() => setIsFlipped(!isFlipped)}
-      >
-        <Canvas camera={{ position: [0, 0, 4] }}>
-          <Passport3DCard isFlipped={isFlipped} />
-        </Canvas>
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-xs text-muted/50 font-mono tracking-widest mt-48">
-          HOVER TO FLIP
-        </div>
-      </div>
-
-      <div className="flex flex-col md:flex-row gap-8 justify-center items-start">
+    <div className="min-h-screen bg-page text-primary selection:bg-brand-primary/30 pt-20">
+      <main className="px-4 sm:px-6 lg:px-8 pb-24 md:pb-12 max-w-5xl mx-auto space-y-12">
         
-        {/* The 2D Passport Card UI */}
-        <div className="w-full md:w-[450px] aspect-[1.586/1] rounded-2xl p-[2px] bg-gradient-to-br from-primary/50 via-surface to-indigo-500/30 shadow-[0_20px_50px_rgba(79,92,255,0.15)] relative">
-          <div className="w-full h-full bg-[#0d0e15] rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden">
-            
-            {/* Watermark */}
-            <ShieldCheck size={200} className="absolute -right-10 -bottom-10 text-primary/5 opacity-50 pointer-events-none" />
+        {/* ── Page Header ── */}
+        <motion.header {...fadeUp(0)} className="flex flex-col items-center justify-center text-center">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="w-2 h-2 rounded-full bg-brand-primary shadow-[0_0_10px_rgba(79,92,255,0.8)]" />
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-primary">
+              Sovereign Identity Protocol
+            </p>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-display font-bold text-primary tracking-tight leading-none mb-4">
+            Digital Identity <span className="italic text-brand-primary">Passport</span>
+          </h1>
+          <p className="text-muted text-sm max-w-lg font-medium">
+            A verifiable cryptographic proof of existence. Universal, portable, and institutional-grade.
+          </p>
+        </motion.header>
 
-            <div className="flex justify-between items-start border-b border-border/50 pb-3 mb-4">
-              <div>
-                <h3 className="text-primary font-bold tracking-widest text-sm mb-1 uppercase">Transfer Legacy Digital Passport</h3>
-                <p className="text-[10px] text-muted font-mono">ID: {passport.fullName.toUpperCase().replace(/\s/g, '')}-{calculateAge(passport.dateOfBirth)}</p>
-              </div>
-              <div className="w-12 h-12 rounded-lg bg-surface border border-border flex items-center justify-center">
-                <ShieldCheck className="text-primary" size={24} />
-              </div>
-            </div>
+        {/* ── 3D Visualization ── */}
+        <motion.div 
+          {...fadeUp(0.1)}
+          className="h-64 w-full cursor-pointer relative group" 
+          onMouseEnter={() => setIsFlipped(true)}
+          onMouseLeave={() => setIsFlipped(false)}
+          onClick={() => setIsFlipped(!isFlipped)}
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(79,92,255,0.05),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <Canvas camera={{ position: [0, 0, 4] }}>
+            <Passport3DCard isFlipped={isFlipped} />
+          </Canvas>
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-[9px] font-bold text-obsidian-600 tracking-[0.4em] uppercase mt-40">
+            Hover to rotate credential
+          </div>
+        </motion.div>
 
-            <div className="flex gap-4 flex-1">
-              <div className="space-y-3 flex-1">
+        <div className="flex flex-col md:flex-row gap-12 justify-center items-start">
+          
+          {/* ── Physical-Style Passport Card ── */}
+          <motion.div {...fadeUp(0.2)} className="w-full md:w-[480px] aspect-[1.586/1] rounded-[32px] p-[1.5px] bg-gradient-to-br from-brand-primary/40 via-obsidian-800 to-brand-primary/10 shadow-[0_40px_100px_rgba(0,0,0,0.5)] relative group">
+            <div className="w-full h-full bg-[#0a0a0c] rounded-[31px] p-8 flex flex-col justify-between relative overflow-hidden backdrop-blur-xl">
+              
+              {/* Complex Watermark Patterns */}
+              <div className="absolute -right-16 -bottom-16 w-64 h-64 border border-brand-primary/5 rounded-full pointer-events-none" />
+              <div className="absolute -right-8 -bottom-8 w-48 h-48 border border-brand-primary/5 rounded-full pointer-events-none" />
+              <ShieldCheck size={240} className="absolute -right-20 -bottom-20 text-brand-primary opacity-[0.03] pointer-events-none" />
+
+              <div className="flex justify-between items-start border-b border-base pb-4 mb-6">
                 <div>
-                  <p className="text-[10px] text-muted uppercase tracking-wider mb-0.5">Full Name</p>
-                  <p className="text-sm font-semibold text-text">{passport.fullName}</p>
+                  <h3 className="text-brand-primary font-bold tracking-[0.25em] text-[10px] mb-1.5 uppercase">Transfer Legacy · Digital Passport</h3>
+                  <p className="text-[9px] text-obsidian-600 font-mono font-bold tracking-widest uppercase">ID: {passport.fullName.toUpperCase().replace(/\s/g, '')}-{calculateAge(passport.dateOfBirth)}</p>
                 </div>
-                <div className="flex gap-4">
+                <div className="w-12 h-12 rounded-xl bg-surface border border-base flex items-center justify-center shadow-inner">
+                  <Fingerprint className="text-brand-primary" size={24} />
+                </div>
+              </div>
+
+              <div className="flex gap-8 flex-1">
+                <div className="space-y-5 flex-1">
                   <div>
-                    <p className="text-[10px] text-muted uppercase tracking-wider mb-0.5">Date of Birth</p>
-                    <p className="text-sm font-medium text-text">{passport.dateOfBirth}</p>
+                    <p className="text-[9px] text-obsidian-600 font-bold uppercase tracking-[0.2em] mb-1.5">Full Legal Name</p>
+                    <p className="text-base font-display font-bold text-primary tracking-tight">{passport.fullName}</p>
                   </div>
-                  <div>
-                    <p className="text-[10px] text-muted uppercase tracking-wider mb-0.5">Country</p>
-                    <p className="text-sm font-medium text-text">{passport.country}</p>
+                  <div className="flex gap-8">
+                    <div>
+                      <p className="text-[9px] text-obsidian-600 font-bold uppercase tracking-[0.2em] mb-1.5">Issuance Date</p>
+                      <p className="text-xs font-bold text-obsidian-200 uppercase tracking-widest">{passport.dateOfBirth}</p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] text-obsidian-600 font-bold uppercase tracking-[0.2em] mb-1.5">Jurisdiction</p>
+                      <p className="text-xs font-bold text-obsidian-200 uppercase tracking-widest">{passport.country}</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-8">
+                    <div>
+                      <p className="text-[9px] text-obsidian-600 font-bold uppercase tracking-[0.2em] mb-1.5">Blood Metric</p>
+                      <p className="text-xs font-bold text-red-500 uppercase tracking-widest">{passport.bloodGroup}</p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] text-obsidian-600 font-bold uppercase tracking-[0.2em] mb-1.5">Vault State</p>
+                      <p className="text-xs font-bold text-brand-primary flex items-center gap-2 tracking-[0.2em]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse shadow-[0_0_8px_rgba(79,92,255,0.8)]" />
+                        SYNCHRONIZED
+                      </p>
+                    </div>
                   </div>
                 </div>
-                <div className="flex gap-4">
-                  <div>
-                    <p className="text-[10px] text-muted uppercase tracking-wider mb-0.5">Blood</p>
-                    <p className="text-sm font-bold text-red-400">{passport.bloodGroup}</p>
+                
+                <div className="w-28 flex flex-col items-end gap-3 shrink-0">
+                  <div className="p-2.5 bg-obsidian-50 rounded-2xl shadow-2xl relative group-hover:scale-105 transition-transform">
+                    <QRCodeSVG value={passport.qrCodeData || 'transfer_legacy'} size={92} bgColor="#f8fafc" fgColor="#0a0a0c" />
                   </div>
-                  <div>
-                    <p className="text-[10px] text-muted uppercase tracking-wider mb-0.5">Vault Status</p>
-                    <p className="text-sm font-medium text-emerald-400 flex items-center gap-1">ACTIVE</p>
+                  <div className="w-full">
+                    <p className="text-[7px] text-obsidian-700 text-right font-mono font-bold truncate tracking-widest">{passport.qrCodeData}</p>
                   </div>
                 </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-base">
+                <p className="text-[9px] text-obsidian-600 font-bold uppercase tracking-[0.2em] mb-1.5">Protocol Custodian</p>
+                <p className="text-[11px] font-bold text-obsidian-200 tracking-tight flex items-center gap-2">
+                  {passport.emergencyContact.name} <span className="text-obsidian-700 font-medium">({passport.emergencyContact.relation})</span>
+                  <span className="w-1 h-1 rounded-full bg-surface/80" />
+                  <span className="font-mono text-primary0">{passport.emergencyContact.phone}</span>
+                </p>
               </div>
               
-              <div className="w-24 flex flex-col items-end gap-3 shrink-0">
-                <div className="p-1 bg-white rounded-lg">
-                  <QRCodeSVG value={passport.qrCodeData || 'transfer_legacy'} size={88} />
-                </div>
-                <div className="w-full">
-                  <p className="text-[8px] text-muted text-right font-mono truncate">{passport.qrCodeData}</p>
-                </div>
-              </div>
             </div>
+          </motion.div>
 
-            <div className="mt-4 pt-3 border-t border-border/50">
-              <p className="text-[10px] text-muted uppercase tracking-wider mb-0.5">Emergency Contact</p>
-              <p className="text-xs font-medium text-text">
-                {passport.emergencyContact.name} ({passport.emergencyContact.relation}) • {passport.emergencyContact.phone}
-              </p>
-            </div>
-            
+          {/* ── Action Matrix ── */}
+          <div className="w-full md:w-80 space-y-6">
+            <motion.div {...fadeUp(0.3)}>
+              <Card className="p-6 bg-surface/40 border border-base/60 relative group">
+                <div className="absolute inset-0 bg-brand-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <h4 className="text-[10px] font-bold text-brand-primary uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+                  <Sparkles size={12} /> Autonomous Synthesis
+                </h4>
+                <p className="text-xs text-muted font-medium leading-relaxed mb-6 italic">
+                  "{passport.vaultSummary}"
+                </p>
+                <button 
+                  onClick={simulateAiSummary} 
+                  disabled={isGenerating} 
+                  className="text-[10px] font-bold text-primary0 uppercase tracking-widest flex items-center gap-2 hover:text-brand-primary transition-colors disabled:opacity-50"
+                >
+                  {isGenerating ? <div className="w-3 h-3 border-2 border-brand-primary border-t-transparent rounded-full animate-spin" /> : <Activity size={14}/>}
+                  {isGenerating ? 'Synthesizing...' : 'Regenerate Analysis'}
+                </button>
+              </Card>
+            </motion.div>
+
+            <motion.div {...fadeUp(0.4)} className="grid grid-cols-2 gap-4">
+               <button 
+                onClick={() => setIsEditModalOpen(true)}
+                className="flex flex-col items-center justify-center p-6 rounded-3xl bg-surface border border-base hover:border-brand-primary/40 hover:bg-page transition-all gap-3 group"
+               >
+                 <div className="w-10 h-10 rounded-xl bg-page border border-base flex items-center justify-center group-hover:text-brand-primary transition-colors">
+                   <Edit3 size={18}/>
+                 </div>
+                 <span className="text-[10px] font-bold text-muted uppercase tracking-widest">Update Data</span>
+               </button>
+               
+               <button 
+                onClick={() => setIsShareModalOpen(true)}
+                className="flex flex-col items-center justify-center p-6 rounded-3xl bg-brand-primary text-obsidian-950 hover:bg-brand-primary transition-all gap-3 shadow-xl shadow-brand-primary/10 active:scale-95"
+               >
+                 <div className="w-10 h-10 rounded-xl bg-page/10 flex items-center justify-center">
+                   <Share2 size={18}/>
+                 </div>
+                 <span className="text-[10px] font-bold uppercase tracking-widest">Share Pulse</span>
+               </button>
+            </motion.div>
+
+            <motion.button 
+              {...fadeUp(0.5)}
+              onClick={() => {
+                toast.success('Institutional Verification PDF Generated');
+                const notification = new Notification("Protocol Transmitted", { body: "Your verification PDF is ready for download." });
+              }}
+              className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl border border-base text-primary0 hover:text-obsidian-200 hover:border-base transition-all text-[10px] font-bold uppercase tracking-[0.2em]"
+            >
+               <Download size={14}/> Generate Verification PDF
+            </motion.button>
           </div>
+
         </div>
+      </main>
 
-        {/* Actions & Info panel */}
-        <div className="w-full md:w-80 space-y-4">
-          <div className="glassmorphism rounded-2xl p-5 border-primary/20">
-             <h4 className="text-sm font-semibold text-text mb-2">Vault Summary</h4>
-             <p className="text-xs text-muted leading-relaxed mb-4">
-               {passport.vaultSummary}
-             </p>
-             <button onClick={simulateAiSummary} disabled={isGenerating} className="text-xs text-primary hover:text-primary-light flex items-center gap-1 transition-colors">
-               <Sparkles size={12}/> {isGenerating ? 'Updating...' : 'Regenerate Summary'}
-             </button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-             <Button variant="secondary" className="w-full flex-col h-auto py-4 gap-2" onClick={() => setIsEditModalOpen(true)}>
-               <Edit3 size={20}/>
-               <span className="text-xs">Edit Details</span>
-             </Button>
-             <Button variant="primary" className="w-full flex-col h-auto py-4 gap-2 border-none shadow-[0_0_15px_rgba(79,92,255,0.3)] bg-primary/20 hover:bg-primary" onClick={() => setIsShareModalOpen(true)}>
-               <Share2 size={20}/>
-               <span className="text-xs font-bold text-white">Share</span>
-             </Button>
-          </div>
-
-          <Button variant="secondary" className="w-full gap-2 text-muted border-border/50">
-             <Download size={16}/> Download PDF
-          </Button>
-        </div>
-
-      </div>
-
-      {/* Edit Modal */}
+      {/* ── Institutional Edit Modal ── */}
       <AnimatePresence>
         {isEditModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="w-full max-w-lg bg-surface border border-border rounded-2xl overflow-hidden shadow-2xl">
-              <div className="p-4 border-b border-border/50 flex justify-between items-center">
-                <h3 className="text-lg font-bold text-text">Edit Passport Details</h3>
-                <button onClick={() => setIsEditModalOpen(false)} className="text-muted hover:text-text"><X size={20}/></button>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-page/80 backdrop-blur-md">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }} 
+              animate={{ opacity: 1, scale: 1, y: 0 }} 
+              exit={{ opacity: 0, scale: 0.95, y: 20 }} 
+              className="w-full max-w-lg bg-surface border border-base rounded-[32px] overflow-hidden shadow-2xl"
+            >
+              <div className="p-8 border-b border-base flex justify-between items-center bg-surface/50">
+                <div>
+                  <h3 className="text-xl font-display font-bold text-primary">Modify Protocol Data</h3>
+                  <p className="text-[10px] font-bold text-obsidian-600 uppercase tracking-widest mt-1">Identity Authorization Required</p>
+                </div>
+                <button onClick={() => setIsEditModalOpen(false)} className="text-obsidian-600 hover:text-obsidian-200 p-2 transition-colors"><X size={20}/></button>
               </div>
-              <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-                
-                <div className="grid grid-cols-2 gap-4">
+              
+              <div className="p-8 space-y-6 max-h-[60vh] overflow-y-auto scrollbar-hide">
+                <div className="grid grid-cols-2 gap-6">
                   <div className="col-span-2">
-                    <label className="text-xs text-muted block mb-1">Full Name</label>
-                    <input type="text" className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-text" value={editForm.fullName} onChange={(e) => setEditForm({...editForm, fullName: e.target.value})} />
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-obsidian-600 mb-2 block">Full Legal Identity</label>
+                    <input type="text" className="w-full bg-page border border-base rounded-xl px-4 py-3 text-sm text-obsidian-100 focus:outline-none focus:border-brand-primary/50 font-medium" value={editForm.fullName} onChange={(e) => setEditForm({...editForm, fullName: e.target.value})} />
                   </div>
                   <div>
-                    <label className="text-xs text-muted block mb-1">Date of Birth</label>
-                    <input type="date" className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-text" value={editForm.dateOfBirth} onChange={(e) => setEditForm({...editForm, dateOfBirth: e.target.value})} />
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-obsidian-600 mb-2 block">Birth Metrics</label>
+                    <input type="date" className="w-full bg-page border border-base rounded-xl px-4 py-3 text-sm text-obsidian-100 focus:outline-none focus:border-brand-primary/50 font-medium" value={editForm.dateOfBirth} onChange={(e) => setEditForm({...editForm, dateOfBirth: e.target.value})} />
                   </div>
                   <div>
-                    <label className="text-xs text-muted block mb-1">Blood Group</label>
-                    <select className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-text outline-none" value={editForm.bloodGroup} onChange={(e) => setEditForm({...editForm, bloodGroup: e.target.value})}>
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-obsidian-600 mb-2 block">Blood Group</label>
+                    <select className="w-full bg-page border border-base rounded-xl px-4 py-3 text-sm text-obsidian-100 focus:outline-none focus:border-brand-primary/50 outline-none font-medium" value={editForm.bloodGroup} onChange={(e) => setEditForm({...editForm, bloodGroup: e.target.value})}>
                       {['A+','A-','B+','B-','O+','O-','AB+','AB-'].map(b => <option key={b} value={b}>{b}</option>)}
                     </select>
                   </div>
                   <div className="col-span-2">
-                    <label className="text-xs text-muted block mb-1">Country</label>
-                    <input type="text" className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-text" value={editForm.country} onChange={(e) => setEditForm({...editForm, country: e.target.value})} />
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-obsidian-600 mb-2 block">Sovereign Jurisdiction</label>
+                    <input type="text" className="w-full bg-page border border-base rounded-xl px-4 py-3 text-sm text-obsidian-100 focus:outline-none focus:border-brand-primary/50 font-medium" value={editForm.country} onChange={(e) => setEditForm({...editForm, country: e.target.value})} />
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-border/50">
-                  <h4 className="text-sm font-semibold text-text mb-3">Emergency Contact</h4>
-                  <div className="space-y-3">
-                    <input type="text" placeholder="Name" className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-text" value={editForm.emergencyContact.name} onChange={(e) => setEditForm({...editForm, emergencyContact: {...editForm.emergencyContact, name: e.target.value}})} />
-                    <div className="grid grid-cols-2 gap-3">
-                      <input type="text" placeholder="Phone" className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-text" value={editForm.emergencyContact.phone} onChange={(e) => setEditForm({...editForm, emergencyContact: {...editForm.emergencyContact, phone: e.target.value}})} />
-                      <input type="text" placeholder="Relation" className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-text" value={editForm.emergencyContact.relation} onChange={(e) => setEditForm({...editForm, emergencyContact: {...editForm.emergencyContact, relation: e.target.value}})} />
+                <div className="pt-6 border-t border-base">
+                  <h4 className="text-xs font-bold text-muted uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <ShieldAlert size={14} className="text-red-500" /> Emergency Custodian
+                  </h4>
+                  <div className="space-y-4">
+                    <input type="text" placeholder="Legal Name" className="w-full bg-page border border-base rounded-xl px-4 py-3 text-sm text-obsidian-100 focus:outline-none focus:border-brand-primary/50 font-medium" value={editForm.emergencyContact.name} onChange={(e) => setEditForm({...editForm, emergencyContact: {...editForm.emergencyContact, name: e.target.value}})} />
+                    <div className="grid grid-cols-2 gap-4">
+                      <input type="text" placeholder="Global Phone" className="w-full bg-page border border-base rounded-xl px-4 py-3 text-sm text-obsidian-100 focus:outline-none focus:border-brand-primary/50 font-medium" value={editForm.emergencyContact.phone} onChange={(e) => setEditForm({...editForm, emergencyContact: {...editForm.emergencyContact, phone: e.target.value}})} />
+                      <input type="text" placeholder="Relation" className="w-full bg-page border border-base rounded-xl px-4 py-3 text-sm text-obsidian-100 focus:outline-none focus:border-brand-primary/50 font-medium" value={editForm.emergencyContact.relation} onChange={(e) => setEditForm({...editForm, emergencyContact: {...editForm.emergencyContact, relation: e.target.value}})} />
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-border/50">
-                  <h4 className="text-sm font-semibold text-text mb-3">Sharing Preferences</h4>
-                  <div className="space-y-2">
+                <div className="pt-6 border-t border-base">
+                  <h4 className="text-xs font-bold text-muted uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <Globe size={14} className="text-brand-primary" /> Authorization Bounds
+                  </h4>
+                  <div className="space-y-3">
                     {[
-                      { id: 'shareableWithFamily', label: 'Share with Family' },
-                      { id: 'shareableWithAttorney', label: 'Share with Estate Attorney' },
-                      { id: 'shareableWithAdvisor', label: 'Share with Financial Advisor' },
+                      { id: 'shareableWithFamily', label: 'Mandate Sharing with Verified Beneficiaries' },
+                      { id: 'shareableWithAttorney', label: 'Mandate Sharing with Legal Counsel' },
+                      { id: 'shareableWithAdvisor', label: 'Mandate Sharing with Sovereign Advisor' },
                     ].map(pref => (
-                      <label key={pref.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-background cursor-pointer">
-                        <input type="checkbox" className="w-4 h-4 rounded text-primary focus:ring-primary bg-background border-border" 
+                      <label key={pref.id} className="flex items-center gap-4 p-4 rounded-2xl bg-page/40 border border-base/60 hover:border-brand-primary/30 cursor-pointer transition-all group">
+                        <input type="checkbox" className="w-5 h-5 rounded-lg text-brand-primary focus:ring-brand-primary bg-surface border-base transition-all" 
                           checked={editForm[pref.id as keyof IdentityPassport] as boolean} 
                           onChange={(e) => setEditForm({...editForm, [pref.id]: e.target.checked})} 
                         />
-                        <span className="text-sm text-text">{pref.label}</span>
+                        <span className="text-[11px] font-bold text-muted uppercase tracking-widest group-hover:text-obsidian-200 transition-colors">{pref.label}</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
               </div>
-              <div className="p-4 border-t border-border/50 bg-background flex justify-end gap-3">
-                <Button variant="secondary" onClick={() => setIsEditModalOpen(false)}>Cancel</Button>
-                <Button variant="primary" onClick={handleSave}>Save Changes</Button>
+              <div className="p-8 border-t border-base bg-page/40 flex justify-end gap-4">
+                <Button variant="secondary" className="px-8 font-bold uppercase tracking-widest text-[10px]" onClick={() => setIsEditModalOpen(false)}>Abort</Button>
+                <Button variant="primary" className="px-8 font-bold uppercase tracking-widest text-[10px]" onClick={handleSave}>Sync Protocol</Button>
               </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
 
-      {/* Share Modal */}
+      {/* ── Institutional Share Modal ── */}
       <AnimatePresence>
         {isShareModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="w-full max-w-sm bg-surface border border-border rounded-2xl p-6 text-center">
-               <div className="w-16 h-16 rounded-full bg-primary/20 text-primary flex items-center justify-center mx-auto mb-4 border border-primary/30">
-                 <QrCode size={32} />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-page/80 backdrop-blur-md">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }} 
+              animate={{ opacity: 1, scale: 1 }} 
+              exit={{ opacity: 0, scale: 0.95 }} 
+              className="w-full max-w-sm bg-surface border border-base rounded-[40px] p-10 text-center shadow-2xl relative overflow-hidden"
+            >
+               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(79,92,255,0.1),transparent)]" />
+               <div className="w-20 h-20 rounded-[28px] bg-brand-primary/10 text-brand-primary flex items-center justify-center mx-auto mb-6 border border-brand-primary/20 shadow-inner relative z-10">
+                 <QrCode size={36} />
                </div>
-               <h3 className="text-xl font-bold text-text mb-2">Share Passport</h3>
-               <p className="text-sm text-muted mb-6">Scan QR to access public verified data.</p>
+               <h3 className="text-2xl font-display font-bold text-primary mb-2 relative z-10">Authorization Node</h3>
+               <p className="text-[10px] font-bold text-primary0 uppercase tracking-[0.2em] mb-10 relative z-10">Verified Protocol Sharing</p>
                
-               <div className="bg-white p-4 rounded-xl inline-block mb-6 shadow-xl">
-                 <QRCodeSVG value={passport.qrCodeData} size={150} />
+               <div className="bg-obsidian-50 p-6 rounded-[32px] inline-block mb-10 shadow-[0_20px_50px_rgba(0,0,0,0.4)] relative z-10">
+                 <QRCodeSVG value={passport.qrCodeData} size={180} bgColor="#f8fafc" fgColor="#0a0a0c" />
                </div>
                
-               <div className="w-full bg-background rounded-lg p-3 text-xs text-muted font-mono flex items-center justify-between border border-border/50 mb-6">
-                 <span className="truncate flex-1 text-left select-all">{passport.qrCodeData}</span>
+               <div className="w-full bg-page rounded-2xl p-4 text-[10px] text-obsidian-600 font-mono font-bold flex items-center justify-between border border-base mb-10 relative z-10">
+                 <span className="truncate flex-1 text-left select-all tracking-widest">{passport.qrCodeData}</span>
                </div>
                
-               <div className="space-y-3">
-                 <Button variant="primary" className="w-full" onClick={() => {
-                   // Mock email send
-                   setIsShareModalOpen(false);
-                 }}>Send via Email</Button>
-                 <Button variant="secondary" className="w-full text-muted border-none" onClick={() => setIsShareModalOpen(false)}>Close</Button>
+               <div className="space-y-4 relative z-10">
+                 <Button variant="primary" className="w-full py-4 text-[10px] font-bold uppercase tracking-widest" onClick={() => setIsShareModalOpen(false)}>
+                   Transmit via Secure Email
+                 </Button>
+                 <button className="text-[10px] font-bold text-obsidian-600 uppercase tracking-[0.2em] hover:text-secondary transition-colors" onClick={() => setIsShareModalOpen(false)}>
+                   Close Protocol
+                 </button>
                </div>
             </motion.div>
           </div>

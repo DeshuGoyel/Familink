@@ -9,8 +9,8 @@ export default function DeathSimulator() {
   const [phase, setPhase] = useState(0);
   const { assets, guardians } = useStore();
 
-  const confirmedGuardiansCount = guardians.filter(g => g.status === 'confirmed').length;
-  const guardianThreshold = 2; // Assuming 2
+  const confirmedGuardiansCount = guardians.filter(g => g.status === 'Confirmed').length;
+  const guardianThreshold = 2; 
   const thresholdMet = confirmedGuardiansCount >= guardianThreshold;
 
   const handleStart = () => {

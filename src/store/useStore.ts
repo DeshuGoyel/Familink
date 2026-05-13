@@ -59,7 +59,29 @@ interface AppState {
   addAllocation: (allocation: Omit<Allocation, 'id'>) => void;
   updateAllocation: (id: string, percentage: number) => void;
   removeAllocation: (id: string) => void;
+  calculateScore: () => void;
 }
+
+const calculateNewScore = (state: any) => {
+  let score = 0;
+  
+  // 1. Guardians (40%)
+  const confirmedGuardians = state.guardians.filter((g: any) => g.status === 'Confirmed').length;
+  score += Math.min(confirmedGuardians * 20, 40);
+
+  // 2. Assets Coverage (40%)
+  if (state.assets.length > 0) {
+    const coveredAssets = state.assets.filter((a: any) => (a.notes && a.notes.length > 0) || a.status === 'Protected').length;
+    score += Math.round((coveredAssets / state.assets.length) * 40);
+  }
+
+  // 3. Heirs (20%)
+  if (state.heirs.length > 0) {
+    score += 20;
+  }
+
+  return score;
+};
 
 export const useStore = create<AppState>((set) => ({
   user: {
@@ -74,8 +96,8 @@ export const useStore = create<AppState>((set) => ({
     ]
   },
   assets: [...mockAssets],
-  guardians: [...mockGuardians],
-  heirs: [...mockHeirs],
+  guardians: mockGuardians.map(g => ({ ...g, status: g.status === 'confirmed' ? 'Confirmed' : 'Pending' })),
+  heirs: mockHeirs.map(h => ({ ...h, status: h.status === 'active' ? 'Record Secured' : h.status })),
   charities: [
     { id: 'c1', name: 'GiveWell', description: 'Maximum impact, evidence-based charities.', category: 'Global Health' },
     { id: 'c2', name: 'Electronic Frontier Foundation', description: 'Defending digital privacy and free speech.', category: 'Digital Rights' },
@@ -91,25 +113,34 @@ export const useStore = create<AppState>((set) => ({
   isSidebarCollapsed: false,
   isMobileSidebarOpen: false,
 
-  addAsset: (asset) => set((state) => ({ assets: [...state.assets, { ...asset, id: Date.now().toString() }] })),
-  updateAsset: (id, data) => set((state) => ({
-    assets: state.assets.map(a => a.id === id ? { ...a, ...data } : a)
-  })),
-  deleteAsset: (id) => set((state) => ({
-    assets: state.assets.filter(a => a.id !== id)
-  })),
-  addGuardian: (guardian) => set((state) => ({
-    guardians: [...state.guardians, { ...guardian, id: Date.now().toString(), status: 'Pending' }]
-  })),
-  confirmGuardian: (id) => set((state) => ({
-    guardians: state.guardians.map(g => g.id === id ? { ...g, status: 'Confirmed' } : g)
-  })),
-  removeGuardian: (id) => set((state) => ({
-    guardians: state.guardians.filter(g => g.id !== id)
-  })),
-  addHeir: (heir) => set((state) => ({
-    heirs: [...state.heirs, { ...heir, id: Date.now().toString(), status: 'Not Notified', progress: 0 }]
-  })),
+  addAsset: (asset) => set((state) => {
+    const newState = { ...state, assets: [...state.assets, { ...asset, id: Date.now().toString() }] };
+    return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
+  }),
+  updateAsset: (id, data) => set((state) => {
+    const newState = { ...state, assets: state.assets.map(a => a.id === id ? { ...a, ...data } : a) };
+    return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
+  }),
+  deleteAsset: (id) => set((state) => {
+    const newState = { ...state, assets: state.assets.filter(a => a.id !== id) };
+    return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
+  }),
+  addGuardian: (guardian) => set((state) => {
+    const newState = { ...state, guardians: [...state.guardians, { ...guardian, id: Date.now().toString(), status: 'Pending' }] };
+    return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
+  }),
+  confirmGuardian: (id) => set((state) => {
+    const newState = { ...state, guardians: state.guardians.map(g => g.id === id ? { ...g, status: 'Confirmed' } : g) };
+    return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
+  }),
+  removeGuardian: (id) => set((state) => {
+    const newState = { ...state, guardians: state.guardians.filter(g => g.id !== id) };
+    return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
+  }),
+  addHeir: (heir) => set((state) => {
+    const newState = { ...state, heirs: [...state.heirs, { ...heir, id: Date.now().toString(), status: 'Not Notified', progress: 0 }] };
+    return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
+  }),
   updateHeirStatus: (id, status) => set((state) => ({
     heirs: state.heirs.map(h => h.id === id ? { ...h, status } : h)
   })),
@@ -136,5 +167,7 @@ export const useStore = create<AppState>((set) => ({
   })),
   removeAllocation: (id) => set((state) => ({
     allocations: state.allocations.filter(a => a.id !== id)
-  }))
+  })),
+
+  calculateScore: () => set((state) => ({ user: { ...state.user, score: calculateNewScore(state) } }))
 }));

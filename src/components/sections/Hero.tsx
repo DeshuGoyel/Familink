@@ -10,11 +10,11 @@ import { CountdownTimer } from '../ui/CountdownTimer';
 
 /* ─── Avatar stack ─────────────────────────────────────────── */
 const avatars = [
-  { bg: '#6366f1', initials: 'MK' },
-  { bg: '#8b5cf6', initials: 'SR' },
-  { bg: '#ec4899', initials: 'AP' },
-  { bg: '#f59e0b', initials: 'JL' },
-  { bg: '#10b981', initials: 'RD' },
+  { bg: '#D4AF37', initials: 'MK' }, // Gold
+  { bg: '#1E293B', initials: 'SR' }, // Obsidian
+  { bg: '#10B981', initials: 'AP' }, // Emerald
+  { bg: '#F59E0B', initials: 'JL' }, // Amber
+  { bg: '#0F172A', initials: 'RD' }, // Darker Obsidian
 ];
 
 /* ─── Floating glass card ───────────────────────────────────── */
@@ -29,12 +29,13 @@ function GlassCard({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.85, y: 16 }}
+      initial={{ opacity: 0, scale: 0.9, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ delay, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      className={`absolute bg-white/[0.12] backdrop-blur-xl border border-white/25 rounded-2xl shadow-2xl shadow-black/20 ${className}`}
+      transition={{ delay, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      className={`absolute bg-white/[0.03] backdrop-blur-3xl border border-white/[0.08] rounded-2xl shadow-2xl ${className}`}
     >
-      {children}
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.08] to-transparent pointer-events-none" />
+      <div className="relative z-10">{children}</div>
     </motion.div>
   );
 }
@@ -56,10 +57,10 @@ function GlassChip({
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay, duration: 0.6, ease: 'easeOut' }}
-      className={`absolute flex items-center gap-2 bg-white/[0.14] backdrop-blur-xl border border-white/25 px-4 py-2.5 rounded-full shadow-xl ${className}`}
+      className={`absolute flex items-center gap-2 bg-white/[0.05] backdrop-blur-2xl border border-white/[0.1] px-4 py-2.5 rounded-full shadow-lg ${className}`}
     >
-      <Icon className="w-3.5 h-3.5 text-white" />
-      <span className="text-white text-sm font-semibold whitespace-nowrap leading-none">{label}</span>
+      <Icon className="w-3.5 h-3.5 text-white/70" />
+      <span className="text-white/90 text-sm font-medium tracking-tight whitespace-nowrap leading-none">{label}</span>
     </motion.div>
   );
 }
@@ -80,7 +81,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="hero"
-      className="relative min-h-screen flex overflow-hidden bg-[#090B14]"
+      className="relative min-h-screen flex overflow-hidden bg-page"
       style={{ paddingTop: '72px' }} /* navbar height — prevents overlap */
     >
       {/* ── LEFT CONTENT PANEL ────────────────────────────── */}
@@ -99,53 +100,39 @@ export default function Hero() {
             {avatars.map((a) => (
               <div
                 key={a.initials}
-                className="w-8 h-8 rounded-full border-2 border-[#090B14] flex items-center justify-center text-white text-[10px] font-bold"
+                className="w-8 h-8 rounded-full border-2 border-page flex items-center justify-center text-white text-[10px] font-bold"
                 style={{ backgroundColor: a.bg }}
               >
                 {a.initials}
               </div>
             ))}
           </div>
-          <p className="text-sm text-white/50">
-            <span className="text-white font-semibold">2,400+ families</span> protected
+          <p className="text-sm text-secondary">
+            <span className="text-primary font-semibold">2,400+ families</span> protected
           </p>
-          <span className="flex items-center gap-1.5 text-emerald-400 text-xs font-semibold bg-emerald-400/10 px-3 py-1.5 rounded-full border border-emerald-400/20">
+          <span className="flex items-center gap-1.5 text-brand-success text-xs font-semibold bg-brand-success/10 px-3 py-1.5 rounded-full border border-brand-success/20">
             <ShieldCheck size={11} />
             Private Beta
           </span>
         </motion.div>
 
-        {/* Headline — Wallet-style split weight */}
-        <h1 className="leading-[1.05] mb-7">
+        {/* Headline — Institutional Grade */}
+        <h1 className="leading-[0.9] mb-10">
           <motion.span
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="block text-5xl md:text-6xl xl:text-[68px] font-light text-white/40 tracking-tight"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="block text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter gradient-text-premium"
           >
-            Your Digital
+            100 YEARS.
           </motion.span>
           <motion.span
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.33, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="block text-5xl md:text-6xl xl:text-[68px] font-black text-white tracking-tight"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="block text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter gold-gradient"
           >
-            Legacy,
-          </motion.span>
-          <motion.span
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.46, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="block text-5xl md:text-6xl xl:text-[68px] font-black tracking-tight"
-            style={{
-              background: 'linear-gradient(135deg, #f9a8d4 0%, #f97316 45%, #c084fc 90%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            Protected Forever.
+            100% SECURE.
           </motion.span>
         </h1>
 
@@ -154,10 +141,10 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.62, duration: 0.8 }}
-          className="text-base md:text-lg text-white/45 max-w-md mb-9 leading-relaxed"
+          className="text-base md:text-lg text-secondary max-w-lg mb-9 leading-relaxed text-balance"
         >
-          The only platform that transfers your crypto to your family automatically —
-          without lawyers, seed phrases, or any technical knowledge.
+          The world's first complete digital asset succession platform.
+          Protect your crypto, identities, and memories with absolute zero-knowledge security.
         </motion.p>
 
         {/* Waitlist form */}
@@ -170,25 +157,54 @@ export default function Hero() {
           <WaitlistForm />
         </motion.div>
 
-        {/* Micro copy */}
-        <motion.p
+        {/* Monochrome Logo Cloud (Ditto Same) */}
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.92, duration: 0.5 }}
-          className="text-sm text-white/35 flex items-center gap-2 mb-12"
+          transition={{ delay: 1, duration: 1 }}
+          className="pt-12 border-t border-white/5 opacity-40 grayscale"
         >
-          <ArrowRight size={12} className="text-orange-400 flex-shrink-0" />
-          Free forever plan · No credit card needed
-        </motion.p>
+          <p className="text-[10px] uppercase tracking-[0.25em] text-white/40 mb-8 font-bold flex items-center gap-4">
+            <span className="h-px w-8 bg-white/10" />
+            As Seen In
+            <span className="h-px w-8 bg-white/10" />
+          </p>
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-6 md:gap-x-12 md:gap-y-8">
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 bg-white rounded-sm flex items-center justify-center p-0.5">
+                <img src="https://cryptologos.cc/logos/coinbase-base-logo.svg?v=032" className="h-full" alt="Coinbase" />
+              </div>
+              <span className="text-white text-[12px] font-bold tracking-tight">COINBASE</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 bg-[#F3BA2F] rounded-sm flex items-center justify-center p-0.5">
+                <img src="https://cryptologos.cc/logos/binance-usd-busd-logo.svg?v=032" className="h-full" alt="Binance" />
+              </div>
+              <span className="text-white text-[12px] font-bold tracking-tight">BINANCE</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 bg-[#5741D9] rounded-sm flex items-center justify-center p-0.5">
+                <img src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=032" className="h-full" alt="Solana" />
+              </div>
+              <span className="text-white text-[12px] font-bold tracking-tight">SOLANA</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 bg-white rounded-sm flex items-center justify-center p-0.5">
+                <img src="https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=032" className="h-full" alt="Ethereum" />
+              </div>
+              <span className="text-white text-[12px] font-bold tracking-tight">ETHEREUM</span>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Countdown */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.1, duration: 0.6 }}
-          className="pt-8 border-t border-white/[0.07]"
+          className="pt-8 border-t border-base"
         >
-          <p className="text-[11px] text-white/35 mb-5 font-semibold uppercase tracking-[0.18em]">
+          <p className="text-[11px] text-muted mb-5 font-semibold uppercase tracking-[0.18em]">
             Beta launches in:
           </p>
           <CountdownTimer targetDate={launchDate} />
@@ -202,7 +218,7 @@ export default function Hero() {
         <div
           className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none"
           style={{
-            background: '#090B14',
+            background: 'var(--color-bg-page)',
             clipPath: 'polygon(0 0, 100% 0, 0 100%)',
           }}
         />
@@ -213,11 +229,13 @@ export default function Hero() {
             className="absolute inset-0"
             style={{
               background:
-                'linear-gradient(145deg, #2d1b5e 0%, #7c3aed 12%, #be185d 30%, #f97316 52%, #fb923c 65%, #c084fc 82%, #818cf8 100%)',
+                'radial-gradient(circle at 70% 30%, #2e1065 0%, #000000 60%, #000000 100%)',
             }}
           />
-          {/* Soft light leak */}
-          <div className="absolute inset-0 bg-gradient-to-bl from-white/[0.08] via-transparent to-black/30" />
+          {/* Vibrant color wash */}
+          <div className="absolute inset-0 opacity-40 mix-blend-screen bg-[radial-gradient(circle_at_80%_40%,rgba(168,85,247,0.3)_0%,rgba(236,72,153,0.2)_40%,transparent_80%)]" />
+          {/* Subtle orange accent light */}
+          <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_20%,rgba(249,115,22,0.12),transparent_50%)]" />
           {/* Texture noise */}
           <div
             className="absolute inset-0 opacity-20 mix-blend-overlay"
@@ -231,11 +249,12 @@ export default function Hero() {
         {/* Breathing blobs */}
         <motion.div
           className="absolute inset-0 pointer-events-none"
-          animate={{ opacity: [0.4, 0.75, 0.4] }}
+          animate={{ opacity: [0.4, 0.85, 0.4] }}
           transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <div className="absolute top-[8%] right-[10%] w-72 h-72 bg-white/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-[15%] left-[15%] w-56 h-56 bg-purple-300/15 rounded-full blur-2xl" />
+          <div className="absolute top-[8%] right-[10%] w-72 h-72 bg-purple-500/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-[15%] left-[15%] w-56 h-56 bg-pink-500/15 rounded-full blur-2xl" />
+          <div className="absolute top-[40%] right-[30%] w-64 h-64 bg-orange-500/10 rounded-full blur-3xl" />
         </motion.div>
 
         {/* Abstract SVG curves */}
@@ -300,8 +319,8 @@ export default function Hero() {
             <div className="absolute left-1/2 top-[72%] -translate-x-1/2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold text-white/80 shadow-2xl backdrop-blur-xl">
               Guardian vault armed
               {/* Sparkle badge */}
-              <div className="absolute -top-3 -right-3 w-7 h-7 bg-yellow-400 rounded-xl flex items-center justify-center shadow-lg shadow-yellow-500/40">
-                <Sparkles className="w-4 h-4 text-yellow-900" />
+              <div className="absolute -top-3 -right-3 w-7 h-7 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/40">
+                <Sparkles className="w-4 h-4 text-white" />
               </div>
             </div>
           </motion.div>
@@ -351,7 +370,7 @@ export default function Hero() {
       {/* ── Mobile gradient wash ──────────────────────────── */}
       <div
         className="absolute inset-x-0 bottom-0 h-48 lg:hidden pointer-events-none z-0"
-        style={{ background: 'linear-gradient(to top, rgba(249,115,22,0.12), transparent)' }}
+        style={{ background: 'linear-gradient(to top, var(--color-bg-page), transparent)' }}
       />
 
       {/* ── Scroll cue ────────────────────────────────────── */}
@@ -360,14 +379,14 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.7 }}
-        className="absolute bottom-7 left-[26%] -translate-x-1/2 z-20 text-white/25 hover:text-white/70 transition-colors hidden lg:block"
+        className="absolute bottom-10 left-[26%] -translate-x-1/2 z-20 text-secondary hover:text-primary transition-colors hidden lg:block"
         aria-label="Scroll down"
       >
         <motion.div
-          animate={{ y: [0, 7, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <ChevronDown size={26} />
+          <ChevronDown size={32} strokeWidth={1} />
         </motion.div>
       </motion.button>
     </section>

@@ -1,10 +1,19 @@
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
-import { User, Shield, Bell, Palette, AlertTriangle, Activity } from 'lucide-react';
+import { User, Shield, Bell, Palette, AlertTriangle, Activity, ChevronRight, HardDrive, Fingerprint, Globe, CreditCard, HelpCircle, ShieldAlert } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import Card from '../components/ui/Card';
 import toast from 'react-hot-toast';
 import { useTheme } from 'next-themes';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 15 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+});
 
 export default function Settings() {
   const { user } = useStore();
@@ -13,248 +22,358 @@ export default function Settings() {
   const [deleteConfirm, setDeleteConfirm] = useState('');
 
   const tabs = [
-    { name: 'Profile', icon: User },
-    { name: 'Security', icon: Shield },
-    { name: 'Recovery', icon: Activity },
-    { name: 'Notifications', icon: Bell },
-    { name: 'Appearance', icon: Palette },
-    { name: 'Danger Zone', icon: AlertTriangle },
+    { name: 'Profile', icon: User, desc: 'Personal Identity' },
+    { name: 'Security', icon: Shield, desc: 'Access & Auth' },
+    { name: 'Recovery', icon: Activity, desc: 'Protocol Logic' },
+    { name: 'Notifications', icon: Bell, desc: 'Signal Preferences' },
+    { name: 'Appearance', icon: Palette, desc: 'Visual Interface' },
+    { name: 'Danger Zone', icon: AlertTriangle, desc: 'Decommissioning' },
   ];
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success('Settings saved successfully');
+    toast.success('Configuration synchronized successfully');
   };
 
   const handleDelete = () => {
     if (deleteConfirm === 'DELETE') {
-      toast.error('Account deletion simulation triggered');
+      toast.error('Account decommissioning sequence initiated');
       setDeleteConfirm('');
     }
   };
 
   return (
-    <div className="min-h-screen bg-secondary">
-<main className="pt-6 px-4 sm:px-6 lg:px-8 pb-24 md:pb-8">
-        <div className="max-w-4xl mx-auto space-y-8">
-          
-          <header>
-            <h1 className="text-3xl font-bold text-text">Settings</h1>
-            <p className="text-muted mt-1">Manage your account and preferences.</p>
-          </header>
+    <div className="min-h-screen bg-page text-primary selection:bg-brand-primary/30 pt-20">
+      <main className="px-4 sm:px-6 lg:px-8 pb-28 md:pb-12 max-w-7xl mx-auto space-y-12">
+        
+        {/* ── Page Header ── */}
+        <motion.header {...fadeUp(0)} className="flex flex-col space-y-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-obsidian-700 shadow-[0_0_10px_rgba(255,255,255,0.1)]" />
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary0">
+              System Configuration & Preferences
+            </p>
+          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-primary tracking-tight leading-none">
+            Vault <span className="italic text-muted">Settings</span>
+          </h1>
+          <p className="text-muted text-sm font-medium max-w-2xl">
+            Fine-tune your institutional legacy infrastructure, security parameters, and automated verification protocols.
+          </p>
+        </motion.header>
 
-          <div className="flex flex-col md:flex-row gap-8">
-            <aside className="md:w-64 shrink-0 space-y-2">
-              {tabs.map(tab => (
-                <button
-                  key={tab.name}
-                  onClick={() => setActiveTab(tab.name)}
-                  className={`flex items-center space-x-3 w-full px-4 py-3 rounded-xl transition ${
+        <div className="flex flex-col lg:flex-row gap-12">
+          {/* ── Sidebar Navigation ── */}
+          <motion.aside {...fadeUp(0.1)} className="lg:w-80 shrink-0 space-y-3">
+            {tabs.map((tab, i) => (
+              <button
+                key={tab.name}
+                onClick={() => setActiveTab(tab.name)}
+                className={`flex items-center justify-between w-full px-6 py-5 rounded-[24px] transition-all duration-500 group relative overflow-hidden ${
+                  activeTab === tab.name 
+                  ? tab.name === 'Danger Zone' 
+                    ? 'bg-red-500/10 text-red-500 border border-red-500/30 shadow-2xl shadow-red-500/5' 
+                    : 'bg-brand-primary/10 text-brand-primary border border-brand-primary/30 shadow-2xl shadow-brand-primary/5'
+                  : 'text-obsidian-600 hover:bg-surface/60 hover:text-obsidian-200 border border-transparent'
+                }`}
+              >
+                <div className="flex items-center gap-5 relative z-10">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 ${
                     activeTab === tab.name 
-                    ? tab.name === 'Danger Zone' ? 'bg-danger/10 text-danger font-medium' : 'bg-primary/20 text-primary font-medium border border-primary/20'
-                    : 'text-muted hover:bg-surface hover:text-text'
-                  }`}
-                >
-                  <tab.icon size={20} />
-                  <span>{tab.name}</span>
-                </button>
-              ))}
-            </aside>
+                      ? tab.name === 'Danger Zone' ? 'bg-red-500 text-white' : 'bg-brand-primary text-white' 
+                      : 'bg-page border border-base text-obsidian-600 group-hover:border-base'
+                  }`}>
+                    <tab.icon size={18} />
+                  </div>
+                  <div className="text-left">
+                    <span className="text-[11px] font-bold tracking-[0.1em] uppercase block">{tab.name}</span>
+                    <span className={`text-[9px] font-bold uppercase tracking-widest opacity-40 group-hover:opacity-60 transition-opacity ${activeTab === tab.name ? 'opacity-60' : ''}`}>{tab.desc}</span>
+                  </div>
+                </div>
+                {activeTab === tab.name && (
+                  <motion.div layoutId="active-pill" className="absolute left-0 w-1 h-1/2 bg-current rounded-full" />
+                )}
+                {activeTab === tab.name && <ChevronRight size={16} className="relative z-10 opacity-50" />}
+              </button>
+            ))}
+            
+            <div className="mt-12 p-8 rounded-[32px] bg-surface/40 border border-base/60 space-y-6 relative overflow-hidden group">
+               <div className="absolute top-0 right-0 p-4 opacity-5 transform group-hover:scale-110 transition-transform">
+                  <Shield size={100} className="text-brand-primary" />
+               </div>
+               <p className="text-[10px] font-bold text-brand-primary uppercase tracking-[0.2em]">Institutional Health</p>
+               <div className="space-y-4">
+                  <div className="flex justify-between items-end">
+                     <span className="text-xs font-bold text-muted">Vault Security Score</span>
+                     <span className="text-sm font-display font-bold text-trust-500">94/100</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-page rounded-full overflow-hidden border border-base">
+                     <div className="h-full w-[94%] bg-trust-500 rounded-full" />
+                  </div>
+               </div>
+               <button className="text-[10px] font-bold text-obsidian-600 uppercase tracking-widest flex items-center gap-2 hover:text-brand-primary transition-colors">
+                  Run Security Audit <ChevronRight size={14}/>
+               </button>
+            </div>
+          </motion.aside>
 
-            <div className="flex-1">
-              <div className="glassmorphism rounded-2xl p-6 md:p-8 border border-border">
+          {/* ── Content Area ── */}
+          <motion.div {...fadeUp(0.2)} className="flex-1">
+            <Card className="p-10 lg:p-16 bg-surface/40 border border-base/60 rounded-[40px] min-h-[750px] relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-obsidian-700/20 to-transparent" />
+              
+              <AnimatePresence mode="wait">
                 {activeTab === 'Profile' && (
-                  <form onSubmit={handleSave} className="space-y-6">
-                    <h2 className="text-xl font-bold text-text mb-6">Profile Information</h2>
-                    <div className="flex items-center space-x-6 mb-8">
-                      <div className="w-24 h-24 rounded-full bg-surface border-2 border-primary/50 flex items-center justify-center text-3xl font-bold text-primary">
-                        {user.name.charAt(0)}
+                  <motion.form 
+                    key="profile"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    onSubmit={handleSave} 
+                    className="space-y-12"
+                  >
+                    <div className="space-y-4">
+                      <h2 className="text-3xl font-display font-bold text-primary tracking-tight">Identity Profile</h2>
+                      <p className="text-sm text-primary0 font-medium italic">Your primary institutional identity recognized across all succession protocols.</p>
+                    </div>
+                    
+                    <div className="flex flex-col sm:flex-row items-center gap-10">
+                      <div className="relative group">
+                        <div className="w-32 h-32 rounded-[40px] bg-page border border-base flex items-center justify-center text-5xl font-display font-bold text-brand-primary group-hover:border-brand-primary/50 transition-all duration-700 shadow-2xl relative overflow-hidden">
+                           <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                           <span className="relative z-10">{user.name.charAt(0)}</span>
+                        </div>
+                        <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-2xl bg-brand-primary text-obsidian-950 flex items-center justify-center border-4 border-obsidian-900 shadow-xl cursor-pointer hover:scale-110 transition-transform">
+                           <Activity size={18} />
+                        </div>
                       </div>
-                      <Button variant="secondary" type="button">Upload New Avatar</Button>
+                      <div className="space-y-4 text-center sm:text-left">
+                         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian-600">Avatar Allocation</p>
+                         <div className="flex gap-4">
+                           <Button variant="secondary" type="button" className="h-11 px-8 text-[10px] font-bold uppercase tracking-widest border-base">Update Matrix</Button>
+                           <Button variant="ghost" type="button" className="text-[10px] font-bold uppercase tracking-widest text-obsidian-600 hover:text-muted">Purge Image</Button>
+                         </div>
+                      </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <Input label="Full Name" defaultValue={user.name} />
-                      <Input label="Email Address" defaultValue={user.email} disabled />
-                      <Input label="Phone Number" defaultValue="+1 (555) 123-4567" />
-                      <Input label="Country" defaultValue="United States" />
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                      <Input label="Full Identity Name" defaultValue={user.name} className="h-14 rounded-2xl" />
+                      <Input label="Protocol Email Address" defaultValue={user.email} disabled className="h-14 rounded-2xl opacity-60" />
+                      <Input label="Secure Communication Line" defaultValue="+1 (555) 123-4567" className="h-14 rounded-2xl" />
+                      <Input label="Institutional Jurisdiction" defaultValue="Global / Sovereign" className="h-14 rounded-2xl" />
                     </div>
-                    <div className="pt-4">
-                      <Button type="submit">Save Changes</Button>
+                    
+                    <div className="pt-8 border-t border-base/60 flex justify-end">
+                      <Button type="submit" variant="primary" className="h-14 px-12 text-[11px] font-bold uppercase tracking-[0.2em] shadow-xl shadow-brand-primary/10">Synchronize Identity</Button>
                     </div>
-                  </form>
+                  </motion.form>
                 )}
 
                 {activeTab === 'Security' && (
-                  <div className="space-y-8">
-                    <h2 className="text-xl font-bold text-text mb-6">Security Settings</h2>
-                    
+                  <motion.div 
+                    key="security"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-12"
+                  >
                     <div className="space-y-4">
-                      <h3 className="text-lg font-medium text-text border-b border-border pb-2">Two-Factor Authentication (2FA)</h3>
-                      <div className="flex items-center justify-between p-4 bg-surface rounded-xl border border-border">
-                        <div>
-                          <p className="font-medium text-text">Authenticator App</p>
-                          <p className="text-sm text-muted">Use an app like Google Authenticator to generate codes.</p>
+                      <h2 className="text-3xl font-display font-bold text-primary tracking-tight">Access Infrastructure</h2>
+                      <p className="text-sm text-primary0 font-medium italic">Cryptographic authentication layers and hardware authorization protocols.</p>
+                    </div>
+                    
+                    <div className="space-y-8">
+                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-obsidian-600 flex items-center gap-3">
+                         <Shield size={14} className="text-brand-primary"/> Multi-Factor Authentication
+                      </h3>
+                      <div className="p-8 bg-page/60 rounded-[32px] border border-base group hover:border-brand-primary/20 transition-all flex flex-col md:flex-row items-center justify-between gap-8">
+                        <div className="flex gap-6 items-center">
+                          <div className="w-16 h-16 rounded-2xl bg-brand-primary/10 flex items-center justify-center text-brand-primary border border-brand-primary/20 shadow-inner">
+                             <Fingerprint size={32} />
+                          </div>
+                          <div>
+                            <p className="text-xl font-display font-bold text-primary tracking-tight">Authenticator Synthesis</p>
+                            <p className="text-xs text-primary0 font-medium mt-1 leading-relaxed">Hardware-grade verification required for all vault decrypts.</p>
+                          </div>
                         </div>
-                        <Button variant="secondary">Enable 2FA</Button>
+                        <Button variant="secondary" className="h-12 px-8 text-[10px] font-bold uppercase tracking-widest border-brand-primary/30 text-brand-primary hover:bg-brand-primary/10">Enable MFA Handshake</Button>
                       </div>
                     </div>
 
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-medium text-text border-b border-border pb-2">Emergency Contact</h3>
-                      <Input label="Emergency Contact Phone" placeholder="+1 (555) 000-0000" />
-                      <Button onClick={handleSave}>Update Contact</Button>
-                    </div>
-
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-medium text-text border-b border-border pb-2">Active Sessions</h3>
-                      {[
-                        { device: 'MacBook Pro - Chrome', location: 'New York, USA', current: true },
-                        { device: 'iPhone 15 - Safari', location: 'New York, USA', current: false }
-                      ].map((s, i) => (
-                        <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-surface rounded-xl border border-border gap-4">
-                          <div>
-                            <p className="font-medium text-text flex items-center gap-2">
-                              {s.device} 
-                              {s.current && <span className="text-[10px] uppercase tracking-wider bg-primary/20 text-primary px-2 py-0.5 rounded-full">Current</span>}
-                            </p>
-                            <p className="text-sm text-muted">{s.location}</p>
+                    <div className="space-y-8 pt-4">
+                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-obsidian-600 flex items-center gap-3">
+                         <Globe size={14} className="text-brand-primary"/> Active Protocol Handshakes
+                      </h3>
+                      <div className="space-y-4">
+                        {[
+                          { device: 'Institutional Workstation - Brave', location: 'New York, USA', current: true },
+                          { device: 'Encrypted Mobile - Safari', location: 'Geneva, Switzerland', current: false }
+                        ].map((s, i) => (
+                          <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-page/40 rounded-[24px] border border-base/60 gap-6 group hover:bg-page/60 transition-all">
+                            <div className="flex items-center gap-6">
+                               <div className="w-12 h-12 rounded-xl bg-surface border border-base flex items-center justify-center text-obsidian-600 group-hover:text-brand-primary transition-colors shadow-inner">
+                                  <HardDrive size={20} />
+                               </div>
+                               <div>
+                                <p className="font-display font-bold text-obsidian-100 text-lg flex items-center gap-4 tracking-tight">
+                                  {s.device} 
+                                  {s.current && <span className="text-[9px] font-bold uppercase tracking-[0.2em] bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-3 py-1 rounded-full">Primary Node</span>}
+                                </p>
+                                <p className="text-[10px] font-bold text-obsidian-600 mt-1 uppercase tracking-widest">{s.location} · Active now</p>
+                              </div>
+                            </div>
+                            {!s.current && <button className="text-[10px] font-bold text-red-500 hover:text-red-400 uppercase tracking-widest px-4 py-2 bg-red-500/10 rounded-xl border border-red-500/20">Revoke Token</button>}
                           </div>
-                          {!s.current && <Button variant="ghost" className="text-danger hover:bg-danger/10">Revoke</Button>}
-                        </div>
-                      ))}
-                      <Button variant="secondary" className="mt-4 text-danger hover:bg-danger/10 hover:text-danger hover:border-danger/30 w-full md:w-auto">
-                        Revoke All Other Sessions
-                      </Button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
 
                 {activeTab === 'Recovery' && (
-                  <div className="space-y-8">
-                     <h2 className="text-xl font-bold text-text mb-6">Recovery Triggers</h2>
-                     <p className="text-sm text-muted mb-6">Configure how and when your legacy vault is unlocked for your heirs.</p>
-                     
-                     <div className="space-y-4">
-                       <h3 className="text-lg font-medium text-text border-b border-border pb-2">Proof of Life Pulse</h3>
-                       <div className="p-4 bg-surface rounded-xl border border-border space-y-4">
-                          <p className="text-sm text-text">If you don't check in within this time, recovery is initiated.</p>
-                          <select className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-text outline-none focus:border-primary">
-                            <option value="7">Every 7 Days</option>
-                            <option value="14">Every 14 Days</option>
-                            <option value="30">Every 30 Days</option>
-                            <option value="90">Every 90 Days</option>
-                          </select>
-                       </div>
-                     </div>
-
-                     <div className="space-y-4">
-                       <h3 className="text-lg font-medium text-text border-b border-border pb-2">Death Certificate Upload</h3>
-                       <div className="p-6 bg-surface/50 rounded-xl border border-dashed border-border/60 text-center space-y-3">
-                           <Shield className="mx-auto text-primary opacity-50 mb-2" size={32}/>
-                           <p className="font-medium text-text">Verify Status</p>
-                           <p className="text-sm text-muted max-w-sm mx-auto">Upload an official death certificate to bypass the waiting period. Requires manual admin or AI verification.</p>
-                           <Button variant="secondary" className="mt-4 text-xs font-medium border-primary/20 text-primary">Upload Certificate (PDF)</Button>
-                       </div>
-                     </div>
-                  </div>
-                )}
-
-                {activeTab === 'Notifications' && (
-                  <div className="space-y-6">
-                    <h2 className="text-xl font-bold text-text mb-6">Notification Preferences</h2>
+                  <motion.div 
+                    key="recovery"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-12"
+                  >
                     <div className="space-y-4">
-                      {[
-                        { title: 'Email Alerts', desc: 'Critical security alerts and recovery initiation.' },
-                        { title: 'Guardian Updates', desc: 'When guardians accept, view, or approve requests.' },
-                        { title: 'Heir Activity', desc: 'When heirs log in or attempt recovery.' },
-                        { title: 'Weekly Report', desc: 'Summary of your vault status and AI recommendations.' }
-                      ].map((n, i) => (
-                        <div key={i} className="flex items-center justify-between p-4 bg-surface rounded-xl border border-border">
-                          <div>
-                            <p className="font-medium text-text">{n.title}</p>
-                            <p className="text-sm text-muted">{n.desc}</p>
-                          </div>
-                          <label className="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" defaultChecked={i < 2} className="sr-only peer" />
-                            <div className="w-11 h-6 bg-surface border border-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-muted after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-checked:after:bg-white"></div>
-                          </label>
-                        </div>
-                      ))}
+                      <h2 className="text-3xl font-display font-bold text-primary tracking-tight">Verification Protocols</h2>
+                      <p className="text-sm text-primary0 font-medium italic">Logical parameters for automated succession and vault release.</p>
                     </div>
-                    <Button onClick={handleSave}>Save Preferences</Button>
-                  </div>
+                     
+                    <div className="space-y-8">
+                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-obsidian-600 flex items-center gap-3">
+                         <Activity size={14} className="text-brand-primary"/> Pulse Frequency
+                      </h3>
+                      <div className="p-10 bg-page/60 rounded-[40px] border border-base space-y-8 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-8 opacity-5">
+                           <Activity size={160} className="text-brand-primary" />
+                        </div>
+                        <p className="text-sm text-muted font-medium leading-relaxed italic max-w-lg">The system initiates a recovery sequence if an institutional handshake is not detected within the following duration:</p>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                           {['7 Days', '14 Days', '30 Days', '90 Days'].map((d, i) => (
+                             <button key={d} className={`p-6 rounded-2xl border flex flex-col items-center gap-3 transition-all ${i === 2 ? 'bg-brand-primary/10 border-brand-primary text-primary shadow-xl' : 'bg-surface border-base text-obsidian-600 hover:border-base'}`}>
+                                <span className="text-xl font-display font-bold">{d.split(' ')[0]}</span>
+                                <span className="text-[9px] font-bold uppercase tracking-widest opacity-60">Days</span>
+                             </button>
+                           ))}
+                        </div>
+                        <p className="text-[10px] font-bold text-obsidian-600 uppercase tracking-widest text-center mt-6">Recommended: 30-Day Protocol Cycle</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-8 pt-4">
+                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-obsidian-600 flex items-center gap-3">
+                         <ShieldAlert size={14} className="text-brand-primary"/> Override Authority
+                      </h3>
+                      <div className="p-12 bg-page/40 rounded-[40px] border border-dashed border-base text-center space-y-8 group hover:border-brand-primary/20 transition-all relative">
+                          <div className="w-20 h-20 rounded-[28px] bg-brand-primary/5 border border-brand-primary/20 flex items-center justify-center mx-auto text-brand-primary group-hover:scale-110 transition-transform duration-700 shadow-inner">
+                             <Shield size={36}/>
+                          </div>
+                          <div className="space-y-3">
+                            <p className="text-2xl font-display font-bold text-primary tracking-tight">Legal Mandate Override</p>
+                            <p className="text-sm text-primary0 max-w-md mx-auto font-medium italic leading-relaxed">Submit verified legal documentation to bypass wait periods. Our institutional compliance engine audits submissions in real-time.</p>
+                          </div>
+                          <Button variant="secondary" className="h-14 px-12 text-[10px] font-bold uppercase tracking-widest border-brand-primary/30 text-brand-primary hover:bg-brand-primary/10 shadow-2xl">Submit Archival PDF</Button>
+                      </div>
+                    </div>
+                  </motion.div>
                 )}
 
                 {activeTab === 'Appearance' && (
-                  <div className="space-y-6">
-                    <h2 className="text-xl font-bold text-text mb-6">Appearance</h2>
+                  <motion.div 
+                    key="appearance"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-12"
+                  >
+                    <div className="space-y-4">
+                      <h2 className="text-3xl font-display font-bold text-primary tracking-tight">Visual Foundation</h2>
+                      <p className="text-sm text-primary0 font-medium italic">Customize the aesthetic presentation of your legacy protocols.</p>
+                    </div>
                     
-                    <div>
-                      <h3 className="font-medium text-text mb-3">Theme</h3>
-                      <div className="flex space-x-4">
-                        <button onClick={() => setTheme('dark')} className={`flex-1 py-4 border rounded-xl flex items-center justify-center transition-colors ${theme === 'dark' ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-surface text-muted hover:border-primary/50'}`}>
-                          Dark Mode
+                    <div className="space-y-8">
+                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-obsidian-600">Interface Basis</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <button onClick={() => setTheme('dark')} className={`group flex flex-col items-center gap-6 p-10 rounded-[32px] border-2 transition-all duration-700 relative overflow-hidden ${theme === 'dark' ? 'bg-brand-primary/5 border-brand-primary shadow-2xl shadow-brand-primary/10' : 'bg-page border-base hover:border-base'}`}>
+                          {theme === 'dark' && <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-brand-primary shadow-[0_0_10px_rgba(79,92,255,0.8)]" />}
+                          <div className="w-full aspect-video bg-surface rounded-2xl border border-base shadow-2xl relative overflow-hidden">
+                             <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/10 to-transparent" />
+                          </div>
+                          <span className="text-lg font-display font-bold text-primary">Institutional Dark</span>
                         </button>
-                        <button onClick={() => setTheme('light')} className={`flex-1 py-4 border rounded-xl flex items-center justify-center transition-colors ${theme === 'light' ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-surface text-muted hover:border-primary/50'}`}>
-                          Light Mode
+                        <button onClick={() => setTheme('light')} className={`group flex flex-col items-center gap-6 p-10 rounded-[32px] border-2 transition-all duration-700 relative overflow-hidden ${theme === 'light' ? 'bg-brand-primary/5 border-brand-primary shadow-2xl shadow-brand-primary/10' : 'bg-page border-base hover:border-base'}`}>
+                          {theme === 'light' && <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-brand-primary shadow-[0_0_10px_rgba(79,92,255,0.8)]" />}
+                          <div className="w-full aspect-video bg-white rounded-2xl border border-gray-200 shadow-2xl" />
+                          <span className="text-lg font-display font-bold text-obsidian-900">Institutional Light</span>
                         </button>
                       </div>
                     </div>
 
-                    <div>
-                      <h3 className="font-medium text-text mb-3">Accent Color</h3>
-                      <div className="flex space-x-4">
-                        <button className="w-10 h-10 rounded-full bg-[#4F5CFF] ring-2 ring-offset-2 ring-offset-secondary ring-[#4F5CFF]" />
-                        <button className="w-10 h-10 rounded-full bg-[#A855F7] hover:ring-2 hover:ring-offset-2 hover:ring-offset-secondary hover:ring-[#A855F7] transition" />
-                        <button className="w-10 h-10 rounded-full bg-[#06B6D4] hover:ring-2 hover:ring-offset-2 hover:ring-offset-secondary hover:ring-[#06B6D4] transition" />
+                    <div className="space-y-8 pt-4">
+                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-obsidian-600">Protocol Accent</h3>
+                      <div className="flex gap-8">
+                        {['#4F5CFF', '#D4AF37', '#06B6D4', '#10B981'].map((c, i) => (
+                          <button key={c} className={`w-16 h-16 rounded-[20px] transition-all duration-500 border-4 border-obsidian-950 shadow-2xl ${i === 0 ? 'scale-110 ring-4 ring-brand-primary/20 ring-offset-8 ring-offset-obsidian-900' : 'opacity-40 hover:opacity-100 hover:scale-105'}`} style={{ backgroundColor: c }} />
+                        ))}
                       </div>
                     </div>
-
-                    <div>
-                      <h3 className="font-medium text-text mb-3">Font Size</h3>
-                      <input type="range" min="1" max="3" defaultValue="2" className="w-full accent-primary" />
-                      <div className="flex justify-between text-xs text-muted mt-2">
-                        <span>Small</span>
-                        <span>Medium</span>
-                        <span>Large</span>
-                      </div>
-                    </div>
-                  </div>
+                  </motion.div>
                 )}
 
                 {activeTab === 'Danger Zone' && (
-                  <div className="space-y-6">
-                    <div>
-                      <h2 className="text-xl font-bold text-danger mb-2">Delete Account</h2>
-                      <p className="text-muted text-sm">
-                        Permanently delete your Transfer Legacy account and all data. Your vault will be destroyed and cryptographic keys purged. This action cannot be undone.
+                  <motion.div 
+                    key="danger"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-12"
+                  >
+                    <div className="space-y-4">
+                      <h2 className="text-3xl font-display font-bold text-red-500 tracking-tight">Vault Termination</h2>
+                      <p className="text-sm text-red-500/60 font-medium italic">Critical sequence to permanently decommission your succession infrastructure.</p>
+                    </div>
+
+                    <div className="p-10 bg-red-500/5 border border-red-500/20 rounded-[40px] space-y-10 relative overflow-hidden">
+                      <div className="absolute top-0 right-0 p-10 opacity-5">
+                         <AlertTriangle size={180} className="text-red-500" />
+                      </div>
+                      <p className="text-sm text-red-500/80 font-medium leading-loose italic relative z-10">
+                        Warning: This protocol is final. Termination will result in the immediate and irreversible destruction of all vault archives, cryptographic key fragments, and beneficiary mandates. Transfer Legacy cannot recover purged data.
                       </p>
+                      
+                      <div className="space-y-8 relative z-10">
+                        <div className="space-y-4">
+                          <label className="text-[10px] font-bold text-red-500/60 uppercase tracking-[0.2em] ml-1">Authorize Termination Sequence</label>
+                          <p className="text-xs text-primary0 font-medium italic">Input <span className="font-mono text-red-500 font-bold bg-red-500/10 px-3 py-1 rounded-lg">DELETE</span> to unlock authorization button.</p>
+                          <Input 
+                            value={deleteConfirm}
+                            onChange={(e) => setDeleteConfirm(e.target.value)}
+                            placeholder="PROTOCOL_TERMINATION_CODE"
+                            className="h-16 rounded-2xl border-red-500/20 focus:border-red-500/60 placeholder:text-red-900/20 bg-page/40 text-lg font-mono tracking-widest"
+                          />
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          disabled={deleteConfirm !== 'DELETE'}
+                          onClick={handleDelete}
+                          className="w-full h-16 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border-red-500/20 font-bold uppercase tracking-[0.2em] disabled:opacity-30 transition-all duration-500 shadow-xl shadow-red-500/5"
+                        >
+                          Decommission Vault Protocol
+                        </Button>
+                      </div>
                     </div>
-
-                    <div className="bg-danger/5 border border-danger/20 rounded-xl p-6">
-                      <p className="font-medium text-text mb-4">To confirm deletion, type <span className="font-mono text-danger font-bold">DELETE</span> below:</p>
-                      <Input 
-                        value={deleteConfirm}
-                        onChange={(e) => setDeleteConfirm(e.target.value)}
-                        placeholder="DELETE"
-                        className="mb-4"
-                      />
-                      <Button 
-                        variant="danger" 
-                        disabled={deleteConfirm !== 'DELETE'}
-                        onClick={handleDelete}
-                      >
-                        Permanently Delete Account
-                      </Button>
-                    </div>
-                  </div>
+                  </motion.div>
                 )}
+              </AnimatePresence>
 
-              </div>
-            </div>
-          </div>
-
+            </Card>
+          </motion.div>
         </div>
+
       </main>
     </div>
   );

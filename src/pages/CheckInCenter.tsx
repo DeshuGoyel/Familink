@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, ShieldAlert, CheckCircle, Clock, Bell, History, Settings, Fingerprint, Mail } from 'lucide-react';
+import { Shield, ShieldAlert, CheckCircle, Clock, Bell, History, Settings, Fingerprint, Mail, Activity, ChevronRight, AlertTriangle } from 'lucide-react';
 import { useCheckinStore } from '../store/useCheckinStore';
 import { Canvas } from '@react-three/fiber';
 import { CheckInHeart } from '../components/checkin/CheckInHeart';
 import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
+import Badge from '../components/ui/Badge';
+
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 15 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+});
 
 export default function CheckInCenter() {
   const { checkins, checkinSettings, completeCheckin, updateSettings, simulateMissedCheckin } = useCheckinStore();
@@ -13,7 +22,7 @@ export default function CheckInCenter() {
   const [showConfetti, setShowConfetti] = useState(false);
 
   const isAlertMode = checkinSettings.status !== 'active';
-  const misses = checkinSettings.currentStreak === 0 ? checkinSettings.totalMissed : 0; // Quick mock derivation
+  const misses = checkinSettings.currentStreak === 0 ? checkinSettings.totalMissed : 0; 
 
   // Update countdown timer
   useEffect(() => {
@@ -46,183 +55,236 @@ export default function CheckInCenter() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      
-      {/* Header */}
-      <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-text flex items-center gap-3">
-            Proof of Life
-            <span className={`px-3 py-1 text-xs rounded-full font-medium flex items-center gap-1 border ${
-              isAlertMode ? 'bg-red-500/10 text-red-500 border-red-500/30 shadow-[0_0_10px_rgba(239,68,68,0.2)] animate-pulse' : 
-              'bg-emerald-500/10 text-emerald-500 border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]'
-            }`}>
-              {isAlertMode ? <ShieldAlert size={14}/> : <Shield size={14}/>}
-              {isAlertMode ? 'ALERT MODE' : 'ACTIVE'}
-            </span>
-          </h1>
-          <p className="text-muted mt-2">Your vault stays active as long as you do.</p>
-        </div>
-      </header>
-
-      {/* 3D Scene */}
-      <div className="h-48 w-full rounded-2xl bg-gradient-to-b from-surface/50 to-surface border border-border/50 relative overflow-hidden flex items-center justify-center">
-        <Canvas camera={{ position: [0, 0, 5] }}>
-          <CheckInHeart isAlert={isAlertMode} />
-        </Canvas>
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(17,24,39,0.8)_100%)]"></div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="min-h-screen bg-page text-primary selection:bg-brand-primary/30 pt-20">
+      <main className="px-4 sm:px-6 lg:px-8 pb-24 md:pb-12 max-w-5xl mx-auto space-y-12">
         
-        {/* Main Status Card */}
-        <div className="md:col-span-2 glassmorphism rounded-2xl p-6 relative">
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            <div className="p-4 bg-surface/50 rounded-xl border border-border/50">
-              <p className="text-sm text-muted mb-1 flex items-center gap-1"><History size={14}/> Last Check-In</p>
-              <p className="text-lg font-medium text-text">
-                {checkinSettings.lastCheckinAt ? new Date(checkinSettings.lastCheckinAt).toLocaleDateString() : 'Never'}
+        {/* ── Page Header ── */}
+        <motion.header {...fadeUp(0)} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className={`w-2 h-2 rounded-full ${isAlertMode ? 'bg-red-500 animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.8)]' : 'bg-brand-primary shadow-[0_0_10px_rgba(79,92,255,0.8)]'}`} />
+              <p className={`text-[10px] font-bold uppercase tracking-[0.2em] ${isAlertMode ? 'text-red-500' : 'text-brand-primary'}`}>
+                {isAlertMode ? 'Emergency Alert Status' : 'Vault Heartbeat Protocol'}
               </p>
             </div>
-            <div className="p-4 bg-surface/50 rounded-xl border border-border/50">
-              <p className="text-sm text-muted mb-1 flex items-center gap-1"><Clock size={14}/> Next Due</p>
-              <p className={`text-lg font-medium ${timeRemaining === 'Overdue' ? 'text-red-500' : 'text-text'}`}>
-                {timeRemaining}
-              </p>
-            </div>
-            <div className="p-4 bg-surface/50 rounded-xl border border-border/50">
-              <p className="text-sm text-muted mb-1">Misses</p>
-              <p className="text-lg font-medium text-text flex items-center gap-2">
-                {misses} 
-                {misses > 0 && <span className="w-2 h-2 rounded-full bg-red-500"></span>}
-              </p>
-            </div>
-            <div className="p-4 bg-amber-500/10 rounded-xl border border-amber-500/30">
-              <p className="text-sm text-amber-500/80 mb-1">Streak</p>
-              <p className="text-lg font-medium text-amber-500">
-                {checkinSettings.currentStreak} days
-              </p>
-            </div>
+            <h1 className="text-4xl sm:text-5xl font-display font-bold text-primary tracking-tight leading-none">
+              Proof of <span className="italic text-brand-primary">Life</span>
+            </h1>
+            <p className="text-muted text-sm mt-3 font-medium">
+              Maintain sovereign control through periodic verification pulses.
+            </p>
           </div>
+          <div className="flex items-center gap-4">
+             <Badge variant={isAlertMode ? 'secondary' : 'default'} className="px-4 py-1.5 text-[10px] uppercase tracking-widest font-bold">
+               {isAlertMode ? 'Protocol Violated' : 'Operational Sync'}
+             </Badge>
+          </div>
+        </motion.header>
 
-          <div className="relative">
-            <AnimatePresence>
-              {showConfetti && (
-                <motion.div 
-                  initial={{ scale: 0, opacity: 1 }}
-                  animate={{ scale: 2, opacity: 0 }}
-                  exit={{ opacity: 0 }}
-                  className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
+        {/* ── Heartbeat Visualization ── */}
+        <motion.div {...fadeUp(0.1)} className="h-64 w-full rounded-[32px] bg-surface/40 border border-base/60 relative overflow-hidden flex items-center justify-center backdrop-blur-sm group">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(79,92,255,0.05),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <Canvas camera={{ position: [0, 0, 5] }}>
+            <CheckInHeart isAlert={isAlertMode} />
+          </Canvas>
+          <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(10,10,12,0.6)_100%)]" />
+          <div className="absolute bottom-6 left-0 right-0 text-center pointer-events-none">
+            <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-obsidian-600">Sovereign Pulse Active</p>
+          </div>
+        </motion.div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          
+          {/* ── Main Status Matrix ── */}
+          <motion.div {...fadeUp(0.2)} className="lg:col-span-2 space-y-6">
+            <Card variant="default" className="p-8 bg-surface/50 border-base/60 relative">
+              <div className="grid grid-cols-2 gap-8 mb-10">
+                <div className="p-6 bg-page/50 rounded-2xl border border-base/50 group hover:border-brand-primary/30 transition-all">
+                  <p className="text-[10px] font-bold text-primary0 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <History size={12} className="text-brand-primary" /> Last Pulse
+                  </p>
+                  <p className="text-xl font-display font-bold text-primary tracking-tight">
+                    {checkinSettings.lastCheckinAt ? new Date(checkinSettings.lastCheckinAt).toLocaleDateString() : 'Uninitialized'}
+                  </p>
+                </div>
+                <div className="p-6 bg-page/50 rounded-2xl border border-base/50 group hover:border-brand-primary/30 transition-all">
+                  <p className="text-[10px] font-bold text-primary0 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <Clock size={12} className="text-brand-primary" /> Next Window
+                  </p>
+                  <p className={`text-xl font-display font-bold tracking-tight ${timeRemaining === 'Overdue' ? 'text-red-500' : 'text-brand-primary'}`}>
+                    {timeRemaining}
+                  </p>
+                </div>
+                <div className="p-6 bg-page/50 rounded-2xl border border-base/50 group hover:border-brand-primary/30 transition-all">
+                  <p className="text-[10px] font-bold text-primary0 uppercase tracking-widest mb-3">Violation Misses</p>
+                  <p className="text-xl font-display font-bold text-primary tracking-tight flex items-center gap-3">
+                    {misses} 
+                    {misses > 0 && <span className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></span>}
+                  </p>
+                </div>
+                <div className="p-6 bg-brand-primary/5 rounded-2xl border border-brand-primary/20 group hover:bg-brand-primary/10 transition-all">
+                  <p className="text-[10px] font-bold text-brand-primary/80 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <Activity size={12} /> Sync Streak
+                  </p>
+                  <p className="text-xl font-display font-bold text-brand-primary tracking-tight">
+                    {checkinSettings.currentStreak} <span className="text-sm">Days</span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="relative">
+                <AnimatePresence>
+                  {showConfetti && (
+                    <motion.div 
+                      initial={{ scale: 0.5, opacity: 1 }}
+                      animate={{ scale: 2, opacity: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
+                    >
+                      <CheckCircle className="text-brand-primary w-32 h-32 blur-sm" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                
+                <motion.button
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                  onClick={handleCheckIn}
+                  className="w-full py-8 rounded-3xl relative overflow-hidden group bg-brand-primary text-obsidian-950 shadow-2xl shadow-brand-primary/20 transition-all active:scale-95"
                 >
-                  <CheckCircle className="text-emerald-500 w-32 h-32" />
-                </motion.div>
-              )}
-            </AnimatePresence>
-            
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleCheckIn}
-              className="w-full py-6 rounded-xl relative overflow-hidden group bg-primary/20 hover:bg-primary border border-primary/50 shadow-[0_0_20px_rgba(79,92,255,0.2)] transition-all"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-white/20 to-primary/0 translate-x-[-100%] group-hover:animate-[shimmer_1.5s_infinite]"></div>
-              <span className="relative z-10 flex items-center justify-center gap-2 text-xl font-bold text-white">
-                <CheckCircle size={28} /> I'm Here
-              </span>
-            </motion.button>
-          </div>
-        </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 translate-x-[-100%] group-hover:animate-[shimmer_2s_infinite]"></div>
+                  <span className="relative z-10 flex items-center justify-center gap-4 text-2xl font-display font-bold uppercase tracking-tighter">
+                    <Fingerprint size={32} /> Initialize Verification Pulse
+                  </span>
+                </motion.button>
+              </div>
+            </Card>
 
-        {/* Settings & Sim Pannel */}
-        <div className="space-y-6">
-          <div className="glassmorphism rounded-2xl p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="font-semibold text-text flex items-center gap-2"><Settings size={18}/> Settings</h3>
-              <button 
-                onClick={() => setShowSettings(!showSettings)}
-                className="text-primary hover:text-primary-light"
-              >
-                {showSettings ? 'Hide' : 'Edit'}
-              </button>
-            </div>
-
-            {showSettings ? (
+            {/* ── History Timeline ── */}
+            <Card className="p-8 bg-surface/30 border-base/60">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-primary0 mb-8 flex items-center gap-3">
+                <History size={16} className="text-brand-primary" /> Pulse Verification History
+              </h3>
               <div className="space-y-4">
-                <div>
-                  <label className="text-sm text-muted mb-2 block">Frequency</label>
-                  <div className="flex gap-2">
-                    {['weekly', 'biweekly', 'monthly'].map(f => (
-                      <button 
-                        key={f}
-                        onClick={() => updateSettings({ frequency: f as any })}
-                        className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-                          checkinSettings.frequency === f ? 'bg-primary/20 text-primary border-primary' : 'bg-surface text-muted border-border hover:bg-surface-light'
-                        }`}
-                      >
-                        {f.charAt(0).toUpperCase() + f.slice(1)}
-                      </button>
-                    ))}
+                {checkins.slice(0, 8).map((checkin) => (
+                  <div key={checkin.id} className="flex items-center justify-between p-5 rounded-2xl bg-page/50 border border-base/50 hover:border-brand-primary/20 transition-all group">
+                    <div className="flex items-center gap-5">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                        checkin.status === 'responded' ? 'bg-brand-primary/10 text-brand-primary' :
+                        checkin.status === 'missed' ? 'bg-red-500/10 text-red-500' : 'bg-amber-500/10 text-amber-500'
+                      }`}>
+                        {checkin.method === 'tap' ? <Fingerprint size={18}/> : <Mail size={18}/>}
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-primary tracking-tight group-hover:text-brand-primary transition-colors capitalize">{checkin.status}</p>
+                        <p className="text-[10px] text-obsidian-600 font-bold uppercase tracking-widest mt-1.5">{new Date(checkin.scheduledFor).toLocaleString()}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-6">
+                      <span className={`text-[9px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full bg-surface border ${
+                         checkin.status === 'responded' ? 'border-brand-primary/20 text-brand-primary' : 'border-red-500/20 text-red-400'
+                      }`}>
+                        {checkin.method}
+                      </span>
+                      <ChevronRight size={14} className="text-obsidian-800" />
+                    </div>
+                  </div>
+                ))}
+                {checkins.length === 0 && (
+                  <p className="text-center text-obsidian-600 font-bold uppercase tracking-widest py-16 text-[10px] italic">No pulse history recorded in vault.</p>
+                )}
+              </div>
+            </Card>
+          </motion.div>
+
+          {/* ── Settings & Tools ── */}
+          <motion.div {...fadeUp(0.3)} className="space-y-8">
+            <Card className="p-8 bg-surface/50 border-base/60">
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-xs font-bold uppercase tracking-widest text-primary0 flex items-center gap-3">
+                  <Settings size={16} className="text-brand-primary"/> Protocol Config
+                </h3>
+                <button 
+                  onClick={() => setShowSettings(!showSettings)}
+                  className="text-[10px] font-bold text-brand-primary uppercase tracking-widest hover:underline"
+                >
+                  {showSettings ? 'Close' : 'Modify'}
+                </button>
+              </div>
+
+              {showSettings ? (
+                <div className="space-y-8">
+                  <div>
+                    <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian-600 mb-4 block">Verification Frequency</label>
+                    <div className="grid grid-cols-1 gap-2">
+                      {['weekly', 'biweekly', 'monthly'].map(f => (
+                        <button 
+                          key={f}
+                          onClick={() => updateSettings({ frequency: f as any })}
+                          className={`px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-widest border transition-all ${
+                            checkinSettings.frequency === f 
+                              ? 'bg-brand-primary/10 text-brand-primary border-brand-primary/40 shadow-[0_0_15px_rgba(79,92,255,0.1)]' 
+                              : 'bg-page text-primary0 border-base hover:border-base'
+                          }`}
+                        >
+                          {f}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian-600 block mb-4">
+                      Alert Quorum After: {checkinSettings.alertGuardiansAfterMisses} Misses
+                    </label>
+                    <input 
+                      type="range" 
+                      min="1" 
+                      max="3" 
+                      value={checkinSettings.alertGuardiansAfterMisses} 
+                      onChange={(e) => updateSettings({ alertGuardiansAfterMisses: parseInt(e.target.value) })}
+                      className="w-full h-1.5 bg-surface/80 rounded-full appearance-none cursor-pointer accent-brand-primary"
+                    />
                   </div>
                 </div>
-                <div>
-                  <label className="text-sm text-muted block mb-1">Alert Guardians After: {checkinSettings.alertGuardiansAfterMisses} miss</label>
-                  <input type="range" min="1" max="3" value={checkinSettings.alertGuardiansAfterMisses} 
-                    onChange={(e) => updateSettings({ alertGuardiansAfterMisses: parseInt(e.target.value) })}
-                    className="w-full"
-                  />
+              ) : (
+                <div className="space-y-6">
+                   <div className="flex justify-between items-center p-4 rounded-xl bg-page/40 border border-base/60">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-obsidian-600">Interval</span>
+                      <span className="text-xs font-bold text-obsidian-200 capitalize">{checkinSettings.frequency}</span>
+                   </div>
+                   <div className="flex justify-between items-center p-4 rounded-xl bg-page/40 border border-base/60">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-obsidian-600">Quorum Trigger</span>
+                      <span className="text-xs font-bold text-obsidian-200">{checkinSettings.alertGuardiansAfterMisses} Misses</span>
+                   </div>
+                   <div className="flex justify-between items-center p-4 rounded-xl bg-page/40 border border-base/60">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-obsidian-600">Succession Depth</span>
+                      <span className="text-xs font-bold text-obsidian-200">{checkinSettings.consecutiveMissesAllowed} Misses</span>
+                   </div>
                 </div>
-              </div>
-            ) : (
-              <div className="space-y-3 text-sm text-muted">
-                <p>Checked <strong className="text-text capitalize">{checkinSettings.frequency}</strong>.</p>
-                <p>Alerts sent after <strong className="text-text">{checkinSettings.alertGuardiansAfterMisses}</strong> miss.</p>
-                <p>Recovery after <strong className="text-text">{checkinSettings.consecutiveMissesAllowed}</strong> misses.</p>
-              </div>
-            )}
-          </div>
+              )}
+            </Card>
 
-          <div className="glassmorphism rounded-2xl p-6 border-red-500/20">
-            <h3 className="font-semibold text-text mb-4 text-sm flex items-center gap-2"><Bell size={16}/> Developer Tools</h3>
-            <Button variant="secondary" className="w-full text-red-500 border-red-500/30 hover:bg-red-500/10" onClick={() => simulateMissedCheckin()}>
-              Simulate Missed Check-In
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* History Timeline */}
-      <div className="glassmorphism rounded-2xl p-6">
-        <h3 className="font-semibold text-text mb-6 flex items-center gap-2"><History size={18}/> Check-In History</h3>
-        <div className="space-y-4">
-          {checkins.slice(0, 10).map((checkin) => (
-            <div key={checkin.id} className="flex items-center justify-between p-3 rounded-xl bg-surface/30 border border-border/50">
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-full ${
-                  checkin.status === 'responded' ? 'bg-emerald-500/10 text-emerald-500' :
-                  checkin.status === 'missed' ? 'bg-red-500/10 text-red-500' : 'bg-amber-500/10 text-amber-500'
-                }`}>
-                  {checkin.method === 'tap' ? <Fingerprint size={16}/> : <Mail size={16}/>}
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-text capitalize">{checkin.status}</p>
-                  <p className="text-xs text-muted">{new Date(checkin.scheduledFor).toLocaleString()}</p>
-                </div>
+            {/* ── Intelligence Alerts ── */}
+            <div className="p-8 rounded-[32px] bg-red-500/5 border border-red-500/20 relative group overflow-hidden">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                 <AlertTriangle size={80} className="text-red-500" />
               </div>
-              <div>
-                <span className={`text-xs px-2 py-1 rounded-full bg-surface-light border ${
-                   checkin.status === 'responded' ? 'border-emerald-500/20 text-emerald-400' : 'border-red-500/20 text-red-400'
-                }`}>
-                  {checkin.method}
-                </span>
-              </div>
+              <h3 className="text-xs font-bold text-red-500 uppercase tracking-widest mb-4 flex items-center gap-3">
+                <Bell size={16}/> Protocol Testing
+              </h3>
+              <p className="text-[10px] text-muted font-medium leading-relaxed mb-6">Simulation of missed verification pulses triggers guardian alerts and starts the succession countdown.</p>
+              <Button 
+                variant="secondary" 
+                className="w-full py-4 text-[10px] font-bold uppercase tracking-widest text-red-500 border-red-500/30 hover:bg-red-500/10" 
+                onClick={() => simulateMissedCheckin()}
+              >
+                Simulate Violation Pulse
+              </Button>
             </div>
-          ))}
-          {checkins.length === 0 && (
-            <p className="text-center text-muted py-8 text-sm">No history recorded yet.</p>
-          )}
+          </motion.div>
         </div>
-      </div>
 
+      </main>
     </div>
   );
 }

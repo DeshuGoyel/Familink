@@ -5,7 +5,15 @@ import { AuroraScene } from '../components/obituary/AuroraScene';
 import { useObituaryStore, ObituaryEntry } from '../store/useObituaryStore';
 import { useStore } from '../store/useStore';
 import Button from '../components/ui/Button';
-import { Sparkles, Video, Mic, Feather, BookOpen, Clock, Lock, X, Eye } from 'lucide-react';
+import Card from '../components/ui/Card';
+import { Sparkles, Video, Mic, Feather, BookOpen, Clock, Lock, X, Eye, ChevronRight, PenTool, CheckCircle2, ShieldCheck } from 'lucide-react';
+
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 15 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+});
 
 export default function DigitalObituary() {
   const { entries, createEntry, deleteEntry } = useObituaryStore();
@@ -18,7 +26,7 @@ export default function DigitalObituary() {
 
   const simulateAiGeneration = () => {
     setIsGenerating(true);
-    let text = "My dearest family, \n\nIf you are reading this, it means I have passed on. Please know that my final thoughts were full of love and gratitude for the time we shared. I've left instructions to ensure you are taken care of. Do not mourn for too long, but celebrate the joyful moments we had. I am at peace.\n\nAlways with you,\n[Name]";
+    let text = "My dearest family, \n\nIf you are reading this, it means I have passed on. Please know that my final thoughts were full of love and gratitude for the time we shared. I've left instructions to ensure you are taken care of through the Transfer Legacy protocols. Do not mourn for too long, but celebrate the joyful moments we had. I am at peace.\n\nAlways with you,\n[Name]";
     
     let currentText = "";
     let i = 0;
@@ -32,7 +40,7 @@ export default function DigitalObituary() {
         clearInterval(interval);
         setIsGenerating(false);
       }
-    }, 15);
+    }, 12);
   };
 
   const handleCreate = () => {
@@ -41,7 +49,7 @@ export default function DigitalObituary() {
       title: newEntry.title || 'My Final Letter',
       content: newEntry.content || '',
       recipientHeirId: newEntry.recipientHeirId || 'all',
-      isLocked: true // These are always sealed upon creation
+      isLocked: true 
     });
     setIsModalOpen(false);
     setStep(1);
@@ -49,243 +57,284 @@ export default function DigitalObituary() {
   };
 
   const getIcon = (type: string) => {
-    if (type === 'voice') return <Mic size={20} />;
-    if (type === 'video') return <Video size={20} />;
-    return <Feather size={20} />;
+    if (type === 'voice') return <Mic size={18} />;
+    if (type === 'video') return <Video size={18} />;
+    return <Feather size={18} />;
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pt-6 px-4 md:px-8 pb-24 md:pb-8">
-      
-      {/* Header */}
-      <header className="flex flex-col items-center justify-center text-center pt-8 pb-4">
-        <h1 className="text-4xl font-serif text-white tracking-wide mb-3 text-glow-purple">
-          Your Final Words
-        </h1>
-        <p className="text-purple-200/60 max-w-md text-lg">
-          Some things are too important to leave unsaid.
-        </p>
-      </header>
-
-      {/* 3D Scene */}
-      <div className="h-[200px] w-full rounded-[2rem] bg-[#050510] relative overflow-hidden flex items-center justify-center shadow-[0_0_50px_rgba(139,92,255,0.1)] border border-purple-900/30">
-        <Canvas camera={{ position: [0, 0, 5] }}>
-          <AuroraScene />
-        </Canvas>
-        <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-transparent to-[#050510]/80"></div>
-      </div>
-
-      {!hasSeenIntro ? (
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-2xl mx-auto bg-surface/40 backdrop-blur-md rounded-2xl p-8 border border-purple-500/20 text-center"
-        >
-          <BookOpen size={48} className="mx-auto text-purple-400 mb-6 opacity-80" />
-          <p className="text-xl text-text leading-relaxed font-serif mb-6">
-            This space is private. Only visible to your heirs after recovery is complete. 
-            You can update these anytime. Writing them is one of the most loving things you can do.
+    <div className="min-h-screen bg-page text-primary selection:bg-brand-primary/30 pt-20">
+      <main className="px-4 sm:px-6 lg:px-8 pb-24 md:pb-12 max-w-4xl mx-auto space-y-12">
+        
+        {/* ── Page Header ── */}
+        <motion.header {...fadeUp(0)} className="flex flex-col items-center justify-center text-center">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="w-2 h-2 rounded-full bg-brand-primary shadow-[0_0_10px_rgba(79,92,255,0.8)]" />
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-primary">
+              Legacy Commemoration Protocol
+            </p>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-display font-bold text-primary tracking-tight leading-none mb-4">
+            Final <span className="italic text-brand-primary">Words</span>
+          </h1>
+          <p className="text-muted text-sm max-w-md font-medium">
+            Some things are too important to leave unsaid. Archive your final mandates and personal sentiments.
           </p>
-          <Button 
-            variant="primary" 
-            className="bg-purple-600 hover:bg-purple-700 text-white border-none px-8 py-3 text-lg !rounded-full shadow-[0_0_20px_rgba(147,51,234,0.4)]"
-            onClick={() => { setHasSeenIntro(true); setIsModalOpen(true); }}
-          >
-            Begin Writing
-          </Button>
+        </motion.header>
+
+        {/* ── 3D Visualizer ── */}
+        <motion.div {...fadeUp(0.1)} className="h-64 w-full rounded-[40px] bg-surface/40 border border-base/60 relative overflow-hidden flex items-center justify-center group shadow-2xl">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(79,92,255,0.05),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <Canvas camera={{ position: [0, 0, 5] }}>
+            <AuroraScene />
+          </Canvas>
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-transparent to-obsidian-950/80" />
+          <div className="absolute bottom-6 left-0 right-0 text-center pointer-events-none">
+            <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-obsidian-600">Archival Synthesis Active</p>
+          </div>
         </motion.div>
-      ) : (
-        <div className="space-y-6">
-          <div className="flex justify-between items-end mb-6">
-            <h2 className="text-2xl font-serif text-white">Your Sealed Messages</h2>
+
+        {!hasSeenIntro ? (
+          <motion.div 
+            {...fadeUp(0.2)}
+            className="max-w-2xl mx-auto bg-surface/40 backdrop-blur-xl rounded-[32px] p-12 border border-base/60 text-center relative overflow-hidden"
+          >
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand-primary/50 to-transparent" />
+            <BookOpen size={56} className="mx-auto text-brand-primary mb-8 opacity-80" />
+            <p className="text-xl text-obsidian-100 leading-relaxed font-display font-bold mb-8 italic">
+              "This space is sovereign. Your words are cryptographically sealed until protocol activation. 
+              The most profound inheritance you leave is your voice."
+            </p>
             <Button 
-              variant="secondary" 
-              className="text-purple-400 border-purple-500/30 hover:bg-purple-500/10"
-              onClick={() => setIsModalOpen(true)}
+              variant="primary" 
+              className="px-12 py-4 text-[10px] font-bold uppercase tracking-[0.2em] shadow-2xl shadow-brand-primary/20"
+              onClick={() => { setHasSeenIntro(true); setIsModalOpen(true); }}
             >
-              Add Message
+              Begin Archival Process
             </Button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {entries.map((entry) => {
-              const heir = heirs.find(h => h.id === entry.recipientHeirId);
-              return (
-                <motion.div 
-                  key={entry.id}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="bg-surface/30 backdrop-blur-md rounded-2xl p-8 border border-purple-500/20 relative group hover:border-purple-500/40 transition-colors"
-                >
-                  <div className="absolute top-6 right-6 p-2 bg-amber-500/10 rounded-full border border-amber-500/20" title="Private - Sealed">
-                    <Lock size={16} className="text-amber-500" />
-                  </div>
-
-                  <h3 className="text-2xl font-serif text-white mb-2">{heir ? `To ${heir.name}` : 'To My Family'}</h3>
-                  <div className="flex items-center gap-2 mb-6 text-sm text-purple-300/60">
-                    <span className="flex items-center gap-1">{getIcon(entry.type)} <span className="capitalize">{entry.type}</span></span>
-                    <span>•</span>
-                    <span className="flex items-center gap-1"><Clock size={14}/> {new Date(entry.createdAt).toLocaleDateString()}</span>
-                  </div>
-
-                  <div className="flex justify-between items-center mt-8 pt-6 border-t border-purple-500/10">
-                    <button className="text-sm font-medium text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors">
-                      <Eye size={16}/> Preview (Owner Only)
-                    </button>
-                    <button onClick={() => deleteEntry(entry.id)} className="text-sm text-muted hover:text-red-400 transition-colors">
-                      Delete
-                    </button>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Multistep Create Modal */}
-      <AnimatePresence>
-        {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/90 backdrop-blur-md transition-all">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="w-full max-w-3xl bg-[#0a0a14] rounded-3xl border border-purple-500/30 overflow-hidden flex flex-col max-h-[90vh] shadow-[0_0_100px_rgba(147,51,234,0.15)]"
-            >
-              <div className="p-6 border-b border-purple-500/10 flex justify-between items-center">
-                <div className="flex items-center gap-3 text-purple-200">
-                  <Feather size={20} className="text-purple-500"/> 
-                  <span className="font-serif text-xl tracking-wide">Write Message</span>
-                </div>
-                <button onClick={() => setIsModalOpen(false)} className="text-muted hover:text-text p-2 rounded-full hover:bg-surface"><X size={20}/></button>
+          </motion.div>
+        ) : (
+          <div className="space-y-8">
+            <motion.div {...fadeUp(0.2)} className="flex justify-between items-end">
+              <div>
+                <h2 className="text-xl font-display font-bold text-primary">Sealed Mandates</h2>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-obsidian-600 mt-1">Owner Access Only</p>
               </div>
-
-              <div className="flex-1 overflow-y-auto p-8 space-y-8">
-                
-                {step === 1 && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-                    <h3 className="text-2xl font-serif text-white text-center">Who is this message for?</h3>
-                    <div className="max-w-sm mx-auto">
-                      <select 
-                        className="w-full bg-surface border border-purple-500/30 rounded-xl px-5 py-4 text-white text-lg outline-none focus:border-purple-500 transition-colors"
-                        value={newEntry.recipientHeirId || 'all'} 
-                        onChange={(e) => setNewEntry({...newEntry, recipientHeirId: e.target.value})}
-                      >
-                        <option value="all">Create a general message for all heirs</option>
-                        {heirs.map(h => <option key={h.id} value={h.id}>{h.name}</option>)}
-                      </select>
-                    </div>
-                  </motion.div>
-                )}
-
-                {step === 2 && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-                    <h3 className="text-2xl font-serif text-white text-center">How would you like to deliver your message?</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {[
-                        { id: 'letter', icon: Feather, title: 'Written Letter', desc: 'Your words, their forever.' },
-                        { id: 'voice', icon: Mic, title: 'Voice Transcript', desc: 'As if they could hear you.' },
-                        { id: 'video', icon: Video, title: 'Video Script', desc: 'A message from beyond.' }
-                      ].map((t) => (
-                        <button
-                          key={t.id}
-                          onClick={() => setNewEntry({ ...newEntry, type: t.id as any })}
-                          className={`p-8 rounded-2xl border flex flex-col items-center justify-center gap-4 transition-all text-center ${
-                            newEntry.type === t.id ? 'bg-purple-900/20 border-purple-500 shadow-[0_0_30px_rgba(147,51,234,0.2)] text-white' : 'bg-surface/30 border-purple-500/20 hover:border-purple-500/50 text-purple-200/50 hover:text-purple-200'
-                          }`}
-                        >
-                          <t.icon size={36} className="mb-2" />
-                          <div>
-                            <span className="font-serif text-lg block mb-1">{t.title}</span>
-                            <span className="text-xs opacity-60 italic">{t.desc}</span>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-
-                {step === 3 && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 flex flex-col h-full min-h-[400px]">
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-xl font-serif text-white flex items-center gap-2">
-                        {getIcon(newEntry.type || 'letter')} Express yourself
-                      </h3>
-                      <button 
-                        onClick={simulateAiGeneration}
-                        disabled={isGenerating}
-                        className="text-xs font-medium px-4 py-2 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/30 flex items-center gap-2 hover:bg-amber-500/20 transition-all"
-                      >
-                       <Sparkles size={14} /> Need help finding the words?
-                      </button>
-                    </div>
-                    
-                    <textarea 
-                      className="w-full flex-1 rounded-2xl p-6 text-lg text-white font-serif placeholder-purple-200/30 resize-none focus:outline-none focus:ring-1 focus:ring-purple-500/50 transition-all bg-[#0d0d1a] border border-purple-900/50"
-                      placeholder="Start with 'Dear Name,'...&#10;Tell them what they meant to you.&#10;Share your final wishes and guidance.&#10;Let them know you are at peace."
-                      value={newEntry.content || ''}
-                      onChange={(e) => setNewEntry({...newEntry, content: e.target.value})}
-                    />
-                  </motion.div>
-                )}
-
-                {step === 4 && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 bg-[#fdfbf7] p-12 rounded-[2rem] shadow-inner text-black transform rotate-[0.5deg]">
-                    <div className="font-serif text-xl leading-relaxed text-[#2a2a2a]">
-                       <p className="mb-8 font-medium">
-                         To: {heirs.find(h => h.id === newEntry.recipientHeirId)?.name || 'My Family'}
-                       </p>
-                       <div className="whitespace-pre-wrap">{newEntry.content}</div>
-                       <p className="mt-12 text-sm text-gray-400 italic font-sans text-right">
-                         Written on {new Date().toLocaleDateString()}
-                       </p>
-                    </div>
-                  </motion.div>
-                )}
-                
-                {step === 5 && (
-                  <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6 text-center py-12">
-                    <motion.div 
-                       initial={{ scale: 0.8, rotateX: 45 }} 
-                       animate={{ scale: 1, rotateX: 0 }} 
-                       className="w-32 h-32 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-white flex items-center justify-center mx-auto mb-8 shadow-[0_0_50px_rgba(245,158,11,0.4)]"
-                    >
-                      <Lock size={48} />
-                    </motion.div>
-                    <h3 className="text-3xl font-serif text-white mb-4">Seal This Message</h3>
-                    <p className="text-lg text-purple-200/60 max-w-md mx-auto">
-                      Your message will be sealed. They will receive it when the time comes.
-                    </p>
-                  </motion.div>
-                )}
-
-              </div>
-
-              <div className="p-6 border-t border-purple-500/10 bg-surface/30 flex justify-between">
-                 {step > 1 ? (
-                   <Button variant="secondary" className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10" onClick={() => setStep(step - 1)}>Go Back</Button>
-                 ) : <div></div>}
-                 
-                 {step < 5 ? (
-                   <Button 
-                     variant="primary" 
-                     onClick={() => setStep(step + 1)} 
-                     className="bg-purple-600 hover:bg-purple-700 text-white border-none min-w-[120px] disabled:opacity-50 disabled:cursor-not-allowed"
-                     disabled={step === 3 && !newEntry.content}
-                   >
-                     {step === 4 ? 'Looks Good' : 'Next'}
-                   </Button>
-                 ) : (
-                   <Button variant="primary" className="bg-amber-500 hover:bg-amber-600 text-white border-none focus:ring-amber-500/50 shadow-[0_0_20px_rgba(245,158,11,0.3)] px-8 py-3 text-lg" onClick={handleCreate}>
-                     <Lock size={20} className="mr-2"/> Seal Now
-                   </Button>
-                 )}
-              </div>
+              <Button 
+                variant="secondary" 
+                className="text-[10px] font-bold uppercase tracking-widest px-6"
+                onClick={() => setIsModalOpen(true)}
+              >
+                + New Message
+              </Button>
             </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {entries.map((entry, idx) => {
+                const heir = heirs.find(h => h.id === entry.recipientHeirId);
+                return (
+                  <motion.div 
+                    key={entry.id}
+                    {...fadeUp(0.3 + idx * 0.1)}
+                  >
+                    <Card className="p-8 bg-surface/40 border border-base/60 relative group hover:border-brand-primary/30 transition-all cursor-default">
+                      <div className="absolute top-8 right-8 p-2.5 bg-brand-gold/10 rounded-xl border border-brand-gold/20 shadow-inner group-hover:bg-brand-gold/20 transition-all" title="Institutional Lock Applied">
+                        <Lock size={16} className="text-brand-gold" />
+                      </div>
+
+                      <h3 className="text-2xl font-display font-bold text-primary mb-3 truncate pr-12">{heir ? `To ${heir.name}` : 'Family Protocol'}</h3>
+                      <div className="flex items-center gap-5 text-[10px] font-bold text-primary0 uppercase tracking-widest">
+                        <span className="flex items-center gap-2 text-brand-primary">{getIcon(entry.type)} {entry.type}</span>
+                        <span className="w-1 h-1 rounded-full bg-surface/80" />
+                        <span className="flex items-center gap-2"><Clock size={12}/> {new Date(entry.createdAt).toLocaleDateString()}</span>
+                      </div>
+
+                      <div className="flex justify-between items-center mt-10 pt-6 border-t border-base/60">
+                        <button className="text-[10px] font-bold text-brand-primary uppercase tracking-widest flex items-center gap-2 hover:text-brand-primary transition-colors">
+                          <Eye size={14}/> Decrypt Preview
+                        </button>
+                        <button onClick={() => deleteEntry(entry.id)} className="text-[10px] font-bold text-obsidian-700 hover:text-red-500 uppercase tracking-widest transition-colors">
+                          Purge
+                        </button>
+                      </div>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         )}
-      </AnimatePresence>
+
+        {/* ── Multi-Step Synthesis Modal ── */}
+        <AnimatePresence>
+          {isModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-page/90 backdrop-blur-md">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 30 }}
+                className="w-full max-w-3xl bg-surface border border-base rounded-[40px] overflow-hidden flex flex-col max-h-[90vh] shadow-[0_40px_100px_rgba(0,0,0,0.6)]"
+              >
+                <div className="p-8 border-b border-base/60 flex justify-between items-center bg-surface/50">
+                  <div className="flex items-center gap-4 text-brand-primary">
+                    <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center border border-brand-primary/20">
+                       <PenTool size={20}/> 
+                    </div>
+                    <div>
+                      <span className="font-display text-xl font-bold text-primary">Synthesis Hub</span>
+                      <p className="text-[9px] font-bold text-obsidian-600 uppercase tracking-[0.2em] mt-1">Archival Step {step} / 5</p>
+                    </div>
+                  </div>
+                  <button onClick={() => setIsModalOpen(false)} className="text-obsidian-600 hover:text-obsidian-200 p-2.5 rounded-xl hover:bg-page transition-all"><X size={20}/></button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-10 lg:p-12 space-y-10 scrollbar-hide">
+                  
+                  {step === 1 && (
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 text-center">
+                      <h3 className="text-3xl font-display font-bold text-primary tracking-tight">Designate Mandate Recipient</h3>
+                      <div className="max-w-md mx-auto relative group">
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-brand-primary/20 to-transparent blur opacity-0 group-hover:opacity-100 transition duration-500" />
+                        <select 
+                          className="relative w-full bg-page border border-base rounded-2xl px-6 py-5 text-primary text-lg font-medium outline-none focus:border-brand-primary/50 transition-all appearance-none cursor-pointer"
+                          value={newEntry.recipientHeirId || 'all'} 
+                          onChange={(e) => setNewEntry({...newEntry, recipientHeirId: e.target.value})}
+                        >
+                          <option value="all">General Protocol (All Beneficiaries)</option>
+                          {heirs.map(h => <option key={h.id} value={h.id}>{h.name}</option>)}
+                        </select>
+                      </div>
+                      <p className="text-xs text-primary0 font-medium">Specific messages can only be decrypted by the designated heir.</p>
+                    </motion.div>
+                  )}
+
+                  {step === 2 && (
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-10">
+                      <h3 className="text-3xl font-display font-bold text-primary text-center tracking-tight">Select Transmission Mode</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {[
+                          { id: 'letter', icon: Feather, title: 'Written Mandate', desc: 'Sovereign text archive.' },
+                          { id: 'voice', icon: Mic, title: 'Vocal Record', desc: 'Audio synthesis upload.' },
+                          { id: 'video', icon: Video, title: 'Visual Synthesis', desc: 'Full motion archive.' }
+                        ].map((t) => (
+                          <button
+                            key={t.id}
+                            onClick={() => setNewEntry({ ...newEntry, type: t.id as any })}
+                            className={`p-8 rounded-[32px] border flex flex-col items-center justify-center gap-6 transition-all text-center relative overflow-hidden group ${
+                              newEntry.type === t.id ? 'bg-brand-primary/10 border-brand-primary shadow-2xl shadow-brand-primary/10 text-primary' : 'bg-page border-base text-obsidian-600 hover:border-base'
+                            }`}
+                          >
+                            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all ${newEntry.type === t.id ? 'bg-brand-primary text-obsidian-950' : 'bg-surface text-obsidian-700 border border-base'}`}>
+                              <t.icon size={32} />
+                            </div>
+                            <div>
+                              <span className="font-display font-bold text-xl block mb-2">{t.title}</span>
+                              <span className="text-[10px] font-bold uppercase tracking-widest opacity-60 italic">{t.desc}</span>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {step === 3 && (
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 flex flex-col h-full min-h-[450px]">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-2xl font-display font-bold text-primary flex items-center gap-4">
+                          {getIcon(newEntry.type || 'letter')} Transcribe Content
+                        </h3>
+                        <button 
+                          onClick={simulateAiGeneration}
+                          disabled={isGenerating}
+                          className="px-5 py-2.5 rounded-xl bg-brand-gold/10 text-brand-gold border border-brand-gold/20 flex items-center gap-2 hover:bg-brand-gold/20 transition-all text-[10px] font-bold uppercase tracking-widest"
+                        >
+                         <Sparkles size={14} className={isGenerating ? 'animate-spin' : ''} /> {isGenerating ? 'Synthesizing...' : 'AI Assist'}
+                        </button>
+                      </div>
+                      
+                      <div className="flex-1 relative group">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-brand-primary/5 to-transparent blur opacity-0 group-hover:opacity-100 transition duration-500" />
+                        <textarea 
+                          className="relative w-full h-full min-h-[350px] bg-page border border-base rounded-[32px] p-8 text-lg text-obsidian-100 font-medium placeholder-obsidian-800 resize-none focus:outline-none focus:border-brand-primary/40 transition-all leading-relaxed"
+                          placeholder="Initialize protocol message here...&#10;&#10;Consider sharing:&#10;• Personal values and final guidance.&#10;• Distribution intent beyond legal dry text.&#10;• Final words of continuity."
+                          value={newEntry.content || ''}
+                          onChange={(e) => setNewEntry({...newEntry, content: e.target.value})}
+                        />
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {step === 4 && (
+                    <motion.div initial={{ opacity: 0, y: 10, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} className="p-12 rounded-[40px] bg-obsidian-50 border border-white shadow-2xl relative">
+                       <div className="absolute top-8 right-8 opacity-10">
+                          <CheckCircle2 size={120} className="text-brand-primary" />
+                       </div>
+                       <div className="relative z-10 font-medium text-lg leading-relaxed text-obsidian-900 max-w-lg mx-auto">
+                          <p className="mb-10 text-[10px] font-bold uppercase tracking-[0.3em] text-brand-primary">Document Review</p>
+                          <p className="mb-10 font-display font-bold text-2xl text-obsidian-950">
+                            Subject: Legacy Mandate to {heirs.find(h => h.id === newEntry.recipientHeirId)?.name || 'Family Quorum'}
+                          </p>
+                          <div className="whitespace-pre-wrap italic font-serif opacity-80 leading-loose">"{newEntry.content}"</div>
+                          <div className="mt-16 pt-8 border-t border-obsidian-200 flex justify-between items-end">
+                             <div className="text-[9px] font-bold text-muted uppercase tracking-widest">
+                                Protocol Encoded: {new Date().toLocaleDateString()}
+                             </div>
+                             <div className="w-16 h-1 w-obsidian-200" />
+                          </div>
+                       </div>
+                    </motion.div>
+                  )}
+                  
+                  {step === 5 && (
+                    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-10 text-center py-16">
+                      <motion.div 
+                         animate={{ 
+                           scale: [1, 1.05, 1],
+                           boxShadow: ['0 0 20px rgba(212,175,55,0.2)', '0 0 60px rgba(212,175,55,0.4)', '0 0 20px rgba(212,175,55,0.2)']
+                         }} 
+                         transition={{ repeat: Infinity, duration: 3 }}
+                         className="w-32 h-32 rounded-full bg-brand-gold text-obsidian-950 flex items-center justify-center mx-auto mb-10 shadow-2xl"
+                      >
+                        <Lock size={48} />
+                      </motion.div>
+                      <h3 className="text-4xl font-display font-bold text-primary tracking-tight">Seal Mandate</h3>
+                      <p className="text-lg text-muted max-w-md mx-auto font-medium">
+                        This archive will be cryptographically locked. It is only accessible upon verification of protocol activation.
+                      </p>
+                    </motion.div>
+                  )}
+
+                </div>
+
+                <div className="p-8 border-t border-base bg-page/40 flex justify-between items-center">
+                   <div className="flex gap-4">
+                     {step > 1 ? (
+                       <Button variant="secondary" className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest border-base" onClick={() => setStep(step - 1)}>Go Back</Button>
+                     ) : <div></div>}
+                   </div>
+                   
+                   <div className="flex gap-4">
+                     {step < 5 ? (
+                       <Button 
+                         variant="primary" 
+                         onClick={() => setStep(step + 1)} 
+                         className="px-10 py-3 text-[10px] font-bold uppercase tracking-widest min-w-[140px] disabled:opacity-50"
+                         disabled={step === 3 && !newEntry.content}
+                       >
+                         {step === 4 ? 'Confirm Review' : 'Continue Pulse'}
+                       </Button>
+                     ) : (
+                       <Button variant="primary" className="bg-brand-gold hover:bg-brand-gold text-obsidian-950 border-none shadow-[0_0_30px_rgba(212,175,55,0.3)] px-12 py-4 text-[10px] font-bold uppercase tracking-[0.2em]" onClick={handleCreate}>
+                         <ShieldCheck size={18} className="mr-2"/> Commit to Vault
+                       </Button>
+                     )}
+                   </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+      </main>
     </div>
   );
 }

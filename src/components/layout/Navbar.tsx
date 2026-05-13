@@ -1,91 +1,116 @@
-import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { Link, useLocation } from 'react-router-dom';
+import { motion, useScroll } from 'framer-motion';
 import { useStore } from '../../store/useStore';
-import { Bell, Menu, X, User } from 'lucide-react';
+import { Bell, Menu, X } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import ThemeToggle from './ThemeToggle';
+import { useEffect, useState } from 'react';
+import { Logo } from '../ui/Logo';
+
+const navLinks = [
+  { label: 'Dashboard', to: '/dashboard' },
+  { label: 'Assets', to: '/assets' },
+  { label: 'Guardians', to: '/guardians' },
+  { label: 'Trust', to: '/trust' },
+];
 
 export default function Navbar() {
   const { user, toggleNotifications, notifications, isMobileSidebarOpen, toggleMobileSidebar, toggleSidebar } = useStore();
   const { scrollY } = useScroll();
-  
-  const bgOpacity = useTransform(scrollY, [0, 50], [0, 0.4]);
-  const blur = useTransform(scrollY, [0, 50], ["blur(0px)", "blur(12px)"]);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const unsub = scrollY.on('change', v => setScrolled(v > 20));
+    return unsub;
+  }, [scrollY]);
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <motion.nav 
-      style={{ 
-        backgroundColor: `rgba(0, 0, 0, ${bgOpacity.get()})`,
-        backdropFilter: blur,
-      }}
+    <motion.nav
       className={cn(
-        "fixed top-0 w-full z-50 transition-colors duration-300",
-        scrollY.get() > 50 ? "border-b border-primary/20 shadow-[0_4px_30px_rgba(79,92,255,0.1)]" : "border-b border-transparent"
+        'fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-300 flex items-center',
+        scrolled ? 'bg-surface/85 backdrop-blur-xl border-b border-base' : 'bg-transparent border-b border-transparent'
       )}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-3">
-            <button 
-              onClick={toggleSidebar} 
-              className="hidden md:flex p-2 text-muted hover:text-text rounded-md hover:bg-surface border border-transparent hover:border-border transition-colors focus:outline-none"
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="flex items-center justify-between h-full">
+
+          {/* Left: hamburger + brand */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={toggleSidebar}
+              className="hidden md:flex p-2 rounded-xl text-secondary hover:text-primary bg-surface/50 border border-base hover:border-brand-primary/20 transition-all shadow-sm"
               title="Toggle Sidebar"
             >
-              <Menu className="w-5 h-5" />
+              <Menu size={18} strokeWidth={2} />
             </button>
-            <Link to="/" className="flex items-center space-x-3 group">
-              <img 
-                src="/logo-dark.png" 
-                alt="Transfer Legacy Logo" 
-                className="w-10 h-10 object-contain hidden dark:block group-hover:scale-105 transition-transform duration-300"
-              />
-              <img 
-                src="/logo-light.png" 
-                alt="Transfer Legacy Logo" 
-                className="w-10 h-10 object-contain block dark:hidden group-hover:scale-105 transition-transform duration-300"
-              />
-              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500">
-                Transfer Legacy
-              </span>
+
+            <Link to="/" className="group">
+              <Logo size={28} showTagline={false} />
             </Link>
           </div>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-8">
-            <Link to="/dashboard" className="text-muted hover:text-text transition">Dashboard</Link>
-            <Link to="/assets" className="text-muted hover:text-text transition">Assets</Link>
-            <Link to="/resources" className="text-muted hover:text-text transition">Resources</Link>
-            <Link to="/trust" className="text-muted hover:text-text transition">Trust</Link>
-            <Link to="/ai-planner" className="flex items-center space-x-1 text-primary hover:text-primary/80 transition">
-              <span>AI Planner</span>
-            </Link>
+          {/* Centre – Navigation links */}
+          <div className="hidden md:flex items-center gap-1">
+            {navLinks.map(({ label, to }) => {
+              const isActive = location.pathname === to;
+              return (
+                <Link
+                  key={to}
+                  to={to}
+                  className={cn(
+                    'px-4 py-2 rounded-xl text-[11px] font-medium uppercase tracking-[0.25em] transition-all',
+                    isActive
+                      ? 'text-brand-primary bg-brand-primary/5 border border-brand-primary/10'
+                      : 'text-secondary hover:text-primary hover:bg-surface/50'
+                  )}
+                >
+                  {label}
+                </Link>
+              );
+            })}
           </div>
 
-          <div className="hidden md:flex items-center space-x-4">
-            <button onClick={toggleNotifications} className="relative p-2 text-muted hover:text-text focus:outline-none">
-              <Bell className="w-5 h-5" />
-              {unreadCount > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-danger rounded-full"></span>
-              )}
-            </button>
-            <ThemeToggle />
-            <Link to="/dashboard" className="flex items-center space-x-2 px-4 py-2 rounded-full bg-surface border border-border hover:border-primary/50 transition">
-              <User className="w-4 h-4 text-muted" />
-              <span className="text-sm font-medium">{user.name}</span>
-            </Link>
-          </div>
+          {/* Right: Actions */}
+          <div className="flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-2">
+              <button
+                onClick={toggleNotifications}
+                className="relative p-2 text-secondary hover:text-primary rounded-xl hover:bg-surface transition"
+                aria-label="Toggle notifications"
+                title="Notifications"
+              >
+                <Bell size={19} strokeWidth={1.8} />
+                {unreadCount > 0 && (
+                  <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-brand-primary rounded-full" />
+                )}
+              </button>
+              <ThemeToggle />
+            </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            <button onClick={toggleMobileSidebar} className="text-muted hover:text-text">
-              {isMobileSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface border border-base hover:border-brand-primary/30 transition-all shadow-sm"
+            >
+              <div
+                className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[11px] font-bold bg-gradient-to-br from-brand-primary to-brand-primary/80"
+              >
+                {user.name.charAt(0)}
+              </div>
+              <span className="hidden lg:inline text-[11px] font-bold uppercase tracking-wider text-primary">{user.name.split(' ')[0]}</span>
+            </Link>
+
+            {/* Mobile Actions */}
+            <div className="flex md:hidden items-center">
+              <button onClick={toggleMobileSidebar} className="p-2 text-secondary hover:text-primary rounded-xl transition" aria-label="Toggle Menu">
+                {isMobileSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
         </div>
       </div>
-
     </motion.nav>
   );
 }

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import { cn } from '../../utils/cn';
+import ThemeToggle from '../layout/ThemeToggle';
 
 const navLinks = [
   { label: 'How It Works', href: '#how-it-works' },
@@ -37,24 +39,26 @@ export default function LandingNavbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={cn(
+          'fixed top-0 left-0 right-0 z-50 transition-all duration-500 h-[72px] flex items-center',
           scrolled
-            ? 'bg-[#090B14]/80 backdrop-blur-2xl border-b border-white/[0.06] shadow-[0_1px_40px_rgba(0,0,0,0.6)]'
+            ? 'bg-surface/80 backdrop-blur-2xl border-b border-base shadow-2xl'
             : 'bg-transparent'
-        }`}
+        )}
       >
-        <div className="max-w-7xl mx-auto px-6 h-[72px] flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 w-full flex items-center justify-between">
           {/* Logo */}
           <a href="#" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 overflow-hidden flex items-center justify-center">
-              <img src="/logo-dark.png" alt="Transfer Legacy" className="w-full h-full object-contain" />
+            <div className="w-9 h-9 overflow-hidden flex items-center justify-center">
+              <img src="/logo-dark.png" alt="Transfer Legacy" className="w-full h-full object-contain dark:block hidden" />
+              <img src="/logo-light.png" alt="Transfer Legacy" className="w-full h-full object-contain dark:hidden block" />
             </div>
-            <span className="font-bold text-[17px] tracking-tight text-white">
+            <span className="font-bold text-[18px] tracking-tight text-primary uppercase letter-spacing-[0.05em]">
               Transfer{' '}
               <span
                 className="font-black"
                 style={{
-                  background: 'linear-gradient(135deg, #f9a8d4, #f97316)',
+                  background: 'linear-gradient(135deg, #3B82F6, #D4A72C)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
@@ -65,46 +69,48 @@ export default function LandingNavbar() {
             </span>
           </a>
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex items-center gap-1">
+          {/* Desktop Links — Matching Sidebar label style */}
+          <div className="hidden lg:flex items-center gap-2">
             {navLinks.map((link) => (
               <button
                 key={link.label}
                 onClick={() => scrollTo(link.href)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={cn(
+                  'px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300',
                   activeSection === link.href
-                    ? 'text-white bg-white/8'
-                    : 'text-white/50 hover:text-white hover:bg-white/5'
-                }`}
+                    ? 'text-brand-primary bg-brand-primary/10 shadow-[inset_0_0_12px_rgba(212,167,44,0.1)]'
+                    : 'text-secondary hover:text-primary hover:bg-surface/50'
+                )}
               >
                 {link.label}
               </button>
             ))}
           </div>
 
-          {/* CTA */}
+          {/* Actions */}
           <div className="hidden md:flex items-center gap-4">
+            <ThemeToggle />
             <button
               onClick={() => scrollTo('#waitlist')}
-              className="px-5 py-2 rounded-full text-sm font-bold text-white border border-white/15 hover:border-white/30 hover:bg-white/5 transition-all duration-200"
+              className="px-5 py-2 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] text-secondary border border-base hover:border-strong hover:bg-surface/50 transition-all duration-300"
             >
               Sign in
             </button>
             <button
               onClick={() => scrollTo('#waitlist')}
-              className="px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.5)]"
+              className="px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_0_25px_rgba(59,130,246,0.2)] hover:shadow-[0_0_35px_rgba(59,130,246,0.4)]"
               style={{
-                background: 'linear-gradient(135deg, #f9a8d4 0%, #f97316 50%, #c084fc 100%)',
-                color: '#fff',
+                background: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #D4A72C 100%)',
+                color: 'white',
               }}
             >
-              Join Waitlist
+              Secure Legacy
             </button>
           </div>
 
           {/* Hamburger */}
           <button
-            className="md:hidden text-white p-2 rounded-lg hover:bg-white/5 transition-colors"
+            className="md:hidden text-primary p-2 rounded-xl hover:bg-surface/50 transition-colors"
             onClick={() => setMobileOpen(true)}
           >
             <Menu size={22} />
@@ -120,14 +126,14 @@ export default function LandingNavbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'tween', duration: 0.28 }}
-            className="fixed inset-0 z-[100] bg-[#090B14] flex flex-col px-8 pt-24 pb-12"
+            className="fixed inset-0 z-[100] bg-page flex flex-col px-8 pt-24 pb-12"
           >
             {/* Gradient accent */}
-            <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none"
-              style={{ background: 'radial-gradient(circle at top right, rgba(249,115,22,0.12), transparent 60%)' }}
+            <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none opacity-20"
+              style={{ background: 'radial-gradient(circle at top right, var(--color-brand-primary), transparent 60%)' }}
             />
             <button
-              className="absolute top-5 right-6 text-white/60 hover:text-white transition-colors"
+              className="absolute top-5 right-6 text-secondary hover:text-primary transition-colors"
               onClick={() => setMobileOpen(false)}
             >
               <X size={26} />
@@ -141,7 +147,7 @@ export default function LandingNavbar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.06 }}
                   onClick={() => scrollTo(link.href)}
-                  className="text-3xl font-bold text-white/80 hover:text-white text-left transition-colors"
+                  className="text-3xl font-bold text-primary hover:text-brand-primary text-left transition-colors"
                 >
                   {link.label}
                 </motion.button>
@@ -151,10 +157,10 @@ export default function LandingNavbar() {
             <div className="mt-auto">
               <button
                 onClick={() => scrollTo('#waitlist')}
-                className="w-full py-4 rounded-2xl text-base font-bold text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]"
-                style={{ background: 'linear-gradient(135deg, #f9a8d4 0%, #f97316 50%, #c084fc 100%)' }}
+                className="w-full py-4 rounded-2xl text-base font-bold text-white shadow-[0_0_30px_rgba(59,130,246,0.3)]"
+                style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #D4A72C 100%)' }}
               >
-                Claim Your Spot
+                Secure Your Legacy
               </button>
             </div>
           </motion.div>

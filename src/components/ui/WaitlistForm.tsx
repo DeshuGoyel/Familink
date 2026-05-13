@@ -45,7 +45,7 @@ export function WaitlistForm() {
       particleCount: 100,
       spread: 70,
       origin: { y: 0.6 },
-      colors: ['#D4AF37', '#4F5CFF', '#ffffff']
+      colors: ['#F97316', '#A855F7', '#EC4899', '#ffffff']
     });
   };
 
@@ -69,7 +69,7 @@ export function WaitlistForm() {
       setPosition(result.position);
       setIsSuccess(true);
       triggerConfetti();
-      
+
       if (result.isNew) {
         toast.success('Successfully joined waitlist!');
       } else {
@@ -87,44 +87,44 @@ export function WaitlistForm() {
   return (
     <div style={{ perspective: 1200 }} className="w-full max-w-md mx-auto relative z-10">
       <motion.div
-        style={{ 
-          rotateX, 
-          rotateY, 
-          transformStyle: "preserve-3d" 
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d"
         }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         className="w-full"
       >
         {isSuccess ? (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             style={{ transform: "translateZ(30px)" }}
-            className="bg-primary/20 border border-primary/40 rounded-2xl p-8 text-center shadow-[0_0_30px_rgba(79,92,255,0.3)] backdrop-blur-md"
+            className="bg-brand-primary/10 border border-brand-primary/30 rounded-2xl p-8 text-center shadow-lg backdrop-blur-md"
           >
-            <div className="w-16 h-16 bg-accent/20 text-accent rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
-               <CheckCircle2 size={32} />
+            <div className="w-16 h-16 bg-brand-primary/20 text-brand-primary rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
+              <CheckCircle2 size={32} />
             </div>
-            <h3 className="text-2xl font-bold text-white font-display mb-2">You're on the list!</h3>
-            <p className="text-[#8B949E] mb-6 text-lg">
-              Status: <strong className="text-gold text-xl">#{position?.toLocaleString()}</strong>
+            <h3 className="text-2xl font-bold text-primary font-display mb-2">You're on the list!</h3>
+            <p className="text-secondary mb-6 text-lg">
+              Status: <strong className="text-brand-gold text-xl">#{position?.toLocaleString()}</strong>
             </p>
-            <div className="text-sm text-[#8B949E]">
+            <div className="text-sm text-muted">
               We'll email you when beta access opens.
             </div>
           </motion.div>
         ) : (
-          <form 
-            onSubmit={handleSubmit(onSubmit)} 
+          <form
+            onSubmit={handleSubmit(onSubmit)}
             style={{ transform: "translateZ(30px)" }}
-            className="w-full bg-[#0D1117]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-[0_0_40px_rgba(0,0,0,0.5)] group relative overflow-hidden"
+            className="w-full bg-surface/80 backdrop-blur-xl border border-base rounded-3xl p-8 shadow-xl group relative overflow-hidden"
           >
-            <motion.div 
+            <motion.div
               animate={{ opacity: isFocused ? 1 : 0 }}
-              className="absolute inset-0 bg-gradient-to-tr from-indigo-500/10 to-transparent pointer-events-none transition-opacity duration-300"
+              className="absolute inset-0 bg-gradient-to-tr from-brand-primary/10 to-transparent pointer-events-none transition-opacity duration-300"
             />
-            
+
             <div className="flex flex-col gap-5 relative z-10">
               <div className="relative">
                 <motion.input
@@ -135,53 +135,53 @@ export function WaitlistForm() {
                   onBlur={() => setIsFocused(false)}
                   style={{ transform: "translateZ(20px)" }}
                   whileFocus={{ scale: 1.01 }}
-                  className="w-full bg-black/60 border border-white/10 focus:border-indigo-500 rounded-xl px-5 py-4 text-white placeholder-[#8B949E] outline-none transition-all focus:shadow-[0_0_20px_rgba(79,92,255,0.4)] block"
+                  className="w-full bg-page/50 border border-base focus:border-brand-primary rounded-xl px-5 py-4 text-primary placeholder-muted transition-all focus:shadow-[0_0_20px_rgba(249,115,22,0.15)] block"
                 />
                 <AnimatePresence>
                   {errors.email && (
-                    <motion.p 
+                    <motion.p
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.9 }}
-                      className="text-red-400 text-sm pl-2 mt-2 font-medium"
+                      className="text-error text-sm pl-2 mt-2 font-medium"
                     >
                       {errors.email.message}
                     </motion.p>
                   )}
                 </AnimatePresence>
               </div>
-              
-              <Button 
-                type="submit" 
+
+              <Button
+                type="submit"
                 disabled={isSubmitting}
-                className={`w-full py-4 text-lg font-bold bg-gold hover:bg-[#ebc449] text-black shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:shadow-[0_0_30px_rgba(212,175,55,0.6)] transition-all flex items-center justify-center gap-2 ${isSubmitting ? 'opacity-90' : ''}`}
+                className={`w-full py-4 text-lg font-bold bg-brand-primary hover:bg-brand-primary-hover text-white shadow-brand transition-all flex items-center justify-center gap-2 ${isSubmitting ? 'opacity-90' : ''}`}
               >
                 {isSubmitting ? (
                   <>
                     <Loader2 size={20} className="animate-spin" />
-                    Securing Spot...
+                    Securing Archive...
                   </>
                 ) : (
                   <>
                     <Lock size={18} className="opacity-80" />
-                    Claim Your Spot
+                    Secure Your Legacy
                   </>
                 )}
               </Button>
             </div>
-            
+
             <div className="mt-6 flex flex-col items-center gap-3 relative z-10">
-              <div className="flex items-center gap-4 text-[11px] font-medium text-[#8B949E] uppercase tracking-wider">
-                <div className="flex items-center gap-1.5 border border-white/10 bg-white/5 rounded-full px-2.5 py-1">
-                  <ShieldCheck size={12} className="text-emerald-400" />
+              <div className="flex items-center gap-4 text-[11px] font-medium text-muted uppercase tracking-wider">
+                <div className="flex items-center gap-1.5 border border-base bg-surface/50 rounded-full px-2.5 py-1">
+                  <ShieldCheck size={12} className="text-brand-success" />
                   AES-256 Encrypted
                 </div>
-                <div className="flex items-center gap-1.5 border border-white/10 bg-white/5 rounded-full px-2.5 py-1">
-                  <Lock size={12} className="text-indigo-400" />
+                <div className="flex items-center gap-1.5 border border-base bg-surface/50 rounded-full px-2.5 py-1">
+                  <Lock size={12} className="text-brand-primary" />
                   Zero-Knowledge
                 </div>
               </div>
-              <p className="text-xs text-[#8B949E] text-center">
+              <p className="text-xs text-muted text-center">
                 Zero spam. Cancel anytime. Join 2,400+ protected families.
               </p>
             </div>

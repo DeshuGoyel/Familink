@@ -21,8 +21,8 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="bg-[#0B0E14] text-[#F0F6FC] min-h-screen font-sans selection:bg-indigo-500/30 overflow-x-hidden relative">
-      <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/10 via-[#0B0E14]/0 to-[#0B0E14]/0" />
+    <div className="bg-page text-primary min-h-screen font-sans selection:bg-brand-primary/30 overflow-x-hidden relative">
+      <div className="absolute inset-0 z-0 pointer-events-none bg-aurora opacity-40" />
       <LandingNavbar />
 
       <main>

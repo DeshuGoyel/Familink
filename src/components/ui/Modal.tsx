@@ -30,7 +30,11 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
             >
               <div className="flex justify-between items-center mb-6 flex-shrink-0">
                 <h2 className="text-xl font-semibold text-text">{title}</h2>
-                <button onClick={onClose} className="text-muted hover:text-text transition">
+                <button 
+                  onClick={onClose} 
+                  className="text-muted hover:text-text transition p-1.5 rounded-lg"
+                  aria-label="Close modal"
+                >
                   <X size={20} />
                 </button>
               </div>

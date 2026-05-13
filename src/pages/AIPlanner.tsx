@@ -1,14 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
 import { useStore } from '../store/useStore';
-import { Bot, ArrowRight, ShieldAlert, Lightbulb, ShieldCheck, Send } from 'lucide-react';
+import { Bot, ArrowRight, ShieldAlert, Lightbulb, ShieldCheck, Send, Sparkles, AlertTriangle, ChevronRight, CheckCircle2 } from 'lucide-react';
 import Card from '../components/ui/Card';
-import { motion } from 'framer-motion';
+import Button from '../components/ui/Button';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const aiReplies = [
-  "I can certainly help with that. Based on your current vault 72/100 score, I recommend adding at least one more guardian.",
-  "That's a great question. For NFT inheritance, you should provide direct instructions on how to access the specific wallet they are stored in.",
-  "I've analyzed your setup. You have 3 guardians, which is excellent for Shamir's Secret Sharing. However, your son Raj is still in 'In Recovery' status.",
-  "To improve your score, consider adding detailed notes to your 'Main BTC Wallet' asset. Only 12% of users do this, but it increases recovery success by 80%."
+  "I can certainly help with that. Based on your current vault 72/100 score, I recommend adding at least one more guardian to the protocol.",
+  "That's a critical question. For digital business inheritance, you should provide direct instructions on how to access the registrar and DNS settings.",
+  "I've analyzed your setup. You have 3 guardians, which is excellent for Shamir's Secret Sharing. However, your beneficiary 'Raj' has not yet verified their recovery credentials.",
+  "To improve your vault integrity, consider adding detailed synthesis notes to your 'Institutional Portfolio'. Only 12% of high-net-worth users do this, but it increases recovery success by 80%."
 ];
 
 const TypewriterText = ({ text }: { text: string }) => {
@@ -21,17 +22,24 @@ const TypewriterText = ({ text }: { text: string }) => {
       setDisplayed(text.substring(0, index));
       index++;
       if (index > text.length) clearInterval(interval);
-    }, 15);
+    }, 12);
     return () => clearInterval(interval);
   }, [text]);
   
   return <span>{displayed}</span>;
 };
 
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 15 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+});
+
 export default function AIPlanner() {
   const { user } = useStore();
   const [messages, setMessages] = useState([
-    { role: 'ai', content: `Hi ${user.name.split(' ')[0]} 👋 I've analyzed your vault. You're missing recovery instructions for your NFTs. Want me to generate them for you?` }
+    { role: 'ai', content: `Greetings, ${user.name.split(' ')[0]}. I've completed a synthesis of your vault. You're currently missing comprehensive recovery instructions for your digital intellectual property. Shall we initialize the protocol?` }
   ]);
   const [inputVal, setInputVal] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -64,139 +72,199 @@ export default function AIPlanner() {
     setMessages(prev => [...prev, { role: 'user', content: action }]);
     setIsTyping(true);
     setTimeout(() => {
-      setMessages(prev => [...prev, { role: 'ai', content: `I am executing action: "${action}". Here are your tailored suggestions...` }]);
+      setMessages(prev => [...prev, { role: 'ai', content: `Protocol initialized for: "${action}". I am analyzing your specific risk profile now...` }]);
       setIsTyping(false);
     }, 1500);
   };
 
   return (
-    <div className="min-h-screen bg-secondary">
-<main className="pt-6 px-4 sm:px-6 lg:px-8 pb-24 md:pb-8">
-        <div className="max-w-7xl mx-auto space-y-8">
-          
-          <header className="flex items-center space-x-4">
+    <div className="min-h-screen bg-page text-primary selection:bg-brand-primary/30 pt-20">
+      <main className="px-4 sm:px-6 lg:px-8 pb-24 md:pb-12 max-w-7xl mx-auto space-y-12">
+        
+        {/* ── Page Header ── */}
+        <motion.header {...fadeUp(0)} className="flex items-center space-x-6">
+          <div className="relative">
+            <div className="absolute inset-0 bg-brand-primary/20 blur-xl rounded-full" />
             <motion.div 
-               animate={{ boxShadow: ['0 0 10px rgba(79,92,255,0.4)', '0 0 30px rgba(79,92,255,0.8)', '0 0 10px rgba(79,92,255,0.4)'] }}
-               transition={{ repeat: Infinity, duration: 2 }}
-               className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center text-primary"
+               animate={{ boxShadow: ['0 0 10px rgba(79,92,255,0.4)', '0 0 40px rgba(79,92,255,0.8)', '0 0 10px rgba(79,92,255,0.4)'] }}
+               transition={{ repeat: Infinity, duration: 3 }}
+               className="w-14 h-14 bg-brand-primary text-obsidian-950 rounded-2xl flex items-center justify-center relative z-10"
             >
-              <Bot size={28} />
+              <Bot size={32} />
             </motion.div>
-            <div>
-              <h1 className="text-3xl font-bold text-text">AI Legacy Planner</h1>
-              <p className="text-muted mt-1">Powered by Gemini · Your personal inheritance advisor</p>
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="w-2 h-2 rounded-full bg-brand-primary" />
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-primary">
+                Cognitive Legacy Synthesis
+              </p>
             </div>
-          </header>
+            <h1 className="text-3xl sm:text-4xl font-display font-bold text-primary tracking-tight leading-none">
+              Institutional <span className="italic text-brand-primary">Legacy Planner</span>
+            </h1>
+            <p className="text-muted text-sm mt-2 font-medium">Powered by Gemini · Your sovereign inheritance advisor.</p>
+          </div>
+        </motion.header>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 flex flex-col h-[600px] glassmorphism rounded-2xl border border-border overflow-hidden">
-              <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          
+          {/* ── Chat Container ── */}
+          <motion.div {...fadeUp(0.2)} className="lg:col-span-2 flex flex-col h-[650px] bg-surface/40 border border-base/60 rounded-[32px] overflow-hidden backdrop-blur-md relative shadow-2xl">
+            <div className="flex-1 overflow-y-auto p-8 space-y-8 scrollbar-hide">
+              <AnimatePresence initial={false}>
                 {messages.map((msg, idx) => (
                   <motion.div 
                     key={idx} 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 15, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
                     className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
-                    <div className={`max-w-[80%] p-4 rounded-2xl ${
-                      msg.role === 'user' ? 'bg-primary text-white rounded-br-none' : 'bg-surface border border-border text-text rounded-bl-none'
+                    <div className={`max-w-[85%] p-6 rounded-3xl font-medium leading-relaxed ${
+                      msg.role === 'user' 
+                        ? 'bg-brand-primary text-obsidian-950 rounded-br-none shadow-lg shadow-brand-primary/10' 
+                        : 'bg-page/60 border border-base text-obsidian-100 rounded-bl-none'
                     }`}>
-                      {msg.role === 'ai' ? <TypewriterText text={msg.content} /> : msg.content}
+                      <p className="text-sm">
+                        {msg.role === 'ai' ? <TypewriterText text={msg.content} /> : msg.content}
+                      </p>
                     </div>
                   </motion.div>
                 ))}
-                {isTyping && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-                    <div className="bg-surface border border-border p-4 rounded-2xl rounded-bl-none flex space-x-2">
-                      <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0 }} className="w-2 h-2 rounded-full bg-muted" />
-                      <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }} className="w-2 h-2 rounded-full bg-muted" />
-                      <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }} className="w-2 h-2 rounded-full bg-muted" />
-                    </div>
-                  </motion.div>
-                )}
-                <div ref={messagesEndRef} />
-              </div>
-              
-              <div className="p-4 border-t border-border bg-surface/50">
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {['🔍 Analyze my gaps', '📝 Generate heir instructions', '⚠️ Check for risks', '📊 Estimate asset value', '🌍 Check legal compliance'].map(action => (
-                    <button 
-                      key={action}
-                      onClick={() => handleActionClick(action)}
-                      className="px-3 py-1.5 rounded-full bg-surface border border-border text-xs text-muted hover:text-primary hover:border-primary/50 transition"
-                    >
-                      {action}
-                    </button>
-                  ))}
-                </div>
-                <form onSubmit={handleSend} className="relative">
-                  <input
-                    type="text"
-                    value={inputVal}
-                    onChange={e => setInputVal(e.target.value)}
-                    placeholder="Ask AI about your legacy plan..."
-                    className="w-full bg-surface border border-border rounded-xl pl-4 pr-12 py-3 text-text focus:outline-none focus:border-primary/50 text-sm"
-                  />
-                  <button 
-                    type="submit" 
-                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-primary text-white rounded-lg hover:bg-primary/90 transition"
-                  >
-                    <Send size={16} />
-                  </button>
-                </form>
-              </div>
+              </AnimatePresence>
+              {isTyping && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
+                  <div className="bg-page/40 border border-base px-5 py-4 rounded-3xl rounded-bl-none flex items-center space-x-2">
+                    <motion.div animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1, delay: 0 }} className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
+                    <motion.div animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1, delay: 0.2 }} className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
+                    <motion.div animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1, delay: 0.4 }} className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
+                  </div>
+                </motion.div>
+              )}
+              <div ref={messagesEndRef} />
             </div>
+            
+            {/* ── Chat Input ── */}
+            <div className="p-6 border-t border-base/60 bg-page/40">
+              <div className="flex flex-wrap gap-2 mb-6">
+                {[
+                  { label: 'Analyze Gaps', icon: Sparkles },
+                  { label: 'Generate Mandates', icon: Bot },
+                  { label: 'Risk Assessment', icon: AlertTriangle },
+                  { label: 'Legal Audit', icon: ShieldCheck }
+                ].map((action, i) => (
+                  <button 
+                    key={i}
+                    onClick={() => handleActionClick(action.label)}
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface border border-base text-[10px] font-bold uppercase tracking-widest text-muted hover:text-brand-primary hover:border-brand-primary/50 transition-all active:scale-95 shadow-sm"
+                  >
+                    <action.icon size={12} />
+                    {action.label}
+                  </button>
+                ))}
+              </div>
+              <form onSubmit={handleSend} className="relative group">
+                <input
+                  type="text"
+                  value={inputVal}
+                  onChange={e => setInputVal(e.target.value)}
+                  placeholder="Ask advisor about vault protocols..."
+                  className="w-full bg-surface border border-base rounded-2xl pl-6 pr-14 py-4 text-primary focus:outline-none focus:border-brand-primary/50 focus:ring-1 focus:ring-brand-primary/30 text-sm font-medium transition-all"
+                />
+                <button 
+                  type="submit" 
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-brand-primary text-obsidian-950 rounded-xl hover:bg-brand-primary transition-all shadow-lg active:scale-95"
+                >
+                  <Send size={18} />
+                </button>
+              </form>
+            </div>
+          </motion.div>
 
-            <div className="space-y-6">
-              <Card className="flex flex-col items-center justify-center p-8 text-center bg-surface/80 border border-border">
-                <h3 className="text-muted font-medium mb-4">Legacy Health Check</h3>
-                <div className="relative w-32 h-32 flex items-center justify-center mb-6">
+          {/* ── Sidebar Metrics ── */}
+          <div className="space-y-8">
+            <motion.div {...fadeUp(0.3)}>
+              <Card className="flex flex-col items-center justify-center p-10 text-center bg-surface/50 border border-base/60 relative overflow-hidden group">
+                <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary0 mb-8">Legacy Protocol Health</h3>
+                
+                <div className="relative w-40 h-40 flex items-center justify-center mb-8">
                   <svg className="transform -rotate-90 w-full h-full">
-                    <circle cx="64" cy="64" r="50" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-surface" />
-                    <circle cx="64" cy="64" r="50" stroke="#4F5CFF" strokeWidth="8" fill="transparent" strokeDasharray={Math.PI * 100} strokeDashoffset={(Math.PI * 100) * (1 - 0.72)} className="drop-shadow-[0_0_10px_rgba(79,92,255,0.5)] transition-all duration-1000" />
+                    <circle cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="6" fill="transparent" className="text-obsidian-800" />
+                    <motion.circle 
+                      cx="80" cy="80" r="70" 
+                      stroke="#4F5CFF" 
+                      strokeWidth="6" 
+                      fill="transparent" 
+                      strokeDasharray={Math.PI * 140} 
+                      initial={{ strokeDashoffset: Math.PI * 140 }}
+                      animate={{ strokeDashoffset: (Math.PI * 140) * (1 - 0.72) }}
+                      transition={{ duration: 2, ease: "easeOut" }}
+                      className="drop-shadow-[0_0_15px_rgba(79,92,255,0.4)]" 
+                    />
                   </svg>
                   <div className="absolute flex flex-col items-center">
-                    <span className="text-3xl font-bold text-text">72</span>
-                    <span className="text-xs text-muted">/ 100</span>
+                    <span className="text-5xl font-display font-bold text-primary">72</span>
+                    <span className="text-[10px] font-bold text-obsidian-600 uppercase tracking-widest mt-1">Sovereign Index</span>
                   </div>
                 </div>
-                <div className="w-full space-y-3">
-                  <div className="flex justify-between text-sm"><span className="text-muted">Assets</span><span className="text-accent">90%</span></div>
-                  <div className="flex justify-between text-sm"><span className="text-muted">Guardians</span><span className="text-yellow-500">60%</span></div>
-                  <div className="flex justify-between text-sm"><span className="text-muted">Heirs</span><span className="text-accent">80%</span></div>
-                  <div className="flex justify-between text-sm"><span className="text-muted">Instructions</span><span className="text-danger">40%</span></div>
+
+                <div className="w-full space-y-4">
+                  {[
+                    { label: 'Asset Synthesis', value: '90%', color: 'text-brand-primary' },
+                    { label: 'Guardian Quorum', value: '60%', color: 'text-amber-500' },
+                    { label: 'Mandate Coverage', value: '40%', color: 'text-red-500' }
+                  ].map((m, i) => (
+                    <div key={i} className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
+                      <span className="text-primary0">{m.label}</span>
+                      <span className={m.color}>{m.value}</span>
+                    </div>
+                  ))}
                 </div>
               </Card>
+            </motion.div>
 
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl border border-danger/30 bg-danger/5 flex items-start space-x-3">
-                  <ShieldAlert className="text-danger mt-1 shrink-0" size={20} />
-                  <div>
-                    <h4 className="text-sm font-semibold text-text mb-1">Risk Detected</h4>
-                    <p className="text-xs text-muted mb-2">Your ETH wallet has no guardian specifically assigned. 47% of ETH inheritance cases fail without this.</p>
-                    <button className="text-xs font-semibold text-danger flex items-center hover:opacity-80">Fix this <ArrowRight size={12} className="ml-1" /></button>
-                  </div>
+            {/* ── Intelligence Feed ── */}
+            <div className="space-y-4">
+              <motion.div {...fadeUp(0.4)} className="p-6 rounded-3xl border border-red-500/20 bg-red-500/5 flex items-start gap-4 group hover:bg-red-500/10 transition-all">
+                <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center shrink-0">
+                  <ShieldAlert className="text-red-500" size={18} />
                 </div>
-                <div className="p-4 rounded-xl border border-primary/30 bg-primary/5 flex items-start space-x-3">
-                  <Lightbulb className="text-primary mt-1 shrink-0" size={20} />
-                  <div>
-                    <h4 className="text-sm font-semibold text-text mb-1">Suggestion</h4>
-                    <p className="text-xs text-muted mb-2">Add a video message for your heirs to personalize their experience.</p>
-                    <button className="text-xs font-semibold text-primary flex items-center hover:opacity-80">Add video <ArrowRight size={12} className="ml-1" /></button>
-                  </div>
+                <div className="flex-1">
+                  <h4 className="text-xs font-bold text-primary uppercase tracking-widest mb-1 group-hover:text-red-400 transition-colors">Critical Vulnerability</h4>
+                  <p className="text-[10px] text-muted font-medium leading-relaxed mb-3">Your hardware vault has no secondary recovery path. 47% of recovery attempts fail without a fragmented key backup.</p>
+                  <button className="text-[9px] font-bold text-red-500 uppercase tracking-[0.2em] flex items-center group-hover:translate-x-1 transition-transform">
+                    Initialize Repair <ChevronRight size={10} className="ml-1" />
+                  </button>
                 </div>
-                <div className="p-4 rounded-xl border border-accent/30 bg-accent/5 flex items-start space-x-3">
-                  <ShieldCheck className="text-accent mt-1 shrink-0" size={20} />
-                  <div>
-                    <h4 className="text-sm font-semibold text-text mb-1">Strong Point</h4>
-                    <p className="text-xs text-muted">Your BTC wallet recovery path is excellent — 3 guardians confirmed.</p>
-                  </div>
+              </motion.div>
+
+              <motion.div {...fadeUp(0.5)} className="p-6 rounded-3xl border border-brand-primary/20 bg-brand-primary/5 flex items-start gap-4 group hover:bg-brand-primary/10 transition-all">
+                <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center shrink-0">
+                  <Lightbulb className="text-brand-primary" size={18} />
                 </div>
-              </div>
+                <div className="flex-1">
+                  <h4 className="text-xs font-bold text-primary uppercase tracking-widest mb-1 group-hover:text-brand-primary transition-colors">Optimization Suggested</h4>
+                  <p className="text-[10px] text-muted font-medium leading-relaxed mb-3">Append a biometric synthesis (video) to your memory capsules to ensure heir continuity.</p>
+                  <button className="text-[9px] font-bold text-brand-primary uppercase tracking-[0.2em] flex items-center group-hover:translate-x-1 transition-transform">
+                    Enable Synthesis <ChevronRight size={10} className="ml-1" />
+                  </button>
+                </div>
+              </motion.div>
+
+              <motion.div {...fadeUp(0.6)} className="p-6 rounded-3xl border border-green-500/20 bg-green-500/5 flex items-start gap-4 group hover:bg-green-500/10 transition-all">
+                <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="text-green-500" size={18} />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-xs font-bold text-primary uppercase tracking-widest mb-1 group-hover:text-green-400 transition-colors">Integrity Verified</h4>
+                  <p className="text-[10px] text-muted font-medium leading-relaxed">Your sovereign BTC recovery path has reached a 100% verification threshold with 3 active guardians.</p>
+                </div>
+              </motion.div>
             </div>
           </div>
-
         </div>
+
       </main>
     </div>
   );

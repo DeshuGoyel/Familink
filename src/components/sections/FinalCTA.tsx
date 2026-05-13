@@ -13,37 +13,18 @@ export default function FinalCTA() {
   return (
     <section
       id="waitlist"
-      className="relative overflow-hidden"
-      style={{ background: '#090B14' }}
+      className="relative overflow-hidden bg-page"
     >
       {/* Top separator */}
       <div
         className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(249,115,22,0.5), rgba(249,115,22,0.5), transparent)' }}
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.3), rgba(59,130,246,0.3), transparent)' }}
       />
-
-      {/* Diagonal gradient panel — mirrors the hero */}
-      <div className="absolute inset-0 flex overflow-hidden pointer-events-none">
-        {/* Left dark side */}
-        <div className="hidden lg:block flex-1" style={{ background: '#090B14' }} />
-
-        {/* Diagonal cut */}
-        <div className="hidden lg:block w-28" style={{ background: '#090B14', clipPath: 'polygon(100% 0, 100% 100%, 0 100%)' }} />
-
-        {/* Right gradient */}
-        <div
-          className="hidden lg:block w-[45%]"
-          style={{
-            background: 'linear-gradient(145deg, #2d1b5e 0%, #7c3aed 15%, #be185d 35%, #f97316 55%, #fb923c 68%, #c084fc 85%, #818cf8 100%)',
-            opacity: 0.35,
-          }}
-        />
-      </div>
 
       {/* Ambient glow */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] rounded-full blur-[160px] pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(249,115,22,0.07), rgba(192,132,252,0.05), transparent 70%)' }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] rounded-full blur-[160px] pointer-events-none opacity-20"
+        style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.15), rgba(212,167,44,0.1), transparent 70%)' }}
       />
 
       <div className="max-w-5xl mx-auto px-6 py-32 relative z-10">
@@ -55,29 +36,26 @@ export default function FinalCTA() {
           className="text-center"
         >
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full border text-sm font-semibold"
-            style={{ background: 'rgba(249,115,22,0.08)', borderColor: 'rgba(249,115,22,0.22)', color: '#fb923c' }}
+          <div className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full border border-brand-primary/20 bg-brand-primary/5 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-primary"
           >
             <ShieldCheck size={14} />
-            Founding member spots are limited
+            Founding member protocols active
           </div>
 
           {/* Headline */}
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6 leading-[1.04] tracking-tight">
-            Your family shouldn't need{' '}
+            The 100-year plan for your{' '}
             <span
               className="inline"
               style={{
-                background: 'linear-gradient(135deg, #f9a8d4 0%, #f97316 50%, #c084fc 100%)',
+                background: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #D4A72C 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
               }}
             >
-              a cryptographer
+              digital world.
             </span>
-            <br />
-            to inherit what you built.
           </h2>
 
           <p className="text-xl text-white/35 mb-12 max-w-2xl mx-auto leading-relaxed">
@@ -107,9 +85,10 @@ export default function FinalCTA() {
             <p className="text-white/35 text-sm italic leading-relaxed mb-3">
               "We built this because we lived the problem. No family should lose what their loved one spent years building."
             </p>
-            <p className="text-white/20 text-xs font-medium flex items-center justify-center gap-2">
-              <ArrowRight size={11} style={{ color: '#f97316' }} />
+            <p className="text-white/20 text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2">
+              <span className="w-4 h-px bg-brand-primary/30" />
               Deshu & Vikash, Transfer Legacy
+              <span className="w-4 h-px bg-brand-primary/30" />
             </p>
           </div>
         </motion.div>

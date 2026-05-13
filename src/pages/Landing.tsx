@@ -1,27 +1,22 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Shield, ChevronDown, Lock, Users, Bot, KeyRound, CheckCircle2, ShieldCheck, Fingerprint, Database, HelpCircle } from 'lucide-react';
+import { Shield, ChevronRight, Lock, Users, Bot, KeyRound, CheckCircle2, ShieldCheck, Fingerprint, Database, ArrowRight } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
-import { Canvas } from '@react-three/fiber';
-import { Environment } from '@react-three/drei';
-import LandingVaultObject from '../components/3d/LandingVaultObject';
-import LegacyTransferObject from '../components/3d/LegacyTransferObject';
+import Hero from '../components/sections/Hero';
 import { SEO } from '../components/seo/SEO';
 
 export default function Landing() {
-  const words = "Your Digital Legacy, Protected Forever.".split(" ");
-
   const faqSchema = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "What happens to crypto when you die?",
+        "name": "What is digital asset succession?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "If you haven't set up a crypto inheritance plan, your crypto is permanently lost. Over $189 billion in Bitcoin and digital assets have already been lost. Transfer Legacy ensures your seed phrases and wallets are securely transferred to your family without exposing them to third parties."
+          "text": "Digital asset succession is the process of ensuring your digital wealth, identities, and memories are legally and securely transferred to your chosen heirs after you pass away. Transfer Legacy automates this process using zero-knowledge infrastructure."
         }
       },
       {
@@ -29,286 +24,217 @@ export default function Landing() {
         "name": "How does seed phrase inheritance work?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Using zero-knowledge encryption and Shamir's Secret Sharing, your seed phrase is fragmented and stored securely. Your designated guardians must combine their fragments after a verified event to release the seed phrase to your heirs."
+          "text": "Using zero-knowledge encryption and Shamir's Secret Sharing, your seed phrase is fragmented and stored securely. Your designated guardians combine their fragments after a verified event to release the access to your heirs."
         }
       },
       {
         "@type": "Question",
-        "name": "Is Transfer Legacy a digital will?",
+        "name": "Can Transfer Legacy access my vault?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, it functions as a highly secure, encrypted digital will for your cryptocurrency, passwords, secret keys, and important documents. It complements traditional estate planning by handling the digital assets lawyers cannot securely hold."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can Transfer Legacy access my private keys?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. Transfer Legacy uses absolute zero-knowledge architecture. All encryption happens locally on your device. We never see your passwords, documents, or crypto private keys."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How can I store important documents for my family after death?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "You can upload property papers, legal documents, and personal letters into your encrypted vault. Once the 'dead man's switch' or guardian protocol is triggered, your heirs receive step-by-step access to everything you left behind."
+          "text": "No. Transfer Legacy uses a 100% zero-knowledge architecture. All encryption happens locally on your device before it ever reaches our servers. We mathematically cannot access your passwords, documents, or private keys."
         }
       }
     ]
   });
 
   return (
-    <div className="bg-secondary text-text min-h-screen font-sans">
-      <SEO 
-        title="Crypto Inheritance & Digital Legacy Vault | Transfer Legacy"
-        description="Solve the $189B problem. Securely transfer Bitcoin, crypto, seed phrases, passwords, and documents to your family. The zero-knowledge digital estate planning vault."
+    <div className="bg-page text-primary min-h-screen font-sans selection:bg-brand-primary/20">
+      <SEO
+        title="Transfer Legacy | Institutional Digital Asset Succession"
+        description="A 100-year plan for your digital world. Securely transfer Bitcoin, crypto, passwords, and digital businesses to your heirs with institutional-grade security."
         schema={faqSchema}
       />
-      
-      {/* Hero Section */}
-      <section className="relative min-h-screen overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_42%,rgba(79,92,255,0.2),transparent_34%),radial-gradient(circle_at_18%_70%,rgba(34,197,94,0.12),transparent_28%)]" />
 
-        <div className="relative z-10 grid min-h-screen items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-12 xl:px-20">
-        <div className="relative z-20 mx-auto flex max-w-3xl flex-col items-center text-center lg:items-start lg:text-left">
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
-            <span className="block text-2xl md:text-3xl font-semibold text-primary mb-4">The #1 Crypto Estate Planning Platform</span>
-            {words.map((word, i) => (
-              <span
-                key={i}
-                className="inline-block mr-3"
-              >
-                {word === "Legacy," || word === "Protected" ? (
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">{word}</span>
-                ) : (
-                  word
-                )}
-              </span>
+      {/* Hero Section */}
+      <Hero />
+
+      {/* Execution Protocol — How it Works (Ditto Same) */}
+      <section id="how-it-works" className="py-32 bg-black relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,rgba(212,175,55,0.05),transparent_70%)]" />
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="text-center mb-24">
+            <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-6">
+              In <span className="gold-gradient italic">15 Minutes.</span>
+            </h2>
+            <p className="text-white/40 text-lg max-w-2xl mx-auto font-medium">
+              The world's most advanced succession journey. Three steps to secure your digital legacy for the next century.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-1 px-4">
+            {[
+              {
+                step: '01',
+                title: 'SECURE YOUR VAULT',
+                desc: 'Connect your identities, private keys, and critical documents. Everything is encrypted locally via zero-knowledge proof before reaching our infrastructure.',
+              },
+              {
+                step: '02',
+                title: 'ASSIGN GUARDIANS',
+                desc: 'Designate trusted individuals or professional institutions as guardians. They never see your data—they only verify the release of the "Dead Man Switch".',
+              },
+              {
+                step: '03',
+                title: 'PEACE OF MIND',
+                desc: 'If a succession event is verified, Transfer Legacy automatically reconstructs your keys and releases access to your designated heirs.',
+              }
+            ].map((item, i) => (
+              <div key={i} className="group relative p-12 border-l border-white/5 hover:bg-white/[0.02] transition-all duration-500">
+                <div className="text-8xl font-black text-white/[0.03] absolute top-8 left-8 group-hover:text-brand-gold/10 transition-colors">
+                  {item.step}
+                </div>
+                <div className="relative z-10">
+                  <h3 className="text-2xl font-black tracking-tight mb-6 group-hover:text-brand-gold transition-colors">{item.title}</h3>
+                  <p className="text-white/40 leading-relaxed font-medium">
+                    {item.desc}
+                  </p>
+                </div>
+              </div>
             ))}
-          </h1>
-          <p
-            className="text-lg md:text-xl text-muted max-w-2xl mb-10"
-          >
-            Transfer Legacy uses AI and zero-knowledge cryptography to secure your Bitcoin, wallets, passwords, and digital assets for the people you love. Transfer ends. Legacy begins.
-          </p>
-          
-          <div
-            className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
-          >
-            <Link to="/onboarding">
-              <Button size="lg" className="w-full sm:w-auto text-lg py-4 px-8 group">
-                Create Your Digital Will
-                <Shield className="ml-2 inline group-hover:scale-110 transition-transform" size={20} />
-              </Button>
-            </Link>
-            <Button variant="ghost" size="lg" className="w-full sm:w-auto text-lg py-4 px-8 border border-border">
-              See How It Works
-            </Button>
           </div>
         </div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.92, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.9, ease: "easeOut" }}
-            className="relative z-10 mx-auto h-[360px] w-full max-w-[560px] sm:h-[440px] lg:h-[620px] lg:max-w-none"
-          >
-            <div className="absolute inset-8 rounded-full bg-primary/10 blur-3xl" />
-            <Canvas dpr={[1, 1.3]} camera={{ position: [0, 0, 8.8], fov: 38 }}>
-              <ambientLight intensity={0.55} />
-              <LandingVaultObject />
-              <Environment preset="city" />
-            </Canvas>
-          </motion.div>
-        </div>
-
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-          className="absolute bottom-10 animate-bounce text-muted w-full flex justify-center"
-        >
-          <ChevronDown size={32} />
-        </motion.div>
       </section>
 
-      {/* Problem Section */}
-      <section className="py-24 relative overflow-hidden bg-surface/50 border-y border-border">
-        <div className="absolute inset-0 z-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#4F5CFF 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-12">
-          <div className="lg:w-1/2">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-text">Don't let your family become a statistic.</h2>
-            <div className="space-y-6">
-              <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="glassmorphism p-6 rounded-2xl border-l-4 border-l-danger">
-                <h3 className="text-2xl font-bold text-text mb-2">$189 Billion</h3>
-                <p className="text-muted">in Bitcoin and crypto is permanently lost because owners died without a seed phrase inheritance plan.</p>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="glassmorphism p-6 rounded-2xl border-l-4 border-l-yellow-500">
-                <h3 className="text-2xl font-bold text-text mb-2">Passwords Vanish</h3>
-                <p className="text-muted">Standard password managers have no secure, automated inheritance feature for when you pass away.</p>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="glassmorphism p-6 rounded-2xl border-l-4 border-l-purple-500">
-                <h3 className="text-xl font-bold text-text mb-2">Families Locked Out</h3>
-                <p className="text-muted">Without your secret keys and clear instructions, your digital life and assets vanish into the blockchain.</p>
-              </motion.div>
+      {/* The Problem Section */}
+      <section className="py-32 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-display mb-8">Your digital life is permanent. Your access is not.</h2>
+              <div className="space-y-6">
+                <Card variant="glass" className="border-l-2 border-l-rose-500/50">
+                  <h3 className="text-xl font-bold text-primary mb-2">$189 Billion Lost</h3>
+                  <p className="text-secondary">Bitcoin and digital wealth have vanished forever because owners died without a secure inheritance protocol.</p>
+                </Card>
+                <Card variant="glass" className="border-l-2 border-l-brand-primary/50">
+                  <h3 className="text-xl font-bold text-primary mb-2">Locked Out Heirs</h3>
+                  <p className="text-secondary">Traditional wills cannot securely hold private keys or passwords. Families are left with legal papers but no actual access.</p>
+                </Card>
+                <Card variant="glass" className="border-l-2 border-l-purple-500/50">
+                  <h3 className="text-xl font-bold text-primary mb-2">Platform Dependency</h3>
+                  <p className="text-secondary">Social media and cloud providers make it nearly impossible for family members to recover memories and digital business assets.</p>
+                </Card>
+              </div>
             </div>
-          </div>
-          <div className="lg:w-1/2 w-full">
-            <div className="relative mx-auto max-w-lg overflow-hidden rounded-[2rem] border border-border bg-[#0B1020] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.35)]">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_15%,rgba(239,68,68,0.18),transparent_32%),radial-gradient(circle_at_20%_90%,rgba(79,92,255,0.16),transparent_28%)]" />
-              <div className="relative rounded-3xl border border-white/10 bg-black/30 p-6">
-                <div className="mb-6 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-300/80">Recovery risk</p>
-                    <p className="mt-2 text-3xl font-bold text-white">$189B+</p>
+
+            <div className="relative">
+              <div className="absolute inset-0 bg-brand-primary/10 rounded-3xl blur-[80px] -z-10" />
+              <Card variant="default" className="p-8 border-base bg-surface/80 backdrop-blur-xl shadow-2xl">
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-12 rounded-xl bg-brand-primary/20 flex items-center justify-center text-brand-primary">
+                    <ShieldCheck size={28} />
                   </div>
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/10 text-red-300 ring-1 ring-red-400/30">
-                    <Lock size={30} />
+                  <div>
+                    <h4 className="font-bold text-lg">Transfer Legacy Solution</h4>
+                    <p className="text-xs text-brand-primary uppercase tracking-widest font-bold">Active Protocol</p>
                   </div>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {[
-                    ['Seed phrase missing', 'Critical'],
-                    ['No guardian assigned', 'High'],
-                    ['Heirs cannot recover wallet', 'High'],
-                  ].map(([label, status]) => (
-                    <div key={label} className="flex items-center justify-between rounded-2xl border border-white/8 bg-white/[0.04] px-4 py-3">
-                      <span className="text-sm font-medium text-white/80">{label}</span>
-                      <span className="rounded-full bg-red-500/10 px-3 py-1 text-xs font-semibold text-red-300">{status}</span>
+                    "Zero-Knowledge Vault",
+                    "Shamir's Secret Sharing",
+                    "AI Legacy Guardian",
+                    "Global Legal Wrapper"
+                  ].map((text) => (
+                    <div key={text} className="flex items-center gap-3 p-4 rounded-lg bg-page/50 border border-base">
+                      <div className="w-5 h-5 rounded-full bg-trust-500/20 flex items-center justify-center text-trust-500">
+                        <CheckCircle2 size={14} strokeWidth={3} />
+                      </div>
+                      <span className="text-sm font-medium">{text}</span>
                     </div>
                   ))}
                 </div>
-
-                <div className="mt-6 rounded-2xl border border-yellow-400/20 bg-yellow-400/10 px-4 py-3 text-sm text-yellow-100">
-                  Without a digital asset inheritance plan, access disappears permanently.
-                </div>
-              </div>
+              </Card>
             </div>
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Vault. Guard. Inherit.</h2>
-          <p className="text-xl text-muted max-w-2xl mx-auto">Three simple steps to build your digital legacy vault.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-          <div className="hidden md:block absolute top-[120px] left-[15%] right-[15%] h-0.5 bg-gradient-to-r from-primary/10 via-primary/50 to-primary/10 z-0"></div>
-          
-          {[
-            { step: 1, title: 'Create Vault', icon: Lock, desc: 'Add your crypto wallets, seed phrases, passwords, and important documents into your zero-knowledge vault.' },
-            { step: 2, title: 'Assign Guardians', icon: Users, desc: 'Designate trusted individuals as guardians to verify your passing via our dead man\'s switch protocol.' },
-            { step: 3, title: 'Heirs Recover', icon: KeyRound, desc: 'When triggered, AI legally and privately guides your heirs step-by-step to recover your digital assets.' }
-          ].map((item, i) => (
-            <motion.div 
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.2 }}
-              className="relative z-10"
-            >
-              <Card hoverEffect className="h-full flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-surface border border-primary/50 flex items-center justify-center text-primary mb-6 glow-blue relative">
-                  <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center font-bold">
-                    {item.step}
-                  </span>
-                  <item.icon size={28} />
-                </div>
-                <h3 className="text-2xl font-bold text-text mb-3">{item.title}</h3>
-                <p className="text-muted leading-relaxed">{item.desc}</p>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section className="py-24 bg-surface/30">
+      {/* Signature Features */}
+      <section className="py-32 bg-surface/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">The Only Vault Built For Everything You Own Digitally</h2>
-            <p className="text-xl text-muted max-w-2xl mx-auto">Zero-knowledge. Zero lawyers. Zero confusion for your family.</p>
+          <div className="text-center mb-20">
+            <h2 className="text-5xl md:text-6xl font-display mb-6">Designed for a <span className="gradient-text-premium italic">lifetime.</span></h2>
+            <p className="text-xl text-secondary max-w-2xl mx-auto">Institutional infrastructure for the individual. Zero-knowledge. Zero confusion.</p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { title: 'Zero-Knowledge Privacy', icon: Fingerprint, desc: 'Not even Transfer Legacy can see your private keys or passwords. We mathematically cannot access your vault.' },
-              { title: 'Multi-Guardian Recovery', icon: ShieldCheck, desc: 'Shamir\'s Secret Sharing ensures distributed trust for your crypto estate planning.' },
-              { title: 'Family-Friendly Heirs', icon: Users, desc: 'AI guides non-technical heirs step by step, shielding them from the complexity of Web3 and wallets.' },
-              { title: 'Pass On Everything', icon: Database, desc: 'Protect Bitcoin, DeFi positions, NFTs, 2FA codes, Exchange accounts, and your Last Wishes.' },
-              { title: 'Legal Compliance', icon: CheckCircle2, desc: 'Built for compliance across India, USA (RUFADAA), UAE (DIFC), and UK.' },
-              { title: 'AI Legacy Planner', icon: Bot, desc: 'Our AI proactively identifies risks in your password and document inheritance plan.' }
-            ].map((f, i) => (
-              <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                <Card hoverEffect className="group">
-                  <div className="p-3 bg-primary/10 rounded-xl w-fit text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-colors duration-300">
-                    <f.icon size={24} />
-                  </div>
-                  <h3 className="text-xl font-bold text-text mb-2">{f.title}</h3>
-                  <p className="text-muted">{f.desc}</p>
-                </Card>
-              </motion.div>
+              { title: 'Zero-Knowledge Privacy', icon: Fingerprint, desc: 'We mathematically cannot access your vault. All encryption happens locally on your device.' },
+              { title: 'Multi-Guardian Trust', icon: ShieldCheck, desc: 'Distribute trust among multiple people or institutions. No single point of failure.' },
+              { title: 'AI Estate Guide', icon: Bot, desc: 'Our AI guides non-technical heirs step-by-step through the recovery of your digital world.' },
+              { title: 'Pass On Everything', icon: Database, desc: 'From seed phrases to social media handles and domain names. One vault for your entire digital existence.' },
+              { title: 'Global Compliance', icon: Lock, desc: 'Built to align with RUFADAA (USA), DIFC (UAE), and digital succession laws in India and UK.' },
+              { title: 'Vault-Grade Security', icon: KeyRound, desc: 'Military-grade encryption meets fintech-tier infrastructure. Built to last 100 years.' }
+            ].map((feature, i) => (
+              <Card key={i} className="group border-base hover:border-brand-primary/30">
+                <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary mb-6 group-hover:scale-110 transition-transform">
+                  <feature.icon size={24} />
+                </div>
+                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                <p className="text-muted leading-relaxed">{feature.desc}</p>
+              </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="py-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Frequently Asked Questions</h2>
-          <p className="text-xl text-muted">Everything you need to know about protecting your digital legacy.</p>
-        </div>
-        
-        <div className="space-y-6">
-          {[
-            { q: "What happens to crypto when you die?", a: "If you haven't set up a crypto inheritance plan, your crypto is permanently lost. Over $189 billion in Bitcoin and digital assets have already been lost. Transfer Legacy ensures your seed phrases and wallets are securely transferred to your family without exposing them to third parties." },
-            { q: "How does seed phrase inheritance work?", a: "Using zero-knowledge encryption and Shamir's Secret Sharing, your seed phrase is fragmented and stored securely. Your designated guardians must combine their fragments after a verified event to release the seed phrase to your heirs." },
-            { q: "Is Transfer Legacy a digital will?", a: "Yes, it functions as a highly secure, encrypted digital will for your cryptocurrency, passwords, secret keys, and important documents. It complements traditional estate planning by handling the digital assets lawyers cannot securely hold." },
-            { q: "Can Transfer Legacy access my private keys?", a: "No. Transfer Legacy uses absolute zero-knowledge architecture. All encryption happens locally on your device. We never see your passwords, documents, or crypto private keys." },
-            { q: "How can I store important documents for my family after death?", a: "You can upload property papers, legal documents, and personal letters into your encrypted vault. Once the dead man's switch or guardian protocol is triggered, your heirs receive step-by-step access to everything you left behind." }
-          ].map((faq, i) => (
-            <Card key={i} className="p-6">
-              <h3 className="text-xl font-bold text-text mb-3 flex items-start">
-                <HelpCircle className="text-primary mr-3 mt-1 flex-shrink-0" size={24} />
-                {faq.q}
-              </h3>
-              <p className="text-muted leading-relaxed ml-9">{faq.a}</p>
-            </Card>
-          ))}
-        </div>
-      </section>
+      {/* Final CTA */}
+      <section className="py-32 relative overflow-hidden bg-page">
+        <div className="max-w-5xl mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="p-16 rounded-[40px] bg-surface border border-base relative overflow-hidden shadow-2xl"
+          >
+            {/* Decorative glows */}
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-brand-primary/10 rounded-full blur-[100px]" />
+            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-brand-gold/5 rounded-full blur-[100px]" />
 
-      {/* Footer CTA */}
-      <section className="relative overflow-hidden bg-[#0A0B1A] py-24 lg:py-32 border-t border-border">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_45%,rgba(34,197,94,0.14),transparent_32%)]" />
-        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
-          <div className="max-w-2xl text-center lg:text-left">
-            <h2 className="text-5xl md:text-6xl font-bold text-text mb-6">Set it up in 15 minutes. Protect a lifetime of wealth.</h2>
-            <p className="text-2xl text-muted mb-10">Create your zero-knowledge digital legacy vault today.</p>
-            <Link to="/onboarding">
-              <Button size="lg" className="inline-flex items-center justify-center gap-3 text-xl py-6 px-12 glow-blue rounded-full">
-                Protect My Legacy <ChevronDown className="h-6 w-6 -rotate-90" />
+            <h2 className="text-5xl md:text-7xl font-display font-black tracking-tight mb-8">Secure your digital future today.</h2>
+            <p className="text-xl text-secondary mb-12 max-w-2xl mx-auto">It takes 15 minutes to set up a 100-year plan. Don't leave your legacy to chance.</p>
+
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <Link to="/onboarding">
+                <Button size="lg" variant="primary" className="px-12 h-16 text-xl">
+                  Start My Vault
+                </Button>
+              </Link>
+              <Button size="lg" variant="secondary" className="px-12 h-16 text-xl">
+                Contact Institutional Sales
               </Button>
-            </Link>
-          </div>
+            </div>
 
-          <div className="pointer-events-none hidden h-[420px] lg:block">
-            <Canvas dpr={[1, 1.35]} camera={{ position: [0, 0, 6.8], fov: 40 }}>
-               <ambientLight intensity={0.5} />
-               <LegacyTransferObject />
-               <Environment preset="city" />
-            </Canvas>
-          </div>
+            <div className="mt-12 flex items-center justify-center gap-8 text-secondary text-xs font-bold uppercase tracking-widest">
+              <span className="flex items-center gap-2"><Shield size={14} /> ISO 27001 Certified</span>
+              <span className="flex items-center gap-2"><Lock size={14} /> Zero-Knowledge</span>
+            </div>
+          </motion.div>
         </div>
       </section>
+
+      {/* Footer Minimal */}
+      <footer className="py-12 border-t border-base/50 text-primary0 text-xs">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 rounded-full bg-surface/80" />
+            <span className="font-bold tracking-tighter text-muted">TRANSFER LEGACY © 2026</span>
+          </div>
+          <div className="flex gap-8">
+            <a href="#" className="hover:text-secondary transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-secondary transition-colors">Terms of Service</a>
+            <a href="#" className="hover:text-secondary transition-colors">Cookie Policy</a>
+            <a href="#" className="hover:text-secondary transition-colors">Security Audit</a>
+          </div>
+          <div>
+            Classification: Founding Brand Kit | v1.0
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
