@@ -77,8 +77,8 @@ export default function AIPlanner() {
   };
 
   return (
-    <div className="min-h-screen bg-page text-primary selection:bg-brand-primary/30 pt-20">
-      <main className="px-4 sm:px-6 lg:px-8 pb-24 md:pb-12 max-w-7xl mx-auto space-y-12">
+    <div className="min-h-screen bg-page text-primary selection:bg-brand-primary/30 pt-8">
+      <main className="px-4 sm:px-6 lg:px-8 pb-24 md:pb-12 max-w-7xl mx-auto space-y-8">
         
         {/* ── Page Header ── */}
         <motion.header {...fadeUp(0)} className="flex items-center space-x-6">

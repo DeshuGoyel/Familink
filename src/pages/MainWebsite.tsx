@@ -87,10 +87,13 @@ function AppLayout() {
           <Route path="/settings"    element={<Settings />} />
           <Route path="/onboarding"  element={<Onboarding />} />
           <Route path="/checkin"     element={<CheckInCenter />} />
+          <Route path="/check-in"    element={<CheckInCenter />} />
           <Route path="/capsules"    element={<MemoryCapsules />} />
           <Route path="/obituary"    element={<DigitalObituary />} />
           <Route path="/passport"    element={<IdentityPassport />} />
+          <Route path="/identity"    element={<IdentityPassport />} />
           <Route path="/developer"   element={<DeveloperPortal />} />
+          <Route path="/activity"    element={<LegacyAnalytics />} />
 
           {/* New Functional Feature Routes */}
           <Route path="/features/vault-security"          element={<VaultSecurity />} />
