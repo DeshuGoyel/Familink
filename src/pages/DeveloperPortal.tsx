@@ -51,7 +51,7 @@ export default function DeveloperPortal() {
   ];
 
   return (
-    <div className="min-h-screen bg-page text-primary pt-20">
+    <div className="min-h-screen bg-page text-primary pt-6">
       <main className="px-4 sm:px-6 lg:px-8 pb-24 max-w-7xl mx-auto space-y-10">
         
         {/* ── Page Header ── */}

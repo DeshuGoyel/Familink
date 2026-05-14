@@ -43,7 +43,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-page text-primary selection:bg-brand-primary/30 pt-20">
+    <div className="min-h-screen bg-page text-primary selection:bg-brand-primary/30 pt-6">
       <main className="px-4 sm:px-6 lg:px-8 pb-28 md:pb-12 max-w-7xl mx-auto space-y-12">
         
         {/* ── Page Header ── */}

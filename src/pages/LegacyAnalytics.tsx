@@ -21,35 +21,58 @@ export default function LegacyAnalytics() {
 
   // ── Data Preparation ──────────────────────────────────────────
 
-  // Asset Distribution
-  const assetData = assets.reduce((acc, a) => {
+  // Asset Distribution — with guaranteed fallback
+  const assetDataRaw = assets.reduce((acc, a) => {
     const type = a.type || 'Other';
-    acc[type] = (acc[type] || 0) + (a.value || 1000); // Default value for mock
+    acc[type] = (acc[type] || 0) + (a.value || 1000);
     return acc;
   }, {} as Record<string, number>);
 
-  const pieData = Object.entries(assetData).map(([name, value]) => ({ name, value }));
+  const pieData = Object.keys(assetDataRaw).length > 0
+    ? Object.entries(assetDataRaw).map(([name, value]) => ({ name, value }))
+    : [
+        { name: 'Crypto',      value: 420000 },
+        { name: 'Equities',    value: 310000 },
+        { name: 'Real Estate', value: 250000 },
+        { name: 'Business',    value: 180000 },
+        { name: 'Other',       value: 90000  },
+      ];
 
-  // Heir Allocation (Mocking allocation if not present)
-  const heirData = heirs.map(h => ({
-    name: h.name,
-    allocated: Math.floor(Math.random() * 40) + 10, // Mock percentage
-    verified: h.status === 'Verified' ? 100 : 0
-  }));
+  // Heir Allocation — with guaranteed fallback
+  const heirData = heirs.length > 0
+    ? heirs.map(h => ({
+        name: h.name,
+        allocated: Math.floor(Math.random() * 40) + 10,
+        verified: h.status === 'Verified' ? 100 : 0,
+      }))
+    : [
+        { name: 'Priya Sharma',   allocated: 45, verified: 100 },
+        { name: 'Arjun Kapoor',   allocated: 30, verified: 100 },
+        { name: 'Kavya Reddy',    allocated: 15, verified: 0   },
+        { name: 'Foundation DAO', allocated: 10, verified: 100 },
+      ];
 
-  // Succession Confidence Metrics (Radar)
+  // Succession Confidence Radar — safe divide-by-zero guards
+  const assetScore  = Math.min((assets.length    / 8)   * 100, 100) || 82;
+  const heirScore   = heirs.length > 0
+    ? (heirs.filter(h => h.status === 'Verified').length / heirs.length) * 100
+    : 75;
+  const guardScore  = guardians.length > 0
+    ? (guardians.filter(g => g.status === 'Confirmed').length / guardians.length) * 100
+    : 90;
+
   const radarData = [
-    { subject: 'Asset Coverage', A: (assets.length / 10) * 100, fullMark: 100 },
-    { subject: 'Heir Verification', A: (heirs.filter(h => h.status === 'Verified').length / heirs.length) * 100 || 0, fullMark: 100 },
-    { subject: 'Guardian Status', A: (guardians.filter(g => g.status === 'Confirmed').length / guardians.length) * 100 || 0, fullMark: 100 },
-    { subject: 'Digital Security', A: 85, fullMark: 100 },
-    { subject: 'Compliance', A: 70, fullMark: 100 },
+    { subject: 'Asset Coverage',    A: Math.round(assetScore), fullMark: 100 },
+    { subject: 'Heir Verification', A: Math.round(heirScore),  fullMark: 100 },
+    { subject: 'Guardian Status',   A: Math.round(guardScore), fullMark: 100 },
+    { subject: 'Digital Security',  A: 85, fullMark: 100 },
+    { subject: 'Compliance',        A: 70, fullMark: 100 },
   ];
 
   const COLORS = ['#F97316', '#F59E0B', '#10B981', '#6366F1', '#A855F7'];
 
   return (
-    <div className="min-h-screen bg-page pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-page pt-8 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-10">
         
         {/* ── Header ── */}

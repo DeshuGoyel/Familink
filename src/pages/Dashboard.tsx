@@ -69,7 +69,7 @@ export default function Dashboard() {
   const activeGuardians = guardians.filter(g => g.status === 'Confirmed').length;
 
   return (
-    <div className="min-h-screen pt-20 relative overflow-hidden bg-page">
+    <div className="min-h-screen pt-6 relative overflow-hidden bg-page">
       {/* Background Institutional Layer */}
       <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
       <div className="absolute inset-0 bg-dot-matrix opacity-40 pointer-events-none" />

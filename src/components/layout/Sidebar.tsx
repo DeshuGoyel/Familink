@@ -19,14 +19,14 @@ import { useStore } from '../../store/useStore';
 import { cn } from '../../utils/cn';
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-  { icon: BarChart2, label: 'Analytics', path: '/analytics' },
-  { icon: Package, label: 'Asset Vault', path: '/vault' },
-  { icon: Users, label: 'Guardians', path: '/guardians' },
-  { icon: Shield, label: 'Trust Center', path: '/trust' },
-  { icon: Lock, label: 'AI Planner', path: '/planner' },
-  { icon: Code2, label: 'Dev Portal', path: '/developer' },
-  { icon: History, label: 'Activity', path: '/activity' },
+  { icon: LayoutDashboard, label: 'Dashboard',  path: '/dashboard' },
+  { icon: BarChart2,       label: 'Analytics',  path: '/analytics' },
+  { icon: Package,         label: 'Asset Vault', path: '/assets' },
+  { icon: Users,           label: 'Guardians',  path: '/guardians' },
+  { icon: Shield,          label: 'Trust Center', path: '/trust' },
+  { icon: Lock,            label: 'AI Planner', path: '/ai-planner' },
+  { icon: Code2,           label: 'Dev Portal', path: '/developer' },
+  { icon: History,         label: 'Activity',   path: '/activity' },
 ];
 
 const bottomItems = [
