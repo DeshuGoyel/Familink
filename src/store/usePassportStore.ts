@@ -62,6 +62,19 @@ export const usePassportStore = create<PassportState>()(
     }),
     {
       name: 'transfer_legacy_identity_passport',
+      // Merge stored state with defaults so new fields never come back undefined
+      merge: (persisted: unknown, current: PassportState): PassportState => ({
+        ...current,
+        passport: {
+          ...defaultPassport,
+          ...(persisted as PassportState)?.passport,
+          // Ensure nested emergencyContact is never undefined
+          emergencyContact: {
+            ...defaultPassport.emergencyContact,
+            ...(persisted as PassportState)?.passport?.emergencyContact,
+          },
+        },
+      }),
     }
   )
 );

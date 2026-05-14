@@ -57,13 +57,23 @@ const fadeUp = (delay = 0) => ({
 });
 
 export default function IdentityPassportPage() {
-  const { passport, updatePassport, generateQRData, generateSummary } = usePassportStore();
+  const { passport: rawPassport, updatePassport, generateQRData, generateSummary } = usePassportStore();
   const { assets, guardians, heirs } = useStore();
-  
+
+  // Defensive: merge with defaults in case localStorage state is partial/stale
+  const passport: IdentityPassport = {
+    fullName: '', dateOfBirth: '', country: '', bloodGroup: '', vaultSummary: '',
+    qrCodeData: '', lastUpdated: '', shareableWithAttorney: false,
+    shareableWithAdvisor: false, shareableWithFamily: true,
+    emergencyContact: { name: '', phone: '', relation: '' },
+    ...rawPassport,
+    emergencyContact: { name: '', phone: '', relation: '', ...rawPassport?.emergencyContact },
+  };
+
   const [isFlipped, setIsFlipped] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  
+
   const [editForm, setEditForm] = useState<IdentityPassport>(passport);
   const [isGenerating, setIsGenerating] = useState(false);
 
