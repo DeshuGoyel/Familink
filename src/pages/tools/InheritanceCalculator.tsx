@@ -200,7 +200,7 @@ export default function InheritanceCalculator() {
                     <RefreshCcw size={16} className="mr-2" /> RE-CALCULATE
                   </Button>
                   <Button className="flex-1 glow-amber">
-                    GET FULL REPORT <ArrowRight size={16} className="ml-2" />
+                    Start Free Security Audit <ArrowRight size={16} className="ml-2" />
                   </Button>
                 </div>
               </motion.div>

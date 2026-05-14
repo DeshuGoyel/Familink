@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
-import { AuroraScene } from '../components/obituary/AuroraScene';
+import { lazy, Suspense } from 'react';
+const AuroraScene = lazy(() => import('../components/obituary/AuroraScene').then(module => ({ default: module.AuroraScene })));
 import { useObituaryStore, ObituaryEntry } from '../store/useObituaryStore';
 import { useStore } from '../store/useStore';
 import Button from '../components/ui/Button';
@@ -86,7 +87,9 @@ export default function DigitalObituary() {
         <motion.div {...fadeUp(0.1)} className="h-64 w-full rounded-[40px] bg-surface/40 border border-base/60 relative overflow-hidden flex items-center justify-center group shadow-2xl">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(79,92,255,0.05),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
           <Canvas camera={{ position: [0, 0, 5] }}>
-            <AuroraScene />
+            <Suspense fallback={null}>
+              <AuroraScene />
+            </Suspense>
           </Canvas>
           <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-transparent to-obsidian-950/80" />
           <div className="absolute bottom-6 left-0 right-0 text-center pointer-events-none">
@@ -173,6 +176,9 @@ export default function DigitalObituary() {
                 initial={{ opacity: 0, scale: 0.95, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 30 }}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="modal-title"
                 className="w-full max-w-3xl bg-surface border border-base rounded-[40px] overflow-hidden flex flex-col max-h-[90vh] shadow-[0_40px_100px_rgba(0,0,0,0.6)]"
               >
                 <div className="p-8 border-b border-base/60 flex justify-between items-center bg-surface/50">
@@ -181,7 +187,7 @@ export default function DigitalObituary() {
                        <PenTool size={20}/> 
                     </div>
                     <div>
-                      <span className="font-display text-xl font-bold text-primary">Synthesis Hub</span>
+                      <span id="modal-title" className="font-display text-xl font-bold text-primary">Synthesis Hub</span>
                       <p className="text-[9px] font-bold text-obsidian-600 uppercase tracking-[0.2em] mt-1">Archival Step {step} / 5</p>
                     </div>
                   </div>

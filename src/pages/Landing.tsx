@@ -104,7 +104,7 @@ export default function Landing() {
               <h2 className="text-4xl md:text-5xl font-display mb-8">Your digital life is permanent. Your access is not.</h2>
               <div className="space-y-6">
                 <Card variant="glass" className="border-l-2 border-l-rose-500/50">
-                  <h3 className="text-xl font-bold text-primary mb-2">$189 Billion Lost</h3>
+                  <h3 className="text-xl font-bold text-primary mb-2">$189 Billion Lost<span className="text-brand-primary">*</span></h3>
                   <p className="text-secondary">Bitcoin and digital wealth have vanished forever because owners died without a secure inheritance protocol.</p>
                 </Card>
                 <Card variant="glass" className="border-l-2 border-l-brand-primary/50">
@@ -115,6 +115,7 @@ export default function Landing() {
                   <h3 className="text-xl font-bold text-primary mb-2">Platform Dependency</h3>
                   <p className="text-secondary">Social media and cloud providers make it nearly impossible for family members to recover memories and digital business assets.</p>
                 </Card>
+                <p className="text-[10px] text-muted uppercase tracking-widest mt-4 opacity-60">*Source: Chainalysis 2023 Digital Asset Report</p>
               </div>
             </div>
 
@@ -160,16 +161,16 @@ export default function Landing() {
             <p className="text-xl text-secondary max-w-2xl mx-auto">Institutional infrastructure for the individual. Zero-knowledge. Zero confusion.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-6">
             {[
-              { title: 'Zero-Knowledge Privacy', icon: Fingerprint, desc: 'We mathematically cannot access your vault. All encryption happens locally on your device.' },
-              { title: 'Multi-Guardian Trust', icon: ShieldCheck, desc: 'Distribute trust among multiple people or institutions. No single point of failure.' },
-              { title: 'AI Estate Guide', icon: Bot, desc: 'Our AI guides non-technical heirs step-by-step through the recovery of your digital world.' },
-              { title: 'Pass On Everything', icon: Database, desc: 'From seed phrases to social media handles and domain names. One vault for your entire digital existence.' },
-              { title: 'Global Compliance', icon: Lock, desc: 'Built to align with RUFADAA (USA), DIFC (UAE), and digital succession laws in India and UK.' },
-              { title: 'Vault-Grade Security', icon: KeyRound, desc: 'Military-grade encryption meets fintech-tier infrastructure. Built to last 100 years.' }
+              { title: 'Zero-Knowledge Privacy', icon: Fingerprint, desc: 'We mathematically cannot access your vault. All encryption happens locally on your device.', span: 'col-span-1 md:col-span-4 lg:col-span-4' },
+              { title: 'Multi-Guardian Trust', icon: ShieldCheck, desc: 'Distribute trust among multiple people. No single point of failure.', span: 'col-span-1 md:col-span-2 lg:col-span-2' },
+              { title: 'AI Estate Guide', icon: Bot, desc: 'Our AI guides non-technical heirs step-by-step through the recovery of your digital world.', span: 'col-span-1 md:col-span-2 lg:col-span-2' },
+              { title: 'Pass On Everything', icon: Database, desc: 'From seed phrases to social media handles and domain names. One vault for your entire digital existence.', span: 'col-span-1 md:col-span-4 lg:col-span-4' },
+              { title: 'Global Compliance', icon: Lock, desc: 'Built to align with RUFADAA (USA), DIFC (UAE), and digital succession laws in India and UK.', span: 'col-span-1 md:col-span-2 lg:col-span-3' },
+              { title: 'Vault-Grade Security', icon: KeyRound, desc: 'Military-grade encryption meets fintech-tier infrastructure. Built to last 100 years.', span: 'col-span-1 md:col-span-2 lg:col-span-3' }
             ].map((feature, i) => (
-              <Card key={i} className="group border-base hover:border-brand-primary/30">
+              <Card key={i} className={`group border-base hover:border-brand-primary/30 ${feature.span}`}>
                 <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary mb-6 group-hover:scale-110 transition-transform">
                   <feature.icon size={24} />
                 </div>
@@ -204,7 +205,7 @@ export default function Landing() {
                   Start My Vault
                 </Button>
               </Link>
-              <Button size="lg" variant="secondary" className="px-12 h-16 text-xl">
+              <Button size="lg" variant="ghost" className="px-12 h-16 text-xl text-secondary hover:text-primary hover:bg-white/5">
                 Contact Institutional Sales
               </Button>
             </div>

@@ -14,7 +14,7 @@ export function SEO({
   title,
   description,
   keywords = "crypto inheritance, digital will, what happens to crypto when you die, Bitcoin inheritance, seed phrase inheritance, password inheritance, digital legacy vault, private key inheritance, crypto estate planning",
-  canonicalUrl = "https://transferlegacy.com/",
+  canonicalUrl = typeof window !== 'undefined' ? window.location.href : "https://transferlegacy.com/",
   type = "website",
   imageUrl = "https://transferlegacy.com/og-image.png",
   schema

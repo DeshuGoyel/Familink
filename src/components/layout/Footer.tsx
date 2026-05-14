@@ -43,11 +43,11 @@ export default function Footer() {
           <div>
             <h3 className="text-text font-semibold mb-4">Compare & Legal</h3>
             <ul className="space-y-2 text-sm text-muted">
-              <li><Link to="/compare/inheriti" className="hover:text-primary transition">vs. Inheriti</Link></li>
-              <li><Link to="/compare/casa" className="hover:text-primary transition">vs. Casa</Link></li>
+              <li><Link to="/tools/compare" className="hover:text-primary transition">Platform Comparisons</Link></li>
               <li><Link to="/legal/privacy" className="hover:text-primary transition">Privacy Commitment</Link></li>
-              <li><Link to="/legal/security" className="hover:text-primary transition">Security Architecture</Link></li>
+              <li><Link to="/legal/security-architecture" className="hover:text-primary transition">Security Architecture</Link></li>
               <li><Link to="/legal/compliance" className="hover:text-primary transition">Global Compliance</Link></li>
+              <li><Link to="/legal/terms" className="hover:text-primary transition">Terms of Service</Link></li>
             </ul>
           </div>
         </div>

@@ -44,6 +44,11 @@ import Whitepaper from './resources/Whitepaper';
 import PlatformComparison from './tools/PlatformComparison';
 import ROICalculator from './tools/ROICalculator';
 import SuccessionPlanner from './tools/SuccessionPlanner';
+import InheritanceCalculator from './tools/InheritanceCalculator';
+
+// Legacy Feature Pages
+import DigitalWill from './features/DigitalWill';
+import SeedPhraseSecurity from './features/SeedPhraseSecurity';
 
 // Legal Pages
 import TermsOfService from './legal/TermsOfService';
@@ -110,11 +115,10 @@ function AppLayout() {
           <Route path="/legal/security-architecture"       element={<SecurityArchitecture />} />
           <Route path="/legal/compliance"                 element={<GlobalCompliance />} />
 
-          {/* Legacy Redirects */}
-          <Route path="/digital-will"                     element={<DigitalWill />} />
-          <Route path="/seed-phrase-inheritance"          element={<SeedPhraseSecurity />} />
-          <Route path="/crypto-inheritance-calculator"     element={<InheritanceCalculator />} />
-          <Route path="/privacy"                          element={<PrivacyPolicy />} />
+          {/* Legacy Features & Tools */}
+          <Route path="/features/digital-wills"           element={<DigitalWill />} />
+          <Route path="/features/seed-phrase"             element={<SeedPhraseSecurity />} />
+          <Route path="/features/inheritance-calculator"  element={<InheritanceCalculator />} />
           
           <Route path="*"            element={<Navigate to="/" />} />
         </Routes>

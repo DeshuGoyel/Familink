@@ -127,7 +127,7 @@ export default function SeedPhraseSecurity() {
                         <Database size={60} />
                       </div>
                       <p className="text-[10px] font-black uppercase text-brand-primary mb-2">{shard.label}</p>
-                      <p className="text-xs font-mono text-muted truncate">SHARD_ID: {shard.hash}</p>
+                      <p className="text-xs font-mono text-muted break-all">SHARD_ID: {shard.hash}</p>
                       <div className="mt-4 flex items-center gap-2 text-[10px] font-bold text-emerald-500">
                         <Lock size={10} /> ENCRYPTED
                       </div>
