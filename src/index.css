@@ -57,34 +57,38 @@
     --color-danger: 244 63 94;
   }
 
-  /* ── LIGHT MODE ── */
+  /* ── LIGHT MODE (not used — app is dark-only) ── */
   .light {
-    --color-bg-base: #F5F5F5;
-    --color-bg-page: #EBEBEB;
-    --color-bg-surface: #FFFFFF;
-    --color-bg-raised: #E2E8F0;
-    --color-bg-hover: #F1F5F9;
-    --color-bg-input: #FFFFFF;
-    --color-text-primary: #020617;
-    --color-text-secondary: #475569;
-    --color-text-muted: #94A3B8;
-    --color-text-link: #2563EB;
-    --color-border: rgba(15, 23, 42, 0.06);
-    --color-border-strong: rgba(15, 23, 42, 0.12);
-    --color-divider: rgba(15, 23, 42, 0.04);
-    --color-brand-primary: #2563EB;
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.10), 0 2px 4px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+    --color-bg-base: #0A0A12;
+    --color-bg-page: #06060E;
+    --color-bg-surface: #10101A;
+    --color-bg-raised: #1A1A28;
+    --color-bg-hover: #1E1E30;
+    --color-bg-input: #10101A;
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #94A3B8;
+    --color-text-muted: #64748B;
+    --color-text-disabled: #334155;
+    --color-text-link: #F97316;
+    --color-border: rgba(255, 255, 255, 0.07);
+    --color-border-strong: rgba(255, 255, 255, 0.14);
+    --color-divider: rgba(255, 255, 255, 0.04);
+    --color-brand-primary: #F97316;
+    --color-brand-primary-hover: #EA580C;
+    --color-brand-gold: #F59E0B;
+    --color-brand-success: #10B981;
+    --shadow-sm: 0 1px 3px rgba(2, 3, 5, 0.8), 0 1px 2px rgba(2, 3, 5, 0.6);
+    --shadow-md: 0 4px 12px rgba(2, 3, 5, 0.8), 0 2px 4px rgba(2, 3, 5, 0.6);
+    --shadow-lg: 0 12px 32px rgba(2, 3, 5, 0.9), 0 4px 8px rgba(2, 3, 5, 0.6);
     /* backward compat */
-    --bg-secondary: 241 245 249;
-    --bg-surface: 255 255 255;
-    --color-text: 15 23 42;
-    --color-border-rgb: 15 23 42;
+    --bg-secondary: 2 3 5;
+    --bg-surface: 10 10 18;
+    --color-text: 255 255 255;
+    --color-border-rgb: 45 55 72;
     --color-muted: 148 163 184;
-    --color-primary: 29 78 216;
-    --color-accent: 212 167 44;
-    --color-danger: 239 68 68;
+    --color-primary: 249 115 22;
+    --color-accent: 245 158 11;
+    --color-danger: 244 63 94;
   }
 
   html {
