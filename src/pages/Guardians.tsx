@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
-import { UserPlus, Trash2, Mail, Info, ShieldCheck, CheckCircle2, Share2, Network, ChevronRight, Lock, Verified } from 'lucide-react';
+import { UserPlus, Trash2, Mail, Info, ShieldCheck, CheckCircle2, Share2, ChevronRight, Lock, Verified } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import Modal from '../components/ui/Modal';
@@ -9,7 +9,7 @@ import { useForm as useRHForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import toast from 'react-hot-toast';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
 import GuardianNetwork3D from '../components/3d/GuardianNetwork3D';
 import Card from '../components/ui/Card';
@@ -47,7 +47,7 @@ export default function Guardians() {
     setValue('message', templates[t as keyof typeof templates]);
   };
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: unknown) => {
     addGuardian({ name: data.name, email: data.email });
     toast.success(`Protocol invitation sent to ${data.name}`);
     setIsModalOpen(false);
@@ -70,7 +70,7 @@ export default function Guardians() {
                 Network Trust Protocol
               </p>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-primary tracking-tight leading-none">
+            <h1 className="text-4xl sm:text-5xl lg:text-5xl font-display font-bold text-primary tracking-tight leading-none">
               Guardian <span className="italic text-brand-gold">Network</span>
             </h1>
             <p className="text-muted text-sm font-medium max-w-xl">

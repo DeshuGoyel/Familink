@@ -7,7 +7,7 @@ import { useObituaryStore, ObituaryEntry } from '../store/useObituaryStore';
 import { useStore } from '../store/useStore';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
-import { Sparkles, Video, Mic, Feather, BookOpen, Clock, Lock, X, Eye, ChevronRight, PenTool, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Sparkles, Video, Mic, Feather, BookOpen, Clock, Lock, X, Eye, PenTool, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 15 },
@@ -27,7 +27,7 @@ export default function DigitalObituary() {
 
   const simulateAiGeneration = () => {
     setIsGenerating(true);
-    let text = "My dearest family, \n\nIf you are reading this, it means I have passed on. Please know that my final thoughts were full of love and gratitude for the time we shared. I've left instructions to ensure you are taken care of through the Transfer Legacy protocols. Do not mourn for too long, but celebrate the joyful moments we had. I am at peace.\n\nAlways with you,\n[Name]";
+    const text = "My dearest family, \n\nIf you are reading this, it means I have passed on. Please know that my final thoughts were full of love and gratitude for the time we shared. I've left instructions to ensure you are taken care of through the Transfer Legacy protocols. Do not mourn for too long, but celebrate the joyful moments we had. I am at peace.\n\nAlways with you,\n[Name]";
     
     let currentText = "";
     let i = 0;
@@ -46,7 +46,7 @@ export default function DigitalObituary() {
 
   const handleCreate = () => {
     createEntry({
-      type: newEntry.type as any,
+      type: newEntry.type as unknown,
       title: newEntry.title || 'My Final Letter',
       content: newEntry.content || '',
       recipientHeirId: newEntry.recipientHeirId || 'all',
@@ -225,7 +225,7 @@ export default function DigitalObituary() {
                         ].map((t) => (
                           <button
                             key={t.id}
-                            onClick={() => setNewEntry({ ...newEntry, type: t.id as any })}
+                            onClick={() => setNewEntry({ ...newEntry, type: t.id as unknown })}
                             className={`p-8 rounded-[32px] border flex flex-col items-center justify-center gap-6 transition-all text-center relative overflow-hidden group ${
                               newEntry.type === t.id ? 'bg-brand-primary/10 border-brand-primary shadow-2xl shadow-brand-primary/10 text-primary' : 'bg-page border-base text-obsidian-600 hover:border-base'
                             }`}

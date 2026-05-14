@@ -48,6 +48,7 @@ export default function CustomCursor() {
       document.removeEventListener('mouseleave', onLeave);
       document.removeEventListener('mouseenter', onEnter);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cursorX, cursorY]);
 
   if (isMobile) return null;

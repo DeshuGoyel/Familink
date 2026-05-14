@@ -1,8 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '../../store/useStore';
 import { X, Key, User, FileText, AlertTriangle, CheckCircle } from 'lucide-react';
+import React from 'react';
 
-const icons: Record<string, any> = {
+const icons: Record<string, React.ElementType> = {
   Key, User, FileText, AlertTriangle, CheckCircle
 };
 

@@ -49,7 +49,7 @@ export default function ResourceGuides() {
                 Institutional Knowledge Base
               </p>
             </motion.div>
-            <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-7xl font-display font-bold tracking-tight">
+            <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-5xl font-display font-bold tracking-tight">
               Protocol <span className="italic text-brand-primary">Guides</span>
             </motion.h1>
             <motion.p {...fadeUp(0.2)} className="text-muted text-lg max-w-xl font-medium">

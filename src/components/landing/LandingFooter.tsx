@@ -81,7 +81,7 @@ export default function LandingFooter() {
           {/* Links */}
           {Object.entries(footerLinks).map(([group, items]) => (
             <div key={group}>
-              <h4 className="text-white font-black text-xs uppercase tracking-widest mb-5">
+              <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-5">
                 {group}
               </h4>
               <ul className="space-y-3.5">

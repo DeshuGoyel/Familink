@@ -28,7 +28,7 @@ export default function SuccessionPlanner() {
               Generational Planning Engine
             </p>
           </motion.div>
-          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-8xl font-display font-bold tracking-tight">
+          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-5xl font-display font-bold tracking-tight">
             Succession <span className="italic text-brand-primary">Planner</span>
           </motion.h1>
           <motion.p {...fadeUp(0.2)} className="text-muted text-xl max-w-3xl mx-auto font-medium">
@@ -73,7 +73,7 @@ export default function SuccessionPlanner() {
                  <Card className="absolute inset-0 bg-page/40 backdrop-blur-3xl border-base flex items-center justify-center rounded-[48px]">
                     <Calendar size={180} className="text-brand-primary/5" />
                     <div className="text-center space-y-4">
-                       <p className="text-6xl font-display font-bold text-brand-primary">Step 1</p>
+                       <p className="text-5xl font-display font-bold text-brand-primary">Step 1</p>
                        <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-obsidian-700">Protocol Initialization</p>
                     </div>
                  </Card>

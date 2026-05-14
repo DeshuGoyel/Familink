@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { HelpCircle, AlertTriangle, ArrowRight } from 'lucide-react';
+import { HelpCircle, ArrowRight } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import { SEO } from '../components/seo/SEO';
@@ -141,7 +141,7 @@ export default function CryptoDeathGuide() {
         <section className="mt-20 pt-12 border-t border-border">
           <h2 className="text-3xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
           <div className="space-y-4">
-            {JSON.parse(faqSchema).mainEntity.map((faq: any, i: number) => (
+            {JSON.parse(faqSchema).mainEntity.map((faq: unknown, i: number) => (
               <Card key={i} className="p-6">
                 <h3 className="text-lg font-bold text-text mb-2 flex items-start">
                   <HelpCircle className="text-primary mr-3 mt-1 flex-shrink-0" size={20} />

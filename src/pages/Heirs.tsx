@@ -29,7 +29,7 @@ const fadeUp = (delay = 0) => ({
 });
 
 export default function Heirs() {
-  const { heirs, addHeir, assets } = useStore();
+  const { heirs, addHeir } = useStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeWizardHeir, setActiveWizardHeir] = useState<string | null>(null);
 
@@ -37,14 +37,14 @@ export default function Heirs() {
     resolver: zodResolver(heirSchema)
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: unknown) => {
     addHeir(data);
     toast.success(`Succession rights registered for ${data.name}`);
     setIsModalOpen(false);
     reset();
   };
 
-  const totalValue = assets.reduce((acc, a) => acc + (a.value || 0), 0);
+  // const totalValue = assets.reduce((acc, a) => acc + (a.value || 0), 0);
 
   return (
     <div className="min-h-screen bg-page text-primary selection:bg-brand-primary/30 pt-20">
@@ -59,7 +59,7 @@ export default function Heirs() {
                 Succession Allocation Protocol
               </p>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-primary tracking-tight leading-none">
+            <h1 className="text-4xl sm:text-5xl lg:text-5xl font-display font-bold text-primary tracking-tight leading-none">
               Heir <span className="italic text-trust-500">Recovery</span>
             </h1>
             <p className="text-muted text-sm font-medium max-w-xl">

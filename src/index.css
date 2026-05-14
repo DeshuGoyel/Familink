@@ -462,6 +462,10 @@
     background-clip: text;
   }
 
+  .font-display {
+    font-weight: 400 !important;
+  }
+
   /* ── Glow utilities ── */
   .glow-brand {
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.35);

@@ -95,7 +95,7 @@ export default function Features() {
           >
             Features
           </p>
-          <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-2">
+          <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-2">
             Everything your family needs.
           </h2>
           <p className="text-xl text-white/35">And nothing they don't.</p>
@@ -129,7 +129,7 @@ export default function Features() {
                     <Icon size={20} style={{ color: f.accent }} />
                   </div>
 
-                  <h3 className="text-xl font-black text-white mb-3 tracking-tight">{f.title}</h3>
+                  <h3 className="text-xl font-bold text-white mb-3 tracking-tight">{f.title}</h3>
                   <p className="text-white/40 text-sm leading-relaxed mb-4">{f.desc}</p>
 
                   {f.sub && (

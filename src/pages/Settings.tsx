@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
-import { User, Shield, Bell, Palette, AlertTriangle, Activity, ChevronRight, HardDrive, Fingerprint, Globe, CreditCard, HelpCircle, ShieldAlert } from 'lucide-react';
+import { User, Shield, Bell, Palette, AlertTriangle, Activity, ChevronRight, HardDrive, Fingerprint, Globe, ShieldAlert } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Card from '../components/ui/Card';
@@ -54,7 +54,7 @@ export default function Settings() {
               System Configuration & Preferences
             </p>
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-primary tracking-tight leading-none">
+          <h1 className="text-4xl sm:text-5xl lg:text-5xl font-display font-bold text-primary tracking-tight leading-none">
             Vault <span className="italic text-muted">Settings</span>
           </h1>
           <p className="text-muted text-sm font-medium max-w-2xl">
@@ -65,7 +65,7 @@ export default function Settings() {
         <div className="flex flex-col lg:flex-row gap-12">
           {/* ── Sidebar Navigation ── */}
           <motion.aside {...fadeUp(0.1)} className="lg:w-80 shrink-0 space-y-3">
-            {tabs.map((tab, i) => (
+            {tabs.map((tab, _i) => (
               <button
                 key={tab.name}
                 onClick={() => setActiveTab(tab.name)}

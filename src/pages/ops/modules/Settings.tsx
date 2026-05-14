@@ -8,7 +8,7 @@ import Input from '../../../components/ui/Input';
 import toast from 'react-hot-toast';
 
 export default function GlobalSettings() {
-  const [settings, setSettings] = useState<any>({
+  const [settings, setSettings] = useState<unknown>({
     brand_name: '',
     support_email: '',
     support_phone: '',
@@ -28,7 +28,7 @@ export default function GlobalSettings() {
     try {
       const data = await opsApi.get('/ops/branding'); 
       setSettings(data);
-    } catch (err) {
+    } catch {
       toast.error('Failed to load settings');
     } finally {
       setIsLoading(false);
@@ -41,7 +41,7 @@ export default function GlobalSettings() {
     try {
       await opsApi.put('/ops/branding', settings);
       toast.success('Settings updated');
-    } catch (err) {
+    } catch {
       toast.error('Failed to save settings');
     } finally {
       setIsSaving(false);

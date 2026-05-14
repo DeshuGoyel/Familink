@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { GitBranch, Clock, Shield, Lock, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { GitBranch, Clock, ArrowRight, CheckCircle2 } from 'lucide-react';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 
@@ -22,7 +22,7 @@ export default function InheritanceLogic() {
               Programmable Succession Engine
             </p>
           </motion.div>
-          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-8xl font-display font-bold tracking-tight">
+          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-5xl font-display font-bold tracking-tight">
             Inheritance <span className="italic text-brand-primary">Logic</span>
           </motion.h1>
           <motion.p {...fadeUp(0.2)} className="text-muted text-xl max-w-3xl mx-auto font-medium">

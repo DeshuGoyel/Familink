@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Environment } from '@react-three/drei';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Users, Lock, Sparkles, ChevronDown, ShieldCheck } from 'lucide-react';
+import { Users, Lock, Sparkles, ChevronDown, ShieldCheck } from 'lucide-react';
 import LandingVaultObject from '../3d/LandingVaultObject';
 import { WaitlistForm } from '../ui/WaitlistForm';
 import { CountdownTimer } from '../ui/CountdownTimer';
@@ -122,7 +122,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="block text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter gradient-text-premium"
+            className="block text-4xl sm:text-5xl md:text-5xl lg:text-5xl font-bold tracking-tighter gradient-text-premium"
           >
             100 YEARS.
           </motion.span>
@@ -130,7 +130,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="block text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter gold-gradient"
+            className="block text-4xl sm:text-5xl md:text-5xl lg:text-5xl font-bold tracking-tighter gold-gradient"
           >
             100% SECURE.
           </motion.span>
@@ -328,17 +328,17 @@ export default function Hero() {
 
         {/* ── Floating stat cards ─────────────────────────── */}
         <GlassCard delay={0.8} className="top-[11%] left-[8%] px-5 py-4">
-          <p className="text-white text-2xl font-black leading-none">$140B+</p>
+          <p className="text-white text-2xl font-bold leading-none">$140B+</p>
           <p className="text-white/60 text-[11px] mt-1 font-medium">Crypto lost yearly</p>
         </GlassCard>
 
         <GlassCard delay={0.95} className="bottom-[22%] right-[5%] px-5 py-4">
-          <p className="text-white text-lg font-black leading-none">Zero-Knowledge</p>
+          <p className="text-white text-lg font-bold leading-none">Zero-Knowledge</p>
           <p className="text-white/60 text-[11px] mt-1 font-medium">Military-grade privacy</p>
         </GlassCard>
 
         <GlassCard delay={1.05} className="bottom-[8%] left-[7%] px-5 py-4">
-          <p className="text-white text-2xl font-black leading-none">5 min</p>
+          <p className="text-white text-2xl font-bold leading-none">5 min</p>
           <p className="text-white/60 text-[11px] mt-1 font-medium">To secure your legacy</p>
         </GlassCard>
 

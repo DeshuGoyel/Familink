@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Minus, Search, HelpCircle, Shield, Key, Users, MessageSquare } from 'lucide-react';
-import Card from '../../components/ui/Card';
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
@@ -53,7 +52,7 @@ export default function FAQPage() {
               Protocol Support & FAQ
             </p>
           </motion.div>
-          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-7xl font-display font-bold tracking-tight">
+          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-5xl font-display font-bold tracking-tight">
             System <span className="italic text-brand-primary">FAQ</span>
           </motion.h1>
           <motion.div {...fadeUp(0.2)} className="relative max-w-xl mx-auto mt-8">

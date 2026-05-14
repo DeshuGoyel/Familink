@@ -76,7 +76,7 @@ export function WaitlistForm() {
         toast('You are already on the list!', { icon: '👋' });
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Waitlist error:', error);
       toast.error(error.message || 'Something went wrong. Please try again.');
     } finally {

@@ -48,7 +48,7 @@ export default function Whitepaper() {
                 Technical Specification v2.4.0
               </p>
             </motion.div>
-            <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-8xl font-display font-bold tracking-tight leading-none">
+            <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-5xl font-display font-bold tracking-tight leading-none">
               Security <span className="italic text-brand-primary">Whitepaper</span>
             </motion.h1>
             <motion.p {...fadeUp(0.2)} className="text-muted text-xl font-medium leading-relaxed">

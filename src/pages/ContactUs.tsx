@@ -32,7 +32,7 @@ export default function ContactUs() {
           const data = await res.json();
           setConfig(data);
         }
-      } catch (err) {
+      } catch {
         console.error('Failed to fetch contact details', err);
       } finally {
         setLoading(false);
@@ -57,7 +57,7 @@ export default function ContactUs() {
       } else {
         throw new Error('Failed to send message');
       }
-    } catch (err) {
+    } catch {
       toast.error('Failed to send message. Please try again.');
     } finally {
       setSubmitting(false);
@@ -91,7 +91,7 @@ export default function ContactUs() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-white to-white/50 bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white via-white to-white/50 bg-clip-text text-transparent">
               Let's Start a Conversation
             </h1>
             <p className="text-xl text-slate-400 leading-relaxed">

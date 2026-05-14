@@ -7,7 +7,7 @@ import { useStore } from '../store/useStore';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
-import { Lock, Unlock, Heart, Mail, Mic, Video, Sparkles, X, ChevronRight, CheckCircle2, Clock, Archive } from 'lucide-react';
+import { Lock, Unlock, Mail, Mic, Video, Sparkles, X, ChevronRight, CheckCircle2, Clock, Archive } from 'lucide-react';
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 15 },
@@ -29,7 +29,7 @@ export default function MemoryCapsules() {
 
   const simulateAiGeneration = () => {
     setIsGenerating(true);
-    let text = "To those I hold dear, \n\nI am establishing this institutional memory capsule to ensure my intentions and legacy are preserved with absolute clarity. Beyond the assets allocated, I want to impart the values that built this foundation. Please manage what has been entrusted to you with the same integrity and long-term vision. \n\nWith enduring trust.";
+    const text = "To those I hold dear, \n\nI am establishing this institutional memory capsule to ensure my intentions and legacy are preserved with absolute clarity. Beyond the assets allocated, I want to impart the values that built this foundation. Please manage what has been entrusted to you with the same integrity and long-term vision. \n\nWith enduring trust.";
     
     let currentText = "";
     let i = 0;
@@ -257,7 +257,7 @@ export default function MemoryCapsules() {
                         ].map((type) => (
                           <button
                             key={type.id}
-                            onClick={() => setNewCapsule({ ...newCapsule, type: type.id as any })}
+                            onClick={() => setNewCapsule({ ...newCapsule, type: type.id as unknown })}
                             className={`p-6 rounded-2xl border-2 flex flex-col items-center justify-center gap-4 transition-all duration-300 ${
                               newCapsule.type === type.id ? 'bg-brand-primary/10 border-brand-primary text-brand-primary' : 'bg-page border-base hover:border-base text-primary0 hover:text-secondary'
                             }`}

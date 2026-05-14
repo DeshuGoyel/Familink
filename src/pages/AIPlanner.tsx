@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useStore } from '../store/useStore';
-import { Bot, ArrowRight, ShieldAlert, Lightbulb, ShieldCheck, Send, Sparkles, AlertTriangle, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { Bot, ShieldAlert, Lightbulb, ShieldCheck, Send, Sparkles, AlertTriangle, ChevronRight, CheckCircle2 } from 'lucide-react';
 import Card from '../components/ui/Card';
-import Button from '../components/ui/Button';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const aiReplies = [

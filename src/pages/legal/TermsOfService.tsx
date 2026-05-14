@@ -46,7 +46,7 @@ export default function TermsOfService() {
               Legal Governance Framework
             </p>
           </motion.div>
-          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-7xl font-display font-bold tracking-tight">
+          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-5xl font-display font-bold tracking-tight">
             Terms of <span className="italic text-brand-primary">Service</span>
           </motion.h1>
           <motion.div {...fadeUp(0.2)} className="flex items-center justify-center gap-8 mt-8 text-[10px] font-bold uppercase tracking-widest text-obsidian-700">

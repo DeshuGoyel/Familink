@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { 
   Check, 
   X, 
@@ -7,9 +6,7 @@ import {
   Lock, 
   Users, 
   Cpu, 
-  ArrowRight,
-  TrendingUp,
-  FileCheck
+  ArrowRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Button from '../../components/ui/Button';
@@ -42,7 +39,7 @@ export default function ComparisonLayout({
 
       <section className="relative pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-          <h1 className="text-5xl lg:text-8xl font-black tracking-tighter mb-8 leading-[0.85]">
+          <h1 className="text-5xl lg:text-5xl font-bold tracking-tighter mb-8 leading-[0.85]">
             BUILT FOR <br />
             <span className="gradient-text-premium uppercase italic">BILLIONS.</span>
           </h1>
@@ -57,15 +54,15 @@ export default function ComparisonLayout({
           <div className="grid grid-cols-12 border-b border-base bg-raised">
             <div className="col-span-6 p-8 border-r border-base flex items-center gap-3">
               <ShieldCheck className="text-brand-primary" />
-              <span className="text-xs font-black uppercase tracking-widest italic">Institutional Features</span>
+              <span className="text-xs font-bold uppercase tracking-widest italic">Institutional Features</span>
             </div>
             <div className="col-span-3 p-8 border-r border-base text-center flex flex-col items-center justify-center">
-              <span className="text-[10px] font-black uppercase text-brand-primary tracking-tighter mb-1">THE GOLD STANDARD</span>
-              <span className="text-sm font-black italic tracking-tight">TRANSFER LEGACY</span>
+              <span className="text-[10px] font-bold uppercase text-brand-primary tracking-tighter mb-1">THE GOLD STANDARD</span>
+              <span className="text-sm font-bold italic tracking-tight">TRANSFER LEGACY</span>
             </div>
             <div className="col-span-3 p-8 text-center flex flex-col items-center justify-center opacity-40">
-              <span className="text-[10px] font-black uppercase text-muted tracking-tighter mb-1">LEGACY ALTERNATIVE</span>
-              <span className="text-sm font-black italic tracking-tight">{competitorName.toUpperCase()}</span>
+              <span className="text-[10px] font-bold uppercase text-muted tracking-tighter mb-1">LEGACY ALTERNATIVE</span>
+              <span className="text-sm font-bold italic tracking-tight">{competitorName.toUpperCase()}</span>
             </div>
           </div>
 
@@ -80,7 +77,7 @@ export default function ComparisonLayout({
                   {typeof feature.legacy === 'boolean' ? (
                     feature.legacy ? <Check className="text-brand-primary" size={24} /> : <X className="text-muted" size={24} />
                   ) : (
-                    <span className="text-xs font-black italic text-brand-primary">{feature.legacy}</span>
+                    <span className="text-xs font-bold italic text-brand-primary">{feature.legacy}</span>
                   )}
                 </div>
                 <div className="col-span-3 p-8 flex items-center justify-center opacity-40">
@@ -115,7 +112,7 @@ export default function ComparisonLayout({
       </section>
 
       <section className="py-20 border-t border-base text-center px-6">
-        <h2 className="text-4xl font-black italic tracking-tighter mb-8">Ready to upgrade your legacy?</h2>
+        <h2 className="text-4xl font-bold italic tracking-tighter mb-8">Ready to upgrade your legacy?</h2>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/onboarding">
             <Button size="lg" className="rounded-full px-12 h-14 glow-blue">

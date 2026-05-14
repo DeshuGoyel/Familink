@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ShieldCheck, ExternalLink, Shield, RefreshCw } from 'lucide-react';
 import { useNotarizationStore } from '../../store/useNotarizationStore';
-import Button from '../ui/Button';
 import { toast } from 'react-hot-toast';
 
 export default function VaultNotarizationCard() {

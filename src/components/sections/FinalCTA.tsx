@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { WaitlistForm } from '../ui/WaitlistForm';
-import { ArrowRight, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 const trustBadges = [
   { icon: '🔒', text: 'No spam ever' },
@@ -43,7 +43,7 @@ export default function FinalCTA() {
           </div>
 
           {/* Headline */}
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6 leading-[1.04] tracking-tight">
+          <h2 className="text-5xl md:text-5xl lg:text-5xl font-bold text-white mb-6 leading-[1.04] tracking-tight">
             The 100-year plan for your{' '}
             <span
               className="inline"

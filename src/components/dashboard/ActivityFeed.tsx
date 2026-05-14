@@ -1,7 +1,8 @@
+import React from 'react';
 import { useStore } from '../../store/useStore';
 import { Lock, User, FileText, Key, Mail, ChevronRight } from 'lucide-react';
 
-const icons: Record<string, any> = { Lock, User, FileText, Key, Mail };
+const icons: Record<string, React.ElementType> = { Lock, User, FileText, Key, Mail };
 
 export default function ActivityFeed() {
   const { activity } = useStore();

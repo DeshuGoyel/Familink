@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Shield, EyeOff, Lock, Zap, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Shield, EyeOff, Zap, CheckCircle2 } from 'lucide-react';
 import Card from '../../components/ui/Card';
 
 const fadeUp = (delay = 0) => ({
@@ -21,7 +21,7 @@ export default function ZeroKnowledge() {
               The Gold Standard of Privacy
             </p>
           </motion.div>
-          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-8xl font-display font-bold tracking-tight">
+          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-5xl font-display font-bold tracking-tight">
             Zero <span className="italic text-brand-primary">Knowledge</span>
           </motion.h1>
           <motion.p {...fadeUp(0.2)} className="text-muted text-xl max-w-3xl mx-auto font-medium">

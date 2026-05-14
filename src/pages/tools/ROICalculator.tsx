@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, DollarSign, ShieldCheck, Clock, ArrowRight, RefreshCcw } from 'lucide-react';
+import { TrendingUp, ShieldCheck, Clock, ArrowRight } from 'lucide-react';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 
@@ -27,7 +27,7 @@ export default function ROICalculator() {
               Institutional Loss Prevention Tool
             </p>
           </motion.div>
-          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-8xl font-display font-bold tracking-tight">
+          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-5xl font-display font-bold tracking-tight">
             ROI <span className="italic text-brand-primary">Calculator</span>
           </motion.h1>
           <motion.p {...fadeUp(0.2)} className="text-muted text-xl max-w-3xl mx-auto font-medium">

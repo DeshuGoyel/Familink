@@ -80,7 +80,7 @@ function ScoreGauge({ visible }: { visible: boolean }) {
       </svg>
 
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-5xl font-black text-white">{score}%</span>
+        <span className="text-5xl font-bold text-white">{score}%</span>
         <span className="text-xs font-bold text-white/35 tracking-widest uppercase mt-2">Legacy Score</span>
         <span className="text-[10px] text-orange-400/60 mt-1">After 3 min setup</span>
       </div>
@@ -142,7 +142,7 @@ export default function Security() {
           >
             Security
           </p>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4 max-w-2xl leading-tight tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 max-w-2xl leading-tight tracking-tight">
             We are mathematically incapable of reading your data.
           </h2>
           <p className="text-white/40 text-lg max-w-xl">
@@ -197,7 +197,7 @@ export default function Security() {
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
-          <h3 className="text-2xl font-black text-white mb-8 tracking-tight">
+          <h3 className="text-2xl font-bold text-white mb-8 tracking-tight">
             What actually happens when you die?
           </h3>
 
@@ -207,7 +207,7 @@ export default function Security() {
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                   <th className="text-left py-4 px-6 text-white/35 font-semibold w-[200px]">Scenario</th>
                   <th
-                    className="py-4 px-6 text-center font-black"
+                    className="py-4 px-6 text-center font-bold"
                     style={{
                       background: 'linear-gradient(135deg, #f9a8d4, #f97316)',
                       WebkitBackgroundClip: 'text',

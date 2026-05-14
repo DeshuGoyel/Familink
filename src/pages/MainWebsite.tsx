@@ -18,7 +18,6 @@ import IdentityPassport from '../pages/IdentityPassport';
 import DeveloperPortal from '../pages/DeveloperPortal';
 import LegacyAnalytics from '../pages/LegacyAnalytics';
 import ParticleBackground from '../components/3d/ParticleBackground';
-import CustomCursor from '../components/CustomCursor';
 import NotificationDrawer from '../components/layout/NotificationDrawer';
 import Sidebar from '../components/layout/Sidebar';
 import { Toaster } from 'react-hot-toast';

@@ -24,7 +24,7 @@ export default function OpsDashboard() {
     adminCount: 0,
     systemStatus: 'Operational',
   });
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchStats();
@@ -33,15 +33,15 @@ export default function OpsDashboard() {
   const fetchStats = async () => {
     try {
       const [waitlist, admins] = await Promise.all([
-        opsApi.get<any[]>('/ops/waitlist'),
-        opsApi.get<any[]>('/ops/admins'),
+        opsApi.get<unknown[]>('/ops/waitlist'),
+        opsApi.get<unknown[]>('/ops/admins'),
       ]);
       setStats({
         waitlistCount: waitlist.length,
         adminCount: admins.length,
         systemStatus: 'Operational',
       });
-    } catch (err) {
+    } catch {
       console.error('Failed to fetch stats');
     } finally {
       setIsLoading(false);
@@ -73,7 +73,7 @@ export default function OpsDashboard() {
       {/* Welcome Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">System Overview</h1>
+          <h1 className="text-3xl font-bold text-white tracking-tight">System Overview</h1>
           <p className="text-slate-400 mt-2 flex items-center gap-2">
             <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             Live infrastructure monitoring for {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}

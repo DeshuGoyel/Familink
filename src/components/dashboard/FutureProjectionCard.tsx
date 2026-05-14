@@ -1,5 +1,4 @@
-import { motion } from 'framer-motion';
-import { TrendingUp, ArrowRight, Sparkles, Target } from 'lucide-react';
+import { ArrowRight, Sparkles, Target } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { Link } from 'react-router-dom';
 import Card from '../ui/Card';

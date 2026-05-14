@@ -59,7 +59,7 @@ export default function FAQ() {
           >
             FAQ
           </p>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             Real questions from real people.
           </h2>
           <p className="text-white/40 text-lg">No marketing fluff — just honest answers.</p>
@@ -91,7 +91,7 @@ export default function FAQ() {
                 >
                   <div className="flex items-start gap-4">
                     <span
-                      className="text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-lg border whitespace-nowrap mt-0.5 flex-shrink-0"
+                      className="text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg border whitespace-nowrap mt-0.5 flex-shrink-0"
                       style={{ color: style.fg, background: style.bg, borderColor: style.border }}
                     >
                       {faq.category}

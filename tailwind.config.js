@@ -85,15 +85,21 @@ export default {
         body:    ['Inter', 'sans-serif'],
       },
 
+      fontWeight: {
+        bold: '600',
+      },
+
       fontSize: {
-        'xs':   ['clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem)',   { lineHeight: '1.4' }],
-        'sm':   ['clamp(0.875rem, 0.8rem + 0.35vw, 1rem)',      { lineHeight: '1.5' }],
-        'base': ['clamp(1rem, 0.95rem + 0.25vw, 1.125rem)',     { lineHeight: '1.65' }],
-        'lg':   ['clamp(1.125rem, 1rem + 0.75vw, 1.5rem)',      { lineHeight: '1.4' }],
-        'xl':   ['clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem)',     { lineHeight: '1.25' }],
-        '2xl':  ['clamp(2rem, 1.2rem + 2.5vw, 3.5rem)',         { lineHeight: '1.15' }],
-        '3xl':  ['clamp(2.5rem, 1rem + 4vw, 5rem)',             { lineHeight: '1.1' }],
-        'hero': ['clamp(3rem, 0.5rem + 7vw, 8rem)',             { lineHeight: '1.0' }],
+        'xs':   ['clamp(0.7rem, 0.65rem + 0.2vw, 0.8rem)',      { lineHeight: '1.4' }],
+        'sm':   ['clamp(0.8rem, 0.75rem + 0.25vw, 0.9rem)',     { lineHeight: '1.5' }],
+        'base': ['clamp(0.9rem, 0.85rem + 0.25vw, 1rem)',       { lineHeight: '1.65' }],
+        'lg':   ['clamp(1rem, 0.95rem + 0.5vw, 1.125rem)',      { lineHeight: '1.4' }],
+        'xl':   ['clamp(1.125rem, 1rem + 0.75vw, 1.25rem)',     { lineHeight: '1.25' }],
+        '2xl':  ['clamp(1.25rem, 1.1rem + 1vw, 1.5rem)',        { lineHeight: '1.15' }],
+        '3xl':  ['clamp(1.5rem, 1.2rem + 1.5vw, 2rem)',         { lineHeight: '1.1' }],
+        '4xl':  ['clamp(1.75rem, 1.5rem + 2vw, 2.5rem)',        { lineHeight: '1.1' }],
+        '5xl':  ['clamp(2rem, 1.75rem + 2.5vw, 3rem)',          { lineHeight: '1.05' }],
+        'hero': ['clamp(2.5rem, 2rem + 4vw, 4.5rem)',           { lineHeight: '1.0' }],
       },
 
       spacing: {

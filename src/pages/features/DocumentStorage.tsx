@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   FileText, 
-  Upload, 
   FileLock2, 
   Search, 
   Download,
@@ -64,7 +63,7 @@ export default function DocumentStorage() {
             <FileLock2 size={16} />
             IMMUTABLE ARCHIVE
           </motion.div>
-          <h1 className="text-5xl lg:text-7xl font-black tracking-tighter mb-8 leading-[0.9]">
+          <h1 className="text-5xl lg:text-5xl font-bold tracking-tighter mb-8 leading-[0.9]">
             THE FAMILY<br />
             <span className="gradient-text-premium">IRON VAULT.</span>
           </h1>
@@ -99,9 +98,9 @@ export default function DocumentStorage() {
                 <table className="w-full text-left">
                   <thead className="bg-raised border-b border-base">
                     <tr>
-                      <th className="px-6 py-4 text-[10px] font-black uppercase text-muted tracking-widest">Document Name</th>
-                      <th className="px-6 py-4 text-[10px] font-black uppercase text-muted tracking-widest">Modified</th>
-                      <th className="px-6 py-4 text-[10px] font-black uppercase text-muted tracking-widest text-right">Actions</th>
+                      <th className="px-6 py-4 text-[10px] font-bold uppercase text-muted tracking-widest">Document Name</th>
+                      <th className="px-6 py-4 text-[10px] font-bold uppercase text-muted tracking-widest">Modified</th>
+                      <th className="px-6 py-4 text-[10px] font-bold uppercase text-muted tracking-widest text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-base">

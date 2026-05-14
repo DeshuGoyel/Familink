@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Activity, Shield, TrendingUp, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Activity, CheckCircle2, ArrowRight } from 'lucide-react';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 
@@ -22,7 +22,7 @@ export default function LegacyHealth() {
               Real-time Readiness Analytics
             </p>
           </motion.div>
-          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-8xl font-display font-bold tracking-tight">
+          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-5xl font-display font-bold tracking-tight">
             Legacy <span className="italic text-brand-primary">Health</span>
           </motion.h1>
           <motion.p {...fadeUp(0.2)} className="text-muted text-xl max-w-3xl mx-auto font-medium">
@@ -35,7 +35,7 @@ export default function LegacyHealth() {
               <div className="absolute inset-0 bg-brand-primary/10 blur-[120px] rounded-full animate-pulse" />
               <Card className="p-16 text-center bg-surface/30 border-base/40 rounded-[64px] backdrop-blur-3xl relative z-10">
                  <div className="inline-flex items-center justify-center w-48 h-48 rounded-full border-8 border-brand-primary/20 relative mb-8">
-                    <span className="text-6xl font-display font-bold text-brand-primary">94</span>
+                    <span className="text-5xl font-display font-bold text-brand-primary">94</span>
                     <span className="absolute -top-2 -right-2 w-10 h-10 bg-brand-primary rounded-full flex items-center justify-center border-4 border-page">
                        <CheckCircle2 size={20} className="text-white" />
                     </span>

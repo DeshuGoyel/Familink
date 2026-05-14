@@ -18,7 +18,7 @@ export function KeyModel() {
     // Human pulse (solid to translucent)
     if (humanRef.current) {
       const opacity = Math.abs(Math.sin(t)); // 0 to 1 loop (approx 2s)
-      humanRef.current.children.forEach((child: any) => {
+      humanRef.current.children.forEach((child: unknown) => {
         if (child.material) {
           child.material.opacity = 0.4 + (opacity * 0.6); // 40% to 100%
         }

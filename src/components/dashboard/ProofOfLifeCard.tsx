@@ -7,7 +7,7 @@ export default function ProofOfLifeCard() {
   const { checkinSettings, completeCheckin } = useCheckinStore();
   
   const last = checkinSettings.lastCheckinAt ? new Date(checkinSettings.lastCheckinAt) : new Date(Date.now() - 86400000);
-  let nextDue = new Date(last);
+  const nextDue = new Date(last);
   if (checkinSettings.frequency === 'weekly') nextDue.setDate(nextDue.getDate() + 7);
   if (checkinSettings.frequency === 'biweekly') nextDue.setDate(nextDue.getDate() + 14);
   if (checkinSettings.frequency === 'monthly') nextDue.setMonth(nextDue.getMonth() + 1);

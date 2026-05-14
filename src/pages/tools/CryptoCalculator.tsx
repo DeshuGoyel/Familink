@@ -66,7 +66,7 @@ export default function CryptoCalculator() {
           <div className="bg-gradient-to-br from-[#0B0E14] to-surface border border-danger/30 p-8 rounded-2xl flex flex-col justify-center items-center text-center">
             <AlertTriangle size={48} className="text-danger mb-4" />
             <h3 className="text-xl font-bold mb-2">Value at Risk of Permanent Loss</h3>
-            <div className="text-5xl font-extrabold text-danger mb-4">{potentialLoss}</div>
+            <div className="text-5xl font-bold text-danger mb-4">{potentialLoss}</div>
             <p className="text-muted mb-8">
               Statistically, your family has a <strong className="text-white">{calculatedRiskPercentage}% chance</strong> of being locked out of your crypto permanently.
             </p>

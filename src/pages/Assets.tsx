@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
-import { Wallet, Plus, Edit2, Trash2, Box, TrendingUp, Briefcase, FileText, Globe, Search, Shield, ChevronRight, LayoutGrid, List } from 'lucide-react';
+import { Wallet, Plus, Edit2, Trash2, Box, TrendingUp, Briefcase, FileText, Globe, Search, Shield, LayoutGrid, List } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import Modal from '../components/ui/Modal';
@@ -54,7 +54,7 @@ export default function Assets() {
     resolver: zodResolver(assetSchema)
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: unknown) => {
     if (editingId) {
       updateAsset(editingId, { ...data, date: new Date().toISOString().split('T')[0] });
       toast.success('Vault record updated');
@@ -78,7 +78,7 @@ export default function Assets() {
     setIsModalOpen(true);
   };
 
-  const openEditModal = (asset: any) => {
+  const openEditModal = (asset: unknown) => {
     setEditingId(asset.id);
     reset(asset);
     setIsModalOpen(true);
@@ -94,7 +94,7 @@ export default function Assets() {
       date: new Date().toISOString().split('T')[0],
       tags: ['retirement', 'institutional', 'long-term'],
       notes: 'Institutional retirement fund. Managed via primary brokerage.'
-    } as any);
+    } as unknown);
     toast.success('Institutional template added');
   };
 
@@ -111,7 +111,7 @@ export default function Assets() {
                 Asset Inventory Protocol
               </p>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-primary tracking-tight leading-none">
+            <h1 className="text-4xl sm:text-5xl lg:text-5xl font-display font-bold text-primary tracking-tight leading-none">
               Asset <span className="italic text-brand-primary">Vault</span>
             </h1>
             <p className="text-muted text-sm font-medium max-w-xl">
@@ -212,7 +212,7 @@ export default function Assets() {
                   </div>
                   
                   {/* Projections */}
-                  {((asset as any).growthRate || asset.type === 'Retirement' || asset.type === 'Crypto') && (
+                  {((asset as unknown).growthRate || asset.type === 'Retirement' || asset.type === 'Crypto') && (
                     <div className="mb-8 p-5 bg-page/80 rounded-2xl border border-base/40 group-hover:border-brand-primary/10 transition-colors shadow-inner">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
@@ -222,7 +222,7 @@ export default function Assets() {
                         <span className="text-[9px] font-bold text-trust-500/60 uppercase">10Y @ 7%</span>
                       </div>
                       <p className="text-2xl font-display font-bold text-trust-500">
-                        ${calculateProjection(asset.value || 0, (asset as any).growthRate || 0.07, 10).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                        ${calculateProjection(asset.value || 0, (asset as unknown).growthRate || 0.07, 10).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                       </p>
                     </div>
                   )}

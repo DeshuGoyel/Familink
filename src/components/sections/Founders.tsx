@@ -52,7 +52,7 @@ export default function Founders() {
           >
             The Team
           </p>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             Built by people who've felt this problem.
           </h2>
           <p className="text-white/40 text-lg max-w-2xl">
@@ -96,7 +96,7 @@ export default function Founders() {
                   alt={f.name}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-10"
                   style={{ objectPosition: 'center 20%' }}
-                  onError={(e) => { 
+                  onError={(_e) => { 
                     console.error('Failed to load image:', f.image);
                   }}
                 />
@@ -107,7 +107,7 @@ export default function Founders() {
               {/* Content */}
               <div className="p-8 flex flex-col gap-5">
                 <div>
-                  <h3 className="text-2xl font-black text-white tracking-tight">{f.name}</h3>
+                  <h3 className="text-2xl font-bold text-white tracking-tight">{f.name}</h3>
                   <p
                     className="text-sm font-bold uppercase tracking-wider mt-1"
                     style={{ color: f.accent }}

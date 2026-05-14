@@ -55,7 +55,7 @@ export default function Allocations() {
     toast.success('Recipient synchronized');
   };
 
-  const getRecipientDetails = (a: any) => {
+  const getRecipientDetails = (a: unknown) => {
     if (a.type === 'heir') {
       const h = heirs.find(heir => heir.id === a.recipientId);
       return { name: h?.name || 'Unknown Heir', icon: Users, color: '#4F5CFF' }; // brand-primary
@@ -74,6 +74,7 @@ export default function Allocations() {
       data.push({ name: 'Unassigned Protocol', value: remainingPercent, color: 'rgba(255,255,255,0.05)' });
     }
     return data;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assetAllocations, remainingPercent]);
 
   return (
@@ -259,7 +260,7 @@ export default function Allocations() {
                                 ))}
                               </Pie>
                               <Tooltip 
-                                formatter={(value: any) => [`${value}%`, 'Protocol Sync']}
+                                formatter={(value: unknown) => [`${value}%`, 'Protocol Sync']}
                                 contentStyle={{ backgroundColor: 'rgb(10 10 12)', border: '1px solid rgb(39 39 42)', borderRadius: '16px', color: '#f8fafc', fontSize: '12px', fontWeight: 'bold' }}
                                 itemStyle={{ color: '#818cf8' }}
                               />

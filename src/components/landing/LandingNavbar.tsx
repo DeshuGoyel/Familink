@@ -56,7 +56,7 @@ export default function LandingNavbar() {
             <span className="font-bold text-[18px] tracking-tight text-primary uppercase letter-spacing-[0.05em]">
               Transfer{' '}
               <span
-                className="font-black"
+                className="font-bold"
                 style={{
                   background: 'linear-gradient(135deg, #3B82F6, #D4A72C)',
                   WebkitBackgroundClip: 'text',
@@ -98,7 +98,7 @@ export default function LandingNavbar() {
             </button>
             <button
               onClick={() => scrollTo('#waitlist')}
-              className="px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_0_25px_rgba(59,130,246,0.2)] hover:shadow-[0_0_35px_rgba(59,130,246,0.4)]"
+              className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_0_25px_rgba(59,130,246,0.2)] hover:shadow-[0_0_35px_rgba(59,130,246,0.4)]"
               style={{
                 background: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #D4A72C 100%)',
                 color: 'white',

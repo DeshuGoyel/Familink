@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Mail, Shield, AlertCircle, Loader2, ArrowRight } from 'lucide-react';
+import { Shield, AlertCircle, Loader2, ArrowRight } from 'lucide-react';
 import { useOpsStore } from '../../store/useOpsStore';
 import { opsApi } from '../../lib/opsApi';
 import Input from '../../components/ui/Input';
@@ -32,7 +32,7 @@ export default function OpsLogin() {
     setError(null);
 
     try {
-      const response = await opsApi.post<{ token: string; admin: any }>('/ops/login', {
+      const response = await opsApi.post<{ token: string; admin: unknown }>('/ops/login', {
         email,
         password,
       });
@@ -40,7 +40,7 @@ export default function OpsLogin() {
       setAuth(response.token, response.admin);
       toast.success('Welcome back, Admin');
       navigate('/ops/dashboard');
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err.message || 'Invalid credentials');
       toast.error('Authentication failed');
     } finally {

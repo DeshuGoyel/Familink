@@ -54,7 +54,7 @@ export default function DigitalWill() {
             <ShieldCheck size={16} />
             LEGAL TECH 2.0
           </motion.div>
-          <h1 className="text-5xl lg:text-7xl font-black tracking-tighter mb-8 leading-[0.9]">
+          <h1 className="text-5xl lg:text-5xl font-bold tracking-tighter mb-8 leading-[0.9]">
             YOUR WILL,<br />
             <span className="gradient-text-premium">REINVENTED.</span>
           </h1>
@@ -146,7 +146,7 @@ export default function DigitalWill() {
                       </div>
                       <h5 className="font-bold mb-2">Guardian Threshold</h5>
                       <p className="text-xs text-muted">2 out of 3 Guardians must verify death to release vault.</p>
-                      <div className="mt-4 text-brand-primary font-black text-xl italic">2/3 SELECTION</div>
+                      <div className="mt-4 text-brand-primary font-bold text-xl italic">2/3 SELECTION</div>
                     </div>
                     <div className="p-6 rounded-2xl border border-base bg-surface flex flex-col items-center text-center opacity-50 grayscale cursor-not-allowed">
                       <div className="w-10 h-10 rounded-full bg-base flex items-center justify-center text-muted mb-4">
@@ -170,7 +170,7 @@ export default function DigitalWill() {
                   <div className="w-20 h-20 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-500 mx-auto mb-6">
                     <CheckCircle2 size={40} />
                   </div>
-                  <h4 className="text-2xl font-black mb-2 italic tracking-tight">ENCRYPTION COMPLETE</h4>
+                  <h4 className="text-2xl font-bold mb-2 italic tracking-tight">ENCRYPTION COMPLETE</h4>
                   <p className="text-sm text-muted max-w-xs mx-auto mb-8">
                     Your digital will is now cryptographically bound to your designated heirs.
                   </p>

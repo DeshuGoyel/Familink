@@ -25,7 +25,7 @@ type Tab = 'identity' | 'theme' | 'controls';
 
 export default function SystemSettings() {
   const [activeTab, setActiveTab] = useState<Tab>('identity');
-  const [config, setConfig] = useState<any>({
+  const [config, setConfig] = useState<unknown>({
     brand_name: '',
     logo_url: '',
     support_email: '',
@@ -51,7 +51,7 @@ export default function SystemSettings() {
     try {
       const data = await opsApi.get('/ops/branding');
       setConfig(data);
-    } catch (err) {
+    } catch {
       toast.error('Failed to load settings');
     } finally {
       setIsLoading(false);
@@ -64,7 +64,7 @@ export default function SystemSettings() {
     try {
       await opsApi.put('/ops/branding', config);
       toast.success('Configuration updated successfully');
-    } catch (err) {
+    } catch {
       toast.error('Failed to save changes');
     } finally {
       setIsSaving(false);
@@ -89,9 +89,9 @@ export default function SystemSettings() {
 
       // In a real environment, we would PUT to presign.upload_url
       // For this demo, we'll simulate the upload success
-      setConfig((prev: any) => ({ ...prev, logo_url: presign.public_url }));
+      setConfig((prev: unknown) => ({ ...prev, logo_url: presign.public_url }));
       toast.success('Logo uploaded. Save settings to publish.');
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(err.message || 'Failed to upload logo');
     } finally {
       setIsUploadingLogo(false);

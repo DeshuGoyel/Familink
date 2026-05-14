@@ -64,7 +64,7 @@ const ResourcesHub = () => {
         
         {/* Header Section */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
             Resource Hub
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">

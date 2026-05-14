@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Mail, Search, Download, Trash2, Tag, Calendar, MoreHorizontal } from 'lucide-react';
+import { Users, Mail, Search, Download, Calendar, MoreHorizontal } from 'lucide-react';
 import { opsApi } from '../../../lib/opsApi';
 import Card from '../../../components/ui/Card';
 import Button from '../../../components/ui/Button';
@@ -8,7 +8,7 @@ import Badge from '../../../components/ui/Badge';
 import toast from 'react-hot-toast';
 
 export default function WaitlistManager() {
-  const [entries, setEntries] = useState<any[]>([]);
+  const [entries, setEntries] = useState<unknown[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -18,9 +18,9 @@ export default function WaitlistManager() {
 
   const fetchEntries = async () => {
     try {
-      const data = await opsApi.get<any[]>('/ops/waitlist');
+      const data = await opsApi.get<unknown[]>('/ops/waitlist');
       setEntries(data);
-    } catch (err) {
+    } catch {
       toast.error('Failed to load waitlist');
     } finally {
       setIsLoading(false);

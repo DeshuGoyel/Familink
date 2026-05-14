@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Shield, ChevronRight, Lock, Users, Bot, KeyRound, CheckCircle2, ShieldCheck, Fingerprint, Database, ArrowRight } from 'lucide-react';
+import { Shield, Lock, Bot, KeyRound, CheckCircle2, ShieldCheck, Fingerprint, Database } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Hero from '../components/sections/Hero';
@@ -54,7 +54,7 @@ export default function Landing() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,rgba(212,175,55,0.05),transparent_70%)]" />
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="text-center mb-24">
-            <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-6">
+            <h2 className="text-5xl md:text-5xl font-bold tracking-tighter mb-6">
               In <span className="gold-gradient italic">15 Minutes.</span>
             </h2>
             <p className="text-white/40 text-lg max-w-2xl mx-auto font-medium">
@@ -81,11 +81,11 @@ export default function Landing() {
               }
             ].map((item, i) => (
               <div key={i} className="group relative p-12 border-l border-white/5 hover:bg-white/[0.02] transition-all duration-500">
-                <div className="text-8xl font-black text-white/[0.03] absolute top-8 left-8 group-hover:text-brand-gold/10 transition-colors">
+                <div className="text-5xl font-bold text-white/[0.03] absolute top-8 left-8 group-hover:text-brand-gold/10 transition-colors">
                   {item.step}
                 </div>
                 <div className="relative z-10">
-                  <h3 className="text-2xl font-black tracking-tight mb-6 group-hover:text-brand-gold transition-colors">{item.title}</h3>
+                  <h3 className="text-2xl font-bold tracking-tight mb-6 group-hover:text-brand-gold transition-colors">{item.title}</h3>
                   <p className="text-white/40 leading-relaxed font-medium">
                     {item.desc}
                   </p>
@@ -157,7 +157,7 @@ export default function Landing() {
       <section className="py-32 bg-surface/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-display mb-6">Designed for a <span className="gradient-text-premium italic">lifetime.</span></h2>
+            <h2 className="text-5xl md:text-5xl font-display mb-6">Designed for a <span className="gradient-text-premium italic">lifetime.</span></h2>
             <p className="text-xl text-secondary max-w-2xl mx-auto">Institutional infrastructure for the individual. Zero-knowledge. Zero confusion.</p>
           </div>
 
@@ -196,7 +196,7 @@ export default function Landing() {
             <div className="absolute -top-24 -right-24 w-64 h-64 bg-brand-primary/10 rounded-full blur-[100px]" />
             <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-brand-gold/5 rounded-full blur-[100px]" />
 
-            <h2 className="text-5xl md:text-7xl font-display font-black tracking-tight mb-8">Secure your digital future today.</h2>
+            <h2 className="text-5xl md:text-5xl font-display font-bold tracking-tight mb-8">Secure your digital future today.</h2>
             <p className="text-xl text-secondary mb-12 max-w-2xl mx-auto">It takes 15 minutes to set up a 100-year plan. Don't leave your legacy to chance.</p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-4">

@@ -1,6 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { ShieldCheck, Lock, Eye, Globe, Scale } from 'lucide-react';
+import { ShieldCheck, Lock, Eye, Scale } from 'lucide-react';
 import { SEO } from '../../components/seo/SEO';
 
 export default function PrivacyPolicy() {
@@ -16,7 +15,7 @@ export default function PrivacyPolicy() {
           <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 flex items-center justify-center text-brand-primary mb-8">
             <ShieldCheck size={24} />
           </div>
-          <h1 className="text-4xl lg:text-6xl font-black italic tracking-tighter mb-4">PRIVACY PROTOCOL.</h1>
+          <h1 className="text-4xl lg:text-5xl font-bold italic tracking-tighter mb-4">PRIVACY PROTOCOL.</h1>
           <p className="text-xl text-muted font-medium tracking-tight">Version 2.1 — Effective May 2026</p>
         </div>
       </section>

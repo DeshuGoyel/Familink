@@ -41,7 +41,7 @@ export default function PrivacyProtocol() {
               Data Privacy Protocol v2.1
             </p>
           </motion.div>
-          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-7xl font-display font-bold tracking-tight">
+          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-5xl font-display font-bold tracking-tight">
             Privacy <span className="italic text-brand-primary">Protocol</span>
           </motion.h1>
           <motion.p {...fadeUp(0.2)} className="text-muted text-lg max-w-2xl mx-auto font-medium">

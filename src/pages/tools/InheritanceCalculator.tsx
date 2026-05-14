@@ -4,10 +4,8 @@ import {
   Calculator, 
   ShieldAlert, 
   TrendingUp, 
-  AlertTriangle, 
   CheckCircle2,
   ArrowRight,
-  Info,
   RefreshCcw,
   ShieldCheck
 } from 'lucide-react';
@@ -95,7 +93,7 @@ export default function InheritanceCalculator() {
           >
             <Calculator size={32} />
           </motion.div>
-          <h1 className="text-5xl lg:text-7xl font-black tracking-tighter mb-8 leading-[0.9]">
+          <h1 className="text-5xl lg:text-5xl font-bold tracking-tighter mb-8 leading-[0.9]">
             LEGACY SECURITY<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-amber-200">SCORE.</span>
           </h1>
@@ -120,7 +118,7 @@ export default function InheritanceCalculator() {
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-8"
               >
-                <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] text-muted">
+                <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
                   <span>Question {currentQuestion + 1} of {questions.length}</span>
                   <div className="flex gap-1">
                     {questions.map((_, i) => (
@@ -168,12 +166,12 @@ export default function InheritanceCalculator() {
                     />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-5xl font-black italic tracking-tighter">{Math.round(totalScore)}</span>
-                    <span className="text-[10px] font-black uppercase text-muted tracking-widest">SCORE</span>
+                    <span className="text-5xl font-bold italic tracking-tighter">{Math.round(totalScore)}</span>
+                    <span className="text-[10px] font-bold uppercase text-muted tracking-widest">SCORE</span>
                   </div>
                 </div>
 
-                <h4 className={cn("text-3xl font-black italic mb-2 tracking-tighter", getScoreInfo().color)}>
+                <h4 className={cn("text-3xl font-bold italic mb-2 tracking-tighter", getScoreInfo().color)}>
                   {getScoreInfo().label}
                 </h4>
                 <p className="text-muted text-sm max-w-sm mx-auto mb-10 leading-relaxed">
@@ -215,7 +213,7 @@ export default function InheritanceCalculator() {
             <Calculator size={300} strokeWidth={0.5} />
           </div>
           <div className="relative z-10 max-w-2xl">
-            <h2 className="text-4xl lg:text-5xl font-black italic tracking-tighter mb-8 leading-tight">
+            <h2 className="text-4xl lg:text-5xl font-bold italic tracking-tighter mb-8 leading-tight">
               STOP THE $189B <br />LEAKAGE.
             </h2>
             <p className="text-lg text-muted mb-10 leading-relaxed">

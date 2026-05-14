@@ -1,6 +1,6 @@
 import React from 'react';
 import SEO from '../../components/seo/SEO';
-import { ArrowRight, Lock, Key, ShieldCheck, Database } from 'lucide-react';
+import { ArrowRight, Lock, Key, Database } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const PrivateKeyInheritance = () => {
@@ -52,7 +52,7 @@ const PrivateKeyInheritance = () => {
             <Lock className="w-5 h-5" />
             <span className="font-semibold tracking-wide uppercase text-sm">Advanced Security Guide</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
             Private Key Inheritance
           </h1>
           <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">

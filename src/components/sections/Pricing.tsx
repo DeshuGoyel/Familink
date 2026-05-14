@@ -107,7 +107,7 @@ export default function Pricing() {
           >
             Pricing
           </p>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             Founding Member Pricing
           </h2>
           <p className="text-white/40 text-lg mb-8">Lock in your rate forever before public launch.</p>
@@ -132,7 +132,7 @@ export default function Pricing() {
                   {label}
                   {label === 'Yearly' && (
                     <span
-                      className="text-[10px] font-black px-2 py-0.5 rounded-full"
+                      className="text-[10px] font-bold px-2 py-0.5 rounded-full"
                       style={active ? { background: 'rgba(255,255,255,0.2)' } : { background: 'rgba(249,115,22,0.15)', color: '#f97316' }}
                     >
                       SAVE 40%
@@ -165,7 +165,7 @@ export default function Pricing() {
               {/* Popular badge */}
               {plan.highlighted && (
                 <div
-                  className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-[10px] font-black px-4 py-1.5 rounded-full whitespace-nowrap tracking-wide"
+                  className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-[10px] font-bold px-4 py-1.5 rounded-full whitespace-nowrap tracking-wide"
                   style={{
                     background: 'linear-gradient(135deg, #f97316, #fb923c)',
                     color: '#fff',
@@ -182,7 +182,7 @@ export default function Pricing() {
               <div className="p-8 flex flex-col flex-1">
                 <div className="mb-6">
                   <h3
-                    className="text-xl font-black tracking-tight"
+                    className="text-xl font-bold tracking-tight"
                     style={{ color: plan.highlighted ? plan.accent : 'white' }}
                   >
                     {plan.name}
@@ -201,7 +201,7 @@ export default function Pricing() {
                       transition={{ duration: 0.2 }}
                       className="flex items-end gap-1"
                     >
-                      <span className="text-5xl font-black text-white">
+                      <span className="text-5xl font-bold text-white">
                         ${yearly ? plan.yearlyPrice : plan.monthlyPrice}
                       </span>
                       <span className="text-white/30 mb-2 text-sm">/mo</span>

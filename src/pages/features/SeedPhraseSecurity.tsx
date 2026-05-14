@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   KeyRound, 
   ShieldAlert, 
   Divide, 
   Cpu, 
-  Lock, 
-  Unlock,
+  Lock,
   Layers,
   ArrowRight,
   Database
@@ -50,7 +49,7 @@ export default function SeedPhraseSecurity() {
           >
             <KeyRound size={32} />
           </motion.div>
-          <h1 className="text-5xl lg:text-7xl font-black tracking-tighter mb-8 leading-[0.9]">
+          <h1 className="text-5xl lg:text-5xl font-bold tracking-tighter mb-8 leading-[0.9]">
             SEED PHRASE<br />
             <span className="gold-gradient">INFRASTRUCTURE.</span>
           </h1>
@@ -70,7 +69,7 @@ export default function SeedPhraseSecurity() {
             {!isComplete ? (
               <div className="space-y-6">
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-widest text-muted block mb-3">Input Sample Seed (e.g. 12 words)</label>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted block mb-3">Input Sample Seed (e.g. 12 words)</label>
                   <textarea 
                     value={phrase}
                     onChange={(e) => setPhrase(e.target.value)}
@@ -82,7 +81,7 @@ export default function SeedPhraseSecurity() {
                 <Button 
                   onClick={simulateSplit} 
                   disabled={!phrase || isSplitting}
-                  className="w-full h-16 text-lg font-black italic tracking-tight"
+                  className="w-full h-16 text-lg font-bold italic tracking-tight"
                 >
                   {isSplitting ? "CRYPTOGRAPHIC FRAGMENTATION..." : "INITIATE SHARDING PROTOCOL"}
                 </Button>
@@ -126,7 +125,7 @@ export default function SeedPhraseSecurity() {
                       <div className="absolute -right-2 -bottom-2 text-brand-primary/5 group-hover:scale-110 transition-transform">
                         <Database size={60} />
                       </div>
-                      <p className="text-[10px] font-black uppercase text-brand-primary mb-2">{shard.label}</p>
+                      <p className="text-[10px] font-bold uppercase text-brand-primary mb-2">{shard.label}</p>
                       <p className="text-xs font-mono text-muted break-all">SHARD_ID: {shard.hash}</p>
                       <div className="mt-4 flex items-center gap-2 text-[10px] font-bold text-emerald-500">
                         <Lock size={10} /> ENCRYPTED
@@ -158,7 +157,7 @@ export default function SeedPhraseSecurity() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-4xl font-black italic tracking-tighter mb-6 leading-tight">
+              <h2 className="text-4xl font-bold italic tracking-tighter mb-6 leading-tight">
                 THE DEATH OF THE <br />"PIECE OF PAPER".
               </h2>
               <div className="space-y-6">

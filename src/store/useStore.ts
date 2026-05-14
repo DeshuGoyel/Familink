@@ -1,6 +1,47 @@
 import { create } from 'zustand';
 import { mockAssets, mockGuardians, mockHeirs, mockActivity, mockNotifications } from '../data/mockData';
 
+export interface Asset {
+  id: string;
+  name?: string;
+  type?: string;
+  status?: string;
+  value?: number;
+  date?: string;
+  tags?: string[];
+  notes?: string;
+}
+
+export interface Guardian {
+  id: string;
+  name?: string;
+  email?: string;
+  status: string;
+}
+
+export interface Heir {
+  id: string;
+  name?: string;
+  email?: string;
+  relation?: string;
+  status: string;
+  progress?: number;
+}
+
+export interface Activity {
+  id: string;
+  message?: string;
+  time?: string;
+  icon?: string;
+}
+
+export interface Notification {
+  id: string;
+  message?: string;
+  icon?: string;
+  read: boolean;
+}
+
 export interface Charity {
   id: string;
   name: string;
@@ -28,26 +69,26 @@ interface User {
 
 interface AppState {
   user: User;
-  assets: any[];
-  guardians: any[];
-  heirs: any[];
+  assets: Asset[];
+  guardians: Guardian[];
+  heirs: Heir[];
   charities: Charity[];
   allocations: Allocation[];
-  activity: any[];
-  notifications: any[];
+  activity: Activity[];
+  notifications: Notification[];
   theme: string;
   accentColor: string;
   isNotificationOpen: boolean;
   isSidebarCollapsed: boolean;
   isMobileSidebarOpen: boolean;
   
-  addAsset: (asset: any) => void;
-  updateAsset: (id: string, data: any) => void;
+  addAsset: (asset: Omit<Asset, 'id'>) => void;
+  updateAsset: (id: string, data: Partial<Asset>) => void;
   deleteAsset: (id: string) => void;
-  addGuardian: (guardian: any) => void;
+  addGuardian: (guardian: Omit<Guardian, 'id' | 'status'>) => void;
   confirmGuardian: (id: string) => void;
   removeGuardian: (id: string) => void;
-  addHeir: (heir: any) => void;
+  addHeir: (heir: Omit<Heir, 'id' | 'status' | 'progress'>) => void;
   updateHeirStatus: (id: string, status: string) => void;
   updateScore: (score: number) => void;
   toggleTheme: () => void;
@@ -62,16 +103,16 @@ interface AppState {
   calculateScore: () => void;
 }
 
-const calculateNewScore = (state: any) => {
+const calculateNewScore = (state: Pick<AppState, 'guardians' | 'assets' | 'heirs'>) => {
   let score = 0;
   
   // 1. Guardians (40%)
-  const confirmedGuardians = state.guardians.filter((g: any) => g.status === 'Confirmed').length;
+  const confirmedGuardians = state.guardians.filter((g: Guardian) => g.status === 'Confirmed').length;
   score += Math.min(confirmedGuardians * 20, 40);
 
   // 2. Assets Coverage (40%)
   if (state.assets.length > 0) {
-    const coveredAssets = state.assets.filter((a: any) => (a.notes && a.notes.length > 0) || a.status === 'Protected').length;
+    const coveredAssets = state.assets.filter((a: Asset) => (a.notes && a.notes.length > 0) || a.status === 'Protected').length;
     score += Math.round((coveredAssets / state.assets.length) * 40);
   }
 

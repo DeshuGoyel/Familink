@@ -57,7 +57,7 @@ export default function Problem() {
           >
             The Problem
           </p>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.08] tracking-tight">
+          <h2 className="text-4xl md:text-5xl lg:text-5xl font-bold text-white leading-[1.08] tracking-tight">
             $140 Billion in crypto vanishes every year.{' '}
             <span className="text-white/30 font-light">No one told their family.</span>
           </h2>
@@ -79,7 +79,7 @@ export default function Problem() {
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                 style={{ background: `radial-gradient(circle at 30% 30%, ${stat.glow}, transparent 70%)` }}
               />
-              <div className="text-6xl md:text-7xl font-black leading-none mb-3" style={{ color: stat.color }}>
+              <div className="text-5xl md:text-5xl font-bold leading-none mb-3" style={{ color: stat.color }}>
                 {stat.prefix}<AnimatedCounter target={stat.value} delay={i * 0.15} />{stat.suffix}
               </div>
               {stat.showBar && (

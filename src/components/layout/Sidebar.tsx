@@ -11,7 +11,6 @@ import {
   ChevronLeft,
   ChevronRight,
   LogOut,
-  Bell,
   Code2,
   Lock,
   BarChart2

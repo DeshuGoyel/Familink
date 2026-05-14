@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, ShieldAlert, CheckCircle, Clock, Bell, History, Settings, Fingerprint, Mail, Activity, ChevronRight, AlertTriangle } from 'lucide-react';
+import { CheckCircle, Clock, Bell, History, Settings, Fingerprint, Mail, Activity, ChevronRight, AlertTriangle } from 'lucide-react';
 import { useCheckinStore } from '../store/useCheckinStore';
 import { Canvas } from '@react-three/fiber';
 import { CheckInHeart } from '../components/checkin/CheckInHeart';
@@ -28,7 +28,7 @@ export default function CheckInCenter() {
   useEffect(() => {
     const updateTime = () => {
       const last = checkinSettings.lastCheckinAt ? new Date(checkinSettings.lastCheckinAt) : new Date(Date.now() - 86400000);
-      let nextDue = new Date(last);
+      const nextDue = new Date(last);
       if (checkinSettings.frequency === 'weekly') nextDue.setDate(nextDue.getDate() + 7);
       if (checkinSettings.frequency === 'biweekly') nextDue.setDate(nextDue.getDate() + 14);
       if (checkinSettings.frequency === 'monthly') nextDue.setMonth(nextDue.getMonth() + 1);
@@ -220,7 +220,7 @@ export default function CheckInCenter() {
                       {['weekly', 'biweekly', 'monthly'].map(f => (
                         <button 
                           key={f}
-                          onClick={() => updateSettings({ frequency: f as any })}
+                          onClick={() => updateSettings({ frequency: f as unknown })}
                           className={`px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-widest border transition-all ${
                             checkinSettings.frequency === f 
                               ? 'bg-brand-primary/10 text-brand-primary border-brand-primary/40 shadow-[0_0_15px_rgba(79,92,255,0.1)]' 

@@ -79,12 +79,12 @@ export default function SocialProof() {
               <motion.span
                 animate={{ scale: count === 2417 ? [1, 1.05, 1] : 1 }}
                 transition={{ duration: 0.4, type: 'spring' }}
-                className="text-7xl font-black text-white leading-none"
+                className="text-5xl font-bold text-white leading-none"
               >
                 {count.toLocaleString()}
               </motion.span>
               <span
-                className="text-4xl font-black mb-1"
+                className="text-4xl font-bold mb-1"
                 style={{
                   background: 'linear-gradient(135deg, #f97316, #fb923c)',
                   WebkitBackgroundClip: 'text',
@@ -179,7 +179,7 @@ export default function SocialProof() {
             {media.map((m) => (
               <span
                 key={m}
-                className="text-base font-black tracking-wider text-white/15 hover:text-white/40 transition-colors duration-200 cursor-default"
+                className="text-base font-bold tracking-wider text-white/15 hover:text-white/40 transition-colors duration-200 cursor-default"
               >
                 {m}
               </span>

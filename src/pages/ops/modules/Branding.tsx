@@ -7,7 +7,7 @@ import Button from '../../../components/ui/Button';
 import toast from 'react-hot-toast';
 
 export default function BrandingStudio() {
-  const [config, setConfig] = useState<any>({
+  const [config, setConfig] = useState<unknown>({
     brand_name: '',
     logo_url: '',
     support_email: '',
@@ -24,7 +24,7 @@ export default function BrandingStudio() {
     try {
       const data = await opsApi.get('/ops/branding');
       setConfig(data);
-    } catch (err) {
+    } catch {
       toast.error('Failed to load branding');
     } finally {
       setIsLoading(false);
@@ -37,7 +37,7 @@ export default function BrandingStudio() {
     try {
       await opsApi.put('/ops/branding', config);
       toast.success('Theme assets updated');
-    } catch (err) {
+    } catch {
       toast.error('Failed to save changes');
     } finally {
       setIsSaving(false);

@@ -52,7 +52,7 @@ const DigitalWillIndia = () => {
             <Globe2 className="w-5 h-5" />
             <span className="font-semibold tracking-wide uppercase text-sm">India Jurisdiction Guide</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
             Creating a Digital Will in India: The Complete Guide
           </h1>
           <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">

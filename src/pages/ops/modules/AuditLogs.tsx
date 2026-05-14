@@ -4,7 +4,6 @@ import {
   ScrollText, 
   Search, 
   Filter, 
-  Calendar, 
   User, 
   Activity, 
   Info,
@@ -16,7 +15,6 @@ import {
 } from 'lucide-react';
 import { opsApi } from '../../../lib/opsApi';
 import Card from '../../../components/ui/Card';
-import Badge from '../../../components/ui/Badge';
 import toast from 'react-hot-toast';
 import { cn } from '../../../utils/cn';
 
@@ -27,7 +25,7 @@ interface AuditLog {
   action: string;
   entity_type: string | null;
   entity_id: string | null;
-  metadata: any | null;
+  metadata: unknown | null;
   ip_address: string | null;
   created_at: string;
 }
@@ -43,6 +41,7 @@ export default function AuditLogs() {
 
   useEffect(() => {
     fetchLogs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterAction]);
 
   const fetchLogs = async () => {
@@ -55,7 +54,7 @@ export default function AuditLogs() {
         }
       });
       setLogs(data || []);
-    } catch (err) {
+    } catch {
       toast.error('Failed to load activity logs');
       setLogs([]);
     } finally {

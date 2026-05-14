@@ -124,7 +124,7 @@ export default function Testimonials() {
           >
             Testimonials
           </p>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             Trusted by real families.
           </h2>
           <p className="text-white/40 text-lg max-w-xl">

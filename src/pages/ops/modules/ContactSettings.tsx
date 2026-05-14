@@ -41,7 +41,7 @@ export default function ContactSettings() {
       ]);
       setConfig(configData);
       setMessages(messagesData);
-    } catch (err) {
+    } catch {
       toast.error('Failed to load contact settings');
     } finally {
       setLoading(false);
@@ -54,7 +54,7 @@ export default function ContactSettings() {
     try {
       await opsApi.put('/ops/contact', config);
       toast.success('Contact settings updated');
-    } catch (err) {
+    } catch {
       toast.error('Failed to update settings');
     } finally {
       setSaving(false);
@@ -62,7 +62,7 @@ export default function ContactSettings() {
   };
 
   const addEmail = () => setConfig(prev => prev ? ({ ...prev, emails: [...prev.emails, { label: '', email: '' }] }) : null);
-  const removeEmail = (index: number) => setConfig(prev => prev ? ({ ...prev, emails: prev.emails.filter((_, i) => i !== index) }) : null);
+  const removeEmail = (index: number) => setConfig(prev => prev ? ({ ...prev, emails: prev.emails.filter((_, _i) => i !== index) }) : null);
   
   const addPhone = () => setConfig(prev => prev ? ({ ...prev, phones: [...prev.phones, { label: '', number: '' }] }) : null);
   const removePhone = (index: number) => setConfig(prev => prev ? ({ ...prev, phones: prev.phones.filter((_, i) => i !== index) }) : null);

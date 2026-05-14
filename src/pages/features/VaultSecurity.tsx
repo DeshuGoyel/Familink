@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Lock, Eye, Zap, Fingerprint, Globe, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { Shield, Lock, Eye, Zap, Fingerprint, CheckCircle2 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 
@@ -42,7 +42,7 @@ export default function VaultSecurity() {
               Institutional Security Protocol
             </p>
           </motion.div>
-          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-7xl font-display font-bold tracking-tight">
+          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-5xl font-display font-bold tracking-tight">
             Vault <span className="italic text-brand-primary">Security</span>
           </motion.h1>
           <motion.p {...fadeUp(0.2)} className="text-muted text-lg max-w-2xl mx-auto font-medium">

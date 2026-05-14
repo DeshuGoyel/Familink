@@ -37,7 +37,7 @@ function SingleCapsule({ position, color, speed, offset }: FloatingCapsuleProps)
   );
 }
 
-export function FloatingCapsules({ capsules }: { capsules: any[] }) {
+export function FloatingCapsules({ capsules }: { capsules: unknown[] }) {
   // Generate a steady array of visual capsules based on actual data
   // Or just decorative if empty
   const visualItems = capsules.length > 0 ? capsules : [{}, {}, {}];

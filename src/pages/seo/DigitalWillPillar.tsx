@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BookOpen, Shield, Globe, ArrowRight, HelpCircle } from 'lucide-react';
+import { BookOpen, Shield, ArrowRight, HelpCircle } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import { SEO } from '../../components/seo/SEO';
@@ -52,7 +52,7 @@ export default function DigitalWillPillar() {
             <BookOpen size={16} />
             <span className="text-sm font-semibold tracking-wide uppercase">Pillar Guide</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6 leading-tight">
+          <h1 className="text-5xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">
             The Digital Will: <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
               Modern Estate Planning
@@ -123,7 +123,7 @@ export default function DigitalWillPillar() {
         <section className="mt-20 pt-12 border-t border-border">
           <h2 className="text-3xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
           <div className="space-y-4">
-            {JSON.parse(faqSchema).mainEntity.map((faq: any, i: number) => (
+            {JSON.parse(faqSchema).mainEntity.map((faq: unknown, i: number) => (
               <Card key={i} className="p-6">
                 <h3 className="text-lg font-bold text-text mb-2 flex items-start">
                   <HelpCircle className="text-primary mr-3 mt-1 flex-shrink-0" size={20} />

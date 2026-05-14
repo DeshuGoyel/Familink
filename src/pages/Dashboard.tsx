@@ -1,7 +1,6 @@
 import { useStore } from '../store/useStore';
 import {
-  Shield, Users, KeyRound, Plus, Wallet, Bot, TrendingUp,
-  Activity, ArrowRight, ChevronRight
+  Shield, Users, KeyRound, Plus, Wallet, Bot, ChevronRight
 } from 'lucide-react';
 import LegacyScoreGauge from '../components/dashboard/LegacyScoreGauge';
 import ProofOfLifeCard from '../components/dashboard/ProofOfLifeCard';
@@ -86,7 +85,7 @@ export default function Dashboard() {
                 Institutional Access Live
               </p>
             </div>
-            <h1 className="text-5xl sm:text-7xl font-display font-bold tracking-tight leading-[0.9] text-primary">
+            <h1 className="text-5xl sm:text-5xl font-display font-bold tracking-tight leading-[0.9] text-primary">
               Welcome back,<br />
               <span className="gold-gradient italic">{user.name.split(' ')[0]}</span>
             </h1>

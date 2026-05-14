@@ -79,7 +79,7 @@ export const useB2BStore = create<B2BState>()(
         const today = new Date().toISOString().split('T')[0];
         const lastData = state.usageData[state.usageData.length - 1];
         
-        let newUsage = [...state.usageData];
+        const newUsage = [...state.usageData];
         if (lastData.date === today) {
           lastData.calls += 1;
         } else {

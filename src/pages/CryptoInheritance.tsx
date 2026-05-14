@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Shield, ChevronRight, Lock, KeyRound, AlertTriangle, FileText, Bot, HelpCircle, CheckCircle2 } from 'lucide-react';
+import { Shield, AlertTriangle, HelpCircle, CheckCircle2 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import { SEO } from '../components/seo/SEO';
@@ -68,7 +68,7 @@ export default function CryptoInheritance() {
             <Shield size={16} />
             <span className="text-sm font-semibold tracking-wide uppercase">The Ultimate Guide</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6 leading-tight">
+          <h1 className="text-5xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">
             Crypto Inheritance:<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
               How to Secure Your Digital Wealth
@@ -215,7 +215,7 @@ export default function CryptoInheritance() {
         </div>
         
         <div className="space-y-6">
-          {JSON.parse(faqSchema).mainEntity.map((faq: any, i: number) => (
+          {JSON.parse(faqSchema).mainEntity.map((faq: unknown, i: number) => (
             <Card key={i} className="p-6">
               <h3 className="text-xl font-bold text-text mb-3 flex items-start">
                 <HelpCircle className="text-primary mr-3 mt-1 flex-shrink-0" size={24} />

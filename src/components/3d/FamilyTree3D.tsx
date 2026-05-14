@@ -32,11 +32,11 @@ export function FamilyTree3D() {
       <pointLight color="#22C55E" intensity={2} distance={3} />
       
       {/* Connections (Lines) */}
-      <Line points={[nodes[0], nodes[1]] as any} color="#22C55E" opacity={0.5} transparent lineWidth={2} />
-      <Line points={[nodes[0], nodes[2]] as any} color="#22C55E" opacity={0.5} transparent lineWidth={2} />
-      <Line points={[nodes[1], nodes[3]] as any} color="#22C55E" opacity={0.5} transparent lineWidth={2} />
-      <Line points={[nodes[1], nodes[4]] as any} color="#22C55E" opacity={0.5} transparent lineWidth={2} />
-      <Line points={[nodes[2], nodes[5]] as any} color="#22C55E" opacity={0.5} transparent lineWidth={2} />
+      <Line points={[nodes[0], nodes[1]] as unknown} color="#22C55E" opacity={0.5} transparent lineWidth={2} />
+      <Line points={[nodes[0], nodes[2]] as unknown} color="#22C55E" opacity={0.5} transparent lineWidth={2} />
+      <Line points={[nodes[1], nodes[3]] as unknown} color="#22C55E" opacity={0.5} transparent lineWidth={2} />
+      <Line points={[nodes[1], nodes[4]] as unknown} color="#22C55E" opacity={0.5} transparent lineWidth={2} />
+      <Line points={[nodes[2], nodes[5]] as unknown} color="#22C55E" opacity={0.5} transparent lineWidth={2} />
 
       {/* Nodes (Dots) */}
       <group ref={dotsRef}>

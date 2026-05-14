@@ -9,7 +9,6 @@ import {
   Network, 
   Cpu, 
   ExternalLink, 
-  Copy, 
   CheckCircle2,
   Activity,
   Globe,
@@ -33,13 +32,7 @@ const fadeUp = (delay = 0) => ({
 export default function DeveloperPortal() {
   const [activeTab, setActiveTab] = useState<'architecture' | 'api' | 'contracts' | 'security'>('api');
   const { connectedNodes, lastPing, registerNode, pingNode } = useB2BStore();
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedKey(text);
-    setTimeout(() => setCopiedKey(null), 2000);
-  };
 
   const handleConnectBank = () => {
     registerNode({
@@ -89,7 +82,7 @@ export default function DeveloperPortal() {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id as unknown)}
               className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
                 activeTab === tab.id 
                   ? 'bg-brand-primary text-obsidian-950 shadow-lg shadow-brand-primary/20' 

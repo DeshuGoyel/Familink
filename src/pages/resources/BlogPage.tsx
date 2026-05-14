@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, User, Clock, ArrowRight, Share2, Sparkles } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, Share2, Sparkles } from 'lucide-react';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 
@@ -54,7 +54,7 @@ export default function BlogPage() {
               Legacy Insights & Intelligence
             </p>
           </motion.div>
-          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-8xl font-display font-bold tracking-tight">
+          <motion.h1 {...fadeUp(0.1)} className="text-5xl md:text-5xl font-display font-bold tracking-tight">
             Institutional <span className="italic text-brand-primary">Journal</span>
           </motion.h1>
           <motion.p {...fadeUp(0.2)} className="text-muted text-lg max-w-2xl mx-auto font-medium">

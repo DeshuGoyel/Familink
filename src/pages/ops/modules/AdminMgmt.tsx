@@ -35,13 +35,13 @@ type Tab = 'admins' | 'roles';
 
 export default function AdminMgmt() {
   const [activeTab, setActiveTab] = useState<Tab>('admins');
-  const [admins, setAdmins] = useState<any[]>([]);
-  const [roles, setRoles] = useState<any[]>([]);
+  const [admins, setAdmins] = useState<unknown[]>([]);
+  const [roles, setRoles] = useState<unknown[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
-  const [editingRole, setEditingRole] = useState<any>(null);
+  const [editingRole, setEditingRole] = useState<unknown>(null);
   
   const currentAdmin = useOpsStore(state => state.admin);
 
@@ -65,15 +65,15 @@ export default function AdminMgmt() {
   const fetchData = async () => {
     try {
       const [adminsRes, rolesRes] = await Promise.all([
-        opsApi.get<any[]>('/ops/admins'),
-        opsApi.get<any[]>('/ops/roles'),
+        opsApi.get<unknown[]>('/ops/admins'),
+        opsApi.get<unknown[]>('/ops/roles'),
       ]);
       setAdmins(adminsRes);
       setRoles(rolesRes);
       if (rolesRes.length > 0) {
         setNewAdmin(prev => ({ ...prev, role_id: rolesRes[0].id }));
       }
-    } catch (err) {
+    } catch {
       toast.error('Failed to load data');
     } finally {
       setIsLoading(false);
@@ -87,7 +87,7 @@ export default function AdminMgmt() {
       toast.success('Administrator created');
       setIsModalOpen(false);
       fetchData();
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(err.message || 'Failed to create admin');
     }
   };
@@ -103,7 +103,7 @@ export default function AdminMgmt() {
       await opsApi.delete(`/ops/admins/${id}`);
       toast.success('Administrator removed');
       fetchData();
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(err.message || 'Delete failed');
     }
   };
@@ -128,12 +128,12 @@ export default function AdminMgmt() {
       setIsRoleModalOpen(false);
       setEditingRole(null);
       fetchData();
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(err.message || 'Action failed');
     }
   };
 
-  const openRoleModal = (role?: any) => {
+  const openRoleModal = (role?: unknown) => {
     if (role) {
       setEditingRole(role);
       setRoleForm({

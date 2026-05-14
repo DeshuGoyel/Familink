@@ -5,7 +5,7 @@ import { usePassportStore, IdentityPassport } from '../store/usePassportStore';
 import { useStore } from '../store/useStore';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
-import { ShieldCheck, Share2, Download, Edit3, X, QrCode, Sparkles, ChevronRight, Fingerprint, Globe, User, ShieldAlert } from 'lucide-react';
+import { ShieldCheck, Share2, Download, Edit3, X, QrCode, Sparkles, Fingerprint, Globe, ShieldAlert } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useRef, useMemo } from 'react';
 import * as THREE from 'three';
@@ -250,7 +250,7 @@ export default function IdentityPassportPage() {
               {...fadeUp(0.5)}
               onClick={() => {
                 toast.success('Institutional Verification PDF Generated');
-                const notification = new Notification("Protocol Transmitted", { body: "Your verification PDF is ready for download." });
+                const _notification = new Notification("Protocol Transmitted", { body: "Your verification PDF is ready for download." });
               }}
               className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl border border-base text-primary0 hover:text-obsidian-200 hover:border-base transition-all text-[10px] font-bold uppercase tracking-[0.2em]"
             >

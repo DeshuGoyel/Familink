@@ -7,7 +7,6 @@ import {
   ArrowRight, 
   Download,
   BookOpen,
-  Shield,
   Search,
   ExternalLink
 } from 'lucide-react';
@@ -52,7 +51,7 @@ export default function ResourceHub() {
             <Library size={16} />
             EDUCATION & TOOLS
           </motion.div>
-          <h1 className="text-5xl lg:text-8xl font-black tracking-tighter mb-8 leading-[0.85]">
+          <h1 className="text-5xl lg:text-5xl font-bold tracking-tighter mb-8 leading-[0.85]">
             RESOURCE<br />
             <span className="gradient-text-premium">LIBRARY.</span>
           </h1>
@@ -77,7 +76,7 @@ export default function ResourceHub() {
           {resources.map((group, i) => (
             <div key={i}>
               <div className="flex items-center gap-4 mb-10">
-                <h2 className="text-3xl font-black italic tracking-tighter">{group.category}</h2>
+                <h2 className="text-3xl font-bold italic tracking-tighter">{group.category}</h2>
                 <div className="h-px flex-1 bg-gradient-to-r from-base to-transparent" />
               </div>
 
@@ -92,7 +91,7 @@ export default function ResourceHub() {
                       <div className="w-12 h-12 rounded-2xl bg-page border border-base flex items-center justify-center text-brand-primary group-hover:scale-110 transition-transform">
                         {item.type === 'PDF' || item.type === 'DOCX' ? <FileText size={20} /> : <BookOpen size={20} />}
                       </div>
-                      <span className="text-[10px] font-black uppercase text-muted tracking-widest">{item.type}</span>
+                      <span className="text-[10px] font-bold uppercase text-muted tracking-widest">{item.type}</span>
                     </div>
                     
                     <h3 className="text-xl font-bold mb-3 italic leading-tight group-hover:text-brand-primary transition-colors">
@@ -135,8 +134,8 @@ export default function ResourceHub() {
               <div className="w-20 h-20 rounded-full bg-brand-primary/20 backdrop-blur-xl border border-brand-primary/30 flex items-center justify-center text-brand-primary mb-8 group-hover:scale-110 transition-transform">
                 <Video size={32} fill="currentColor" />
               </div>
-              <p className="text-brand-primary font-black uppercase tracking-widest text-sm mb-4">Masterclass</p>
-              <h2 className="text-4xl lg:text-6xl font-black italic tracking-tighter text-white mb-6 leading-tight">
+              <p className="text-brand-primary font-bold uppercase tracking-widest text-sm mb-4">Masterclass</p>
+              <h2 className="text-4xl lg:text-5xl font-bold italic tracking-tighter text-white mb-6 leading-tight">
                 THE 100-YEAR <br />DIGITAL PLAN.
               </h2>
               <p className="text-white/60 max-w-xl mx-auto mb-8 text-sm md:text-base">

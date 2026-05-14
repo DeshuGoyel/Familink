@@ -1,6 +1,6 @@
 import React from 'react';
 import SEO from '../../../components/seo/SEO';
-import { ArrowRight, Scale, Globe2, FileText, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Scale, Globe2, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const DigitalAssetLawUSA = () => {
@@ -52,7 +52,7 @@ const DigitalAssetLawUSA = () => {
             <Globe2 className="w-5 h-5" />
             <span className="font-semibold tracking-wide uppercase text-sm">USA Legal Guide</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
             Digital Asset Inheritance Laws in the USA
           </h1>
           <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
