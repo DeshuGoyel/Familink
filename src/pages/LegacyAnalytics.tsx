@@ -169,8 +169,8 @@ export default function LegacyAnalytics() {
             <Card className="p-8 bg-surface/40 border-base/60 min-h-[400px] flex flex-col">
               <h3 className="text-lg font-display font-bold text-primary mb-2">Confidence Dimensions</h3>
               <p className="text-muted text-xs mb-8">Multi-vector analysis of legacy integrity.</p>
-              <div className="flex-1 min-h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
+              <div style={{ width: '100%', height: 320 }}>
+                <ResponsiveContainer width="100%" height={320}>
                   <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
                     <PolarGrid stroke="rgba(255,255,255,0.05)" />
                     <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748B', fontSize: 10, fontWeight: 'bold' }} />
@@ -193,17 +193,17 @@ export default function LegacyAnalytics() {
             <Card className="p-8 bg-surface/40 border-base/60 min-h-[400px] flex flex-col">
               <h3 className="text-lg font-display font-bold text-primary mb-2">Allocation Distribution</h3>
               <p className="text-muted text-xs mb-8">Current asset weight per designated recipient.</p>
-              <div className="flex-1 min-h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
+              <div style={{ width: '100%', height: 320 }}>
+                <ResponsiveContainer width="100%" height={320}>
                   <BarChart data={heirData} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
                     <XAxis type="number" hide />
-                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: '#FFFFFF', fontSize: 12, fontWeight: 'bold' }} width={100} />
-                    <Tooltip 
+                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: '#FFFFFF', fontSize: 12, fontWeight: 'bold' }} width={120} />
+                    <Tooltip
                       cursor={{ fill: 'rgba(255,255,255,0.02)' }}
                       contentStyle={{ backgroundColor: '#0A0B0D', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
                     />
-                    <Bar dataKey="allocated" fill="#F97316" radius={[0, 4, 4, 0]} barSize={20} />
+                    <Bar dataKey="allocated" fill="#F97316" radius={[0, 4, 4, 0]} barSize={24} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -215,9 +215,9 @@ export default function LegacyAnalytics() {
             <Card className="p-8 bg-surface/40 border-base/60 min-h-[400px] flex flex-col">
               <h3 className="text-lg font-display font-bold text-primary mb-2">Portfolio Synthesis</h3>
               <p className="text-muted text-xs mb-8">Asset concentration by institutional category.</p>
-              <div className="flex-1 min-h-[300px] flex flex-col md:flex-row items-center">
-                <div className="flex-1 w-full h-full min-h-[250px]">
-                  <ResponsiveContainer width="100%" height="100%">
+              <div className="flex flex-col md:flex-row items-center gap-4">
+                <div style={{ width: '100%', height: 280 }}>
+                  <ResponsiveContainer width="100%" height={280}>
                     <PieChart>
                       <Pie
                         data={pieData}
@@ -232,7 +232,7 @@ export default function LegacyAnalytics() {
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="none" />
                         ))}
                       </Pie>
-                      <Tooltip 
+                      <Tooltip
                         contentStyle={{ backgroundColor: '#0A0B0D', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
                       />
                     </PieChart>
