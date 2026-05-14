@@ -3,6 +3,7 @@ import { motion, useScroll } from 'framer-motion';
 import { useStore } from '../../store/useStore';
 import { Bell, Menu, X } from 'lucide-react';
 import { cn } from '../../utils/cn';
+import ThemeToggle from './ThemeToggle';
 import { useEffect, useState } from 'react';
 import { Logo } from '../ui/Logo';
 
@@ -86,6 +87,7 @@ export default function Navbar() {
                   <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-brand-primary rounded-full" />
                 )}
               </button>
+              <ThemeToggle />
             </div>
 
             <Link

@@ -8,7 +8,7 @@ import './index.css'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <HelmetProvider>
-      <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
         <App />
       </ThemeProvider>
     </HelmetProvider>

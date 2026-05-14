@@ -57,38 +57,50 @@
     --color-danger: 244 63 94;
   }
 
-  /* ── LIGHT MODE (not used — app is dark-only) ── */
+  /* ── LIGHT MODE — dark navy variant ── */
   .light {
-    --color-bg-base: #0A0A12;
-    --color-bg-page: #06060E;
-    --color-bg-surface: #10101A;
-    --color-bg-raised: #1A1A28;
-    --color-bg-hover: #1E1E30;
-    --color-bg-input: #10101A;
-    --color-text-primary: #FFFFFF;
-    --color-text-secondary: #94A3B8;
-    --color-text-muted: #64748B;
-    --color-text-disabled: #334155;
-    --color-text-link: #F97316;
-    --color-border: rgba(255, 255, 255, 0.07);
-    --color-border-strong: rgba(255, 255, 255, 0.14);
-    --color-divider: rgba(255, 255, 255, 0.04);
-    --color-brand-primary: #F97316;
-    --color-brand-primary-hover: #EA580C;
-    --color-brand-gold: #F59E0B;
-    --color-brand-success: #10B981;
-    --shadow-sm: 0 1px 3px rgba(2, 3, 5, 0.8), 0 1px 2px rgba(2, 3, 5, 0.6);
-    --shadow-md: 0 4px 12px rgba(2, 3, 5, 0.8), 0 2px 4px rgba(2, 3, 5, 0.6);
-    --shadow-lg: 0 12px 32px rgba(2, 3, 5, 0.9), 0 4px 8px rgba(2, 3, 5, 0.6);
+    --color-bg-base: #0D1117;
+    --color-bg-page: #080C12;
+    --color-bg-surface: #161B22;
+    --color-bg-raised: #21262D;
+    --color-bg-hover: #2D333B;
+    --color-bg-input: #161B22;
+
+    --color-text-primary: #E6EDF3;
+    --color-text-secondary: #8B949E;
+    --color-text-muted: #6E7681;
+    --color-text-disabled: #484F58;
+    --color-text-link: #58A6FF;
+
+    --color-border: rgba(240, 246, 252, 0.08);
+    --color-border-strong: rgba(240, 246, 252, 0.16);
+    --color-divider: rgba(240, 246, 252, 0.05);
+
+    --color-brand-primary: #58A6FF;
+    --color-brand-primary-hover: #79B8FF;
+    --color-brand-primary-active: #388BFD;
+    --color-brand-gold: #E3B341;
+    --color-brand-success: #3FB950;
+
+    --color-success: #3FB950;
+    --color-warning: #D29922;
+    --color-error: #F85149;
+    --color-info: #A371F7;
+
+    --shadow-sm: 0 1px 3px rgba(1, 4, 9, 0.8), 0 1px 2px rgba(1, 4, 9, 0.6);
+    --shadow-md: 0 4px 12px rgba(1, 4, 9, 0.8), 0 2px 4px rgba(1, 4, 9, 0.6);
+    --shadow-lg: 0 12px 32px rgba(1, 4, 9, 0.9), 0 4px 8px rgba(1, 4, 9, 0.6);
+    --shadow-brand: 0 0 24px rgba(88, 166, 255, 0.25), 0 4px 12px rgba(88, 166, 255, 0.15);
+
     /* backward compat */
-    --bg-secondary: 2 3 5;
-    --bg-surface: 10 10 18;
-    --color-text: 255 255 255;
-    --color-border-rgb: 45 55 72;
-    --color-muted: 148 163 184;
-    --color-primary: 249 115 22;
-    --color-accent: 245 158 11;
-    --color-danger: 244 63 94;
+    --bg-secondary: 13 17 23;
+    --bg-surface: 22 27 34;
+    --color-text: 230 237 243;
+    --color-border-rgb: 48 54 61;
+    --color-muted: 139 148 158;
+    --color-primary: 88 166 255;
+    --color-accent: 227 179 65;
+    --color-danger: 248 81 73;
   }
 
   html {
