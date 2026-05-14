@@ -221,7 +221,7 @@ export default function Assets() {
                         </div>
                         <span className="text-[9px] font-bold text-trust-500/60 uppercase">10Y @ 7%</span>
                       </div>
-                      <p className="text-2xl font-display font-bold text-trust-500">
+                      <p className="text-2xl font-bold tracking-tight tabular-nums text-trust-500">
                         ${calculateProjection(asset.value || 0, (asset as unknown).growthRate || 0.07, 10).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                       </p>
                     </div>
@@ -230,7 +230,7 @@ export default function Assets() {
                   <div className="mt-auto pt-8 border-t border-base/60 flex justify-between items-end">
                     <div>
                       <p className="text-[9px] font-bold text-obsidian-600 uppercase tracking-widest mb-1.5">Current Valuation</p>
-                      <p className="text-3xl font-display font-bold text-primary">${asset.value?.toLocaleString() || '0'}</p>
+                      <p className="text-3xl font-bold tracking-tight tabular-nums text-primary">${asset.value?.toLocaleString() || '0'}</p>
                     </div>
                     <div className="flex space-x-3">
                       <button 
@@ -284,7 +284,7 @@ export default function Assets() {
                         </div>
                       </td>
                       <td className="px-8 py-6 text-xs text-muted font-bold uppercase tracking-widest">{asset.type}</td>
-                      <td className="px-8 py-6 font-display font-bold text-primary">${asset.value?.toLocaleString()}</td>
+                      <td className="px-8 py-6 font-bold tracking-tight tabular-nums text-primary">${asset.value?.toLocaleString()}</td>
                       <td className="px-8 py-6">
                         <Badge variant={asset.status === 'Protected' ? 'success' : 'warning'} className="text-[9px] font-bold uppercase tracking-widest px-3">
                           {asset.status === 'Protected' ? 'Encrypted' : asset.status}

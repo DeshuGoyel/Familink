@@ -5,8 +5,8 @@ import { Environment } from '@react-three/drei';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Users, Lock, Sparkles, ChevronDown, ShieldCheck } from 'lucide-react';
 import LandingVaultObject from '../3d/LandingVaultObject';
-import { WaitlistForm } from '../ui/WaitlistForm';
-import { CountdownTimer } from '../ui/CountdownTimer';
+import Button from '../ui/Button';
+import { Link } from 'react-router-dom';
 
 /* ─── Avatar stack ─────────────────────────────────────────── */
 const avatars = [
@@ -147,14 +147,23 @@ export default function Hero() {
           Protect your crypto, identities, and memories with absolute zero-knowledge security.
         </motion.p>
 
-        {/* Waitlist form */}
+        {/* Primary CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.76, duration: 0.6 }}
-          className="mb-3"
+          className="mb-3 flex flex-wrap gap-4"
         >
-          <WaitlistForm />
+          <Link to="/dashboard">
+            <Button variant="primary" className="h-14 px-8 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
+              Access Vault Dashboard
+            </Button>
+          </Link>
+          <Link to="/onboarding">
+            <Button variant="secondary" className="h-14 px-8 text-[11px] font-bold uppercase tracking-widest border border-base bg-surface/30 backdrop-blur-md hover:bg-surface/50 text-white">
+              Start Onboarding
+            </Button>
+          </Link>
         </motion.div>
 
         {/* Monochrome Logo Cloud (Ditto Same) */}
@@ -197,18 +206,7 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* Countdown */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.1, duration: 0.6 }}
-          className="pt-8 border-t border-base"
-        >
-          <p className="text-[11px] text-muted mb-5 font-semibold uppercase tracking-[0.18em]">
-            Beta launches in:
-          </p>
-          <CountdownTimer targetDate={launchDate} />
-        </motion.div>
+
       </motion.div>
 
       {/* ── RIGHT GRADIENT PANEL ───────────────────────────── */}

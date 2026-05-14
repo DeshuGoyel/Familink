@@ -241,7 +241,7 @@ export default function Allocations() {
                        <div className="w-full h-72 relative">
                          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10">
                             <p className="text-[10px] font-bold text-obsidian-600 uppercase tracking-[0.2em] mb-1">Vault Sync</p>
-                            <p className="text-2xl font-display font-bold text-primary">{100 - remainingPercent}%</p>
+                            <p className="text-2xl font-bold tabular-nums tracking-tight text-primary">{100 - remainingPercent}%</p>
                          </div>
                          <ResponsiveContainer width="100%" height="100%">
                             <RePieChart>
