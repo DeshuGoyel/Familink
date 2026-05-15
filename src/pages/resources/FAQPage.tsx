@@ -56,11 +56,11 @@ export default function FAQPage() {
             System <span className="italic text-brand-primary">FAQ</span>
           </motion.h1>
           <motion.div {...fadeUp(0.2)} className="relative max-w-xl mx-auto mt-8">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-obsidian-600" size={20} />
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-secondary" size={20} />
             <input 
               type="text" 
               placeholder="Search protocol help topics..."
-              className="w-full bg-surface border border-base rounded-3xl pl-14 pr-6 py-5 text-sm text-obsidian-200 focus:border-brand-primary/50 transition-all placeholder:text-obsidian-700 shadow-2xl"
+              className="w-full bg-surface border border-base rounded-3xl pl-14 pr-6 py-5 text-sm text-primary focus:border-brand-primary/50 transition-all placeholder:text-muted shadow-2xl"
             />
           </motion.div>
         </div>
@@ -101,7 +101,7 @@ export default function FAQPage() {
                     </h3>
                   </div>
                   <div className={`shrink-0 p-2 rounded-full border border-base transition-transform duration-300 ${openIndex === i ? 'rotate-180 bg-brand-primary/10 border-brand-primary/30' : ''}`}>
-                    {openIndex === i ? <Minus size={18} className="text-brand-primary" /> : <Plus size={18} className="text-obsidian-600" />}
+                    {openIndex === i ? <Minus size={18} className="text-brand-primary" /> : <Plus size={18} className="text-secondary" />}
                   </div>
                 </div>
                 <AnimatePresence>
@@ -113,9 +113,9 @@ export default function FAQPage() {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
                     >
-                      <div className="pt-6 pb-2 text-primary0 leading-relaxed font-medium text-[15px]">
+                      <div className="pt-6 pb-2 text-secondary leading-relaxed font-medium text-[15px]">
                         <p className="mb-4">{faq.answer}</p>
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-page border border-base text-[9px] font-bold uppercase tracking-widest text-obsidian-600">
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-page border border-base text-[9px] font-bold uppercase tracking-widest text-secondary">
                           Category: {faq.category} Protocol
                         </div>
                       </div>

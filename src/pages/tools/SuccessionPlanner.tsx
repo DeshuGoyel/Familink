@@ -44,7 +44,7 @@ export default function SuccessionPlanner() {
                       {step.icon}
                    </div>
                    <h3 className="text-2xl font-display font-bold mb-4">{step.title}</h3>
-                   <p className="text-primary0 leading-relaxed font-medium">
+                   <p className="text-secondary leading-relaxed font-medium">
                       {step.desc}
                    </p>
                 </Card>
@@ -60,7 +60,7 @@ export default function SuccessionPlanner() {
                  <p className="text-muted font-medium leading-relaxed">Most digital estates are lost within 48 hours of an event. Our planner ensures that your assets are recovered, verified, and distributed according to your exact specifications.</p>
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {["Instant Vault Generation", "Guardian Onboarding", "Asset Notarization", "Compliance Audit"].map((point, i) => (
-                      <div key={i} className="flex items-center gap-3 text-sm font-bold text-primary0">
+                      <div key={i} className="flex items-center gap-3 text-sm font-bold text-secondary">
                          <CheckCircle2 size={18} className="text-brand-primary" /> {point}
                       </div>
                     ))}
@@ -74,7 +74,7 @@ export default function SuccessionPlanner() {
                     <Calendar size={180} className="text-brand-primary/5" />
                     <div className="text-center space-y-4">
                        <p className="text-5xl font-display font-bold text-brand-primary">Step 1</p>
-                       <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-obsidian-700">Protocol Initialization</p>
+                       <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted">Protocol Initialization</p>
                     </div>
                  </Card>
               </div>

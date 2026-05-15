@@ -45,7 +45,7 @@ export default function PlatformComparison() {
                  <table className="w-full text-left border-collapse">
                     <thead>
                        <tr className="bg-page/50 border-b border-base">
-                          <th className="p-8 text-sm font-bold uppercase tracking-widest text-obsidian-700">Protocol Feature</th>
+                          <th className="p-8 text-sm font-bold uppercase tracking-widest text-muted">Protocol Feature</th>
                           <th className="p-8 text-center bg-brand-primary/10 border-x border-brand-primary/20">
                              <div className="text-lg font-display font-bold text-brand-primary">Transfer Legacy</div>
                              <div className="text-[9px] font-bold uppercase tracking-widest text-brand-primary/60">Institutional Grade</div>
@@ -61,15 +61,15 @@ export default function PlatformComparison() {
                     <tbody>
                        {features.map((feature, i) => (
                          <tr key={i} className="border-b border-base/40 hover:bg-surface/50 transition-colors">
-                            <td className="p-8 text-primary0 font-medium">{feature.name}</td>
+                            <td className="p-8 text-secondary font-medium">{feature.name}</td>
                             <td className="p-8 text-center bg-brand-primary/5 border-x border-brand-primary/20">
-                               {feature.tl ? <Check className="mx-auto text-trust-500" /> : <X className="mx-auto text-obsidian-800" />}
+                               {feature.tl ? <Check className="mx-auto text-trust-500" /> : <X className="mx-auto text-muted" />}
                             </td>
                             <td className="p-8 text-center">
-                               {feature.bank ? <Check className="mx-auto text-obsidian-600" /> : <X className="mx-auto text-obsidian-800" />}
+                               {feature.bank ? <Check className="mx-auto text-secondary" /> : <X className="mx-auto text-muted" />}
                             </td>
                             <td className="p-8 text-center">
-                               {feature.legacy ? <Check className="mx-auto text-obsidian-600" /> : <X className="mx-auto text-obsidian-800" />}
+                               {feature.legacy ? <Check className="mx-auto text-secondary" /> : <X className="mx-auto text-muted" />}
                             </td>
                          </tr>
                        ))}
@@ -97,7 +97,7 @@ export default function PlatformComparison() {
                       {stat.icon}
                    </div>
                    <p className="text-3xl font-display font-bold text-primary mb-1">{stat.value}</p>
-                   <p className="text-[10px] font-bold uppercase tracking-widest text-obsidian-700">{stat.label}</p>
+                   <p className="text-[10px] font-bold uppercase tracking-widest text-muted">{stat.label}</p>
                 </Card>
               ))}
            </div>

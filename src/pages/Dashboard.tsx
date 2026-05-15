@@ -39,7 +39,7 @@ function StatCard({
         </div>
         <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-muted/60">{label}</span>
       </div>
-      <p className="text-4xl font-bold tabular-nums text-primary tracking-tight leading-none mb-2">{value}</p>
+      <p className="text-4xl font-digits font-bold text-primary tracking-tight leading-none mb-2">{value}</p>
       {sub && <p className="text-[11px] text-secondary font-medium tracking-tight">{sub}</p>}
     </Card>
   );
@@ -90,7 +90,7 @@ export default function Dashboard() {
               <span className="gold-gradient italic">{user.name.split(' ')[0]}</span>
             </h1>
             <p className="text-secondary text-base mt-6 font-medium tracking-tight max-w-xl border-l-2 border-brand-primary/20 pl-4">
-              Your 100-year digital succession plan is active and monitored by 24/7 autonomous verification nodes.
+              Your institutional succession protocol is active, secured by a decentralized cryptographic heartbeat and sovereign nodes.
             </p>
           </div>
           
@@ -153,7 +153,7 @@ export default function Dashboard() {
                     <h3 className="text-2xl font-display font-bold text-primary tracking-tight">Succession Vault Infrastructure</h3>
                     <p className="text-sm text-secondary mt-2 font-medium">
                       Total Protected Assets:{' '}
-                      <span className="text-primary font-bold">${totalValue.toLocaleString()}</span>
+                      <span className="text-primary font-digits font-bold">${totalValue.toLocaleString()}</span>
                     </p>
                   </div>
                   <div className="flex gap-2 relative z-10">
@@ -210,7 +210,7 @@ export default function Dashboard() {
             <motion.div {...fadeUp(0.32)}>
               <Card variant="glass" className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary0">Asset Allocation</span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary">Asset Allocation</span>
                 </div>
                 <AssetDonutChart />
               </Card>

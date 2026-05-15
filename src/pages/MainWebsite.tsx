@@ -48,6 +48,7 @@ import InheritanceCalculator from './tools/InheritanceCalculator';
 // Legacy Feature Pages
 import DigitalWill from './features/DigitalWill';
 import SeedPhraseSecurity from './features/SeedPhraseSecurity';
+import Reports from './Reports';
 
 // Legal Pages
 import TermsOfService from './legal/TermsOfService';
@@ -121,6 +122,7 @@ function AppLayout() {
           <Route path="/features/digital-wills"           element={<DigitalWill />} />
           <Route path="/features/seed-phrase"             element={<SeedPhraseSecurity />} />
           <Route path="/features/inheritance-calculator"  element={<InheritanceCalculator />} />
+          <Route path="/reports"                          element={<Reports />} />
           
           <Route path="*"            element={<Navigate to="/" />} />
         </Routes>

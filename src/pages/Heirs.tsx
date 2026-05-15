@@ -84,7 +84,7 @@ export default function Heirs() {
                      <stat.icon size={26} className={stat.color} />
                   </div>
                   <div>
-                     <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary0 mb-1.5">{stat.label}</p>
+                     <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary mb-1.5">{stat.label}</p>
                      <p className="text-lg font-display font-bold text-primary">{stat.val}</p>
                   </div>
                </Card>
@@ -96,10 +96,10 @@ export default function Heirs() {
         <div className="space-y-8">
           <motion.div {...fadeUp(0.2)} className="flex items-center justify-between">
              <h3 className="text-xl font-display font-bold text-primary">Active Beneficiary Protocols</h3>
-             <div className="flex items-center gap-4 text-[9px] font-bold text-obsidian-600 uppercase tracking-widest">
-                <span className="flex items-center gap-1.5"><Shield size={12}/> Verified Identity</span>
-                <span className="w-1 h-1 rounded-full bg-surface/80" />
-                <span className="flex items-center gap-1.5"><Heart size={12}/> Primary Heir</span>
+             <div className="flex items-center gap-4 text-[9px] font-bold text-muted uppercase tracking-widest">
+                <span className="flex items-center gap-1.5"><Shield size={12} className="text-brand-primary" /> Verified Identity</span>
+                <span className="w-1 h-1 rounded-full bg-base" />
+                <span className="flex items-center gap-1.5"><Heart size={12} className="text-rose-500" /> Primary Heir</span>
              </div>
           </motion.div>
 
@@ -117,8 +117,8 @@ export default function Heirs() {
                         {heir.name.charAt(0)}
                       </div>
                       <div>
-                        <h3 className="text-2xl font-display font-bold text-primary tracking-tight group-hover:text-vault-50 transition-colors">{heir.name}</h3>
-                        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary0 mt-1.5">{heir.relation} · {heir.email}</p>
+                        <h3 className="text-2xl font-display font-bold text-primary tracking-tight group-hover:text-brand-primary transition-colors">{heir.name}</h3>
+                        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-secondary mt-1.5">{heir.relation} · {heir.email}</p>
                       </div>
                     </div>
                     <Badge variant={heir.status === 'In Recovery' ? 'warning' : 'default'} className="px-4 py-1 text-[10px] font-bold uppercase tracking-widest">
@@ -147,12 +147,12 @@ export default function Heirs() {
                     </div>
                   )}
                   
-                  <div className="mt-10 pt-8 border-t border-base/60 flex justify-between items-center opacity-40 group-hover:opacity-100 transition-opacity">
+                  <div className="mt-10 pt-8 border-t border-base flex justify-between items-center opacity-60 group-hover:opacity-100 transition-opacity">
                      <div className="flex gap-4">
-                        <GraduationCap size={18} className="text-obsidian-600" />
-                        <Gavel size={18} className="text-obsidian-600" />
+                        <GraduationCap size={18} className="text-muted" />
+                        <Gavel size={18} className="text-muted" />
                      </div>
-                     <button className="text-[10px] font-bold text-obsidian-600 uppercase tracking-widest flex items-center gap-2 hover:text-muted transition-colors">
+                     <button className="text-[10px] font-bold text-muted uppercase tracking-widest flex items-center gap-2 hover:text-primary transition-colors">
                         Protocol Logs <ChevronRight size={14}/>
                      </button>
                   </div>
@@ -174,9 +174,9 @@ export default function Heirs() {
           </div>
           
           <div className="flex flex-col space-y-3">
-            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary0 ml-1">Succession Mandate & Context</label>
+            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary ml-1">Succession Mandate & Context</label>
             <textarea 
-              className="w-full bg-page border border-base rounded-2xl px-6 py-5 text-obsidian-100 text-sm focus:outline-none focus:border-trust-500/50 transition-all placeholder:text-obsidian-800 leading-relaxed min-h-[140px]"
+              className="w-full bg-page border border-base rounded-2xl px-6 py-5 text-primary text-sm focus:outline-none focus:border-brand-primary/50 transition-all placeholder:text-muted leading-relaxed min-h-[140px]"
               rows={4}
               placeholder="Provide specific mandates or private context for this beneficiary's protocol..."
               {...register('notes')}

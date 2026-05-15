@@ -1,51 +1,42 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Canvas, useFrame } from '@react-three/fiber';
 import { usePassportStore, IdentityPassport } from '../store/usePassportStore';
 import { useStore } from '../store/useStore';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
-import { ShieldCheck, Share2, Download, Edit3, X, QrCode, Sparkles, Fingerprint, Globe, ShieldAlert } from 'lucide-react';
+import { Activity, ShieldCheck, Share2, Download, Edit3, X, QrCode, Sparkles, Fingerprint, Globe, ShieldAlert } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
-import { useRef, useMemo } from 'react';
-import * as THREE from 'three';
 import { toast } from 'react-hot-toast';
 
-// Minimal 3D Card
-function Passport3DCard({ isFlipped }: { isFlipped: boolean }) {
-  const meshRef = useRef<THREE.Mesh>(null);
-  
-  const holographicMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({
-    color: '#0a0a0c',
-    metalness: 0.9,
-    roughness: 0.1,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.1,
-    iridescence: 1.0,
-    iridescenceIOR: 1.3,
-    transmission: 0.1,
-  }), []);
-
-  useFrame((state) => {
-    if (meshRef.current) {
-      const targetRotation = isFlipped ? Math.PI : 0;
-      meshRef.current.rotation.y += (targetRotation - meshRef.current.rotation.y) * 0.1;
-      
-      // Suble tilt based on mouse
-      meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, (state.mouse.y * Math.PI) / 10, 0.1);
-    }
-  });
-  
+// CSS holographic flip card — replaces broken Three.js canvas
+function HolographicCard({ isFlipped }: { isFlipped: boolean }) {
   return (
-    <group>
-      <ambientLight intensity={0.5} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={2} />
-      <pointLight position={[-10, -10, -10]} intensity={1} color="#4F5CFF" />
-      
-      <mesh ref={meshRef} material={holographicMaterial}>
-        <boxGeometry args={[3.2, 2, 0.05]} />
-      </mesh>
-    </group>
+    <div style={{ perspective: '1200px' }} className="w-full h-48">
+      <div
+        style={{
+          transformStyle: 'preserve-3d',
+          transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+          transition: 'transform 0.7s cubic-bezier(0.16,1,0.3,1)',
+          position: 'relative', width: '100%', height: '100%'
+        }}
+      >
+        {/* Front */}
+        <div style={{ backfaceVisibility: 'hidden' }}
+          className="absolute inset-0 rounded-3xl bg-[#0a0a0c] border border-brand-primary/20 shadow-[0_0_60px_rgba(79,92,255,0.15)] overflow-hidden flex items-center justify-center"
+        >
+          <div className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,rgba(79,92,255,0.08),rgba(249,115,22,0.05),rgba(79,92,255,0.08))] animate-spin" style={{ animationDuration: '8s' }} />
+          <div className="absolute top-4 left-6 text-[9px] font-bold tracking-[0.3em] text-brand-primary/60 uppercase">Transfer Legacy · Sovereign Vault</div>
+          <Fingerprint size={64} className="text-brand-primary/10" />
+          <div className="absolute bottom-4 right-6 text-[9px] font-mono text-obsidian-700">TL-2025-INST-001</div>
+        </div>
+        {/* Back */}
+        <div style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+          className="absolute inset-0 rounded-3xl bg-gradient-to-br from-brand-primary/20 to-obsidian-900 border border-brand-primary/30 shadow-2xl flex items-center justify-center"
+        >
+          <ShieldCheck size={64} className="text-brand-primary/40" />
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -121,21 +112,16 @@ export default function IdentityPassportPage() {
           </p>
         </motion.header>
 
-        {/* ── 3D Visualization ── */}
-        <motion.div 
+        {/* ── Holographic Card (CSS 3D) ── */}
+        <motion.div
           {...fadeUp(0.1)}
-          className="h-64 w-full cursor-pointer relative group" 
+          className="w-full cursor-pointer"
           onMouseEnter={() => setIsFlipped(true)}
           onMouseLeave={() => setIsFlipped(false)}
           onClick={() => setIsFlipped(!isFlipped)}
         >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(79,92,255,0.05),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <Canvas camera={{ position: [0, 0, 4] }}>
-            <Passport3DCard isFlipped={isFlipped} />
-          </Canvas>
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-[9px] font-bold text-obsidian-600 tracking-[0.4em] uppercase mt-40">
-            Hover to rotate credential
-          </div>
+          <HolographicCard isFlipped={isFlipped} />
+          <p className="text-center text-[9px] font-bold text-obsidian-600 tracking-[0.4em] uppercase mt-3">Click to rotate credential</p>
         </motion.div>
 
         <div className="flex flex-col md:flex-row gap-12 justify-center items-start">
@@ -256,12 +242,9 @@ export default function IdentityPassportPage() {
                </button>
             </motion.div>
 
-            <motion.button 
+            <motion.button
               {...fadeUp(0.5)}
-              onClick={() => {
-                toast.success('Institutional Verification PDF Generated');
-                const _notification = new Notification("Protocol Transmitted", { body: "Your verification PDF is ready for download." });
-              }}
+              onClick={() => toast.success('Institutional Verification PDF Generated')}
               className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl border border-base text-primary0 hover:text-obsidian-200 hover:border-base transition-all text-[10px] font-bold uppercase tracking-[0.2em]"
             >
                <Download size={14}/> Generate Verification PDF

@@ -59,9 +59,9 @@ export default function AIInsightBanner() {
         link: "/heirs",
         linkText: "Assign Heir",
         icon: KeyRound,
-        color: "text-trust-500",
-        bgHover: "hover:border-trust-500/20",
-        glow: "bg-trust-500/10 group-hover:bg-trust-500/15"
+        color: "text-brand-success",
+        bgHover: "hover:border-brand-success/20",
+        glow: "bg-brand-success/10 group-hover:bg-brand-success/15"
       };
     }
 
@@ -82,20 +82,20 @@ export default function AIInsightBanner() {
   const Icon = insight.icon;
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl bg-surface/40 backdrop-blur-md border border-white/5 p-6 mt-6 mb-6 group transition-all ${insight.bgHover}`}>
+    <div className={`relative overflow-hidden rounded-2xl bg-surface/40 backdrop-blur-md border border-border-base p-6 mt-6 mb-6 group transition-all ${insight.bgHover}`}>
       {/* Premium Glows */}
       <div className={`absolute -top-12 -right-12 w-48 h-48 blur-[80px] rounded-full pointer-events-none transition-all duration-700 ${insight.glow}`} />
-      <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-white/5 blur-[80px] rounded-full pointer-events-none" />
+      <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-primary/5 blur-[80px] rounded-full pointer-events-none" />
       
       <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-start md:items-center gap-5">
-          <div className={`w-12 h-12 bg-surface border border-white/10 rounded-xl flex items-center justify-center ${insight.color} shadow-inner`}>
+          <div className={`w-12 h-12 bg-surface border border-border-base rounded-xl flex items-center justify-center ${insight.color} shadow-inner`}>
             <Icon size={24} strokeWidth={1.5} />
           </div>
           <div>
             <div className="flex items-center gap-2 mb-1.5">
               <h3 className="text-lg font-display font-bold text-primary tracking-tight">{insight.title}</h3>
-              <span className={`px-2 py-0.5 rounded-full bg-white/5 border border-white/10 ${insight.color} text-[10px] font-bold uppercase tracking-wider`}>
+              <span className={`px-2 py-0.5 rounded-full bg-surface border border-border-base ${insight.color} text-[10px] font-bold uppercase tracking-wider`}>
                 Insight
               </span>
             </div>
@@ -107,7 +107,7 @@ export default function AIInsightBanner() {
         
         <Link 
           to={insight.link} 
-          className="group/btn relative flex items-center gap-2 px-6 py-3 bg-white text-black hover:bg-white/90 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-white/10 hover:-translate-y-0.5 active:translate-y-0 shrink-0"
+          className="group/btn relative flex items-center gap-2 px-6 py-3 bg-brand-primary text-white hover:bg-brand-primary/90 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-brand-primary/20 hover:-translate-y-0.5 active:translate-y-0 shrink-0"
         >
           <span className="relative z-10">{insight.linkText}</span>
           <ArrowRight size={16} className="relative z-10 transition-transform group-hover/btn:translate-x-1" />

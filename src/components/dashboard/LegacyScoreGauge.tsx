@@ -35,7 +35,7 @@ export default function LegacyScoreGauge({ score }: { score: number }) {
         />
       </svg>
       <div className="absolute flex flex-col items-center">
-        <span className="text-3xl font-bold text-text">{score}</span>
+        <span className="text-3xl font-digits font-bold text-primary">{score}</span>
         <span className="text-[10px] text-muted uppercase tracking-wider">Score</span>
       </div>
     </div>

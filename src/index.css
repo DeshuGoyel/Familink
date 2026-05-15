@@ -59,26 +59,26 @@
 
   /* ── LIGHT MODE ── */
   .light {
-    --color-bg-base: #F5F5F5;
-    --color-bg-page: #EBEBEB;
-    --color-bg-surface: #FFFFFF;
-    --color-bg-raised: #E2E8F0;
-    --color-bg-hover: #F1F5F9;
+    --color-bg-base: #FDFDFD;
+    --color-bg-page: #F1F5F9; /* Institutional 8% Grey */
+    --color-bg-surface: #E2E8F0;
+    --color-bg-raised: #CBD5E1;
+    --color-bg-hover: #E2E8F0;
     --color-bg-input: #FFFFFF;
 
-    --color-text-primary: #020617;
-    --color-text-secondary: #334155;
-    --color-text-muted: #64748B;
+    --color-text-primary: #0F172A; /* Deep Navy */
+    --color-text-secondary: #475569; /* Slate 600 */
+    --color-text-muted: #64748B; /* Slate 500 */
     --color-text-disabled: #94A3B8;
-    --color-text-link: #2563EB;
+    --color-text-link: #F97316;
 
-    --color-border: rgba(15, 23, 42, 0.10);
-    --color-border-strong: rgba(15, 23, 42, 0.20);
-    --color-divider: rgba(15, 23, 42, 0.06);
+    --color-border: rgba(15, 23, 42, 0.08);
+    --color-border-strong: rgba(15, 23, 42, 0.15);
+    --color-divider: rgba(15, 23, 42, 0.04);
 
-    --color-brand-primary: #2563EB;
-    --color-brand-primary-hover: #1D4ED8;
-    --color-brand-primary-active: #1E40AF;
+    --color-brand-primary: #F97316;
+    --color-brand-primary-hover: #EA580C;
+    --color-brand-primary-active: #C2410C;
     --color-brand-gold: #D97706;
     --color-brand-success: #059669;
 
@@ -87,18 +87,18 @@
     --color-error: #DC2626;
     --color-info: #7C3AED;
 
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.10), 0 2px 4px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
-    --shadow-brand: 0 0 24px rgba(37, 99, 235, 0.20), 0 4px 12px rgba(37, 99, 235, 0.12);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    --shadow-brand: 0 10px 15px -3px rgba(249, 115, 22, 0.15);
 
     /* backward compat */
-    --bg-secondary: 241 245 249;
-    --bg-surface: 255 255 255;
-    --color-text: 2 6 23;
+    --bg-secondary: 253 253 253;
+    --bg-surface: 248 250 252;
+    --color-text: 15 23 42;
     --color-border-rgb: 15 23 42;
-    --color-muted: 100 116 139;
-    --color-primary: 37 99 235;
+    --color-muted: 71 85 105;
+    --color-primary: 249 115, 22;
     --color-accent: 217 119 6;
     --color-danger: 220 38 38;
   }
@@ -109,6 +109,7 @@
 
   body {
     font-family: 'Inter', 'SF Pro Text', system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
     background-color: var(--color-bg-page);
     color: var(--color-text-primary);
     -webkit-font-smoothing: antialiased;

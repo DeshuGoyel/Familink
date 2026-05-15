@@ -90,10 +90,10 @@ export default function Guardians() {
           </Canvas>
           <div className="absolute top-8 left-8 flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-page/80 border border-base backdrop-blur-xl shadow-2xl">
             <div className="w-2 h-2 rounded-full bg-brand-gold animate-pulse" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian-100">Live Trust Graph Synthesis</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Live Trust Graph Synthesis</span>
           </div>
           <div className="absolute bottom-8 right-8 text-right">
-             <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-obsidian-600 mb-1">Decentralized Recovery Active</p>
+             <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-muted mb-1">Decentralized Recovery Active</p>
              <div className="flex gap-1 justify-end">
                 {[1,2,3,4,5].map(i => <div key={i} className="w-1 h-4 bg-brand-gold/20 rounded-full" />)}
              </div>
@@ -113,7 +113,7 @@ export default function Guardians() {
                 </div>
                 <div>
                    <h4 className="text-[11px] font-bold text-brand-gold uppercase tracking-[0.2em] mb-2">Quorum Threshold Required</h4>
-                   <p className="text-sm text-obsidian-200 font-medium leading-relaxed max-w-sm">
+                   <p className="text-sm text-secondary font-medium leading-relaxed max-w-sm">
                      Institutional recovery via Shamir's Secret Sharing requires a minimum of 3 verified nodes. Secure {3 - confirmed} more guardians to finalize protocol.
                    </p>
                 </div>
@@ -128,7 +128,7 @@ export default function Guardians() {
                 </div>
                 <div>
                    <h4 className="text-[11px] font-bold text-trust-500 uppercase tracking-[0.2em] mb-2">Decentralized Protection Active</h4>
-                   <p className="text-sm text-obsidian-200 font-medium leading-relaxed max-w-sm">
+                   <p className="text-sm text-secondary font-medium leading-relaxed max-w-sm">
                      Trust threshold satisfied. Your institutional vault keys are now cryptographically fragmented across your verified network.
                    </p>
                 </div>
@@ -144,7 +144,7 @@ export default function Guardians() {
                   </div>
                   <div>
                      <h4 className="text-[11px] font-bold text-brand-primary uppercase tracking-[0.2em] mb-2">Network Expansion</h4>
-                     <p className="text-sm text-obsidian-200 font-medium max-w-xs">Delegate institutional guardianship to trusted peers and professional fiduciaries.</p>
+                     <p className="text-sm text-secondary font-medium max-w-xs">Delegate institutional guardianship to trusted peers and professional fiduciaries.</p>
                   </div>
                </div>
                <div className="p-3 bg-page rounded-xl border border-base group-hover:border-brand-primary/30 transition-all">
@@ -158,7 +158,7 @@ export default function Guardians() {
         <div className="space-y-6 mt-4">
           <motion.div {...fadeUp(0.3)} className="flex items-center justify-between mb-2">
              <h3 className="text-xl font-display font-bold text-primary">Verified Network Nodes</h3>
-             <p className="text-[10px] font-bold text-obsidian-600 uppercase tracking-widest">Protocol Version 1.0.4</p>
+             <p className="text-[10px] font-bold text-muted uppercase tracking-widest">Protocol Version 1.0.4</p>
           </motion.div>
           
           <div className="grid grid-cols-1 gap-6">
@@ -171,7 +171,7 @@ export default function Guardians() {
                     <div className={`w-16 h-16 rounded-[24px] flex items-center justify-center font-display font-bold text-2xl transition-all border shadow-inner
                       ${g.status === 'Confirmed' 
                         ? 'bg-brand-primary/10 text-brand-primary border-brand-primary/30' 
-                        : 'bg-page text-obsidian-700 border-base'}
+                        : 'bg-page text-muted border-base'}
                     `}>
                       {g.name.charAt(0)}
                     </div>
@@ -209,7 +209,7 @@ export default function Guardians() {
                       )}
                       <button 
                         onClick={() => { removeGuardian(g.id); toast.success('Node removed from network'); }}
-                        className="p-3 text-obsidian-700 hover:text-red-500 transition bg-page hover:bg-surface/80 rounded-xl border border-base shadow-inner"
+                        className="p-3 text-muted hover:text-red-500 transition bg-page hover:bg-surface/80 rounded-xl border border-base shadow-inner"
                         title="Purge Node"
                       >
                         <Trash2 size={18} />
@@ -242,7 +242,7 @@ export default function Guardians() {
                   className={`px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all border ${
                     template === t 
                     ? 'bg-brand-primary/10 text-brand-primary border-brand-primary/40 shadow-xl' 
-                    : 'bg-page text-obsidian-600 border-base hover:border-base'
+                    : 'bg-page text-muted border-base hover:border-base'
                   }`}
                 >
                   {t}
@@ -251,17 +251,17 @@ export default function Guardians() {
             </div>
             <textarea
               {...register('message')}
-              className="w-full mt-2 bg-page border border-base rounded-2xl px-5 py-4 text-obsidian-100 text-sm focus:outline-none focus:border-brand-primary/50 transition-all placeholder:text-obsidian-800 leading-relaxed min-h-[120px]"
+              className="w-full mt-2 bg-page border border-base rounded-2xl px-5 py-4 text-primary text-sm focus:outline-none focus:border-brand-primary/50 transition-all placeholder:text-muted leading-relaxed min-h-[120px]"
               rows={4}
               placeholder="Custom protocol instructions..."
             />
           </div>
 
           <div className="pt-8 border-t border-base">
-             <h4 className="text-[10px] font-bold text-obsidian-600 uppercase tracking-[0.3em] flex items-center gap-3 mb-6">
+             <h4 className="text-[10px] font-bold text-muted uppercase tracking-[0.3em] flex items-center gap-3 mb-6">
                 <Lock size={14}/> Handshake Architecture Preview
              </h4>
-             <div className="bg-page text-obsidian-200 p-8 rounded-[32px] border border-base shadow-2xl relative overflow-hidden">
+             <div className="bg-page text-secondary p-8 rounded-[32px] border border-base shadow-2xl relative overflow-hidden">
                  <div className="absolute top-0 right-0 w-48 h-48 bg-brand-primary/5 blur-[80px] pointer-events-none" />
                  <div className="border-b border-base/60 pb-6 mb-6 flex items-center gap-4">
                      <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary border border-brand-primary/20 shadow-inner">
@@ -277,7 +277,7 @@ export default function Guardians() {
                  <div className="w-full h-14 bg-brand-primary rounded-2xl flex items-center justify-center font-bold text-[11px] uppercase tracking-[0.2em] text-white shadow-xl shadow-brand-primary/20 cursor-not-allowed">
                     Finalize Handshake
                  </div>
-                 <p className="text-[9px] text-obsidian-700 text-center uppercase tracking-[0.4em] mt-8">Institutional Protocol Architecture · v1.0.4</p>
+                 <p className="text-[9px] text-muted text-center uppercase tracking-[0.4em] mt-8">Institutional Protocol Architecture · v1.0.4</p>
              </div>
           </div>
           

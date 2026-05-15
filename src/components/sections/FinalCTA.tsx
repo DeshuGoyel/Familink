@@ -44,7 +44,7 @@ export default function FinalCTA() {
 
           {/* Headline */}
           <h2 className="text-5xl md:text-5xl lg:text-5xl font-bold text-white mb-6 leading-[1.04] tracking-tight">
-            The 100-year plan for your{' '}
+            The definitive protocol for your{' '}
             <span
               className="inline"
               style={{
@@ -54,7 +54,7 @@ export default function FinalCTA() {
                 backgroundClip: 'text',
               }}
             >
-              digital world.
+              digital legacy.
             </span>
           </h2>
 

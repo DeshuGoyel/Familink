@@ -49,8 +49,8 @@ export default function Settings() {
         {/* ── Page Header ── */}
         <motion.header {...fadeUp(0)} className="flex flex-col space-y-4">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-obsidian-700 shadow-[0_0_10px_rgba(255,255,255,0.1)]" />
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary0">
+            <span className="w-2 h-2 rounded-full bg-base shadow-[0_0_10px_rgba(255,255,255,0.1)]" />
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary">
               System Configuration & Preferences
             </p>
           </div>
@@ -74,14 +74,14 @@ export default function Settings() {
                   ? tab.name === 'Danger Zone' 
                     ? 'bg-red-500/10 text-red-500 border border-red-500/30 shadow-2xl shadow-red-500/5' 
                     : 'bg-brand-primary/10 text-brand-primary border border-brand-primary/30 shadow-2xl shadow-brand-primary/5'
-                  : 'text-obsidian-600 hover:bg-surface/60 hover:text-obsidian-200 border border-transparent'
+                  : 'text-secondary hover:bg-surface/60 hover:text-primary border border-transparent'
                 }`}
               >
                 <div className="flex items-center gap-5 relative z-10">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 ${
                     activeTab === tab.name 
                       ? tab.name === 'Danger Zone' ? 'bg-red-500 text-white' : 'bg-brand-primary text-white' 
-                      : 'bg-page border border-base text-obsidian-600 group-hover:border-base'
+                      : 'bg-page border border-base text-secondary group-hover:border-base'
                   }`}>
                     <tab.icon size={18} />
                   </div>
@@ -111,7 +111,7 @@ export default function Settings() {
                      <div className="h-full w-[94%] bg-trust-500 rounded-full" />
                   </div>
                </div>
-               <button className="text-[10px] font-bold text-obsidian-600 uppercase tracking-widest flex items-center gap-2 hover:text-brand-primary transition-colors">
+               <button className="text-[10px] font-bold text-secondary uppercase tracking-widest flex items-center gap-2 hover:text-brand-primary transition-colors">
                   Run Security Audit <ChevronRight size={14}/>
                </button>
             </div>
@@ -120,7 +120,7 @@ export default function Settings() {
           {/* ── Content Area ── */}
           <motion.div {...fadeUp(0.2)} className="flex-1">
             <Card className="p-10 lg:p-16 bg-surface/40 border border-base/60 rounded-[40px] min-h-[750px] relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-obsidian-700/20 to-transparent" />
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-base/20 to-transparent" />
               
               <AnimatePresence mode="wait">
                 {activeTab === 'Profile' && (
@@ -134,7 +134,7 @@ export default function Settings() {
                   >
                     <div className="space-y-4">
                       <h2 className="text-3xl font-display font-bold text-primary tracking-tight">Identity Profile</h2>
-                      <p className="text-sm text-primary0 font-medium italic">Your primary institutional identity recognized across all succession protocols.</p>
+                      <p className="text-sm text-secondary font-medium italic">Your primary institutional identity recognized across all succession protocols.</p>
                     </div>
                     
                     <div className="flex flex-col sm:flex-row items-center gap-10">
@@ -143,15 +143,15 @@ export default function Settings() {
                            <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                            <span className="relative z-10">{user.name.charAt(0)}</span>
                         </div>
-                        <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-2xl bg-brand-primary text-obsidian-950 flex items-center justify-center border-4 border-obsidian-900 shadow-xl cursor-pointer hover:scale-110 transition-transform">
+                        <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-2xl bg-brand-primary text-page flex items-center justify-center border-4 border-base shadow-xl cursor-pointer hover:scale-110 transition-transform">
                            <Activity size={18} />
                         </div>
                       </div>
                       <div className="space-y-4 text-center sm:text-left">
-                         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian-600">Avatar Allocation</p>
+                         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary">Avatar Allocation</p>
                          <div className="flex gap-4">
                            <Button variant="secondary" type="button" className="h-11 px-8 text-[10px] font-bold uppercase tracking-widest border-base">Update Matrix</Button>
-                           <Button variant="ghost" type="button" className="text-[10px] font-bold uppercase tracking-widest text-obsidian-600 hover:text-muted">Purge Image</Button>
+                           <Button variant="ghost" type="button" className="text-[10px] font-bold uppercase tracking-widest text-secondary hover:text-muted">Purge Image</Button>
                          </div>
                       </div>
                     </div>
@@ -179,11 +179,11 @@ export default function Settings() {
                   >
                     <div className="space-y-4">
                       <h2 className="text-3xl font-display font-bold text-primary tracking-tight">Access Infrastructure</h2>
-                      <p className="text-sm text-primary0 font-medium italic">Cryptographic authentication layers and hardware authorization protocols.</p>
+                      <p className="text-sm text-secondary font-medium italic">Cryptographic authentication layers and hardware authorization protocols.</p>
                     </div>
                     
                     <div className="space-y-8">
-                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-obsidian-600 flex items-center gap-3">
+                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary flex items-center gap-3">
                          <Shield size={14} className="text-brand-primary"/> Multi-Factor Authentication
                       </h3>
                       <div className="p-8 bg-page/60 rounded-[32px] border border-base group hover:border-brand-primary/20 transition-all flex flex-col md:flex-row items-center justify-between gap-8">
@@ -193,7 +193,7 @@ export default function Settings() {
                           </div>
                           <div>
                             <p className="text-xl font-display font-bold text-primary tracking-tight">Authenticator Synthesis</p>
-                            <p className="text-xs text-primary0 font-medium mt-1 leading-relaxed">Hardware-grade verification required for all vault decrypts.</p>
+                            <p className="text-xs text-secondary font-medium mt-1 leading-relaxed">Hardware-grade verification required for all vault decrypts.</p>
                           </div>
                         </div>
                         <Button variant="secondary" className="h-12 px-8 text-[10px] font-bold uppercase tracking-widest border-brand-primary/30 text-brand-primary hover:bg-brand-primary/10">Enable MFA Handshake</Button>
@@ -201,7 +201,7 @@ export default function Settings() {
                     </div>
 
                     <div className="space-y-8 pt-4">
-                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-obsidian-600 flex items-center gap-3">
+                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary flex items-center gap-3">
                          <Globe size={14} className="text-brand-primary"/> Active Protocol Handshakes
                       </h3>
                       <div className="space-y-4">
@@ -211,15 +211,15 @@ export default function Settings() {
                         ].map((s, i) => (
                           <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-page/40 rounded-[24px] border border-base/60 gap-6 group hover:bg-page/60 transition-all">
                             <div className="flex items-center gap-6">
-                               <div className="w-12 h-12 rounded-xl bg-surface border border-base flex items-center justify-center text-obsidian-600 group-hover:text-brand-primary transition-colors shadow-inner">
+                               <div className="w-12 h-12 rounded-xl bg-surface border border-base flex items-center justify-center text-secondary group-hover:text-brand-primary transition-colors shadow-inner">
                                   <HardDrive size={20} />
                                </div>
                                <div>
-                                <p className="font-display font-bold text-obsidian-100 text-lg flex items-center gap-4 tracking-tight">
+                                <p className="font-display font-bold text-primary text-lg flex items-center gap-4 tracking-tight">
                                   {s.device} 
                                   {s.current && <span className="text-[9px] font-bold uppercase tracking-[0.2em] bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-3 py-1 rounded-full">Primary Node</span>}
                                 </p>
-                                <p className="text-[10px] font-bold text-obsidian-600 mt-1 uppercase tracking-widest">{s.location} · Active now</p>
+                                <p className="text-[10px] font-bold text-secondary mt-1 uppercase tracking-widest">{s.location} · Active now</p>
                               </div>
                             </div>
                             {!s.current && <button className="text-[10px] font-bold text-red-500 hover:text-red-400 uppercase tracking-widest px-4 py-2 bg-red-500/10 rounded-xl border border-red-500/20">Revoke Token</button>}
@@ -240,11 +240,11 @@ export default function Settings() {
                   >
                     <div className="space-y-4">
                       <h2 className="text-3xl font-display font-bold text-primary tracking-tight">Verification Protocols</h2>
-                      <p className="text-sm text-primary0 font-medium italic">Logical parameters for automated succession and vault release.</p>
+                      <p className="text-sm text-secondary font-medium italic">Logical parameters for automated succession and vault release.</p>
                     </div>
                      
                     <div className="space-y-8">
-                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-obsidian-600 flex items-center gap-3">
+                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary flex items-center gap-3">
                          <Activity size={14} className="text-brand-primary"/> Pulse Frequency
                       </h3>
                       <div className="p-10 bg-page/60 rounded-[40px] border border-base space-y-8 relative overflow-hidden">
@@ -254,18 +254,18 @@ export default function Settings() {
                         <p className="text-sm text-muted font-medium leading-relaxed italic max-w-lg">The system initiates a recovery sequence if an institutional handshake is not detected within the following duration:</p>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                            {['7 Days', '14 Days', '30 Days', '90 Days'].map((d, i) => (
-                             <button key={d} className={`p-6 rounded-2xl border flex flex-col items-center gap-3 transition-all ${i === 2 ? 'bg-brand-primary/10 border-brand-primary text-primary shadow-xl' : 'bg-surface border-base text-obsidian-600 hover:border-base'}`}>
+                             <button key={d} className={`p-6 rounded-2xl border flex flex-col items-center gap-3 transition-all ${i === 2 ? 'bg-brand-primary/10 border-brand-primary text-primary shadow-xl' : 'bg-surface border-base text-secondary hover:border-base'}`}>
                                 <span className="text-xl font-display font-bold">{d.split(' ')[0]}</span>
                                 <span className="text-[9px] font-bold uppercase tracking-widest opacity-60">Days</span>
                              </button>
                            ))}
                         </div>
-                        <p className="text-[10px] font-bold text-obsidian-600 uppercase tracking-widest text-center mt-6">Recommended: 30-Day Protocol Cycle</p>
+                        <p className="text-[10px] font-bold text-secondary uppercase tracking-widest text-center mt-6">Recommended: 30-Day Protocol Cycle</p>
                       </div>
                     </div>
 
                     <div className="space-y-8 pt-4">
-                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-obsidian-600 flex items-center gap-3">
+                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary flex items-center gap-3">
                          <ShieldAlert size={14} className="text-brand-primary"/> Override Authority
                       </h3>
                       <div className="p-12 bg-page/40 rounded-[40px] border border-dashed border-base text-center space-y-8 group hover:border-brand-primary/20 transition-all relative">
@@ -274,7 +274,7 @@ export default function Settings() {
                           </div>
                           <div className="space-y-3">
                             <p className="text-2xl font-display font-bold text-primary tracking-tight">Legal Mandate Override</p>
-                            <p className="text-sm text-primary0 max-w-md mx-auto font-medium italic leading-relaxed">Submit verified legal documentation to bypass wait periods. Our institutional compliance engine audits submissions in real-time.</p>
+                            <p className="text-sm text-secondary max-w-md mx-auto font-medium italic leading-relaxed">Submit verified legal documentation to bypass wait periods. Our institutional compliance engine audits submissions in real-time.</p>
                           </div>
                           <Button variant="secondary" className="h-14 px-12 text-[10px] font-bold uppercase tracking-widest border-brand-primary/30 text-brand-primary hover:bg-brand-primary/10 shadow-2xl">Submit Archival PDF</Button>
                       </div>
@@ -292,11 +292,11 @@ export default function Settings() {
                   >
                     <div className="space-y-4">
                       <h2 className="text-3xl font-display font-bold text-primary tracking-tight">Visual Foundation</h2>
-                      <p className="text-sm text-primary0 font-medium italic">Customize the aesthetic presentation of your legacy protocols.</p>
+                      <p className="text-sm text-secondary font-medium italic">Customize the aesthetic presentation of your legacy protocols.</p>
                     </div>
                     
                     <div className="space-y-8">
-                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-obsidian-600">Interface Basis</h3>
+                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary">Interface Basis</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <button onClick={() => setTheme('dark')} className={`group flex flex-col items-center gap-6 p-10 rounded-[32px] border-2 transition-all duration-700 relative overflow-hidden ${theme === 'dark' ? 'bg-brand-primary/5 border-brand-primary shadow-2xl shadow-brand-primary/10' : 'bg-page border-base hover:border-base'}`}>
                           {theme === 'dark' && <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-brand-primary shadow-[0_0_10px_rgba(79,92,255,0.8)]" />}
@@ -308,16 +308,16 @@ export default function Settings() {
                         <button onClick={() => setTheme('light')} className={`group flex flex-col items-center gap-6 p-10 rounded-[32px] border-2 transition-all duration-700 relative overflow-hidden ${theme === 'light' ? 'bg-brand-primary/5 border-brand-primary shadow-2xl shadow-brand-primary/10' : 'bg-page border-base hover:border-base'}`}>
                           {theme === 'light' && <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-brand-primary shadow-[0_0_10px_rgba(79,92,255,0.8)]" />}
                           <div className="w-full aspect-video bg-white rounded-2xl border border-gray-200 shadow-2xl" />
-                          <span className="text-lg font-display font-bold text-obsidian-900">Institutional Light</span>
+                          <span className="text-lg font-display font-bold text-primary">Institutional Light</span>
                         </button>
                       </div>
                     </div>
 
                     <div className="space-y-8 pt-4">
-                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-obsidian-600">Protocol Accent</h3>
+                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary">Protocol Accent</h3>
                       <div className="flex gap-8">
                         {['#4F5CFF', '#D4AF37', '#06B6D4', '#10B981'].map((c, i) => (
-                          <button key={c} className={`w-16 h-16 rounded-[20px] transition-all duration-500 border-4 border-obsidian-950 shadow-2xl ${i === 0 ? 'scale-110 ring-4 ring-brand-primary/20 ring-offset-8 ring-offset-obsidian-900' : 'opacity-40 hover:opacity-100 hover:scale-105'}`} style={{ backgroundColor: c }} />
+                          <button key={c} className={`w-16 h-16 rounded-[20px] transition-all duration-500 border-4 border-base shadow-2xl ${i === 0 ? 'scale-110 ring-4 ring-brand-primary/20 ring-offset-8 ring-offset-base' : 'opacity-40 hover:opacity-100 hover:scale-105'}`} style={{ backgroundColor: c }} />
                         ))}
                       </div>
                     </div>
@@ -348,7 +348,7 @@ export default function Settings() {
                       <div className="space-y-8 relative z-10">
                         <div className="space-y-4">
                           <label className="text-[10px] font-bold text-red-500/60 uppercase tracking-[0.2em] ml-1">Authorize Termination Sequence</label>
-                          <p className="text-xs text-primary0 font-medium italic">Input <span className="font-mono text-red-500 font-bold bg-red-500/10 px-3 py-1 rounded-lg">DELETE</span> to unlock authorization button.</p>
+                          <p className="text-xs text-secondary font-medium italic">Input <span className="font-mono text-red-500 font-bold bg-red-500/10 px-3 py-1 rounded-lg">DELETE</span> to unlock authorization button.</p>
                           <Input 
                             value={deleteConfirm}
                             onChange={(e) => setDeleteConfirm(e.target.value)}

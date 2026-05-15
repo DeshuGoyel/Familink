@@ -41,7 +41,7 @@ export default function ROICalculator() {
                  <div className="space-y-10">
                     <div className="space-y-4">
                        <div className="flex justify-between items-center">
-                          <label className="text-sm font-bold uppercase tracking-widest text-primary0">Total Digital Asset Value (USD)</label>
+                          <label className="text-sm font-bold uppercase tracking-widest text-secondary">Total Digital Asset Value (USD)</label>
                           <span className="text-2xl font-display font-bold text-brand-primary">${assetValue.toLocaleString()}</span>
                        </div>
                        <input 
@@ -53,18 +53,18 @@ export default function ROICalculator() {
                          onChange={(e) => setAssetValue(parseInt(e.target.value))}
                          className="w-full h-2 bg-page rounded-full appearance-none cursor-pointer accent-brand-primary border border-base"
                        />
-                       <div className="flex justify-between text-[10px] font-bold text-obsidian-700 uppercase">
+                       <div className="flex justify-between text-[10px] font-bold text-muted uppercase">
                           <span>$10k</span>
                           <span>$10M</span>
                        </div>
                     </div>
 
                     <div className="space-y-6 pt-10 border-t border-base">
-                       <div className="flex items-center gap-4 text-obsidian-700">
+                       <div className="flex items-center gap-4 text-muted">
                           <Clock size={18} />
-                          <p className="text-sm font-medium">Estimated recovery time without protocol: <span className="text-primary0 font-bold">18-24 months</span></p>
+                          <p className="text-sm font-medium">Estimated recovery time without protocol: <span className="text-secondary font-bold">18-24 months</span></p>
                        </div>
-                       <div className="flex items-center gap-4 text-obsidian-700">
+                       <div className="flex items-center gap-4 text-muted">
                           <ShieldCheck size={18} />
                           <p className="text-sm font-medium">Estimated recovery time with protocol: <span className="text-brand-primary font-bold">90 days</span></p>
                        </div>

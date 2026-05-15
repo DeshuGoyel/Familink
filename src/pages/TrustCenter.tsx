@@ -176,7 +176,7 @@ export default function TrustCenter() {
                <div className="absolute inset-0 bg-brand-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                <p className="text-xs font-bold text-brand-primary uppercase tracking-widest mb-4 relative z-10">Deep Tech Verification</p>
                <p className="text-sm text-secondary font-medium mb-8 px-4 leading-relaxed relative z-10">Review our comprehensive security architecture whitepaper.</p>
-               <button className="w-full py-4 bg-brand-primary text-obsidian-950 font-bold rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all relative z-10 shadow-lg shadow-brand-primary/20 flex items-center justify-center gap-2">
+               <button className="w-full py-4 bg-brand-primary text-page font-bold rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all relative z-10 shadow-lg shadow-brand-primary/20 flex items-center justify-center gap-2">
                  Read Security Spec
                  <Zap size={14} />
                </button>

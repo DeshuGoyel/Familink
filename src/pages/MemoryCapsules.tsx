@@ -98,7 +98,7 @@ export default function MemoryCapsules() {
           <Canvas camera={{ position: [0, 0, 5] }}>
             <FloatingCapsules capsules={capsules} />
           </Canvas>
-          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-obsidian-950 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-page to-transparent pointer-events-none" />
           <div className="absolute top-6 left-6 flex items-center gap-2">
             <span className="flex h-2 w-2 rounded-full bg-brand-primary animate-pulse" />
             <span className="text-[10px] font-bold text-muted uppercase tracking-widest">Live Vault Visualization</span>
@@ -136,7 +136,7 @@ export default function MemoryCapsules() {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-primary tracking-tight">{capsule.title}</h3>
-                    <p className="text-xs text-primary0 font-medium flex items-center gap-1.5 mt-1">
+                    <p className="text-xs text-secondary font-medium flex items-center gap-1.5 mt-1">
                       Recipient: <span className="text-secondary">{heir?.name || 'Institutional Collective'}</span>
                     </p>
                   </div>
@@ -144,16 +144,16 @@ export default function MemoryCapsules() {
 
                 {asset && (
                   <div className="mb-6 bg-page/50 p-3.5 rounded-xl border border-base/50 flex flex-col gap-1">
-                    <span className="text-[10px] font-bold text-primary0 uppercase tracking-widest">Protocol Anchor:</span>
-                    <span className="text-xs font-bold text-obsidian-200 truncate">{asset.name}</span>
+                    <span className="text-[10px] font-bold text-secondary uppercase tracking-widest">Protocol Anchor:</span>
+                    <span className="text-xs font-bold text-primary truncate">{asset.name}</span>
                   </div>
                 )}
 
                 <div className="mb-8">
-                  <p className="text-[10px] font-bold text-primary0 uppercase tracking-widest mb-1.5">Unlocking Mandate:</p>
+                  <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1.5">Unlocking Mandate:</p>
                   <div className="flex items-center gap-2">
                     <Clock size={14} className="text-muted" />
-                    <span className="text-sm font-bold text-obsidian-200">
+                    <span className="text-sm font-bold text-primary">
                       {capsule.unlockCondition === 'on_recovery' ? 'Verification Success' : capsule.unlockDate}
                     </span>
                   </div>
@@ -166,7 +166,7 @@ export default function MemoryCapsules() {
                         <Lock size={16} className="text-brand-gold/50 mb-2" />
                         <span className="text-[10px] text-brand-gold font-bold tracking-[0.2em] uppercase">Sealed Archive</span>
                       </div>
-                      <p className="text-obsidian-600 opacity-20 blur-[3px] select-none text-xs leading-relaxed">
+                      <p className="text-secondary opacity-20 blur-[3px] select-none text-xs leading-relaxed">
                         {capsule.content.substring(0, 150)}...
                       </p>
                     </>
@@ -193,10 +193,10 @@ export default function MemoryCapsules() {
         {capsules.length === 0 && (
           <motion.div {...fadeUp(0.2)} className="text-center py-20 px-4 border border-dashed border-base rounded-3xl bg-surface/20">
             <div className="w-20 h-20 rounded-full bg-surface border border-base flex items-center justify-center mx-auto mb-6">
-              <Archive size={32} className="text-obsidian-600" />
+              <Archive size={32} className="text-secondary" />
             </div>
-            <h3 className="text-2xl font-display font-bold text-obsidian-100 mb-2">No Archives Detected</h3>
-            <p className="text-primary0 max-w-sm mx-auto mb-8 font-medium italic">Your legacy vault is currently empty. Initiate your first preservation protocol.</p>
+            <h3 className="text-2xl font-display font-bold text-primary mb-2">No Archives Detected</h3>
+            <p className="text-secondary max-w-sm mx-auto mb-8 font-medium italic">Your legacy vault is currently empty. Initiate your first preservation protocol.</p>
             <Button variant="primary" onClick={() => setIsModalOpen(true)} className="h-12 px-8">
               Initialize Capsule
             </Button>
@@ -220,9 +220,9 @@ export default function MemoryCapsules() {
                   <h2 className="text-xl font-display font-bold text-primary flex items-center gap-2">
                     <Archive size={22} className="text-brand-primary"/> Legacy Archive Initiation
                   </h2>
-                  <p className="text-[10px] font-bold text-primary0 uppercase tracking-widest mt-1">Step {step} of 5 Protocol Verification</p>
+                  <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mt-1">Step {step} of 5 Protocol Verification</p>
                 </div>
-                <button onClick={() => setIsModalOpen(false)} className="text-primary0 hover:text-primary transition-colors p-2 bg-surface/80/50 rounded-xl"><X size={20}/></button>
+                <button onClick={() => setIsModalOpen(false)} className="text-secondary hover:text-primary transition-colors p-2 bg-surface/50 rounded-xl"><X size={20}/></button>
               </div>
 
               <div className="flex-1 overflow-y-auto p-8 space-y-10">
@@ -233,8 +233,8 @@ export default function MemoryCapsules() {
                   {[1, 2, 3, 4, 5].map((s) => (
                     <div key={s} className="flex flex-col items-center gap-2">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-500 border-2 ${
-                        step === s ? 'bg-brand-primary border-brand-primary text-obsidian-950 shadow-[0_0_20px_rgba(79,92,255,0.4)]' : 
-                        step > s ? 'bg-brand-primary/20 border-brand-primary text-brand-primary' : 'bg-page border-base text-obsidian-600'
+                        step === s ? 'bg-brand-primary border-brand-primary text-page shadow-[0_0_20px_rgba(79,92,255,0.4)]' : 
+                        step > s ? 'bg-brand-primary/20 border-brand-primary text-brand-primary' : 'bg-page border-base text-secondary'
                       }`}>
                         {step > s ? <CheckCircle2 size={16} /> : s}
                       </div>
@@ -262,7 +262,7 @@ export default function MemoryCapsules() {
                               newCapsule.type === type.id ? 'bg-brand-primary/10 border-brand-primary text-brand-primary' : 'bg-page border-base hover:border-base text-primary0 hover:text-secondary'
                             }`}
                           >
-                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${newCapsule.type === type.id ? 'bg-brand-primary text-obsidian-950' : 'bg-surface/80 text-muted border border-base'}`}>
+                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${newCapsule.type === type.id ? 'bg-brand-primary text-page' : 'bg-surface/80 text-muted border border-base'}`}>
                               {type.icon}
                             </div>
                             <div className="text-center">
@@ -288,15 +288,15 @@ export default function MemoryCapsules() {
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-primary0 uppercase tracking-[0.2em] ml-1">Recipient Heir</label>
-                            <select className="w-full bg-page border border-base rounded-xl px-4 py-4 text-obsidian-100 outline-none focus:border-brand-primary/40 font-medium" value={newCapsule.recipientHeirId || 'all'} onChange={(e) => setNewCapsule({...newCapsule, recipientHeirId: e.target.value})}>
+                            <label className="text-[10px] font-bold text-secondary uppercase tracking-[0.2em] ml-1">Recipient Heir</label>
+                            <select className="w-full bg-page border border-base rounded-xl px-4 py-4 text-primary outline-none focus:border-brand-primary/40 font-medium" value={newCapsule.recipientHeirId || 'all'} onChange={(e) => setNewCapsule({...newCapsule, recipientHeirId: e.target.value})}>
                               <option value="all">Institutional Collective</option>
                               {heirs.map(h => <option key={h.id} value={h.id}>{h.name}</option>)}
                             </select>
                           </div>
                           <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-primary0 uppercase tracking-[0.2em] ml-1">Anchor Asset</label>
-                            <select className="w-full bg-page border border-base rounded-xl px-4 py-4 text-obsidian-100 outline-none focus:border-brand-primary/40 font-medium" value={newCapsule.assetId || ''} onChange={(e) => setNewCapsule({...newCapsule, assetId: e.target.value})}>
+                            <label className="text-[10px] font-bold text-secondary uppercase tracking-[0.2em] ml-1">Anchor Asset</label>
+                            <select className="w-full bg-page border border-base rounded-xl px-4 py-4 text-primary outline-none focus:border-brand-primary/40 font-medium" value={newCapsule.assetId || ''} onChange={(e) => setNewCapsule({...newCapsule, assetId: e.target.value})}>
                               <option value="">No Anchor Required</option>
                               {assets.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
                             </select>
@@ -323,12 +323,12 @@ export default function MemoryCapsules() {
                       
                       <div className="relative group">
                         <textarea 
-                          className="w-full min-h-[280px] bg-page border border-base rounded-2xl p-6 text-obsidian-200 placeholder:text-obsidian-800 resize-none focus:outline-none focus:border-brand-primary/40 transition-all leading-relaxed font-medium"
+                          className="w-full min-h-[280px] bg-page border border-base rounded-2xl p-6 text-primary placeholder:text-muted resize-none focus:outline-none focus:border-brand-primary/40 transition-all leading-relaxed font-medium"
                           placeholder="Commence archival documentation..."
                           value={newCapsule.content || ''}
                           onChange={(e) => setNewCapsule({...newCapsule, content: e.target.value})}
                         />
-                        <div className="absolute bottom-4 right-4 text-[10px] font-bold text-obsidian-700 uppercase tracking-widest pointer-events-none">
+                        <div className="absolute bottom-4 right-4 text-[10px] font-bold text-muted uppercase tracking-widest pointer-events-none">
                           Secured Encryption Active
                         </div>
                       </div>
@@ -360,7 +360,7 @@ export default function MemoryCapsules() {
                           </button>
                           {newCapsule.unlockCondition === 'on_date' && (
                             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="p-4 bg-page border border-base rounded-2xl ml-8">
-                              <input type="date" className="w-full bg-surface border border-base text-obsidian-200 px-4 py-3 rounded-xl focus:outline-none focus:border-brand-primary/30 font-medium" value={newCapsule.unlockDate || ''} onChange={(e) => setNewCapsule({...newCapsule, unlockDate: e.target.value})} />
+                              <input type="date" className="w-full bg-surface border border-base text-primary px-4 py-3 rounded-xl focus:outline-none focus:border-brand-primary/30 font-medium" value={newCapsule.unlockDate || ''} onChange={(e) => setNewCapsule({...newCapsule, unlockDate: e.target.value})} />
                             </motion.div>
                           )}
                         </div>
@@ -387,14 +387,14 @@ export default function MemoryCapsules() {
                           <p className="text-sm font-bold text-primary">{newCapsule.title}</p>
                           <Badge variant="default" className="text-[9px]">Draft Manifest</Badge>
                         </div>
-                        <div className="flex gap-4 text-[10px] font-bold text-obsidian-600 uppercase tracking-widest mb-4">
+                        <div className="flex gap-4 text-[10px] font-bold text-secondary uppercase tracking-widest mb-4">
                           <span>Format: {newCapsule.type}</span>
                           <span className="w-[1px] h-3 bg-surface/80" />
                           <span>Release: {newCapsule.unlockCondition}</span>
                         </div>
                         <div className="h-16 overflow-hidden relative border-t border-base pt-4">
                            <p className="text-[11px] text-muted italic leading-relaxed">"{newCapsule.content}"</p>
-                           <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-obsidian-950 to-transparent" />
+                           <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-page to-transparent" />
                         </div>
                       </div>
                     </motion.div>
@@ -424,7 +424,7 @@ export default function MemoryCapsules() {
                  ) : (
                    <Button 
                      variant="primary" 
-                     className="bg-brand-gold hover:bg-gold-600 text-obsidian-950 border-none px-12 h-12 font-bold shadow-[0_0_30px_rgba(212,175,55,0.2)]" 
+                     className="bg-brand-gold hover:bg-gold-600 text-page border-none px-12 h-12 font-bold shadow-[0_0_30px_rgba(212,175,55,0.2)]" 
                      onClick={handleCreate}
                    >
                      Seal Archive Protocol

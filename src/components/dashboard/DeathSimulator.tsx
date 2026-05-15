@@ -76,25 +76,29 @@ export default function DeathSimulator() {
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-2xl text-left bg-[#0f0f13] border border-white/10 rounded-2xl p-8">
                   <h3 className="text-2xl font-serif text-white mb-6 border-b border-white/10 pb-4">What your heirs can access</h3>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10">
                     {assets.map((asset, i) => {
-                       const isRecoverable = thresholdMet && asset.instructions;
-                       const status = isRecoverable ? 'RECOVERABLE' : (thresholdMet ? 'PARTIALLY RECOVERABLE' : 'NOT RECOVERABLE');
-                       const color = isRecoverable ? 'text-emerald-400' : (thresholdMet ? 'text-amber-400' : 'text-red-400');
+                       const hasInstructions = !!asset.instructions;
+                       const hasBeneficiary = !!asset.beneficiaryId;
+                       const isRecoverable = thresholdMet && hasInstructions && hasBeneficiary;
+                       
+                       const status = isRecoverable ? 'RECOVERABLE' : (!thresholdMet ? 'BLOCKED: QUORUM' : 'INCOMPLETE');
+                       const color = isRecoverable ? 'text-emerald-400' : (!thresholdMet ? 'text-red-400' : 'text-amber-400');
                        const Icon = isRecoverable ? CheckCircle2 : (thresholdMet ? AlertTriangle : ShieldAlert);
                        
                        return (
                          <motion.div 
                            key={asset.id} 
-                           initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.2 }}
+                           initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}
                            className={`p-4 rounded-xl bg-black/40 border border-white/5 flex gap-4 items-start`}
                          >
                             <Icon className={`shrink-0 mt-1 ${color}`} size={20} />
                             <div>
-                               <p className="font-semibold text-white/90">{asset.name} <span className={`text-xs ml-2 px-2 py-0.5 rounded-full border border-current ${color}`}>{status}</span></p>
-                               <p className="text-sm text-white/50 mt-1">
-                                 {isRecoverable ? "Instructions present. Guardian threshold met." : 
-                                  (!thresholdMet ? "No guardian threshold met. Recovery blocked." : "No heir instructions added.")}
+                               <p className="font-semibold text-white/90">{asset.name} <span className={`text-[9px] ml-2 px-2 py-0.5 rounded-full border border-current ${color}`}>{status}</span></p>
+                               <p className="text-xs text-white/50 mt-1">
+                                 {isRecoverable ? "Full recovery path validated." : 
+                                  (!thresholdMet ? `Requires ${guardianThreshold} confirmed guardians.` : 
+                                   (!hasInstructions ? "Missing recovery instructions." : "No heir assigned."))}
                                </p>
                             </div>
                          </motion.div>
@@ -116,21 +120,21 @@ export default function DeathSimulator() {
                   {!thresholdMet && (
                      <div className="mb-6 bg-red-950/50 border border-red-500/30 rounded-xl p-4 flex gap-3 text-red-200">
                         <AlertTriangle className="shrink-0 text-red-500" />
-                        <p>Your recovery threshold requires {guardianThreshold} guardians. Only {confirmedGuardiansCount} is confirmed. <strong>Recovery would fail tonight.</strong></p>
+                        <p className="text-sm">Your recovery threshold requires {guardianThreshold} guardians. Only {confirmedGuardiansCount} {confirmedGuardiansCount === 1 ? 'is' : 'are'} confirmed. <strong>Recovery would fail tonight.</strong></p>
                      </div>
                   )}
 
                   <div className="space-y-4">
                     {guardians.map((guardian, i) => (
-                      <motion.div key={guardian.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.2 }} className="p-4 rounded-xl bg-black/40 border border-white/5 flex gap-4 items-center">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${guardian.status === 'confirmed' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
-                          {guardian.name.charAt(0)}
+                      <motion.div key={guardian.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }} className="p-4 rounded-xl bg-black/40 border border-white/5 flex gap-4 items-center">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${guardian.status === 'Confirmed' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
+                          {guardian.name?.charAt(0)}
                         </div>
                         <div className="flex-1">
-                           <p className="font-medium text-white/90">{guardian.name} <span className="text-xs text-white/40 ml-2">({guardian.relationship})</span></p>
-                           <p className="text-sm text-white/50">{guardian.status === 'confirmed' ? "Would be notified immediately." : "Not confirmed. Would NOT receive notification."}</p>
+                           <p className="font-medium text-white/90 text-sm">{guardian.name} <span className="text-[10px] text-white/40 ml-2">({guardian.relationship})</span></p>
+                           <p className="text-[11px] text-white/50">{guardian.status === 'Confirmed' ? "Validation pulse active." : "Invite pending verification."}</p>
                         </div>
-                        {guardian.status === 'confirmed' ? <CheckCircle2 className="text-emerald-400" size={18}/> : <Clock className="text-amber-400" size={18}/>}
+                        {guardian.status === 'Confirmed' ? <CheckCircle2 className="text-emerald-400" size={18}/> : <Clock className="text-amber-400" size={18}/>}
                       </motion.div>
                     ))}
                   </div>
@@ -145,27 +149,40 @@ export default function DeathSimulator() {
               {phase === 4 && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-2xl bg-[#0f0f13] border border-white/10 rounded-2xl p-8">
                   <h3 className="text-3xl font-serif text-white mb-2">Fix these gaps now</h3>
-                  <p className="text-white/50 mb-8">The best gift you can give your family is a clear path through uncertainty.</p>
+                  <p className="text-white/50 mb-8 text-sm">The best gift you can give your family is a clear path through uncertainty.</p>
                   
                   <div className="space-y-3 text-left bg-black/40 rounded-xl p-6 border border-white/5 mb-8">
                      {!thresholdMet && (
                        <div className="flex items-center justify-between">
-                         <span className="flex items-center gap-2 text-red-300"><span className="w-2 h-2 rounded-full bg-red-500"></span> Confirm 1 more guardian</span>
-                         <span className="text-xs text-white/30 border border-white/10 px-2 py-1 rounded">Takes 2 mins</span>
+                         <span className="flex items-center gap-2 text-red-300 text-sm"><span className="w-2 h-2 rounded-full bg-red-500"></span> Confirm {guardianThreshold - confirmedGuardiansCount} more guardian{guardianThreshold - confirmedGuardiansCount > 1 ? 's' : ''}</span>
+                         <Button variant="secondary" size="sm" onClick={() => { setIsOpen(false); window.location.href='/guardians'; }} className="h-7 text-[10px] px-3">Go to Guardians</Button>
                        </div>
                      )}
-                     <div className="flex items-center justify-between">
-                       <span className="flex items-center gap-2 text-amber-300"><span className="w-2 h-2 rounded-full bg-amber-500"></span> Add instructions to remaining assets</span>
-                       <span className="text-xs text-white/30 border border-white/10 px-2 py-1 rounded">Takes 5 mins</span>
-                     </div>
+                     {assets.filter(a => !a.instructions).length > 0 && (
+                        <div className="flex items-center justify-between">
+                          <span className="flex items-center gap-2 text-amber-300 text-sm"><span className="w-2 h-2 rounded-full bg-amber-500"></span> Add instructions to {assets.filter(a => !a.instructions).length} assets</span>
+                          <Button variant="secondary" size="sm" onClick={() => { setIsOpen(false); window.location.href='/assets'; }} className="h-7 text-[10px] px-3">Go to Assets</Button>
+                        </div>
+                     )}
+                     {assets.filter(a => !a.beneficiaryId).length > 0 && (
+                        <div className="flex items-center justify-between">
+                          <span className="flex items-center gap-2 text-trust-400 text-sm"><span className="w-2 h-2 rounded-full bg-trust-500"></span> Assign heirs to {assets.filter(a => !a.beneficiaryId).length} assets</span>
+                          <Button variant="secondary" size="sm" onClick={() => { setIsOpen(false); window.location.href='/heirs'; }} className="h-7 text-[10px] px-3">Go to Heirs</Button>
+                        </div>
+                     )}
+                     {thresholdMet && assets.filter(a => !a.instructions || !a.beneficiaryId).length === 0 && (
+                        <div className="text-center py-2 text-emerald-400 font-bold text-sm">
+                           No critical gaps detected. Your vault is institutional-grade.
+                        </div>
+                     )}
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Button variant="primary" onClick={() => setIsOpen(false)} className="bg-white text-black hover:bg-gray-200 border-none font-bold px-8 py-3">
-                      Start Fixing Now
+                      Back to Dashboard
                     </Button>
-                    <Button variant="secondary" onClick={() => setIsOpen(false)} className="text-white/50 hover:text-white border-white/20">
-                      Remind Me Tomorrow
+                    <Button variant="secondary" onClick={() => { setIsOpen(false); window.location.href='/ai-planner'; }} className="text-white/80 hover:text-white border-white/20">
+                      Consult AI Advisor
                     </Button>
                   </div>
                 </motion.div>

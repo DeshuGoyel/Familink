@@ -52,6 +52,7 @@ export default {
           300: '#FDBA74',
           200: '#FED7AA',
           100: '#FFEDD5',
+          50:  '#FFF7ED',
         },
         gold: {
           900: '#78350F',
@@ -71,7 +72,7 @@ export default {
           600: '#059669',
           500: '#10B981',
           400: '#34D399',
-          600: '#6EE7B7',
+          300: '#6EE7B7',
           200: '#A7F3D0',
           100: '#D1FAE5',
         },
@@ -81,6 +82,7 @@ export default {
         sans:    ['Inter', 'SF Pro Text', 'system-ui', 'sans-serif'],
         display: ['Instrument Serif', 'Georgia', 'serif'],
         mono:    ['IBM Plex Mono', 'Cascadia Code', 'Courier New', 'monospace'],
+        digits:  ['IBM Plex Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
         // backward compat
         body:    ['Inter', 'sans-serif'],
       },

@@ -3,12 +3,13 @@ import { useStore } from '../store/useStore';
 import { Bot, ShieldAlert, Lightbulb, ShieldCheck, Send, Sparkles, AlertTriangle, ChevronRight, CheckCircle2 } from 'lucide-react';
 import Card from '../components/ui/Card';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '../utils/cn';
 
 const aiReplies = [
   "I can certainly help with that. Based on your current vault 72/100 score, I recommend adding at least one more guardian to the protocol.",
   "That's a critical question. For digital business inheritance, you should provide direct instructions on how to access the registrar and DNS settings.",
   "I've analyzed your setup. You have 3 guardians, which is excellent for Shamir's Secret Sharing. However, your beneficiary 'Raj' has not yet verified their recovery credentials.",
-  "To improve your vault integrity, consider adding detailed synthesis notes to your 'Institutional Portfolio'. Only 12% of high-net-worth users do this, but it increases recovery success by 80%."
+  "To improve your vault integrity, consider adding detailed synthesis notes to your 'Institutional Portfolio'. Only 12% of high-net-worth users do this, but it increases recovery success by 80% with our perpetual storage layer."
 ];
 
 const TypewriterText = ({ text }: { text: string }) => {
@@ -36,9 +37,9 @@ const fadeUp = (delay = 0) => ({
 });
 
 export default function AIPlanner() {
-  const { user } = useStore();
+  const { user, assets, guardians } = useStore();
   const [messages, setMessages] = useState([
-    { role: 'ai', content: `Greetings, ${user.name.split(' ')[0]}. I've completed a synthesis of your vault. You're currently missing comprehensive recovery instructions for your digital intellectual property. Shall we initialize the protocol?` }
+    { role: 'ai', content: `Greetings ${user.name.split(' ')[0]}. I am your autonomous succession advisor. Your current Legacy Health Score is ${user.score}%. I have analyzed your vault and identified three critical optimizations for your digital inheritance protocol. Would you like to review them?` }
   ]);
   const [inputVal, setInputVal] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -61,8 +62,12 @@ export default function AIPlanner() {
     setIsTyping(true);
 
     setTimeout(() => {
-      const reply = aiReplies[Math.floor(Math.random() * aiReplies.length)];
-      setMessages(prev => [...prev, { role: 'ai', content: reply }]);
+      const confirmedCount = guardians.filter(g => g.status === 'Confirmed').length;
+      const missingInstructions = assets.filter(a => !a.instructions).length;
+      setMessages(prev => [...prev, { 
+        role: 'ai', 
+        content: `Analyzing protocol for "${inputVal}"... Based on your current configuration of ${assets.length} assets and ${confirmedCount} confirmed guardians, I recommend hardening your recovery instructions for ${missingInstructions > 0 ? `${missingInstructions} incomplete assets` : 'all legacy items'}.` 
+      }]);
       setIsTyping(false);
     }, 1500);
   };
@@ -197,26 +202,38 @@ export default function AIPlanner() {
                       fill="transparent" 
                       strokeDasharray={Math.PI * 140} 
                       initial={{ strokeDashoffset: Math.PI * 140 }}
-                      animate={{ strokeDashoffset: (Math.PI * 140) * (1 - 0.72) }}
+                      animate={{ strokeDashoffset: (Math.PI * 140) * (1 - user.score / 100) }}
                       transition={{ duration: 2, ease: "easeOut" }}
                       className="drop-shadow-[0_0_15px_rgba(79,92,255,0.4)]" 
                     />
                   </svg>
                   <div className="absolute flex flex-col items-center">
-                    <span className="text-5xl font-display font-bold text-primary">72</span>
+                    <span className="text-5xl font-digits font-bold text-primary">{user.score}</span>
                     <span className="text-[10px] font-bold text-obsidian-600 uppercase tracking-widest mt-1">Sovereign Index</span>
                   </div>
                 </div>
 
                 <div className="w-full space-y-4">
                   {[
-                    { label: 'Asset Synthesis', value: '90%', color: 'text-brand-primary' },
-                    { label: 'Guardian Quorum', value: '60%', color: 'text-amber-500' },
-                    { label: 'Mandate Coverage', value: '40%', color: 'text-red-500' }
+                    { 
+                      label: 'Asset Synthesis', 
+                      value: `${Math.round((assets.filter(a => a.instructions).length / assets.length) * 100)}%`, 
+                      color: 'text-brand-primary' 
+                    },
+                    { 
+                      label: 'Guardian Quorum', 
+                      value: `${Math.round((guardians.filter(g => g.status === 'Confirmed').length / guardians.length) * 100)}%`, 
+                      color: 'text-amber-500' 
+                    },
+                    { 
+                      label: 'Mandate Coverage', 
+                      value: `${Math.round((assets.filter(a => a.beneficiaryId).length / assets.length) * 100)}%`, 
+                      color: 'text-trust-500' 
+                    }
                   ].map((m, i) => (
                     <div key={i} className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
                       <span className="text-primary0">{m.label}</span>
-                      <span className={m.color}>{m.value}</span>
+                      <span className={cn(m.color, "font-digits")}>{m.value}</span>
                     </div>
                   ))}
                 </div>

@@ -10,6 +10,9 @@ export interface Asset {
   date?: string;
   tags?: string[];
   notes?: string;
+  instructions?: string;
+  beneficiaryId?: string;
+  encryptionLevel?: 'Standard' | 'Military' | 'Quantum-Resistant';
 }
 
 export interface Guardian {
@@ -17,6 +20,7 @@ export interface Guardian {
   name?: string;
   email?: string;
   status: string;
+  relationship?: string;
 }
 
 export interface Heir {
@@ -106,17 +110,24 @@ interface AppState {
 const calculateNewScore = (state: Pick<AppState, 'guardians' | 'assets' | 'heirs'>) => {
   let score = 0;
   
-  // 1. Guardians (40%)
+  // 1. Guardians (40%) - Institutional Threshold is 2 confirmed guardians
   const confirmedGuardians = state.guardians.filter((g: Guardian) => g.status === 'Confirmed').length;
-  score += Math.min(confirmedGuardians * 20, 40);
+  if (confirmedGuardians >= 2) {
+    score += 40;
+  } else {
+    score += confirmedGuardians * 20;
+  }
 
-  // 2. Assets Coverage (40%)
+  // 2. Assets Coverage (40%) - Requires instructions and assigned beneficiaries
   if (state.assets.length > 0) {
-    const coveredAssets = state.assets.filter((a: Asset) => (a.notes && a.notes.length > 0) || a.status === 'Protected').length;
+    const coveredAssets = state.assets.filter((a: Asset) => 
+      (a.instructions && a.instructions.length > 0) && 
+      (a.beneficiaryId || a.notes?.includes('assigned'))
+    ).length;
     score += Math.round((coveredAssets / state.assets.length) * 40);
   }
 
-  // 3. Heirs (20%)
+  // 3. Heirs (20%) - Registered and validated
   if (state.heirs.length > 0) {
     score += 20;
   }
@@ -124,21 +135,25 @@ const calculateNewScore = (state: Pick<AppState, 'guardians' | 'assets' | 'heirs
   return score;
 };
 
+const initialState = {
+  assets: [...mockAssets],
+  guardians: mockGuardians.map(g => ({ ...g, status: g.status === 'confirmed' ? 'Confirmed' : 'Pending' })),
+  heirs: mockHeirs.map(h => ({ ...h, status: h.status === 'active' ? 'Record Secured' : h.status })),
+};
+
 export const useStore = create<AppState>((set) => ({
   user: {
     name: "John Asha",
     email: "john@transferlegacy.com",
     avatar: null,
-    score: 72,
+    score: calculateNewScore(initialState as any),
     plan: "Family",
     nextCheckInDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     checkInHistory: [
       { date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), method: 'App Tap' }
     ]
   },
-  assets: [...mockAssets],
-  guardians: mockGuardians.map(g => ({ ...g, status: g.status === 'confirmed' ? 'Confirmed' : 'Pending' })),
-  heirs: mockHeirs.map(h => ({ ...h, status: h.status === 'active' ? 'Record Secured' : h.status })),
+  ...initialState,
   charities: [
     { id: 'c1', name: 'GiveWell', description: 'Maximum impact, evidence-based charities.', category: 'Global Health' },
     { id: 'c2', name: 'Electronic Frontier Foundation', description: 'Defending digital privacy and free speech.', category: 'Digital Rights' },

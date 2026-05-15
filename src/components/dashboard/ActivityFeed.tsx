@@ -26,7 +26,7 @@ export default function ActivityFeed() {
                 <Icon size={16} strokeWidth={2} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-primary truncate group-hover:text-vault-50 transition-colors tracking-tight">
+                <p className="text-sm font-bold text-primary truncate group-hover:text-brand-primary transition-colors tracking-tight">
                   {item.message}
                 </p>
                 <div className="flex items-center gap-2 mt-1">

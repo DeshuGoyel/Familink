@@ -57,11 +57,11 @@ export default function ResourceGuides() {
             </motion.p>
           </div>
           <motion.div {...fadeUp(0.3)} className="w-full md:w-96 relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-obsidian-600 group-focus-within:text-brand-primary transition-colors" size={18} />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary group-focus-within:text-brand-primary transition-colors" size={18} />
             <input 
               type="text" 
               placeholder="Search protocol documentation..."
-              className="w-full bg-surface border border-base rounded-2xl pl-12 pr-4 py-4 text-sm text-obsidian-200 focus:border-brand-primary/50 transition-all placeholder:text-obsidian-700"
+              className="w-full bg-surface border border-base rounded-2xl pl-12 pr-4 py-4 text-sm text-primary focus:border-brand-primary/50 transition-all placeholder:text-muted"
             />
           </motion.div>
         </div>
@@ -84,7 +84,7 @@ export default function ResourceGuides() {
                   <Button variant="primary" className="h-12 px-10 text-[10px] font-bold uppercase tracking-widest">
                     Read Guide <ArrowRight size={16} className="ml-2" />
                   </Button>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-obsidian-700 flex items-center gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted flex items-center gap-2">
                     <Clock size={14} /> 25 Min Read
                   </span>
                 </div>
@@ -105,11 +105,11 @@ export default function ResourceGuides() {
                   <div className="w-12 h-12 rounded-xl bg-page border border-base flex items-center justify-center group-hover:bg-brand-primary/10 transition-all">
                     {React.cloneElement(guide.icon as React.ReactElement, { size: 20 })}
                   </div>
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-obsidian-700">{guide.time}</span>
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-muted">{guide.time}</span>
                 </div>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-brand-primary mb-2">{guide.category}</p>
                 <h3 className="text-xl font-display font-bold mb-4 group-hover:text-vault-50 transition-colors">{guide.title}</h3>
-                <p className="text-sm text-primary0 leading-relaxed font-medium mb-8">
+                <p className="text-sm text-secondary leading-relaxed font-medium mb-8">
                   {guide.description}
                 </p>
                 <div className="flex items-center text-[10px] font-bold uppercase tracking-widest text-brand-primary group-hover:gap-2 transition-all">
@@ -132,7 +132,7 @@ export default function ResourceGuides() {
             ].map((tool, i) => (
               <button key={i} className="flex items-center gap-3 px-6 py-4 rounded-2xl bg-page border border-base hover:border-brand-primary/30 transition-all group">
                 <Download size={18} className="text-brand-primary group-hover:scale-110 transition-transform" />
-                <span className="text-sm font-bold text-primary0">{tool}</span>
+                <span className="text-sm font-bold text-secondary">{tool}</span>
               </button>
             ))}
           </div>

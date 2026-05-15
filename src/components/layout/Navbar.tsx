@@ -75,10 +75,10 @@ export default function Navbar() {
 
           {/* Right: Actions */}
           <div className="flex items-center gap-3">
-            <div className="hidden md:flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <button
                 onClick={toggleNotifications}
-                className="relative p-2 text-secondary hover:text-primary rounded-xl hover:bg-surface transition"
+                className="hidden sm:flex relative p-2 text-secondary hover:text-primary rounded-xl hover:bg-surface transition"
                 aria-label="Toggle notifications"
                 title="Notifications"
               >

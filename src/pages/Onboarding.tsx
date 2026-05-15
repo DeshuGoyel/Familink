@@ -59,9 +59,9 @@ export default function Onboarding() {
             return (
               <div key={i} className="flex items-center gap-2">
                 <div className={`flex items-center justify-center w-8 h-8 rounded-full border transition-all duration-500 ${
-                  isCompleted ? 'bg-brand-primary border-brand-primary text-obsidian-950' :
+                  isCompleted ? 'bg-brand-primary border-brand-primary text-inverse' :
                   isActive    ? 'bg-brand-primary/10 border-brand-primary text-brand-primary' :
-                                'bg-surface/30 border-base text-obsidian-700'
+                                'bg-surface/30 border-base text-muted'
                 }`}>
                   {isCompleted ? <CheckCircle2 size={14} /> : <Icon size={14} />}
                 </div>
@@ -110,7 +110,7 @@ export default function Onboarding() {
               <Button variant="primary" size="lg" onClick={nextStep} fullWidth className="h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
                 Begin Protocol <ArrowRight className="ml-2 inline" size={18} />
               </Button>
-              <div className="mt-8 flex items-center justify-center gap-6 text-[10px] font-bold uppercase tracking-widest text-obsidian-700">
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-[10px] font-bold uppercase tracking-widest text-muted">
                 <span className="flex items-center gap-1.5"><CheckCircle2 size={10} className="text-brand-primary" /> AES-256 Encrypted</span>
                 <span className="flex items-center gap-1.5"><CheckCircle2 size={10} className="text-brand-primary" /> Zero Knowledge</span>
                 <span className="flex items-center gap-1.5"><CheckCircle2 size={10} className="text-brand-primary" /> 5 Minutes</span>
