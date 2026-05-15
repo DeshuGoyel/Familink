@@ -1,33 +1,39 @@
-import { motion } from 'framer-motion';
-import { WaitlistForm } from '../ui/WaitlistForm';
-import { ShieldCheck } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ShieldCheck, ArrowRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
+const words = ["Bitcoin", "Ethereum", "Family", "Legacy"];
 
 const trustBadges = [
-  { icon: '🔒', text: 'No spam ever' },
-  { icon: '⚡', text: 'Cancel anytime' },
-  { icon: '🛡️', text: 'Your data is encrypted' },
+  { icon: '🔒', text: 'Zero-knowledge encryption' },
+  { icon: '🛡️', text: 'No credit card required' },
   { icon: '🌍', text: 'Available worldwide' },
+  { icon: '⚡', text: '14-day full refund' },
 ];
 
 export default function FinalCTA() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % words.length);
+    }, 2500);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <section
       id="waitlist"
-      className="relative overflow-hidden bg-page"
+      className="relative overflow-hidden bg-page border-t border-border-base"
     >
-      {/* Top separator */}
-      <div
-        className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.3), rgba(59,130,246,0.3), transparent)' }}
-      />
-
       {/* Ambient glow */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] rounded-full blur-[160px] pointer-events-none opacity-20"
         style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.15), rgba(212,167,44,0.1), transparent 70%)' }}
       />
 
-      <div className="max-w-5xl mx-auto px-6 py-32 relative z-10">
+      <div className="max-w-5xl mx-auto px-6 py-40 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -36,41 +42,59 @@ export default function FinalCTA() {
           className="text-center"
         >
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full border border-brand-primary/20 bg-brand-primary/5 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-primary"
+          <div className="inline-flex items-center gap-2 mb-12 px-4 py-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-500"
           >
             <ShieldCheck size={14} />
-            Founding member protocols active
+            Institutional risk-reversal active
           </div>
 
-          {/* Headline */}
-          <h2 className="text-5xl md:text-5xl lg:text-5xl font-bold text-white mb-6 leading-[1.04] tracking-tight">
-            The definitive protocol for your{' '}
-            <span
-              className="inline"
-              style={{
-                background: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #D4A72C 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
-              digital legacy.
-            </span>
+          {/* Emotional Headline */}
+          <h2 className="text-5xl md:text-7xl font-bold text-primary mb-8 leading-[1.04] tracking-tight">
+            Your family deserves to inherit <br className="hidden md:block" />
+            everything you <span className="gold-gradient italic">built.</span>
           </h2>
 
-          <p className="text-xl text-white/35 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Join 2,400+ people who already have their digital inheritance plan in place.
+          <div className="flex flex-col items-center justify-center mb-16 h-20">
+            <p className="text-2xl text-secondary font-medium tracking-tight mb-2">
+              The definitive protocol for your
+            </p>
+            <div className="relative h-10 w-full flex justify-center overflow-hidden">
+               <AnimatePresence mode="wait">
+                 <motion.span
+                   key={words[index]}
+                   initial={{ y: 20, opacity: 0 }}
+                   animate={{ y: 0, opacity: 1 }}
+                   exit={{ y: -20, opacity: 0 }}
+                   transition={{ duration: 0.4, ease: "easeInOut" }}
+                   className="text-4xl font-bold text-brand-primary"
+                 >
+                   {words[index]}.
+                 </motion.span>
+               </AnimatePresence>
+            </div>
+          </div>
+
+          <p className="text-xl text-secondary mb-12 max-w-2xl mx-auto leading-relaxed">
+            Join 2,847 crypto holders who already have their digital inheritance plan in place.
           </p>
 
-          {/* Form */}
-          <div className="max-w-lg mx-auto mb-10">
-            <WaitlistForm />
+          <div className="flex flex-col items-center gap-4 mb-16">
+            <Link to="/onboarding">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="h-16 px-12 rounded-2xl bg-brand-primary text-white text-lg font-bold flex items-center gap-3 shadow-lg hover:shadow-brand transition-all duration-500"
+              >
+                Create Your Free Vault <ArrowRight size={20} />
+              </motion.div>
+            </Link>
+            <p className="text-muted text-sm font-medium italic">14-day full refund. No questions. And your free vault stays free forever.</p>
           </div>
 
           {/* Trust chips */}
-          <div className="flex flex-wrap justify-center gap-x-7 gap-y-3 text-sm text-white/30 mb-16">
+          <div className="flex flex-wrap justify-center gap-x-12 gap-y-4 text-sm text-muted">
             {trustBadges.map((b, i) => (
-              <span key={i} className="flex items-center gap-2">
+              <span key={i} className="flex items-center gap-2 font-medium">
                 <span>{b.icon}</span>
                 {b.text}
               </span>
@@ -79,13 +103,12 @@ export default function FinalCTA() {
 
           {/* Founder note */}
           <div
-            className="border-t pt-10 max-w-xl mx-auto"
-            style={{ borderColor: 'rgba(255,255,255,0.06)' }}
+            className="border-t pt-10 mt-24 max-w-xl mx-auto border-border-base"
           >
-            <p className="text-white/35 text-sm italic leading-relaxed mb-3">
+            <p className="text-muted text-sm italic leading-relaxed mb-4">
               "We built this because we lived the problem. No family should lose what their loved one spent years building."
             </p>
-            <p className="text-white/20 text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2">
+            <p className="text-muted text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2">
               <span className="w-4 h-px bg-brand-primary/30" />
               Deshu & Vikash, Transfer Legacy
               <span className="w-4 h-px bg-brand-primary/30" />

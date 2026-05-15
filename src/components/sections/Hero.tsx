@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { Environment } from '@react-three/drei';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Lock, Sparkles, ChevronDown, ShieldCheck, ArrowRight } from 'lucide-react';
-import LandingVaultObject from '../3d/LandingVaultObject';
+import Globe from '../3d/Globe';
 import { Link } from 'react-router-dom';
 
 /* ─── Avatar stack ─────────────────────────────────────────── */
@@ -93,7 +93,7 @@ export default function Hero() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-primary"></span>
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">Institutional Infrastructure v2.4</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">4,200+ Families Protected</span>
         </motion.div>
 
         {/* Massive Headline */}
@@ -104,8 +104,8 @@ export default function Hero() {
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             className="text-7xl md:text-8xl lg:text-9xl font-bold tracking-tighter leading-[0.85] text-primary"
           >
-            The Future of <br />
-            <span className="gold-gradient italic">Human Legacy.</span>
+            Your Crypto Dies With You — <br />
+            <span className="gold-gradient italic text-[0.8em]">Unless You Plan.</span>
           </motion.h1>
           
           <motion.div
@@ -121,10 +121,10 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 1 }}
-          className="text-secondary text-xl md:text-2xl max-w-3xl leading-relaxed mb-16 font-medium tracking-tight"
+          className="text-secondary text-xl md:text-2xl max-w-4xl leading-relaxed mb-16 font-medium tracking-tight"
         >
-          Institutional-grade infrastructure for digital asset succession. <br className="hidden md:block" />
-          Secure your crypto, identities, and memories with absolute zero-knowledge.
+          Transfer Legacy is the zero-knowledge encrypted vault that ensures your <br className="hidden md:block" />
+          Bitcoin, Ethereum, and digital assets reach your heirs — exactly as you intend.
         </motion.p>
 
         {/* Centered Actions */}
@@ -132,36 +132,39 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 1 }}
-          className="flex flex-col sm:flex-row items-center gap-6 mb-24"
+          className="flex flex-col items-center gap-4 mb-24"
         >
-          <Link to="/onboarding">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="h-16 px-12 rounded-2xl bg-brand-primary text-white text-lg font-bold flex items-center gap-3 shadow-lg hover:shadow-brand transition-all duration-500"
-            >
-              Start Your Protocol <ArrowRight size={20} />
-            </motion.div>
-          </Link>
-          <Link to="/dashboard">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="h-16 px-12 rounded-2xl bg-surface border border-border-base text-primary text-lg font-bold flex items-center gap-3 backdrop-blur-xl transition-all"
-            >
-              Access Dashboard
-            </motion.div>
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center gap-6">
+            <Link to="/onboarding">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="h-16 px-12 rounded-2xl bg-brand-primary text-white text-lg font-bold flex items-center gap-3 shadow-lg hover:shadow-brand transition-all duration-500"
+              >
+                Create Your Free Vault — Takes 15 Minutes <ArrowRight size={20} />
+              </motion.div>
+            </Link>
+            <Link to="/dashboard">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="h-16 px-12 rounded-2xl bg-surface border border-border-base text-primary text-lg font-bold flex items-center gap-3 backdrop-blur-xl transition-all"
+              >
+                Access Dashboard
+              </motion.div>
+            </Link>
+          </div>
+          <p className="text-muted text-sm font-medium">No credit card. No seed phrase shared with us. Ever.</p>
         </motion.div>
 
         {/* 3D Scene / Stats Overlay */}
         <div className="relative w-full max-w-6xl aspect-[16/9] md:aspect-[21/9] mb-32 group">
-          {/* 3D Vault */}
-          <div className="absolute inset-0 z-0 opacity-80 dark:opacity-100 transition-opacity">
-             <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 6], fov: 45 }}>
+          {/* 3D Globe */}
+          <div className="absolute inset-0 z-0 opacity-90 dark:opacity-100 transition-opacity">
+             <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 8], fov: 45 }}>
                 <ambientLight intensity={0.5} />
-                <pointLight position={[10, 10, 10]} intensity={1.5} color="#D4AF37" />
+                <pointLight position={[10, 10, 10]} intensity={2} color="#D4AF37" />
                 <Suspense fallback={null}>
-                  <LandingVaultObject scale={1.8} />
+                  <Globe />
                   <Environment preset="night" />
                 </Suspense>
               </Canvas>
@@ -176,7 +179,7 @@ export default function Hero() {
                   </div>
                   <div className="text-left">
                     <p className="text-primary text-xl font-bold font-digits leading-none">$189B+</p>
-                    <p className="text-muted text-[10px] uppercase tracking-widest mt-1 font-bold">Lost Assets</p>
+                    <p className="text-muted text-[10px] uppercase tracking-widest mt-1 font-bold">Permanently Lost</p>
                   </div>
                </div>
             </StatChip>
@@ -187,8 +190,8 @@ export default function Hero() {
                     <Lock size={20} />
                   </div>
                   <div className="text-left">
-                    <p className="text-primary text-xl font-bold leading-none">ZK-Vault</p>
-                    <p className="text-muted text-[10px] uppercase tracking-widest mt-1 font-bold">Military-Grade</p>
+                    <p className="text-primary text-xl font-bold leading-none">Zero-Knowledge</p>
+                    <p className="text-muted text-[10px] uppercase tracking-widest mt-1 font-bold">We Never Hold Keys</p>
                   </div>
                </div>
             </StatChip>
@@ -201,8 +204,8 @@ export default function Hero() {
                     ))}
                   </div>
                   <div>
-                    <p className="text-primary text-xl font-bold font-digits leading-none">2.4k+</p>
-                    <p className="text-muted text-[10px] uppercase tracking-widest mt-1 font-bold">Protected</p>
+                    <p className="text-primary text-xl font-bold font-digits leading-none">2,847</p>
+                    <p className="text-muted text-[10px] uppercase tracking-widest mt-1 font-bold">Families Protected</p>
                   </div>
                </div>
             </StatChip>
@@ -213,8 +216,8 @@ export default function Hero() {
                     <Sparkles size={20} />
                   </div>
                   <div className="text-left">
-                    <p className="text-primary text-xl font-bold leading-none">Quantum</p>
-                    <p className="text-muted text-[10px] uppercase tracking-widest mt-1 font-bold">Proof Ready</p>
+                    <p className="text-primary text-xl font-bold leading-none">15 Minutes</p>
+                    <p className="text-muted text-[10px] uppercase tracking-widest mt-1 font-bold">To Protect Everything</p>
                   </div>
                </div>
             </StatChip>

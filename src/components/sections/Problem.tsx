@@ -2,9 +2,9 @@ import { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 const stats = [
-  { prefix: '$', value: 140, suffix: 'B+', desc: 'in crypto lost permanently each year', color: '#f87171', glow: 'rgba(248,113,113,0.15)' },
+  { prefix: '$', value: 189, suffix: 'B+', desc: 'in crypto lost permanently each year', color: '#f87171', glow: 'rgba(248,113,113,0.15)' },
   { prefix: '', value: 89, suffix: '%',  desc: 'of families locked out of digital assets after a death', color: '#fb923c', glow: 'rgba(251,146,60,0.15)', showBar: true },
-  { prefix: '', value: 3,  suffix: ' min', desc: 'to protect your entire legacy with Transfer Legacy', color: '#34d399', glow: 'rgba(52,211,153,0.15)' },
+  { prefix: '', value: 15, suffix: ' min', desc: 'to protect your entire legacy with Transfer Legacy', color: '#34d399', glow: 'rgba(52,211,153,0.15)' },
 ];
 
 function AnimatedCounter({ target, delay }: { target: number; delay: number }) {
@@ -58,7 +58,7 @@ export default function Problem() {
             The Problem
           </p>
           <h2 className="text-4xl md:text-5xl lg:text-5xl font-bold text-white leading-[1.08] tracking-tight">
-            $140 Billion in crypto vanishes every year.{' '}
+            $189 Billion in crypto vanishes every year.{' '}
             <span className="text-white/30 font-light">No one told their family.</span>
           </h2>
         </motion.div>
@@ -142,7 +142,7 @@ export default function Problem() {
             </span>
             <div className="space-y-5">
               {[
-                'Your vault is set up in 3 minutes',
+                'Your vault is set up in 15 minutes',
                 'Trusted guardians receive their key fragments securely',
                 'When you\'re inactive, your family gets guided access',
                 'Your legacy transfers exactly as you intended.',

@@ -11,6 +11,7 @@ import { SEO } from '../components/seo/SEO';
 
 const Globe = lazy(() => import('../components/3d/Globe'));
 const Problem = lazy(() => import('../components/sections/Problem'));
+const Testimonials = lazy(() => import('../components/sections/Testimonials'));
 const FinalCTA = lazy(() => import('../components/sections/FinalCTA'));
 
 export default function Landing() {
@@ -189,64 +190,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* The Global Sovereign Impact Section */}
-      <section className="py-32 bg-page relative overflow-hidden border-y border-border-base">
-        {/* Background density enhancement */}
-        <div className="absolute inset-0 bg-dot-matrix opacity-[0.15] dark:opacity-[0.05]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.02),transparent_70%)]" />
-        
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center relative z-10">
-          <div className="relative order-2 md:order-1">
-             <div className="aspect-square relative w-full max-w-xl mx-auto">
-                <Canvas dpr={[1, 1.5]}>
-                  <PerspectiveCamera makeDefault position={[0, 0, 8]} />
-                  <ambientLight intensity={0.5} />
-                  <pointLight position={[10, 10, 10]} intensity={2} color="#D4AF37" />
-                  <Suspense fallback={null}>
-                    <Globe />
-                  </Suspense>
-                  <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={0.5} />
-                </Canvas>
-                <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,transparent_50%,var(--color-bg-page)_100%)]" />
-             </div>
-          </div>
-          
-          <div className="order-1 md:order-2">
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/10 border border-brand-gold/20 text-brand-gold text-[10px] font-bold uppercase tracking-[0.2em] mb-8">
-                <GlobeIcon size={12} /> Global Sovereign Network
-              </div>
-              <h2 className="text-5xl md:text-6xl font-bold tracking-tighter mb-8 text-primary">Protecting Families <br /><span className="gold-gradient italic">Everywhere.</span></h2>
-              <p className="text-secondary text-xl leading-relaxed mb-10 font-medium tracking-tight">
-                Transfer Legacy is a global, borderless protocol. We serve over <span className="text-primary font-bold font-digits">2,400+</span> families across 42 countries, ensuring their digital sovereignty is preserved regardless of jurisdiction.
-              </p>
-              
-              <div className="grid grid-cols-2 gap-8 mb-12">
-                 <div>
-                    <p className="text-primary text-3xl font-bold font-digits mb-1">$4.2B+</p>
-                    <p className="text-muted text-[10px] uppercase font-bold tracking-widest text-secondary">Assets Secured</p>
-                 </div>
-                 <div>
-                    <p className="text-primary text-3xl font-bold font-digits mb-1">99.99%</p>
-                    <p className="text-muted text-[10px] uppercase font-bold tracking-widest text-secondary">Protocol Uptime</p>
-                 </div>
-              </div>
-
-              <Link to="/onboarding">
-                <Button variant="outline" className="h-14 px-8 border-brand-gold/30 hover:border-brand-gold text-brand-gold flex items-center gap-2 group">
-                   Join the Global Network <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
       {/* The Comparison Section */}
       <section className="py-32 bg-page relative overflow-hidden">
         <div className="absolute inset-0 bg-dot-matrix opacity-30" />
@@ -313,6 +256,10 @@ export default function Landing() {
           </div>
         </div>
       </section>
+
+      <Suspense fallback={<div className="h-96 bg-surface animate-pulse" />}>
+        <Testimonials />
+      </Suspense>
 
       {/* FAQ Section */}
       <section className="py-32 bg-page">

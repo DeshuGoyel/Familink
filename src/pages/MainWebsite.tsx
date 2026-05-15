@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
+import LandingNavbar from '../components/layout/LandingNavbar';
 import Footer from '../components/layout/Footer';
 import Landing from '../pages/Landing';
 import Dashboard from '../pages/Dashboard';
@@ -70,7 +71,7 @@ function AppLayout() {
 
   return (
     <div className="relative z-10 min-h-screen flex flex-col pt-16 transition-all duration-300">
-      <Navbar />
+      {isLanding ? <LandingNavbar /> : <Navbar />}
       {!isLanding && <Sidebar />}
 
       {/* Page content — offset for sidebar */}
