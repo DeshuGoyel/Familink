@@ -1,133 +1,100 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import SEO from '../../components/seo/SEO';
-import { ArrowRight, Wallet, ShieldAlert, Cpu, KeySquare } from 'lucide-react';
+import { ArrowRight, Shield, Globe2, BookOpen, AlertTriangle, FileCheck, Landmark, Scale, Gavel, CheckCircle2, Wallet, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Button from '../../components/ui/Button';
 
 const TransferCryptoWallet = () => {
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How do I transfer my crypto wallet to my family when I die?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "To transfer a self-custody wallet (like MetaMask, Ledger, or Trust Wallet), your family must have the 12 or 24-word seed phrase. The most secure way to transfer this is using a zero-knowledge Dead Man's Switch like Transfer Legacy, which automatically releases the encrypted seed phrase to them upon your passing."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Will Coinbase transfer my wallet to my family?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "For custodial exchanges like Coinbase, your executor will need to provide a death certificate, an ID, and a Letter of Testamentary. The exchange will eventually transfer the funds. However, your family must know the account exists first. Transfer Legacy ensures they have the account details and login instructions immediately."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can a lawyer access my crypto wallet?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. Unless you give your lawyer your private keys (which introduces immense counterparty risk), a lawyer cannot legally force a blockchain to transfer funds. They can only handle the legal paperwork, not the technical execution."
-        }
-      }
-    ]
-  };
-
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-white pt-24 pb-16">
+    <div className="min-h-screen bg-page text-primary pt-24 pb-16 relative overflow-hidden">
+      <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/5 blur-[120px] pointer-events-none" />
+
       <SEO 
-        title="How to Transfer a Crypto Wallet to Family After Death"
-        description="Learn the exact technical and legal steps to transfer a crypto wallet (Ledger, MetaMask, Coinbase) to your family after you pass away. Protect your assets."
+        title="How to Transfer Crypto Wallets After Death: Step-by-Step Guide"
+        description="A comprehensive guide on transferring Bitcoin, Ethereum, and DeFi wallets to your heirs. Learn the secure protocol for digital asset handovers."
         canonical="https://transferlegacy.com/transfer-crypto-wallet-to-family"
-        schema={faqSchema}
       />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header Section */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 bg-blue-500/10 text-blue-400 px-4 py-2 rounded-full mb-6">
-            <Wallet className="w-5 h-5" />
-            <span className="font-semibold tracking-wide uppercase text-sm">Wallet Succession Guide</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-            How to Transfer a Crypto Wallet to Family
-          </h1>
-          <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-            A step-by-step guide to securing MetaMask, Ledger, and exchange accounts so your family never gets locked out of your digital wealth.
-          </p>
-          <Link 
-            to="/"
-            className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full transition duration-300"
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-24">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center space-x-2 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-4 py-2 rounded-full mb-8 shadow-[0_0_20px_rgba(79,92,255,0.1)]"
           >
-            Secure Your Wallets Now
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Link>
+            <Wallet className="w-4 h-4" />
+            <span className="font-bold tracking-[0.2em] uppercase text-[10px]">Technical Handoff Guide</span>
+          </motion.div>
+          
+          <h1 className="text-5xl md:text-7xl font-display font-bold mb-8 leading-[0.95] tracking-tight text-primary">
+            Transferring Your <span className="italic text-brand-primary">Crypto Wallets</span>
+          </h1>
+          
+          <p className="text-xl text-secondary mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+            A digital wallet handoff isn't a one-time event; it's a security-critical operation. Learn how to transfer control without compromising the assets.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button variant="primary" size="lg" className="px-10 h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
+              Set Up Handoff Protocol <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </div>
         </div>
 
-        {/* Content Section */}
-        <div className="prose prose-invert prose-lg max-w-none">
-          
-          <h2 className="flex items-center text-3xl font-bold mt-12 mb-6">
-            <ShieldAlert className="w-8 h-8 mr-3 text-blue-500" />
-            The Two Types of Crypto Wallets
-          </h2>
-          <p>
-            How you transfer your crypto wallet depends entirely on the <strong>type of wallet</strong> you hold. Estate planning for an exchange account is completely different from a hardware wallet.
-          </p>
+        <div className="space-y-16">
+          <section className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 md:p-12">
+            <h2 className="flex items-center text-3xl font-display font-bold mb-8 text-primary tracking-tight">
+              <RefreshCw className="w-8 h-8 mr-4 text-brand-primary" />
+              The "No-Touch" Transfer
+            </h2>
+            <div className="prose prose-invert max-w-none text-secondary">
+              <p className="text-lg leading-relaxed mb-6">
+                Most people think "Transferring" means giving someone your password. In the institutional world, this is a <span className="text-primary font-bold">Catastrophic Security Leak</span>. You should never "share" a wallet; you should "hand over" the keys in a controlled, encrypted environment.
+              </p>
+              <p className="text-lg leading-relaxed">
+                Transfer Legacy allows you to define a <span className="italic text-brand-primary font-bold">Technical Trigger</span>. When our protocol verifies you are no longer active, it securely releases the necessary tutorials and credentials to your heirs.
+              </p>
+            </div>
+          </section>
 
-          <h3>1. Custodial Wallets (Exchanges like Binance, Coinbase, Kraken)</h3>
-          <p>
-            With these accounts, the exchange holds the private keys. They act like a traditional bank.
-          </p>
-          <ul>
-            <li><strong>The Problem:</strong> If your family doesn't know the account exists, the exchange will keep the money forever.</li>
-            <li><strong>The Solution:</strong> Your family must submit a death certificate, executor documentation, and their own ID to the exchange's legal department to trigger a transfer.</li>
-            <li><strong>What You Must Do:</strong> Leave clear instructions detailing which exchanges you use, the email address associated with them, and any specific account numbers.</li>
-          </ul>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8">
+              <Shield className="w-10 h-10 text-brand-gold mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">DeFi Asset Mapping</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                Inheritance becomes 10x harder if you have funds in <span className="text-primary font-bold">Staking Pools, Liquidity Pools, or NFT Marketplaces</span>. We provide a mapping tool to ensure your family knows exactly which protocols to interact with.
+              </p>
+              <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-400 uppercase tracking-widest">
+                <CheckCircle2 size={14} /> Full DeFi Visibility
+              </div>
+            </div>
 
-          <div className="bg-gradient-to-r from-blue-500/10 to-transparent border-l-4 border-blue-500 p-6 rounded-r-xl my-8">
-            <h3 className="flex items-center text-xl font-bold text-blue-400 mb-3 mt-0">
-              <Cpu className="w-6 h-6 mr-2" />
-              2. Self-Custody Wallets (Ledger, Trezor, MetaMask, Trust Wallet)
-            </h3>
-            <p className="text-gray-300 mb-0">
-              This is where 99% of inheritance plans fail. No corporation controls these wallets. The blockchain only responds to the private key (the 12 or 24-word seed phrase). If your family doesn't get this phrase, the crypto is permanently unrecoverable. <strong>There is no legal workaround.</strong>
-            </p>
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 border-brand-primary/20 bg-brand-primary/5">
+              <BookOpen className="w-10 h-10 text-brand-primary mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">Step-by-Step Tutorials</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                We generate <span className="text-primary font-bold">Custom Recovery Manuals</span> for your heirs. These manuals walk them through exactly how to restore your specific wallet (Ledger, MetaMask, etc.) using the keys we release.
+              </p>
+              <Button variant="ghost" className="text-[10px] font-bold uppercase tracking-widest text-brand-primary p-0">
+                View Sample Recovery Manual
+              </Button>
+            </div>
           </div>
 
-          <h2 className="flex items-center text-3xl font-bold mt-12 mb-6">
-            <KeySquare className="w-8 h-8 mr-3 text-blue-500" />
-            The Ultimate Wallet Transfer Strategy
-          </h2>
-          <p>
-            You cannot put your seed phrase in your will (it becomes public). You cannot give it to a lawyer (counterparty risk). 
-          </p>
-          <p>
-            The only secure, verifiable method to transfer a crypto wallet to your family is through a <strong>Zero-Knowledge Vault and Dead Man's Switch</strong>, provided by Transfer Legacy.
-          </p>
-
-          <ol>
-            <li><strong>Create Your Vault:</strong> Log into Transfer Legacy and create an encrypted record for each of your wallets. Enter the seed phrase, the wallet type (e.g., Ledger Nano X), and the location of the physical device if necessary.</li>
-            <li><strong>Write Human Instructions:</strong> Add a simple, plain-English guide. "Download Trust Wallet, click 'Import Wallet', and enter the 12 words provided below."</li>
-            <li><strong>Assign Heirs:</strong> Designate your spouse, children, or executor as the recipient.</li>
-            <li><strong>Activate the Switch:</strong> Transfer Legacy monitors your status. If you are incapacitated or pass away, the system executes the protocol, releasing the decrypted wallet information strictly to your designated heirs.</li>
-          </ol>
-
-          {/* CTA Section */}
-          <div className="bg-gray-800/50 rounded-2xl p-8 mt-12 border border-gray-700 text-center">
-            <h3 className="text-2xl font-bold mb-4">Don't Leave Your Family Guessing</h3>
-            <p className="text-gray-300 mb-6">
-              Ensure your hardware wallets and exchange accounts are seamlessly transferred. Start your legacy plan today.
+          <div className="bg-gradient-to-br from-brand-primary to-blue-900 text-obsidian-950 rounded-[40px] p-10 md:p-16 text-center shadow-2xl shadow-brand-primary/20">
+            <h3 className="text-3xl md:text-5xl font-display font-bold mb-6 tracking-tight leading-none">
+              Secure Your Wallet <br /><span className="italic">Handoff Today</span>
+            </h3>
+            <p className="text-xl opacity-90 mb-12 max-w-2xl mx-auto font-medium">
+              Don't leave your family guessing. Automate the transfer of your digital wealth.
             </p>
-            <Link 
-              to="/"
-              className="inline-block bg-white text-gray-900 hover:bg-gray-100 font-bold py-3 px-8 rounded-full transition duration-300"
-            >
-              Start Your Transfer Legacy Vault
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Button onClick={() => window.scrollTo(0,0)} className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest">
+                Start Handoff Setup
+              </Button>
+            </div>
           </div>
         </div>
       </div>

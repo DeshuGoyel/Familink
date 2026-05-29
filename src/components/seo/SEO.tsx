@@ -7,7 +7,9 @@ interface SEOProps {
   canonicalUrl?: string;
   type?: string;
   imageUrl?: string;
-  schema?: string;
+  schema?: any;
+  noindex?: boolean;
+  publishedTime?: string;
 }
 
 export function SEO({
@@ -17,8 +19,12 @@ export function SEO({
   canonicalUrl = typeof window !== 'undefined' ? window.location.href : "https://transferlegacy.com/",
   type = "website",
   imageUrl = "https://transferlegacy.com/og-image.png",
-  schema
+  schema,
+  noindex = false,
+  publishedTime
 }: SEOProps) {
+  const schemaString = typeof schema === 'object' ? JSON.stringify(schema) : schema;
+
   return (
     <Helmet>
       {/* Primary Meta Tags */}
@@ -26,6 +32,8 @@ export function SEO({
       <meta name="title" content={title} />
       <meta name="description" content={description} />
       {keywords && <meta name="keywords" content={keywords} />}
+      
+      {noindex && <meta name="robots" content="noindex, nofollow" />}
 
       {/* Canonical URL */}
       {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
@@ -36,6 +44,7 @@ export function SEO({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={imageUrl} />
+      {publishedTime && <meta property="article:published_time" content={publishedTime} />}
 
       {/* Twitter */}
       <meta property="twitter:card" content="summary_large_image" />
@@ -45,11 +54,13 @@ export function SEO({
       <meta property="twitter:image" content={imageUrl} />
 
       {/* Structured Data (Schema.org) */}
-      {schema && (
+      {schemaString && (
         <script type="application/ld+json">
-          {schema}
+          {schemaString}
         </script>
       )}
     </Helmet>
   );
 }
+
+export default SEO;

@@ -56,7 +56,6 @@ export default function IdentityPassportPage() {
     fullName: '', dateOfBirth: '', country: '', bloodGroup: '', vaultSummary: '',
     qrCodeData: '', lastUpdated: '', shareableWithAttorney: false,
     shareableWithAdvisor: false, shareableWithFamily: true,
-    emergencyContact: { name: '', phone: '', relation: '' },
     ...rawPassport,
     emergencyContact: { name: '', phone: '', relation: '', ...rawPassport?.emergencyContact },
   };

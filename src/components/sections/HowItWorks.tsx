@@ -36,11 +36,11 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="relative py-28 overflow-hidden" style={{ background: '#090B14' }}>
+    <section id="how-it-works" className="relative py-28 overflow-hidden bg-page">
       {/* Left gradient bar */}
       <div
         className="absolute left-0 top-0 bottom-0 w-px"
-        style={{ background: 'linear-gradient(to bottom, transparent, rgba(249,115,22,0.4), rgba(192,132,252,0.4), transparent)' }}
+        style={{ background: 'linear-gradient(to bottom, transparent, var(--color-brand-primary), var(--color-brand-secondary), transparent)', opacity: 0.3 }}
       />
 
       <div className="max-w-6xl mx-auto px-6">
@@ -52,21 +52,13 @@ export default function HowItWorks() {
           transition={{ duration: 0.7 }}
           className="text-center mb-24"
         >
-          <p
-            className="text-xs font-bold tracking-[0.22em] uppercase mb-5"
-            style={{
-              background: 'linear-gradient(135deg, #c084fc, #818cf8)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
+          <p className="text-xs font-bold tracking-[0.22em] uppercase mb-5 gradient-text-brand">
             How It Works
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-primary tracking-tight mb-4">
             Three steps. Three minutes.
           </h2>
-          <p className="text-lg text-white/40 max-w-md mx-auto">
+          <p className="text-lg text-secondary max-w-md mx-auto">
             Built for humans, not cryptographers.
           </p>
         </motion.div>
@@ -85,13 +77,12 @@ export default function HowItWorks() {
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ delay: 0.1, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
                 className={`relative grid grid-cols-1 lg:grid-cols-2 gap-10 items-center py-20 ${
-                  i < steps.length - 1 ? 'border-b border-white/[0.05]' : ''
+                  i < steps.length - 1 ? 'border-b border-border-base/10' : ''
                 }`}
               >
                 {/* Watermark number */}
                 <div
-                  className={`absolute ${isRight ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-[180px] font-bold select-none pointer-events-none leading-none`}
-                  style={{ color: 'rgba(255,255,255,0.025)' }}
+                  className={`absolute ${isRight ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-[180px] font-bold select-none pointer-events-none leading-none opacity-[0.03] dark:opacity-[0.05] text-primary`}
                 >
                   {step.number}
                 </div>
@@ -110,10 +101,10 @@ export default function HowItWorks() {
                     </span>
                   </div>
 
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-5 leading-tight tracking-tight">
+                  <h3 className="text-2xl md:text-3xl font-bold text-primary mb-5 leading-tight tracking-tight">
                     {step.title}
                   </h3>
-                  <p className="text-white/45 text-base leading-relaxed mb-5">
+                  <p className="text-secondary/70 text-base leading-relaxed mb-5">
                     {step.desc}
                   </p>
                   <div
@@ -127,8 +118,7 @@ export default function HowItWorks() {
                 {/* Visual */}
                 <div className={`relative z-10 ${isRight ? 'lg:order-1' : ''} flex justify-center`}>
                   <div
-                    className="w-full max-w-[340px] aspect-square rounded-3xl border flex items-center justify-center relative overflow-hidden group"
-                    style={{ background: '#0E1118', borderColor: 'rgba(255,255,255,0.06)' }}
+                    className="w-full max-w-[340px] aspect-square rounded-3xl border border-border-base flex items-center justify-center relative overflow-hidden group bg-surface"
                   >
                     {/* Hover glow */}
                     <div
@@ -137,7 +127,7 @@ export default function HowItWorks() {
                     />
                     {/* Ambient center glow */}
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className="w-40 h-40 rounded-full blur-3xl" style={{ background: step.glowColor }} />
+                      <div className="w-40 h-40 rounded-full blur-3xl opacity-20" style={{ background: step.glowColor }} />
                     </div>
                     {/* Icon */}
                     <div className="relative z-10 flex flex-col items-center gap-5">
@@ -165,7 +155,7 @@ export default function HowItWorks() {
       {/* Bottom line */}
       <div
         className="absolute bottom-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(249,115,22,0.3), transparent)' }}
+        style={{ background: 'linear-gradient(90deg, transparent, var(--color-brand-primary), transparent)', opacity: 0.2 }}
       />
     </section>
   );

@@ -48,7 +48,7 @@ export default function Navbar() {
             </button>
 
             <Link to="/" className="group">
-              <Logo size={28} showTagline={false} />
+              <Logo size={36} showTagline={false} />
             </Link>
           </div>
 

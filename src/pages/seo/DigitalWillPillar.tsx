@@ -1,140 +1,145 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import SEO from '../../components/seo/SEO';
+import { ArrowRight, Shield, Globe2, BookOpen, AlertTriangle, FileCheck, Landmark, Scale, Gavel, CheckCircle2, Scroll, PenTool } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Shield, ArrowRight, HelpCircle } from 'lucide-react';
 import Button from '../../components/ui/Button';
-import Card from '../../components/ui/Card';
-import { SEO } from '../../components/seo/SEO';
 
-export default function DigitalWillPillar() {
-  const faqSchema = JSON.stringify({
+const DigitalWillPillar = () => {
+  const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "What is a digital will?",
+        "name": "Can I put my passwords in a regular will?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "A digital will is a modern estate planning document that specifically outlines how your digital assets (cryptocurrency, passwords, social media accounts, and digital files) should be handled and transferred to your heirs after your death."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is a digital will legally binding?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "It depends on your jurisdiction. In the USA (under RUFADAA) and increasingly in the UK, UAE, and India, digital assets are recognized as property. A digital will, when created alongside a traditional legal will, provides the technical execution to legally transfer these assets."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How to write a digital will?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "To write a digital will, you must inventory your digital assets, securely store credentials (like crypto seed phrases) in a zero-knowledge vault like Transfer Legacy, designate heirs, and leave a clear Letter of Instruction."
+          "text": "It is highly discouraged to include passwords or seed phrases in a traditional paper will. Wills often become public records during probate, exposing your sensitive data to identity thieves and hackers. A Digital Will protocol like Transfer Legacy is required for secure storage."
         }
       }
     ]
-  });
+  };
 
   return (
-    <div className="bg-secondary text-text min-h-screen font-sans pt-20">
+    <div className="min-h-screen bg-page text-primary pt-24 pb-16 relative overflow-hidden">
+      <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/5 blur-[120px] pointer-events-none" />
+
       <SEO 
-        title="Digital Will & Testament: The Complete 2026 Guide | Transfer Legacy"
-        description="Learn how to write a digital will online. Secure your crypto, passwords, and digital assets with a legally compliant, zero-knowledge digital estate plan."
+        title="The Digital Will Blueprint: Legacy Planning for the 21st Century"
+        description="Learn how to build a legally binding and technically secure Digital Will. Protect your crypto, social media, and digital identities with Transfer Legacy."
+        canonical="https://transferlegacy.com/digital-will"
         schema={faqSchema}
       />
-      
-      {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden border-b border-border bg-[#020409]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(79,92,255,0.1),transparent_50%)]" />
-        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary mb-6 border border-primary/20">
-            <BookOpen size={16} />
-            <span className="text-sm font-semibold tracking-wide uppercase">Pillar Guide</span>
-          </div>
-          <h1 className="text-5xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">
-            The Digital Will: <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
-              Modern Estate Planning
-            </span>
-          </h1>
-          <p className="text-xl text-muted max-w-2xl mx-auto mb-10 leading-relaxed">
-            Traditional wills were built for houses and bank accounts. The modern world requires a Digital Will. Learn how to secure your crypto, passwords, and online legacy.
-          </p>
-        </div>
-      </section>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <article className="prose prose-invert prose-lg max-w-none">
-          <h2>Why You Need a Digital Will and Testament</h2>
-          <p>
-            In the past, your wealth was held in physical banks, your memories in photo albums, and your business in paper files. Today, your wealth is in Bitcoin, your memories are on iCloud, and your identity is scattered across hundreds of online accounts.
-          </p>
-          <p>
-            A traditional Last Will and Testament is no longer enough. If your estate planner does not understand seed phrases, two-factor authentication, or encrypted vaults, your digital estate is at severe risk of permanent loss.
-          </p>
-
-          <h2>Core Components of a Digital Estate Plan</h2>
-          <p>
-            A robust digital will consists of three critical layers. Transfer Legacy is the only platform that integrates all three:
-          </p>
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-24">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center space-x-2 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-4 py-2 rounded-full mb-8 shadow-[0_0_20px_rgba(79,92,255,0.1)]"
+          >
+            <Scroll className="w-4 h-4" />
+            <span className="font-bold tracking-[0.2em] uppercase text-[10px]">Institutional Pillar Guide</span>
+          </motion.div>
           
-          <div className="grid md:grid-cols-3 gap-6 my-10 not-prose">
-            <Card className="p-6">
-              <h3 className="text-xl font-bold mb-3 text-white">1. The Inventory</h3>
-              <p className="text-muted text-sm leading-relaxed">A complete map of your digital life: hardware wallets, exchange accounts, domains, and cloud storage.</p>
-            </Card>
-            <Card className="p-6 border-primary/30 relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-2 bg-primary/10 rounded-bl-lg">
-                <Shield size={16} className="text-primary" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-white">2. The Vault</h3>
-              <p className="text-muted text-sm leading-relaxed">A zero-knowledge encrypted database storing the actual passwords, PINs, and 24-word seed phrases.</p>
-            </Card>
-            <Card className="p-6">
-              <h3 className="text-xl font-bold mb-3 text-white">3. The Execution</h3>
-              <p className="text-muted text-sm leading-relaxed">The automated legal mechanism (Dead Man's Switch and Guardian verification) that transfers the vault to your heirs.</p>
-            </Card>
-          </div>
-
-          <h2>How to Write a Digital Will Online</h2>
-          <p>
-            Creating a digital will doesn't require thousands of dollars in attorney fees. With modern zero-knowledge platforms, you can establish an unbreakable digital legacy in under 30 minutes.
+          <h1 className="text-5xl md:text-7xl font-display font-bold mb-8 leading-[0.95] tracking-tight text-primary">
+            The Digital Will <span className="italic text-brand-primary">Blueprint</span>
+          </h1>
+          
+          <p className="text-xl text-secondary mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+            Standard wills are built for houses and cars. Digital Wills are built for the cloud. Bridge the gap between physical law and digital reality.
           </p>
-          <ol>
-            <li><strong>Catalog Your Assets:</strong> Open Transfer Legacy and create entries for your crypto wallets, email accounts, and password managers.</li>
-            <li><strong>Secure the Keys:</strong> Enter your seed phrases and passwords. Transfer Legacy encrypts these locally on your device using military-grade cryptography.</li>
-            <li><strong>Appoint Guardians:</strong> Choose trusted friends, family, or your lawyer to act as Guardians. They hold cryptographic fragments of your vault's key but cannot access the vault themselves.</li>
-            <li><strong>Assign Heirs:</strong> Specify exactly who receives which assets upon your passing.</li>
-            <li><strong>Write a Letter of Instruction:</strong> Leave clear, plain-English instructions for your family so they know what to do without needing a technical background.</li>
-          </ol>
 
-          <div className="bg-surface/50 border border-border rounded-xl p-8 my-12 text-center">
-            <h3 className="text-2xl font-bold mt-0 mb-4">Don't leave your family locked out.</h3>
-            <p className="mb-6">Create your legally compliant Digital Will today.</p>
-            <Link to="/onboarding">
-              <Button size="lg" className="glow-blue">
-                Create Your Digital Will <ArrowRight className="ml-2" size={20} />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button variant="primary" size="lg" className="px-10 h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
+              Draft Your Digital Will <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+
+        <div className="space-y-16">
+          <section className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 md:p-12">
+            <h2 className="flex items-center text-3xl font-display font-bold mb-8 text-primary tracking-tight">
+              <PenTool className="w-8 h-8 mr-4 text-brand-primary" />
+              What is a Digital Will?
+            </h2>
+            <div className="prose prose-invert max-w-none text-secondary">
+              <p className="text-lg leading-relaxed mb-6">
+                A <span className="text-primary font-bold">Digital Will</span> is not just a document—it's a technical protocol. While a traditional will gives your heirs the <span className="italic">legal right</span> to your property, a Digital Will provides them with the <span className="italic">technical means</span> to access it.
+              </p>
+              <p className="text-lg leading-relaxed">
+                In the US, UK, and India, digital assets are recognized as property, but the "Stored Communications Act" and exchange "Terms of Service" often block executors from accessing accounts even with a death certificate.
+              </p>
+            </div>
+          </section>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8">
+              <FileCheck className="w-10 h-10 text-brand-gold mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">Execution Standards</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                A valid Digital Will must address both <span className="text-primary font-bold">Content</span> (the value of assets) and <span className="text-primary font-bold">Access</span> (the credentials to move them).
+              </p>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-2 text-[11px] font-bold text-muted uppercase tracking-wider">
+                  <CheckCircle2 size={14} className="text-emerald-400" /> RUFADAA Compliant
+                </li>
+                <li className="flex items-center gap-2 text-[11px] font-bold text-muted uppercase tracking-wider">
+                  <CheckCircle2 size={14} className="text-brand-gold" /> Zero-Knowledge Security
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 border-brand-primary/20 bg-brand-primary/5">
+              <Landmark className="w-10 h-10 text-brand-primary mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">Estate Integration</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                Integrate your Transfer Legacy protocol directly into your physical estate documents. We provide the "Legal Language" to include in your traditional will.
+              </p>
+              <Button variant="ghost" className="text-[10px] font-bold uppercase tracking-widest text-brand-primary p-0">
+                Get Legal Wording Template
               </Button>
-            </Link>
+            </div>
           </div>
-        </article>
 
-        <section className="mt-20 pt-12 border-t border-border">
-          <h2 className="text-3xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
-          <div className="space-y-4">
-            {JSON.parse(faqSchema).mainEntity.map((faq: unknown, i: number) => (
-              <Card key={i} className="p-6">
-                <h3 className="text-lg font-bold text-text mb-2 flex items-start">
-                  <HelpCircle className="text-primary mr-3 mt-1 flex-shrink-0" size={20} />
-                  {faq.name}
-                </h3>
-                <p className="text-muted leading-relaxed ml-8">{faq.acceptedAnswer.text}</p>
-              </Card>
-            ))}
+          <section className="bg-obsidian-950/50 border border-brand-gold/20 rounded-[32px] p-8 md:p-12 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-10">
+              <AlertTriangle size={120} className="text-brand-gold" />
+            </div>
+            <div className="relative z-10">
+              <h2 className="text-3xl font-display font-bold mb-6 text-primary tracking-tight">The "Terms of Service" Trap</h2>
+              <p className="text-lg text-secondary leading-relaxed mb-8">
+                Most exchanges strictly forbid sharing login credentials. If your family logs in using your password after you're gone, they may be <span className="italic text-primary font-bold">violating federal laws</span>. Transfer Legacy provides the "online tool" authorization required by modern digital asset acts.
+              </p>
+              <div className="flex items-center gap-4 p-4 bg-brand-gold/10 rounded-2xl border border-brand-gold/20">
+                <Shield className="text-brand-gold shrink-0" size={24} />
+                <p className="text-sm font-medium text-brand-gold leading-tight">
+                  Transfer Legacy ensures your heirs access your accounts legally and securely, without triggering fraudulent activity alerts.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <div className="bg-gradient-to-br from-brand-primary to-blue-900 text-obsidian-950 rounded-[40px] p-10 md:p-16 text-center shadow-2xl shadow-brand-primary/20">
+            <BookOpen className="w-16 h-16 mx-auto mb-8 opacity-80" />
+            <h3 className="text-3xl md:text-5xl font-display font-bold mb-6 tracking-tight leading-none">
+              Initialize Your <br /><span className="italic">Digital Will Protocol</span>
+            </h3>
+            <p className="text-xl opacity-90 mb-12 max-w-2xl mx-auto font-medium">
+              Secure your crypto, identities, and memories with the global standard in digital succession.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Button onClick={() => window.scrollTo(0,0)} className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest">
+                Start Your Digital Will
+              </Button>
+            </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default DigitalWillPillar;

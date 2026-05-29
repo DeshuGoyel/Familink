@@ -34,10 +34,10 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative py-28 overflow-hidden" style={{ background: '#090B14' }}>
+    <section id="faq" className="relative py-28 overflow-hidden bg-page">
       <div
         className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(192,132,252,0.4), transparent)' }}
+        style={{ background: 'linear-gradient(90deg, transparent, var(--color-brand-primary), transparent)', opacity: 0.2 }}
       />
 
       <div className="max-w-4xl mx-auto px-6">
@@ -48,21 +48,13 @@ export default function FAQ() {
           transition={{ duration: 0.7 }}
           className="mb-16"
         >
-          <p
-            className="text-xs font-bold tracking-[0.22em] uppercase mb-5"
-            style={{
-              background: 'linear-gradient(135deg, #c084fc, #818cf8)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
+          <p className="text-xs font-bold tracking-[0.22em] uppercase mb-5 gradient-text-brand">
             FAQ
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4 tracking-tight">
             Real questions from real people.
           </h2>
-          <p className="text-white/40 text-lg">No marketing fluff — just honest answers.</p>
+          <p className="text-secondary text-lg">No marketing fluff — just honest answers.</p>
         </motion.div>
 
         <div className="space-y-2.5">
@@ -77,12 +69,11 @@ export default function FAQ() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05, duration: 0.5 }}
-                className="rounded-2xl border overflow-hidden transition-all duration-300"
+                className="rounded-2xl border overflow-hidden transition-all duration-300 bg-surface"
                 style={{
-                  background: '#131722',
-                  borderColor: isOpen ? style.border : 'rgba(255,255,255,0.06)',
+                  borderColor: isOpen ? style.border : 'var(--color-border-base)',
                   borderLeftWidth: '3px',
-                  borderLeftColor: isOpen ? style.barColor : 'rgba(255,255,255,0.06)',
+                  borderLeftColor: isOpen ? style.barColor : 'var(--color-border-base)',
                 }}
               >
                 <button
@@ -96,16 +87,16 @@ export default function FAQ() {
                     >
                       {faq.category}
                     </span>
-                    <span className="text-[15px] font-semibold text-white leading-snug">{faq.q}</span>
+                    <span className="text-[15px] font-semibold text-primary leading-snug">{faq.q}</span>
                   </div>
                   <div
                     className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-300 mt-0.5"
-                    style={isOpen ? { background: style.bg, border: `1px solid ${style.border}` } : { background: 'rgba(255,255,255,0.04)' }}
+                    style={isOpen ? { background: style.bg, border: `1px solid ${style.border}` } : { background: 'var(--color-muted)', opacity: 0.1 }}
                   >
                     <ChevronDown
                       size={15}
                       className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
-                      style={{ color: isOpen ? style.fg : 'rgba(255,255,255,0.3)' }}
+                      style={{ color: isOpen ? style.fg : 'var(--color-text-secondary)' }}
                     />
                   </div>
                 </button>
@@ -118,7 +109,7 @@ export default function FAQ() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
                     >
-                      <div className="px-6 pb-6 text-sm text-white/40 leading-relaxed" style={{ paddingLeft: 'calc(1.5rem + 56px)' }}>
+                      <div className="px-6 pb-6 text-sm text-secondary leading-relaxed" style={{ paddingLeft: 'calc(1.5rem + 56px)' }}>
                         {faq.a}
                       </div>
                     </motion.div>

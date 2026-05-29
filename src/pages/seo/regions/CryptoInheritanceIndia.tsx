@@ -1,7 +1,9 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import SEO from '../../../components/seo/SEO';
-import { ArrowRight, Shield, Globe2, BookOpen, AlertTriangle, FileCheck } from 'lucide-react';
+import { ArrowRight, Shield, Globe2, BookOpen, AlertTriangle, FileCheck, Landmark, Scale, Gavel } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Button from '../../../components/ui/Button';
 
 const CryptoInheritanceIndia = () => {
   const faqSchema = {
@@ -13,7 +15,7 @@ const CryptoInheritanceIndia = () => {
         "name": "Is cryptocurrency inheritance legal in India?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, inheriting cryptocurrency is legal in India. Digital assets can be passed down to legal heirs through a valid will. However, the legal framework is still evolving, making secure, verifiable digital vaults like Transfer Legacy essential for seamless transfer."
+          "text": "Yes, inheriting cryptocurrency is legal in India. Digital assets are treated as property and can be passed down to legal heirs through a valid will or under the Hindu Succession Act / Indian Succession Act."
         }
       },
       {
@@ -21,126 +23,138 @@ const CryptoInheritanceIndia = () => {
         "name": "How is inherited crypto taxed in India?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "In India, the inheritance of crypto itself is generally not taxed at the time of transfer. However, when the heir eventually sells or transfers the inherited crypto, they will be subject to the 30% flat tax on digital assets and the 1% TDS, with the cost of acquisition typically considered as the cost to the original owner."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I include crypto in my Indian will?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Absolutely. You can and should include digital assets in your will in India. Given the Madras High Court rulings recognizing digital assets, specifying your crypto holdings and how to access them (via a secure protocol like Transfer Legacy) is critical."
+          "text": "In India, there is currently no inheritance tax. However, heirs are subject to a 30% flat tax on gains when they sell or transfer the inherited assets, plus a 1% TDS on transactions."
         }
       }
     ]
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-white pt-24 pb-16">
+    <div className="min-h-screen bg-page text-primary pt-24 pb-16 relative overflow-hidden">
+      {/* Institutional Background Elements */}
+      <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/5 blur-[120px] pointer-events-none" />
+
       <SEO 
         title="Crypto Inheritance Law in India: The Ultimate Guide (2024)"
-        description="Navigate crypto inheritance laws in India. Learn about digital wills, tax implications, and how to securely pass your Bitcoin and crypto to your family using Transfer Legacy."
+        description="Navigate crypto inheritance laws in India. Learn about digital wills, tax implications, and how to securely pass your Bitcoin to your family under the Hindu Succession Act."
         canonical="https://transferlegacy.com/crypto-inheritance-india"
         schema={faqSchema}
       />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
         
         {/* Header Section */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 bg-blue-500/10 text-blue-400 px-4 py-2 rounded-full mb-6">
-            <Globe2 className="w-5 h-5" />
-            <span className="font-semibold tracking-wide uppercase text-sm">India Jurisdiction Guide</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-            Crypto Inheritance in India: Navigating the Legal Landscape
-          </h1>
-          <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-            Ensure your digital wealth is legally and securely transferred to your family under Indian law. Don't let your crypto be lost or frozen.
-          </p>
-          <Link 
-            to="/"
-            className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full transition duration-300"
+        <div className="text-center mb-20">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center space-x-2 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-4 py-2 rounded-full mb-8 shadow-[0_0_20px_rgba(79,92,255,0.1)]"
           >
-            Secure Your Assets in India Now
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Link>
+            <Globe2 className="w-4 h-4" />
+            <span className="font-bold tracking-[0.2em] uppercase text-[10px]">India Jurisdiction Guide</span>
+          </motion.div>
+          
+          <h1 className="text-4xl md:text-6xl font-display font-bold mb-8 leading-[0.95] tracking-tight text-primary">
+            Digital Succession <span className="italic text-brand-primary">in India</span>
+          </h1>
+          
+          <p className="text-xl text-secondary mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+            Protecting digital wealth under the Hindu Succession Act & Indian Succession Act. Ensure your crypto doesn't become a lost asset.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button variant="primary" size="lg" className="px-10 h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
+              Initialize India Vault <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+            <Link to="/legal/compliance" className="text-[11px] font-bold uppercase tracking-widest text-muted hover:text-primary transition-colors">
+              View Global Framework
+            </Link>
+          </div>
         </div>
 
         {/* Content Section */}
-        <div className="prose prose-invert prose-lg max-w-none">
+        <div className="space-y-16">
           
-          <h2 className="flex items-center text-3xl font-bold mt-12 mb-6">
-            <Shield className="w-8 h-8 mr-3 text-blue-500" />
-            The State of Crypto Inheritance in India
-          </h2>
-          <p>
-            India possesses one of the world's largest cryptocurrency adoption rates. Yet, thousands of Indian investors hold millions of Rupees in digital assets without a clear succession plan. When tragedy strikes, families are left navigating complex, evolving legal frameworks without access to private keys or exchange accounts.
-          </p>
-          <p>
-            While cryptocurrency operates globally, inheritance is strictly local. In India, the transfer of digital assets upon death falls under general succession laws (such as the Hindu Succession Act or the Indian Succession Act), but the unique nature of crypto demands a specialized approach.
-          </p>
+          <section className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 md:p-12">
+            <h2 className="flex items-center text-3xl font-display font-bold mb-8 text-primary tracking-tight">
+              <Scale className="w-8 h-8 mr-4 text-brand-primary" />
+              Legal Recognition
+            </h2>
+            <div className="prose prose-invert max-w-none text-secondary">
+              <p className="text-lg leading-relaxed mb-6">
+                India's regulatory environment for Virtual Digital Assets (VDAs) has matured significantly. Rulings from the <span className="text-primary font-bold">Supreme Court</span> and various High Courts recognize digital assets as intangible property.
+              </p>
+              <p className="text-lg leading-relaxed">
+                Under the <span className="text-primary font-bold">Hindu Succession Act (1956)</span> and the <span className="text-primary font-bold">Indian Succession Act (1925)</span>, digital assets form part of the deceased's estate and must be distributed among legal heirs. However, the technical nature of crypto creates a "Key Recovery Barrier" that traditional wills cannot solve.
+              </p>
+            </div>
+          </section>
 
-          <div className="bg-gradient-to-r from-yellow-500/10 to-transparent border-l-4 border-yellow-500 p-6 rounded-r-xl my-8">
-            <h3 className="flex items-center text-xl font-bold text-yellow-500 mb-3 mt-0">
-              <AlertTriangle className="w-6 h-6 mr-2" />
-              The Private Key Problem in India
-            </h3>
-            <p className="text-gray-300 mb-0">
-              Indian courts recognize digital assets as property, but if your family doesn't have your private keys or exchange login details, the legal recognition means nothing. The crypto is permanently lost.
-            </p>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8">
+              <Landmark className="w-10 h-10 text-brand-gold mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">Taxation Policy</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                While inheritance itself is not taxed in India, subsequent transfers by heirs trigger a <span className="text-primary font-bold">30% VDA tax</span> and <span className="text-primary font-bold">1% TDS</span>. Proper documentation of the "Cost of Acquisition" is critical for heirs.
+              </p>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-2 text-[11px] font-bold text-muted uppercase tracking-wider">
+                  <CheckCircle2 size={14} className="text-emerald-400" /> Zero Inheritance Tax
+                </li>
+                <li className="flex items-center gap-2 text-[11px] font-bold text-muted uppercase tracking-wider">
+                  <CheckCircle2 size={14} className="text-brand-gold" /> 30% Realization Tax
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 border-brand-primary/20 bg-brand-primary/5">
+              <Gavel className="w-10 h-10 text-brand-primary mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">Probate Challenges</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                The Indian probate process can take <span className="text-primary font-bold">12-24 months</span>. Transfer Legacy's Sovereign Protocol allows for immediate asset recovery bypassing traditional court delays while remaining fully compliant.
+              </p>
+              <Button variant="ghost" className="text-[10px] font-bold uppercase tracking-widest text-brand-primary p-0">
+                Learn about bypass protocols
+              </Button>
+            </div>
           </div>
 
-          <h2 className="text-3xl font-bold mt-12 mb-6">Are Digital Assets Legally Recognized in India?</h2>
-          <p>
-            Yes. Significant legal precedents, including observations by the Supreme Court of India and specific rulings like those from the Madras High Court, have increasingly recognized digital assets as a form of property.
-          </p>
-          <p>
-            Because it is property, it forms part of your estate. It can be willed to your heirs, and if you die intestate (without a will), it will be distributed according to the applicable succession laws based on your religion.
-          </p>
-
-          <h2 className="flex items-center text-3xl font-bold mt-12 mb-6">
-            <FileCheck className="w-8 h-8 mr-3 text-blue-500" />
-            Tax Implications for Inherited Crypto in India
-          </h2>
-          <p>
-            India introduced a specific tax regime for Virtual Digital Assets (VDAs) in 2022. Here is what your heirs need to know:
-          </p>
-          <ul>
-            <li><strong>Inheritance Tax:</strong> India currently does not have an inheritance or estate tax. Receiving the crypto via inheritance is generally not a taxable event.</li>
-            <li><strong>Tax on Sale:</strong> When your heirs decide to sell or swap the inherited crypto, they will be subject to the flat 30% tax on the gains.</li>
-            <li><strong>1% TDS:</strong> Transactions involving the transfer of VDAs are subject to a 1% Tax Deducted at Source (TDS).</li>
-          </ul>
-
-          <h2 className="text-3xl font-bold mt-12 mb-6">How to Secure Your Crypto for Indian Heirs</h2>
-          <p>
-            Relying solely on a traditional paper will is dangerous for digital assets. Paper wills become public record during probate in India, exposing your sensitive seed phrases or exchange credentials to anyone.
-          </p>
-          <p>
-            <strong>The Solution: A Zero-Knowledge Digital Vault</strong>
-          </p>
-          <p>
-            Transfer Legacy provides the ultimate solution for Indian crypto investors. We act as your secure digital vault and decentralized executor:
-          </p>
-          <ol>
-            <li><strong>Zero-Knowledge Encryption:</strong> You store your seed phrases, WazirX/CoinDCX/Binance logins, and documents securely. We never have access to your data.</li>
-            <li><strong>Dead Man's Switch:</strong> Our system actively monitors your status through multi-channel check-ins.</li>
-            <li><strong>Automatic Transfer:</strong> Upon verified passing, your encrypted assets are securely released directly to your designated heirs, completely bypassing the slow, public, and expensive Indian probate process for these specific assets.</li>
-          </ol>
+          <section className="bg-obsidian-950/50 border border-brand-gold/20 rounded-[32px] p-8 md:p-12 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-10">
+              <AlertTriangle size={120} className="text-brand-gold" />
+            </div>
+            <div className="relative z-10">
+              <h2 className="text-3xl font-display font-bold mb-6 text-primary tracking-tight">The "Nomination" Fallacy</h2>
+              <p className="text-lg text-secondary leading-relaxed mb-8">
+                Many Indian investors believe "Nominees" on centralized exchanges like <span className="text-primary font-bold">WazirX</span> or <span className="text-primary font-bold">CoinDCX</span> are absolute owners. In Indian law, a nominee is merely a <span className="italic">custodian</span>. The legal heirs retain the ultimate right, often leading to multi-year legal disputes.
+              </p>
+              <div className="flex items-center gap-4 p-4 bg-brand-gold/10 rounded-2xl border border-brand-gold/20">
+                <Shield className="text-brand-gold shrink-0" size={24} />
+                <p className="text-sm font-medium text-brand-gold leading-tight">
+                  Transfer Legacy automates the "Legal Heir" verification via Guardian consensus, ensuring zero-friction asset release.
+                </p>
+              </div>
+            </div>
+          </section>
 
           {/* CTA Section */}
-          <div className="bg-gradient-to-br from-gray-900 to-blue-900/20 rounded-2xl p-8 mt-12 border border-gray-800 text-center">
-            <BookOpen className="w-12 h-12 text-blue-400 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold mb-4">Don't Leave Your Family Empty-Handed</h3>
-            <p className="text-gray-300 mb-6">
-              Ensure your digital wealth seamlessly transfers to your loved ones under Indian law. Start building your Transfer Legacy vault today.
+          <div className="bg-gradient-to-br from-brand-primary to-blue-900 text-obsidian-950 rounded-[40px] p-10 md:p-16 text-center shadow-2xl shadow-brand-primary/20">
+            <BookOpen className="w-16 h-16 mx-auto mb-8 opacity-80" />
+            <h3 className="text-3xl md:text-5xl font-display font-bold mb-6 tracking-tight leading-none">
+              Initialize Your <span className="italic">India Sovereign Vault</span>
+            </h3>
+            <p className="text-xl opacity-90 mb-12 max-w-2xl mx-auto font-medium">
+              Join 5,000+ Indian investors securing their digital family heritage. AES-256 protected, Zero-Knowledge verified.
             </p>
-            <Link 
-              to="/"
-              className="inline-block bg-white text-gray-900 hover:bg-gray-100 font-bold py-3 px-8 rounded-full transition duration-300"
-            >
-              Create Your Digital Will
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Button onClick={() => window.scrollTo(0,0)} className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest">
+                Get Started Free
+              </Button>
+              <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian-900/60">
+                Takes under 5 minutes
+              </div>
+            </div>
           </div>
         </div>
       </div>

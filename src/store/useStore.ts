@@ -69,6 +69,7 @@ interface User {
   plan: string;
   nextCheckInDate: string;
   checkInHistory: { date: string, method: string }[];
+  jurisdiction?: string;
 }
 
 interface AppState {
@@ -105,6 +106,7 @@ interface AppState {
   updateAllocation: (id: string, percentage: number) => void;
   removeAllocation: (id: string) => void;
   calculateScore: () => void;
+  setJurisdiction: (jurisdiction: string) => void;
 }
 
 const calculateNewScore = (state: Pick<AppState, 'guardians' | 'assets' | 'heirs'>) => {
@@ -225,5 +227,6 @@ export const useStore = create<AppState>((set) => ({
     allocations: state.allocations.filter(a => a.id !== id)
   })),
 
-  calculateScore: () => set((state) => ({ user: { ...state.user, score: calculateNewScore(state) } }))
+  calculateScore: () => set((state) => ({ user: { ...state.user, score: calculateNewScore(state) } })),
+  setJurisdiction: (jurisdiction) => set((state) => ({ user: { ...state.user, jurisdiction } }))
 }));

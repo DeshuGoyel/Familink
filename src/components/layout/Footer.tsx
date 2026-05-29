@@ -6,9 +6,9 @@ export default function Footer() {
   return (
     <footer className="bg-surface/30 backdrop-blur-xl border-t border-base pt-24 pb-12">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-16 mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-16 mb-24">
           <div className="lg:col-span-2">
-            <Logo className="mb-8" size={32} showTagline={true} />
+            <Logo className="mb-8" size={40} showTagline={true} />
             <p className="text-muted/80 text-sm leading-relaxed mb-8 max-w-sm font-medium tracking-tight">
               Transfer Legacy is the global standard for sovereign digital asset succession. We provide institutional-grade infrastructure to secure your crypto, identities, and memories for generations to come.
             </p>
@@ -33,11 +33,23 @@ export default function Footer() {
           <div>
             <h3 className="text-primary text-xs font-bold uppercase tracking-[0.2em] mb-8">Trust Center</h3>
             <ul className="space-y-4 text-sm text-muted font-medium">
-              <li><Link to="/resources/whitepaper" className="hover:text-brand-primary transition-colors">Security Whitepaper</Link></li>
+              <li><Link to="/whitepaper" className="hover:text-brand-primary transition-colors">Technical Whitepaper</Link></li>
+              <li><Link to="/legal-templates" className="hover:text-brand-primary transition-colors">Succession Templates</Link></li>
               <li><Link to="/legal/compliance" className="hover:text-brand-primary transition-colors">Global Compliance</Link></li>
               <li><Link to="/legal/security-architecture" className="hover:text-brand-primary transition-colors">Sovereign Architecture</Link></li>
               <li><Link to="/resources/faq" className="hover:text-brand-primary transition-colors">Protocol FAQ</Link></li>
-              <li><Link to="/resources/guides" className="hover:text-brand-primary transition-colors">Developer Portal</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-primary text-xs font-bold uppercase tracking-[0.2em] mb-8">Knowledge</h3>
+            <ul className="space-y-4 text-sm text-muted font-medium">
+              <li><Link to="/resources" className="hover:text-brand-primary transition-colors font-bold text-brand-primary">Resource Hub</Link></li>
+              <li><Link to="/transfer-legacy-vs-traditional-wills" className="hover:text-brand-primary transition-colors">Legacy vs. Wills</Link></li>
+              <li><Link to="/crypto-inheritance-india" className="hover:text-brand-primary transition-colors">India Guide</Link></li>
+              <li><Link to="/crypto-inheritance-usa" className="hover:text-brand-primary transition-colors">USA Guide</Link></li>
+              <li><Link to="/crypto-inheritance-uk" className="hover:text-brand-primary transition-colors">UK Guide</Link></li>
+              <li><Link to="/crypto-inheritance-uae" className="hover:text-brand-primary transition-colors">UAE Guide</Link></li>
             </ul>
           </div>
 
@@ -45,9 +57,9 @@ export default function Footer() {
             <h3 className="text-primary text-xs font-bold uppercase tracking-[0.2em] mb-8">Support</h3>
             <ul className="space-y-4 text-sm text-muted font-medium">
               <li><Link to="/onboarding" className="hover:text-brand-primary transition-colors">Start Protocol</Link></li>
-              <li><Link to="/tools/compare" className="hover:text-brand-primary transition-colors">Compare Platforms</Link></li>
-              <li><Link to="/legal/privacy" className="hover:text-brand-primary transition-colors">Privacy Commitment</Link></li>
-              <li><Link to="/legal/terms" className="hover:text-brand-primary transition-colors">Terms of Service</Link></li>
+              <li><Link to="/tools/planner" className="hover:text-brand-primary transition-colors">Succession Audit</Link></li>
+              <li><Link to="/tools/crypto-risk-calculator" className="hover:text-brand-primary transition-colors">Risk Calculator</Link></li>
+              <li><Link to="/legal/privacy" className="hover:text-brand-primary transition-colors">Privacy Protocol</Link></li>
               <li><a href="mailto:support@transferlegacy.global" className="flex items-center gap-2 hover:text-brand-primary transition-colors"><Mail size={14} /> Institutional Desk</a></li>
             </ul>
           </div>

@@ -37,11 +37,9 @@ function AnimatedCounter({ target, delay }: { target: number; delay: number }) {
 
 export default function Problem() {
   return (
-    <section id="problem" className="relative py-28 overflow-hidden" style={{ background: '#0C0E18' }}>
+    <section id="problem" className="relative py-28 overflow-hidden bg-raised">
       {/* Gradient accent top */}
-      <div className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(249,115,22,0.4), transparent)' }}
-      />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-primary/40 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-6">
         {/* Section header */}
@@ -52,14 +50,12 @@ export default function Problem() {
           transition={{ duration: 0.7 }}
           className="mb-20 max-w-3xl"
         >
-          <p className="text-xs font-bold tracking-[0.22em] uppercase mb-5"
-            style={{ background: 'linear-gradient(135deg, #f9a8d4, #f97316)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
-          >
+          <p className="text-xs font-bold tracking-[0.22em] uppercase mb-5 gradient-text-brand">
             The Problem
           </p>
-          <h2 className="text-4xl md:text-5xl lg:text-5xl font-bold text-white leading-[1.08] tracking-tight">
+          <h2 className="text-4xl md:text-5xl lg:text-5xl font-bold text-primary leading-[1.08] tracking-tight">
             $189 Billion in crypto vanishes every year.{' '}
-            <span className="text-white/30 font-light">No one told their family.</span>
+            <span className="text-secondary/30 font-light">No one told their family.</span>
           </h2>
         </motion.div>
 
@@ -72,8 +68,7 @@ export default function Problem() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.14, duration: 0.65 }}
-              className="relative rounded-3xl p-8 border border-white/[0.07] overflow-hidden group hover:-translate-y-1 transition-all duration-300"
-              style={{ background: '#151A28' }}
+              className="relative rounded-3xl p-8 border border-border-base overflow-hidden group hover:-translate-y-1 transition-all duration-300 bg-surface"
             >
               {/* Glow */}
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -83,7 +78,7 @@ export default function Problem() {
                 {stat.prefix}<AnimatedCounter target={stat.value} delay={i * 0.15} />{stat.suffix}
               </div>
               {stat.showBar && (
-                <motion.div className="w-full h-1 rounded-full mb-3 overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                <motion.div className="w-full h-1 rounded-full mb-3 overflow-hidden bg-muted/10">
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: `${stat.value}%` }}
@@ -94,7 +89,7 @@ export default function Problem() {
                   />
                 </motion.div>
               )}
-              <p className="text-white/40 text-sm leading-relaxed relative z-10">{stat.desc}</p>
+              <p className="text-secondary text-sm leading-relaxed relative z-10">{stat.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -105,14 +100,14 @@ export default function Problem() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-3xl overflow-hidden border border-white/[0.06]"
+          className="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-3xl overflow-hidden border border-border-base bg-surface shadow-sm"
         >
           {/* Without */}
-          <div className="relative p-10 md:p-14 border-r border-white/[0.06] group overflow-hidden" style={{ background: '#130F14' }}>
+          <div className="relative p-10 md:p-14 border-r border-border-base group overflow-hidden bg-rose-500/[0.02] dark:bg-rose-500/[0.01]">
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
               style={{ background: 'radial-gradient(circle at 20% 20%, rgba(239,68,68,0.06), transparent 60%)' }}
             />
-            <span className="inline-block text-xs font-bold tracking-widest uppercase text-red-400 bg-red-500/10 border border-red-500/15 px-3 py-1.5 rounded-full mb-7">
+            <span className="inline-block text-xs font-bold tracking-widest uppercase text-rose-500 bg-rose-500/10 border border-rose-500/15 px-3 py-1.5 rounded-full mb-7">
               Without Transfer Legacy
             </span>
             <div className="space-y-5">
@@ -123,21 +118,21 @@ export default function Problem() {
                 'Your life\'s work: gone.',
               ].map((step, i) => (
                 <div key={i} className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-5 h-5 rounded-full border border-red-500/40 flex items-center justify-center mt-0.5">
-                    <div className="w-2 h-2 rounded-full bg-red-500" />
+                  <div className="flex-shrink-0 w-5 h-5 rounded-full border border-rose-500/40 flex items-center justify-center mt-0.5">
+                    <div className="w-2 h-2 rounded-full bg-rose-500" />
                   </div>
-                  <p className="text-white/40 text-sm leading-relaxed">{step}</p>
+                  <p className="text-secondary text-sm leading-relaxed">{step}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* With */}
-          <div className="relative p-10 md:p-14 group overflow-hidden" style={{ background: '#0B1210' }}>
+          <div className="relative p-10 md:p-14 group overflow-hidden bg-emerald-500/[0.02] dark:bg-emerald-500/[0.01]">
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
               style={{ background: 'radial-gradient(circle at 80% 20%, rgba(52,211,153,0.06), transparent 60%)' }}
             />
-            <span className="inline-block text-xs font-bold tracking-widest uppercase text-emerald-400 bg-emerald-500/10 border border-emerald-500/15 px-3 py-1.5 rounded-full mb-7">
+            <span className="inline-block text-xs font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/15 px-3 py-1.5 rounded-full mb-7">
               With Transfer Legacy
             </span>
             <div className="space-y-5">
@@ -149,9 +144,9 @@ export default function Problem() {
               ].map((step, i) => (
                 <div key={i} className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-5 h-5 rounded-full border border-emerald-500/40 flex items-center justify-center mt-0.5">
-                    <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400" />
                   </div>
-                  <p className="text-white/75 text-sm leading-relaxed">{step}</p>
+                  <p className="text-primary text-sm leading-relaxed">{step}</p>
                 </div>
               ))}
             </div>
@@ -160,9 +155,7 @@ export default function Problem() {
       </div>
 
       {/* Bottom gradient line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(192,132,252,0.3), transparent)' }}
-      />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-primary/30 to-transparent" />
     </section>
   );
 }

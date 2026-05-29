@@ -61,8 +61,7 @@ export default function SocialProof() {
   return (
     <section
       ref={ref}
-      className="relative py-16 overflow-hidden"
-      style={{ background: '#0E1018', borderTop: '1px solid rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+      className="relative py-16 overflow-hidden bg-page border-y border-border-base/50"
     >
       {/* Ambient */}
       <div
@@ -79,38 +78,29 @@ export default function SocialProof() {
               <motion.span
                 animate={{ scale: count === 2417 ? [1, 1.05, 1] : 1 }}
                 transition={{ duration: 0.4, type: 'spring' }}
-                className="text-5xl font-bold text-white leading-none"
+                className="text-5xl font-bold text-primary leading-none"
               >
                 {count.toLocaleString()}
               </motion.span>
-              <span
-                className="text-4xl font-bold mb-1"
-                style={{
-                  background: 'linear-gradient(135deg, #f97316, #fb923c)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
-              >
+              <span className="text-4xl font-bold mb-1 gradient-text-brand">
                 +
               </span>
             </div>
-            <p className="text-white/35 text-lg mb-8">people protecting their digital legacy</p>
+            <p className="text-secondary text-lg mb-8">people protecting their digital legacy</p>
 
             <div className="flex items-center justify-between text-sm mb-2.5">
-              <span className="text-white/30 font-medium">Founding spots claimed</span>
-              <span className="font-bold" style={{ color: '#fb923c' }}>{progress}%</span>
+              <span className="text-secondary/80 font-medium">Founding spots claimed</span>
+              <span className="font-bold text-brand-primary">{progress}%</span>
             </div>
-            <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)' }}>
+            <div className="w-full h-1.5 rounded-full overflow-hidden bg-muted/10">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: visible ? `${progress}%` : 0 }}
                 transition={{ duration: 2, ease: 'easeOut', delay: 0.3 }}
-                className="h-full rounded-full"
-                style={{ background: 'linear-gradient(90deg, #f97316, #fb923c)' }}
+                className="h-full rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary"
               />
             </div>
-            <p className="text-xs text-white/20 mt-2">{5000 - 2417} founding slots remaining at current pricing.</p>
+            <p className="text-xs text-secondary/40 mt-2">{5000 - 2417} founding slots remaining at current pricing.</p>
           </div>
 
           {/* Testimonial rotator */}
@@ -122,24 +112,16 @@ export default function SocialProof() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.45 }}
-                className="rounded-2xl p-7 relative overflow-hidden"
-                style={{
-                  background: '#131722',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  borderLeftWidth: '3px',
-                  borderLeftColor: t.accent,
-                }}
+                className="rounded-2xl p-7 relative overflow-hidden bg-surface dark:bg-[#131722] border border-border-base border-l-[3px]"
+                style={{ borderLeftColor: t.accent }}
               >
                 {t.verified && (
-                  <div
-                    className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1 rounded-full mb-4"
-                    style={{ color: '#34d399', background: 'rgba(52,211,153,0.08)', border: '1px solid rgba(52,211,153,0.18)' }}
-                  >
+                  <div className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1 rounded-full mb-4 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/15">
                     ✓ Verified Beta User
                   </div>
                 )}
                 <Quote size={16} className="mb-3" style={{ color: `${t.accent}60` }} />
-                <p className="text-white/70 text-sm leading-relaxed mb-6">"{t.quote}"</p>
+                <p className="text-secondary text-sm leading-relaxed mb-6">"{t.quote}"</p>
                 <div className="flex items-center gap-3">
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs"
@@ -148,8 +130,8 @@ export default function SocialProof() {
                     {t.initials}
                   </div>
                   <div>
-                    <p className="font-bold text-white text-sm">{t.name}</p>
-                    <p className="text-white/30 text-xs">{t.role}</p>
+                    <p className="font-bold text-primary text-sm">{t.name}</p>
+                    <p className="text-secondary/50 text-xs">{t.role}</p>
                   </div>
                 </div>
               </motion.div>
@@ -164,8 +146,9 @@ export default function SocialProof() {
                   className="h-1 rounded-full transition-all duration-300"
                   style={{
                     width: i === active ? '24px' : '6px',
-                    background: i === active ? t.accent : 'rgba(255,255,255,0.15)',
+                    background: i === active ? t.accent : 'currentColor',
                   }}
+                  className={`h-1 rounded-full transition-all duration-300 ${i === active ? '' : 'bg-muted/30'}`}
                 />
               ))}
             </div>
@@ -173,13 +156,13 @@ export default function SocialProof() {
         </div>
 
         {/* "As seen in" */}
-        <div className="flex flex-col items-center gap-4" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '32px' }}>
-          <p className="text-[10px] font-bold text-white/20 uppercase tracking-[0.22em]">As seen in</p>
+        <div className="flex flex-col items-center gap-4 border-t border-border-base pt-8">
+          <p className="text-[10px] font-bold text-secondary/30 uppercase tracking-[0.22em]">As seen in</p>
           <div className="flex flex-wrap justify-center gap-x-10 gap-y-3">
             {media.map((m) => (
               <span
                 key={m}
-                className="text-base font-bold tracking-wider text-white/15 hover:text-white/40 transition-colors duration-200 cursor-default"
+                className="text-base font-bold tracking-wider text-secondary/20 hover:text-secondary/50 transition-colors duration-200 cursor-default"
               >
                 {m}
               </span>

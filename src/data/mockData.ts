@@ -117,11 +117,12 @@ export const mockHeirs = [
 ];
 
 export const mockActivity = [
-  { id: 'a1', message: 'BTC Wallet added', time: '2h ago', icon: 'Lock' },
-  { id: 'a2', message: 'Guardian Sarah confirmed', time: '1d ago', icon: 'User' },
-  { id: 'a3', message: 'Will document uploaded', time: '3d ago', icon: 'FileText' },
-  { id: 'a4', message: 'ETH Wallet added', time: '5d ago', icon: 'Key' },
-  { id: 'a5', message: 'Gmail account linked', time: '1w ago', icon: 'Mail' }
+  { id: 'a1', message: 'Heartbeat sync successful', time: '2h ago', icon: 'Lock' },
+  { id: 'a2', message: 'Encryption keys rotated (v2.4)', time: '5h ago', icon: 'Key' },
+  { id: 'a3', message: 'Vault audit completed', time: '1d ago', icon: 'FileText' },
+  { id: 'a4', message: 'Guardian Sarah confirmed ID verification', time: '2d ago', icon: 'User' },
+  { id: 'a5', message: 'BTC Protocol status: SECURE', time: '3d ago', icon: 'Lock' },
+  { id: 'a6', message: 'New succession trigger point defined', time: '1w ago', icon: 'FileText' }
 ];
 
 export const mockNotifications = [

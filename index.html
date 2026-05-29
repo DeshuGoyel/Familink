@@ -32,13 +32,32 @@
     <meta property="twitter:description" content="The world's first AI-guided zero-knowledge legacy transfer protocol." />
     <meta property="twitter:image" content="https://transferlegacy.com/og-image.png" />
 
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/favicon.png">
+
     <!-- Initial Load & Flash of Unstyled Content Prevention -->
+    <script>
+      (function() {
+        try {
+          const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          if (theme === 'dark') document.documentElement.classList.add('dark');
+          else document.documentElement.classList.remove('dark');
+        } catch (e) {}
+      })();
+    </script>
     <style>
+      :root {
+        --preloader-bg: #F1F5F9;
+        --preloader-accent: #4F5CFF;
+      }
+      .dark {
+        --preloader-bg: #020409;
+      }
       body {
         margin: 0;
-        background-color: #020409;
-        color: #F0F6FC;
+        background-color: var(--preloader-bg);
         font-family: system-ui, -apple-system, sans-serif;
+        transition: background-color 0.2s ease;
       }
       .app-preloader {
         position: fixed;
@@ -46,14 +65,14 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background: #020409;
+        background: var(--preloader-bg);
         z-index: 9999;
       }
       .app-preloader .spinner {
         width: 32px;
         height: 32px;
-        border: 3px solid rgba(79, 92, 255, 0.2);
-        border-top-color: #4F5CFF;
+        border: 3px solid rgba(79, 92, 255, 0.15);
+        border-top-color: var(--preloader-accent);
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
       }
@@ -64,19 +83,45 @@
 
     <!-- Schema.org JSON-LD Markup for SEO -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Transfer Legacy",
-      "applicationCategory": "FinanceApplication",
-      "operatingSystem": "Web",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Transfer Legacy",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "description": "Transfer the access. Protect the legacy. Secure digital inheritance vault for cryptocurrency and assets."
       },
-      "description": "Transfer the access. Protect the legacy. Secure digital inheritance vault for cryptocurrency and assets."
-    }
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Transfer Legacy",
+        "url": "https://transferlegacy.com",
+        "logo": "https://transferlegacy.com/logo-dark.png",
+        "sameAs": [
+          "https://twitter.com/transferlegacy",
+          "https://linkedin.com/company/transferlegacy"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "email": "support@transferlegacy.global",
+          "contactType": "customer service"
+        }
+      }
+    ]
+    </script>
+    <!-- PRODUCTION_READY: Replace G-XXXXXXXXXX with your Google Analytics 4 Measurement ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX', { 'anonymize_ip': true });
     </script>
   </head>
   <body>

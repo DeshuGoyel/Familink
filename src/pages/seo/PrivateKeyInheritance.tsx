@@ -1,130 +1,100 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import SEO from '../../components/seo/SEO';
-import { ArrowRight, Lock, Key, Database } from 'lucide-react';
+import { ArrowRight, Shield, Globe2, BookOpen, AlertTriangle, FileCheck, Landmark, Scale, Gavel, CheckCircle2, Lock, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Button from '../../components/ui/Button';
 
 const PrivateKeyInheritance = () => {
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How do you pass down a private key?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The only secure way to pass down a private key is to use a decentralized, encrypted vault with a Dead Man's Switch, like Transfer Legacy. This ensures the key remains secret while you are alive, but is automatically transferred to your heirs if you pass away."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can a crypto exchange recover my private key?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. If you hold crypto in a self-custody wallet (where you control the private key), no exchange, company, or government can recover it for you or your family if the key is lost."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is it safe to email my private key to my family?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Absolutely not. Standard email is not end-to-end encrypted. Hackers routinely scan email accounts for strings of characters that look like private keys. If you email it, you risk having your wallet drained immediately."
-        }
-      }
-    ]
-  };
-
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-white pt-24 pb-16">
+    <div className="min-h-screen bg-page text-primary pt-24 pb-16 relative overflow-hidden">
+      <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/5 blur-[120px] pointer-events-none" />
+
       <SEO 
-        title="Private Key Inheritance: Securely Passing Crypto to Family"
-        description="Don't let your crypto die with you. Learn how to securely pass down your Bitcoin and crypto private keys to your family using a zero-knowledge vault."
+        title="Private Key Inheritance: Secure Digital Asset Succession Protocols"
+        description="Learn the technical and legal protocols for private key inheritance. Secure your Ethereum, Solana, and ERC-20 assets for the next generation."
         canonical="https://transferlegacy.com/private-key-inheritance"
-        schema={faqSchema}
       />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header Section */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 bg-indigo-500/10 text-indigo-400 px-4 py-2 rounded-full mb-6">
-            <Lock className="w-5 h-5" />
-            <span className="font-semibold tracking-wide uppercase text-sm">Advanced Security Guide</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-            Private Key Inheritance
-          </h1>
-          <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-            Not your keys, not your coins. But if your family doesn't get your keys, those coins are gone forever.
-          </p>
-          <Link 
-            to="/"
-            className="inline-flex items-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-full transition duration-300"
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-24">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center space-x-2 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-4 py-2 rounded-full mb-8 shadow-[0_0_20px_rgba(79,92,255,0.1)]"
           >
-            Secure Your Private Keys Now
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Link>
+            <Lock className="w-4 h-4" />
+            <span className="font-bold tracking-[0.2em] uppercase text-[10px]">Technical Protocol Guide</span>
+          </motion.div>
+          
+          <h1 className="text-5xl md:text-7xl font-display font-bold mb-8 leading-[0.95] tracking-tight text-primary">
+            Private Key <span className="italic text-brand-primary">Inheritance</span>
+          </h1>
+          
+          <p className="text-xl text-secondary mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+            In the decentralized world, a private key is the ultimate proof of ownership. If you don't plan for its succession, your assets die with you.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button variant="primary" size="lg" className="px-10 h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
+              Initialize Key Vault <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </div>
         </div>
 
-        {/* Content Section */}
-        <div className="prose prose-invert prose-lg max-w-none">
-          
-          <h2 className="flex items-center text-3xl font-bold mt-12 mb-6">
-            <Key className="w-8 h-8 mr-3 text-indigo-500" />
-            Understanding the Private Key
-          </h2>
-          <p>
-            In cryptocurrency, a private key is a highly complex alphanumeric string that grants the holder absolute control over the funds associated with it on the blockchain. Unlike a password to a bank account, a private key <strong>is</strong> the money. 
-          </p>
-          <p>
-            Because of this absolute power, planning for the inheritance of private keys requires an entirely different security paradigm than traditional estate planning.
-          </p>
+        <div className="space-y-16">
+          <section className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 md:p-12">
+            <h2 className="flex items-center text-3xl font-display font-bold mb-8 text-primary tracking-tight">
+              <Zap className="w-8 h-8 mr-4 text-brand-primary" />
+              The Ownership Dilemma
+            </h2>
+            <div className="prose prose-invert max-w-none text-secondary">
+              <p className="text-lg leading-relaxed mb-6">
+                Unlike bank accounts, <span className="text-primary font-bold">Private Keys</span> do not recognize "Legal Heirs." Blockchains only recognize whoever holds the key. This creates a dangerous "Trust Gap" between your legal will and the technical reality of your wallet.
+              </p>
+              <p className="text-lg leading-relaxed">
+                Transfer Legacy bridges this gap by creating a <span className="text-brand-primary font-bold">Sovereign Custody Protocol</span>. We ensure that your private keys are securely delivered to your verified heirs only when specified conditions are met.
+              </p>
+            </div>
+          </section>
 
-          <div className="bg-indigo-900/30 border-l-4 border-indigo-500 p-6 rounded-r-xl my-8">
-            <h3 className="flex items-center text-xl font-bold text-indigo-400 mb-3 mt-0">
-              The Fundamental Dilemma
-            </h3>
-            <p className="text-gray-300 mb-0">
-              You must ensure your family gets the key when you die, but you must simultaneously ensure that <strong>no one else</strong> (including your family, hackers, or lawyers) can access the key while you are alive.
-            </p>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8">
+              <Shield className="w-10 h-10 text-brand-gold mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">Cryptographic Security</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                Our protocol uses <span className="text-primary font-bold">AES-256-GCM encryption</span>. Your private keys are never stored in plain text. They are encrypted using a key derived from your biometrics and guardian quorum.
+              </p>
+              <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-400 uppercase tracking-widest">
+                <CheckCircle2 size={14} /> Zero-Knowledge Verified
+              </div>
+            </div>
+
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 border-brand-primary/20 bg-brand-primary/5">
+              <Globe2 className="w-10 h-10 text-brand-primary mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">Multi-Chain Support</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                Whether you hold <span className="text-primary font-bold">ETH, SOL, or BTC</span>, our protocol handles all private key formats securely. We provide specific recovery instructions for each asset class.
+              </p>
+              <Button variant="ghost" className="text-[10px] font-bold uppercase tracking-widest text-brand-primary p-0">
+                View Supported Assets
+              </Button>
+            </div>
           </div>
 
-          <h2 className="text-3xl font-bold mt-12 mb-6">Why Physical Methods Are Flawed</h2>
-          <p>
-            Engraving private keys on steel plates or writing them on paper and hiding them in a safe deposit box is common, but deeply flawed for inheritance:
-          </p>
-          <ul>
-            <li><strong>Single Point of Failure:</strong> If the house burns down, or the bank is compromised, the key is gone.</li>
-            <li><strong>Probate Delays:</strong> A safe deposit box gets sealed upon your death. Your heirs will need a court order to open it, which takes months. By the time they get the key, the crypto market could have crashed.</li>
-            <li><strong>Zero Context:</strong> A non-technical spouse finding a metal plate with random letters has no idea what to do with it, making them highly susceptible to scammers who offer to "help."</li>
-          </ul>
-
-          <h2 className="flex items-center text-3xl font-bold mt-12 mb-6">
-            <Database className="w-8 h-8 mr-3 text-indigo-500" />
-            The Digital Vault Strategy
-          </h2>
-          <p>
-            Transfer Legacy solves the fundamental dilemma using a <strong>Zero-Knowledge Dead Man's Switch</strong>.
-          </p>
-          <ol>
-            <li><strong>Absolute Secrecy During Life:</strong> You input your private keys into Transfer Legacy. The data is encrypted on your device. We store the ciphertext. Even if Transfer Legacy were hacked, the attacker would only get meaningless scrambled data.</li>
-            <li><strong>Automated Verification:</strong> The system monitors your well-being. If you do not respond to a sequence of check-ins over a period you define, the system assumes you have passed away.</li>
-            <li><strong>Secure Delivery with Instructions:</strong> The system automatically releases the decryption keys to your pre-assigned heirs. Crucially, you can attach video messages or plain-text guides explaining exactly how to sweep the private key into a new wallet, ensuring they don't get scammed.</li>
-          </ol>
-
-          {/* CTA Section */}
-          <div className="bg-gray-800/50 rounded-2xl p-8 mt-12 border border-gray-700 text-center">
-            <h3 className="text-2xl font-bold mb-4">Don't Take Your Wealth to the Grave</h3>
-            <p className="text-gray-300 mb-6">
-              Ensure your private keys are seamlessly and securely transferred to the people who matter most.
+          <div className="bg-gradient-to-br from-brand-primary to-blue-900 text-obsidian-950 rounded-[40px] p-10 md:p-16 text-center shadow-2xl shadow-brand-primary/20">
+            <h3 className="text-3xl md:text-5xl font-display font-bold mb-6 tracking-tight leading-none">
+              Pass Your <span className="italic">Private Keys</span> Securely
+            </h3>
+            <p className="text-xl opacity-90 mb-12 max-w-2xl mx-auto font-medium">
+              The world's first technical protocol for decentralized private key succession.
             </p>
-            <Link 
-              to="/"
-              className="inline-block bg-white text-gray-900 hover:bg-gray-100 font-bold py-3 px-8 rounded-full transition duration-300"
-            >
-              Encrypt Your Private Keys
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Button onClick={() => window.scrollTo(0,0)} className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest">
+                Initialize Protocol
+              </Button>
+            </div>
           </div>
         </div>
       </div>

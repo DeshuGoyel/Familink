@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transfer Legacy — Protect Your Digital Life</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:    #080B0A;
+  --bg2:   #0F1410;
+  --bg3:   #161C17;
+  --bg4:   #1E261F;
+  --or:    #F97316;
+  --or2:   #FB923C;
+  --gold:  #D97706;
+  --gold2: #F59E0B;
+  --sage:  #4A7C59;
+  --sage2: #6FAE84;
+  --white: #FFFFFF;
+  --off:   #E8EDF0;
+  --muted: rgba(255,255,255,.38);
+  --muted2:rgba(255,255,255,.58);
+  --border:rgba(255,255,255,.07);
+  --fh:    'Cormorant Garamond', serif;
+  --fb:    'DM Sans', sans-serif;
+  --fm:    'DM Mono', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--off);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ── CUSTOM CURSOR ── */
+*{cursor:none}
+.cursor{position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference}
+.cursor-dot{width:8px;height:8px;background:#fff;border-radius:50%;transform:translate(-50%,-50%);transition:transform .1s}
+.cursor-ring{width:36px;height:36px;border:1px solid rgba(255,255,255,.4);border-radius:50%;transform:translate(-50%,-50%);transition:all .18s ease;position:fixed}
+.cursor-ring.hover{transform:translate(-50%,-50%) scale(1.8);border-color:var(--or);background:rgba(249,115,22,.08)}
+
+/* ── GRAIN OVERLAY ── */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:1;opacity:.4}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 60px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.04);transition:all .3s}
+nav.scrolled{background:rgba(8,11,10,.85);border-bottom-color:var(--border)}
+.nav-brand{display:flex;align-items:center;gap:11px}
+.nav-logo{width:32px;height:32px;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.28);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.nav-logo svg{width:16px;height:16px;stroke:var(--or);stroke-width:2;fill:none}
+.nav-name{font-family:var(--fh);font-size:1.1rem;font-weight:600;color:var(--white);letter-spacing:.01em}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{font-size:13.5px;color:var(--muted2);text-decoration:none;transition:color .2s;letter-spacing:.02em}
+.nav-links a:hover{color:var(--white)}
+.nav-cta{display:flex;align-items:center;gap:10px}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted2);padding:9px 20px;border-radius:8px;font-family:var(--fb);font-size:13px;cursor:none;transition:all .2s}
+.btn-ghost:hover{border-color:rgba(255,255,255,.2);color:var(--white)}
+.btn-primary{background:var(--or);color:#fff;border:none;padding:9px 22px;border-radius:8px;font-family:var(--fb);font-size:13px;font-weight:500;cursor:none;transition:all .25s;position:relative;overflow:hidden}
+.btn-primary::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.12) 0%,transparent 100%)}
+.btn-primary:hover{background:var(--or2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(249,115,22,.35)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:120px 60px 80px;text-align:center;overflow:hidden}
+
+/* bg mesh orbs */
+.orb{position:absolute;border-radius:50%;pointer-events:none}
+.orb1{width:700px;height:700px;background:radial-gradient(circle,rgba(74,124,89,.12) 0%,transparent 65%);top:-200px;right:-200px;animation:drift1 18s ease-in-out infinite}
+.orb2{width:500px;height:500px;background:radial-gradient(circle,rgba(249,115,22,.08) 0%,transparent 65%);bottom:-100px;left:-100px;animation:drift2 22s ease-in-out infinite}
+.orb3{width:350px;height:350px;background:radial-gradient(circle,rgba(217,119,6,.07) 0%,transparent 65%);top:40%;left:50%;transform:translate(-50%,-50%);animation:drift3 15s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,30px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-40px)}}
+@keyframes drift3{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-52%,-48%)}}
+
+/* grid lines bg */
+.hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 75%);pointer-events:none}
+
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(249,115,22,.25);border-radius:20px;padding:5px 14px;margin-bottom:36px;backdrop-filter:blur(10px);background:rgba(249,115,22,.06);animation:fadeUp .8s ease both}
+.eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--or);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+.eyebrow-text{font-family:var(--fm);font-size:10px;letter-spacing:.14em;color:var(--or);text-transform:uppercase}
+
+.hero-h1{font-family:var(--fh);font-size:clamp(3.5rem,8vw,7rem);font-weight:400;line-height:1.0;letter-spacing:-.01em;margin-bottom:28px;animation:fadeUp .9s .1s ease both;position:relative;z-index:2}
+.hero-h1 .line1{display:block;color:var(--white)}
+.hero-h1 .line2{display:block;color:var(--gold2);font-style:italic}
+.hero-h1 .line3{display:block;color:var(--white)}
+
+.hero-sub{font-size:clamp(15px,2vw,18px);color:var(--muted2);line-height:1.7;max-width:560px;margin:0 auto 44px;animation:fadeUp 1s .2s ease both;position:relative;z-index:2}
+
+.hero-actions{display:flex;align-items:center;gap:14px;justify-content:center;animation:fadeUp 1s .3s ease both;position:relative;z-index:2;flex-wrap:wrap}
+.btn-hero{background:var(--or);color:#fff;border:none;padding:15px 32px;border-radius:10px;font-family:var(--fb);font-size:15px;font-weight:500;cursor:none;transition:all .25s;position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:9px}
+.btn-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.13) 0%,transparent 100%)}
+.btn-hero:hover{background:var(--or2);transform:translateY(-2px);box-shadow:0 12px 36px rgba(249,115,22,.4)}
+.btn-hero-ghost{background:transparent;color:var(--off);border:1px solid rgba(255,255,255,.15);padding:14px 28px;border-radius:10px;font-family:var(--fb);font-size:15px;cursor:none;transition:all .25s;display:inline-flex;align-items:center;gap:8px;backdrop-filter:blur(10px)}
+.btn-hero-ghost:hover{border-color:rgba(255,255,255,.3);color:var(--white);background:rgba(255,255,255,.04)}
+.btn-hero svg,.btn-hero-ghost svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.5;fill:none}
+
+.hero-trust{display:flex;align-items:center;gap:28px;justify-content:center;margin-top:52px;animation:fadeUp 1s .5s ease both;position:relative;z-index:2;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:7px}
+.trust-item svg{width:14px;height:14px;stroke:var(--sage2);stroke-width:2;fill:none}
+.trust-item span{font-size:12.5px;color:var(--muted2)}
+.trust-sep{width:1px;height:14px;background:var(--border)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── STATS STRIP ── */
+.stats-strip{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg2);padding:40px 60px;display:grid;grid-template-columns:repeat(4,1fr);position:relative;z-index:10}
+.stat-item{text-align:center;padding:0 20px;border-right:1px solid var(--border)}
+.stat-item:last-child{border-right:none}
+.stat-num{font-family:var(--fh);font-size:3rem;font-weight:500;color:var(--white);line-height:1;margin-bottom:6px}
+.stat-num span{color:var(--gold2);font-style:italic}
+.stat-label{font-family:var(--fm);font-size:9.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+
+/* ── SECTION SHARED ── */
+section{padding:120px 60px;max-width:1280px;margin:0 auto}
+.section-eyebrow{display:inline-flex;align-items:center;gap:7px;margin-bottom:16px}
+.section-dot{width:6px;height:6px;border-radius:50%;background:var(--or)}
+.section-tag{font-family:var(--fm);font-size:9.5px;letter-spacing:.14em;color:var(--or);text-transform:uppercase}
+.section-h{font-family:var(--fh);font-size:clamp(2.2rem,4.5vw,3.8rem);font-weight:400;line-height:1.1;color:var(--white);margin-bottom:18px}
+.section-h em{font-style:italic;color:var(--gold2)}
+.section-sub{font-size:16px;color:var(--muted2);line-height:1.75;max-width:560px}
+
+/* ── PROBLEM SECTION ── */
+.problem-section{background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);padding:120px 0;width:100%}
+.problem-inner{max-width:1280px;margin:0 auto;padding:0 60px}
+.story-quote{background:var(--bg3);border:1px solid rgba(217,119,6,.22);border-left:3px solid var(--gold);border-radius:0 16px 16px 0;padding:32px 36px;max-width:700px;margin-bottom:60px;position:relative}
+.story-quote::before{content:'"';position:absolute;top:-20px;left:28px;font-family:var(--fh);font-size:8rem;color:rgba(217,119,6,.15);line-height:1;pointer-events:none}
+.story-text{font-family:var(--fh);font-size:1.25rem;font-style:italic;line-height:1.85;color:var(--off);position:relative;z-index:1}
+.story-attr{margin-top:14px;font-family:var(--fm);font-size:10px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+
+.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:16px;overflow:hidden;margin-top:60px}
+.prob-card{background:var(--bg2);padding:36px;transition:background .2s}
+.prob-card:hover{background:var(--bg3)}
+.prob-num{font-family:var(--fh);font-size:3.2rem;font-weight:500;color:var(--white);line-height:1;margin-bottom:8px}
+.prob-label{font-size:14px;font-weight:500;color:var(--off);margin-bottom:8px}
+.prob-sub{font-size:13px;color:var(--muted2);line-height:1.65}
+.prob-accent{width:32px;height:2px;margin-bottom:20px;border-radius:2px}
+
+/* ── HOW IT WORKS ── */
+.how-section{padding:120px 60px;max-width:1280px;margin:0 auto}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:64px;position:relative}
+.steps-grid::before{content:'';position:absolute;top:32px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border),var(--border),transparent);z-index:0}
+.step-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;position:relative;z-index:1;transition:all .25s}
+.step-card:hover{border-color:rgba(249,115,22,.25);background:var(--bg3);transform:translateY(-4px)}
+.step-num{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;position:relative}
+.step-num::after{content:attr(data-num);font-family:var(--fm);font-size:13px;font-weight:500;color:#fff}
+.step-title{font-size:16px;font-weight:500;color:var(--white);margin-bottom:10px}
+.step-body{font-size:13px;color:var(--muted2);line-height:1.7}
+.step-icon{position:absolute;top:-1px;right:-1px;width:28px;height:28px;background:var(--bg3);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.step-icon svg{width:13px;height:13px;fill:none;stroke-width:1.5}
+
+/* ── FEATURES ── */
+.features-section{padding:120px 60px;background:var(--bg2);width:100%;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.features-inner{max-width:1280px;margin:0 auto}
+.features-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:64px;align-items:start}
+.feature-list{display:flex;flex-direction:column;gap:4px}
+.feature-item{padding:24px;border-radius:12px;cursor:none;transition:all .2s;border:1px solid transparent}
+.feature-item.active{background:var(--bg3);border-color:rgba(249,115,22,.2)}
+.feature-item:hover:not(.active){background:rgba(255,255,255,.02)}
+.feature-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.feature-icon svg{width:17px;height:17px;stroke:currentColor;stroke-width:1.5;fill:none}
+.feature-title{font-size:15px;font-weight:500;color:var(--white);margin-bottom:6px}
+.feature-body{font-size:13px;color:var(--muted2);line-height:1.65}
+.feature-preview{background:var(--bg3);border:1px solid var(--border);border-radius:20px;overflow:hidden;aspect-ratio:4/3;position:relative;display:flex;align-items:center;justify-content:center;min-height:420px}
+.preview-inner{width:85%;text-align:center;padding:32px}
+
+/* ── PRICING ── */
+.pricing-section{padding:120px 60px;max-width:1280px;margin:0 auto}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:64px}
+.price-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .25s;position:relative;overflow:hidden}
+.price-card::before{content:'';position:absolute;inset:0;opacity:0;background:linear-gradient(135deg,rgba(249,115,22,.06) 0%,transparent 60%);transition:opacity .25s}
+.price-card:hover::before{opacity:1}
+.price-card:hover{border-color:rgba(249,115,22,.22);transform:translateY(-4px)}
+.price-card.featured{border-color:rgba(249,115,22,.35);background:linear-gradient(135deg,rgba(249,115,22,.06) 0%,var(--bg2) 50%)}
+.price-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:500;font-family:var(--fm);letter-spacing:.06em;margin-bottom:16px}
+.price-name{font-size:14px;font-weight:500;color:var(--off);margin-bottom:8px;letter-spacing:.02em}
+.price-val{font-family:var(--fh);font-size:3rem;font-weight:500;color:var(--white);line-height:1;margin-bottom:4px}
+.price-per{font-size:12px;color:var(--muted);margin-bottom:24px}
+.price-sep{height:1px;background:var(--border);margin-bottom:20px}
+.price-features{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.pf-item{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--muted2);line-height:1.4}
+.pf-item svg{width:14px;height:14px;stroke:var(--sage2);stroke-width:2;fill:none;flex-shrink:0;margin-top:1px}
+.btn-price{width:100%;padding:11px;border-radius:9px;font-family:var(--fb);font-size:13px;font-weight:500;cursor:none;transition:all .2s;text-align:center;border:1px solid var(--border);background:transparent;color:var(--muted2)}
+.btn-price:hover{border-color:var(--border);color:var(--off);background:rgba(255,255,255,.04)}
+.btn-price-or{background:var(--or);color:#fff;border-color:var(--or)}
+.btn-price-or:hover{background:var(--or2);box-shadow:0 8px 24px rgba(249,115,22,.3)}
+
+/* ── TESTIMONIALS ── */
+.testimonials{padding:120px 60px;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);width:100%}
+.test-inner{max-width:1280px;margin:0 auto}
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:64px}
+.test-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .2s}
+.test-card:hover{border-color:var(--border);transform:translateY(-3px);background:var(--bg3)}
+.test-stars{display:flex;gap:3px;margin-bottom:16px}
+.test-stars svg{width:13px;height:13px;fill:var(--gold2);stroke:none}
+.test-quote{font-family:var(--fh);font-size:1.05rem;font-style:italic;color:var(--off);line-height:1.75;margin-bottom:20px}
+.test-author{display:flex;align-items:center;gap:10px}
+.test-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;font-family:var(--fm);flex-shrink:0}
+.test-name{font-size:13px;font-weight:500;color:var(--white)}
+.test-role{font-size:11.5px;color:var(--muted)}
+
+/* ── FAQ ── */
+.faq-section{padding:120px 60px;max-width:860px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--border);padding:24px 0}
+.faq-q{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;cursor:none;user-select:none}
+.faq-question{font-size:16px;font-weight:500;color:var(--white)}
+.faq-icon{width:22px;height:22px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.faq-icon svg{width:11px;height:11px;stroke:var(--muted2);stroke-width:2;fill:none;transition:transform .25s}
+.faq-item.open .faq-icon{border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.08)}
+.faq-item.open .faq-icon svg{transform:rotate(45deg);stroke:var(--or)}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .25s ease;font-size:14.5px;color:var(--muted2);line-height:1.75}
+.faq-item.open .faq-answer{max-height:200px;padding-top:16px}
+
+/* ── CTA SECTION ── */
+.cta-section{padding:160px 60px;text-align:center;position:relative;overflow:hidden}
+.cta-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(74,124,89,.1) 0%,transparent 70%)}
+.cta-h{font-family:var(--fh);font-size:clamp(2.8rem,6vw,5.5rem);font-weight:400;line-height:1.05;color:var(--white);margin-bottom:20px;position:relative;z-index:1}
+.cta-h em{font-style:italic;color:var(--gold2)}
+.cta-sub{font-size:17px;color:var(--muted2);max-width:500px;margin:0 auto 44px;line-height:1.7;position:relative;z-index:1}
+.cta-actions{display:flex;align-items:center;gap:14px;justify-content:center;position:relative;z-index:1}
+
+/* ── EMAIL FORM ── */
+.email-form{display:flex;gap:10px;max-width:420px;width:100%;margin:0 auto}
+.email-inp{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:9px;padding:13px 16px;font-family:var(--fb);font-size:14px;color:var(--white);outline:none;transition:border .2s;backdrop-filter:blur(10px)}
+.email-inp:focus{border-color:rgba(249,115,22,.5)}
+.email-inp::placeholder{color:var(--muted)}
+
+/* ── FOOTER ── */
+footer{padding:60px;border-top:1px solid var(--border);background:var(--bg2)}
+.footer-inner{max-width:1280px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-brand{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.footer-desc{font-size:13px;color:var(--muted);line-height:1.7;max-width:240px}
+.footer-col-title{font-family:var(--fm);font-size:9.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:16px}
+.footer-links{display:flex;flex-direction:column;gap:10px}
+.footer-links a{font-size:13px;color:var(--muted2);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--white)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:28px;border-top:1px solid var(--border)}
+.footer-copy{font-size:12.5px;color:var(--muted)}
+.footer-legal{display:flex;gap:22px}
+.footer-legal a{font-size:12.5px;color:var(--muted);text-decoration:none}
+.footer-legal a:hover{color:var(--muted2)}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .75s ease,transform .75s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+
+/* ── PREVIEW MOCKUP ── */
+.mock-window{background:var(--bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;width:100%}
+.mock-topbar{background:var(--bg2);padding:10px 14px;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--border)}
+.mock-dot{width:8px;height:8px;border-radius:50%}
+.mock-content{padding:16px}
+.mock-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:8px}
+.mock-label{font-family:var(--fm);font-size:8px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+.mock-val{font-size:20px;font-weight:600;color:var(--white)}
+.mock-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.mock-prog-track{background:var(--bg3);border-radius:3px;height:3px;margin-top:8px;overflow:hidden}
+.mock-prog-fill{height:100%;border-radius:3px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav{padding:18px 24px}
+  .nav-links{display:none}
+  .hero{padding:100px 24px 60px}
+  .stats-strip{padding:32px 24px;grid-template-columns:repeat(2,1fr);gap:1px}
+  section,.how-section,.pricing-section,.faq-section{padding:80px 24px}
+  .problem-inner,.features-inner,.test-inner,.footer-inner{padding:0 24px}
+  .testimonials,.features-section,.testimonials,.cta-section{padding:80px 24px}
+  footer{padding:48px 24px}
+  .steps-grid,.problem-grid,.pricing-grid,.test-grid,.features-grid,.footer-top{grid-template-columns:1fr}
+  .steps-grid::before{display:none}
+  .email-form{flex-direction:column}
+  .cta-actions{flex-direction:column;width:100%;max-width:360px;margin:0 auto}
+  .footer-top{gap:32px}
+  *{cursor:auto}
+  .cursor,.cursor-ring{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor cursor-dot" id="cur-dot"></div>
+<div class="cursor cursor-ring" id="cur-ring"></div>
+
+<!-- ══════════════ NAV ══════════════ -->
+<nav id="navbar">
+  <div class="nav-brand">
+    <div class="nav-logo"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+    <div class="nav-name">Transfer Legacy</div>
+  </div>
+  <div class="nav-links">
+    <a href="#how">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn-ghost">Sign in</button>
+    <button class="btn-primary">Get started free</button>
+  </div>
+</nav>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <div class="hero-eyebrow">
+    <div class="eyebrow-dot"></div>
+    <span class="eyebrow-text">Now in early access · Founding tier open</span>
+  </div>
+
+  <h1 class="hero-h1">
+    <span class="line1">Your entire digital life.</span>
+    <span class="line2">Protected. Organised.</span>
+    <span class="line3">Passed on.</span>
+  </h1>
+
+  <p class="hero-sub">
+    Bank accounts, passwords, files, photos, subscriptions — your family accesses everything in under 10 minutes. No technical knowledge required.
+  </p>
+
+  <div class="hero-actions">
+    <button class="btn-hero">
+      Protect your family
+      <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>
+    <button class="btn-hero-ghost">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+      Watch 2-min demo
+    </button>
+  </div>
+
+  <div class="hero-trust">
+    <div class="trust-item"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><span>Zero-knowledge encrypted</span></div>
+    <div class="trust-sep"></div>
+    <div class="trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>No technical knowledge needed</span></div>
+    <div class="trust-sep"></div>
+    <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Your data — never ours</span></div>
+    <div class="trust-sep"></div>
+    <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span>Guardian system</span></div>
+  </div>
+
+  <!-- Dashboard preview mockup -->
+  <div style="width:100%;max-width:880px;margin:72px auto 0;position:relative;z-index:2;animation:fadeUp 1.1s .6s ease both">
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:20px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.6)">
+      <!-- Browser chrome -->
+      <div style="background:var(--bg2);padding:12px 20px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)">
+        <div style="display:flex;gap:5px"><div style="width:11px;height:11px;border-radius:50%;background:#FF5F57"></div><div style="width:11px;height:11px;border-radius:50%;background:#FEBC2E"></div><div style="width:11px;height:11px;border-radius:50%;background:#28C840"></div></div>
+        <div style="flex:1;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:6px;padding:5px 14px;font-family:var(--fm);font-size:10px;color:var(--muted);max-width:260px;margin:0 auto">app.transferlegacy.com</div>
+      </div>
+      <!-- App shell preview -->
+      <div style="display:grid;grid-template-columns:160px 1fr;min-height:420px;background:var(--bg)">
+        <!-- Sidebar -->
+        <div style="background:var(--bg2);border-right:1px solid var(--border);padding:16px 10px">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:20px;padding:0 6px">
+            <div style="width:20px;height:20px;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.3);border-radius:5px;display:flex;align-items:center;justify-content:center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <span style="font-family:var(--fh);font-size:.75rem;color:var(--white);font-weight:600">Transfer Legacy</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <div style="display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:6px;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2)">
+              <div style="width:11px;height:11px;border-radius:2px;border:1.5px solid var(--or)"></div>
+              <span style="font-size:11px;color:var(--or);font-weight:500">Dashboard</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:6px">
+              <div style="width:11px;height:11px;border-radius:2px;border:1.5px solid var(--muted)"></div>
+              <span style="font-size:11px;color:var(--muted)">Asset Vault</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:6px">
+              <div style="width:11px;height:11px;border-radius:2px;border:1.5px solid var(--muted)"></div>
+              <span style="font-size:11px;color:var(--muted)">Guardians</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:6px">
+              <div style="width:11px;height:11px;border-radius:2px;border:1.5px solid var(--muted)"></div>
+              <span style="font-size:11px;color:var(--muted)">Trust Center</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:6px">
+              <div style="width:11px;height:11px;border-radius:2px;border:1.5px solid var(--muted)"></div>
+              <span style="font-size:11px;color:var(--muted)">Analytics</span>
+            </div>
+          </div>
+        </div>
+        <!-- Dashboard content -->
+        <div style="padding:24px">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--or);animation:pulse 2s ease-in-out infinite"></div>
+            <span style="font-family:var(--fm);font-size:8.5px;letter-spacing:.12em;color:var(--or);text-transform:uppercase">Institutional Access Live</span>
+          </div>
+          <div style="font-family:var(--fh);font-size:1.6rem;font-weight:500;color:var(--white);margin-bottom:4px">Welcome back, <em style="font-style:italic;color:var(--gold2)">Deshu</em></div>
+          <div style="font-size:11px;color:var(--muted2);margin-bottom:18px">Your succession protocol is active.</div>
+          <!-- Stat cards -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+            <div style="background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:center">
+              <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.1em;color:var(--or);text-transform:uppercase;margin-bottom:5px">Score</div>
+              <div style="font-family:var(--fh);font-size:1.4rem;font-weight:500;color:var(--white)">51</div>
+            </div>
+            <div style="background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:center">
+              <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:5px">Assets</div>
+              <div style="font-family:var(--fh);font-size:1.4rem;font-weight:500;color:var(--white)">9</div>
+            </div>
+            <div style="background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:center">
+              <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:5px">Guardians</div>
+              <div style="font-family:var(--fh);font-size:1.4rem;font-weight:500;color:var(--white)">0</div>
+            </div>
+            <div style="background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:center">
+              <div style="font-family:var(--fm);font-size:7.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:5px">Heirs</div>
+              <div style="font-family:var(--fh);font-size:1.4rem;font-weight:500;color:var(--white)">2</div>
+            </div>
+          </div>
+          <!-- Mini vault row -->
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div><div style="font-size:11px;font-weight:500;color:var(--white);margin-bottom:2px">HDFC Savings Account</div><div style="font-size:9px;color:var(--muted)">Bank account · Protected</div></div>
+            <div style="font-family:var(--fm);font-size:11px;color:var(--or2)">₹2,40,000</div>
+          </div>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between">
+            <div><div style="font-size:11px;font-weight:500;color:var(--white);margin-bottom:2px">Will & Testament</div><div style="font-size:9px;color:var(--muted)">Legal document · Protected</div></div>
+            <div style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);font-size:9px;color:#4ade80">Encrypted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Glow -->
+    <div style="position:absolute;bottom:-60px;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,rgba(249,115,22,.3),transparent);filter:blur(8px)"></div>
+  </div>
+</section>
+
+<!-- ══════════════ STATS ══════════════ -->
+<div class="stats-strip reveal">
+  <div class="stat-item"><div class="stat-num">$<span>140</span>B</div><div class="stat-label">Digital wealth permanently lost</div></div>
+  <div class="stat-item"><div class="stat-num"><span>4.9</span>B</div><div class="stat-label">People with no digital estate plan</div></div>
+  <div class="stat-item"><div class="stat-num"><span>0</span></div><div class="stat-label">Dominant solutions exist</div></div>
+  <div class="stat-item"><div class="stat-num"><span>10</span>m</div><div class="stat-label">For your family to access everything</div></div>
+</div>
+
+<!-- ══════════════ PROBLEM ══════════════ -->
+<div class="problem-section" id="problem">
+<div class="problem-inner">
+  <div class="section-eyebrow reveal"><div class="section-dot"></div><span class="section-tag">The crisis nobody talks about</span></div>
+  <h2 class="section-h reveal" style="max-width:620px">The estate planning industry was built for a world that no longer exists.</h2>
+
+  <div class="story-quote reveal reveal-delay-1">
+    <div class="story-text">"A man spent eleven years building $2.3 million in Bitcoin. He kept his seed phrase in his head — for security. He died. His wife found a Ledger in the drawer. She held it for an hour. She had no idea what it was. Every satoshi — gone forever."</div>
+    <div class="story-attr">Real story · Digital inheritance crisis · 2024</div>
+  </div>
+
+  <p class="section-sub reveal">This isn't just a crypto problem. Every person who dies leaves behind bank accounts, passwords, photos, subscriptions, online businesses — with no plan. Their family spends months fighting to access what was built. Most of it is lost.</p>
+
+  <div class="problem-grid reveal reveal-delay-1">
+    <div class="prob-card">
+      <div class="prob-accent" style="background:var(--red,#EF4444)"></div>
+      <div class="prob-num">64<span style="font-size:1.4rem">%</span></div>
+      <div class="prob-label">of adults have no digital estate plan</div>
+      <div class="prob-sub">They assume someone will figure it out. They won't — not without a plan, not without instructions, not without you.</div>
+    </div>
+    <div class="prob-card">
+      <div class="prob-accent" style="background:var(--or)"></div>
+      <div class="prob-num">100<span style="font-size:1.4rem">M+</span></div>
+      <div class="prob-label">accounts permanently locked every year</div>
+      <div class="prob-sub">Bank accounts, email, photos, businesses, crypto. Not hacked. Not stolen. Just gone — because no plan existed.</div>
+    </div>
+    <div class="prob-card">
+      <div class="prob-accent" style="background:var(--gold)"></div>
+      <div class="prob-num">$<span style="font-size:2rem">500</span>B</div>
+      <div class="prob-label">industry built for physical assets only</div>
+      <div class="prob-sub">Traditional wills, password managers, insurance — none of them were designed for the digital world we live in today.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════ HOW IT WORKS ══════════════ -->
+<div class="how-section" id="how">
+  <div class="section-eyebrow reveal"><div class="section-dot"></div><span class="section-tag">How it works</span></div>
+  <h2 class="section-h reveal">Four things working together<br>for the first time.</h2>
+  <div class="steps-grid">
+    <div class="step-card reveal reveal-delay-1">
+      <div class="step-num" style="background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.2)" data-num=""></div>
+      <div style="width:44px;height:44px;border-radius:12px;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2);display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+        <svg style="width:20px;height:20px;stroke:var(--or);stroke-width:1.5;fill:none" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      </div>
+      <div class="step-title">The Vault</div>
+      <div class="step-body">Zero-knowledge encrypted storage for bank credentials, passwords, seed phrases, files, photos, and digital access instructions. We never see your data.</div>
+    </div>
+    <div class="step-card reveal reveal-delay-2">
+      <div style="width:44px;height:44px;border-radius:12px;background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.2);display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+        <svg style="width:20px;height:20px;stroke:var(--gold2);stroke-width:1.5;fill:none" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <div class="step-title">Guardian System</div>
+      <div class="step-body">Designate 1–5 trusted guardians — your spouse, lawyer, adult child. They hold conditional access that activates only when needed. No technical knowledge required.</div>
+    </div>
+    <div class="step-card reveal reveal-delay-3">
+      <div style="width:44px;height:44px;border-radius:12px;background:rgba(74,124,89,.12);border:1px solid rgba(74,124,89,.25);display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+        <svg style="width:20px;height:20px;stroke:var(--sage2);stroke-width:1.5;fill:none" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </div>
+      <div class="step-title">Transfer Guide</div>
+      <div class="step-body">Step-by-step heir experience. Your family accesses everything in under 10 minutes — even if they've never heard of a seed phrase, a password manager, or a 2FA code.</div>
+    </div>
+    <div class="step-card reveal reveal-delay-4">
+      <div style="width:44px;height:44px;border-radius:12px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+        <svg style="width:20px;height:20px;stroke:#60a5fa;stroke-width:1.5;fill:none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </div>
+      <div class="step-title">Legacy Organiser</div>
+      <div class="step-body">Living digital inventory — bank accounts, investments, subscriptions, domain names, online businesses, insurance policies. Updated by you, ready for your family.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ FEATURES ══════════════ -->
+<div class="features-section" id="features">
+<div class="features-inner">
+  <div class="section-eyebrow reveal"><div class="section-dot"></div><span class="section-tag">Platform features</span></div>
+  <h2 class="section-h reveal">Everything your family needs.<br>Nothing they don't.</h2>
+  <div class="features-grid">
+    <div class="feature-list">
+      <div class="feature-item active" id="f1" onclick="activateFeature(1)">
+        <div class="feature-icon" style="background:rgba(249,115,22,.1)"><svg style="stroke:var(--or)" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        <div class="feature-title">Zero-knowledge encryption</div>
+        <div class="feature-body">AES-256 client-side encryption. Your data is encrypted in your browser before it ever leaves your device. We are the safe, not the bank.</div>
+      </div>
+      <div class="feature-item" id="f2" onclick="activateFeature(2)">
+        <div class="feature-icon" style="background:rgba(217,119,6,.1)"><svg style="stroke:var(--gold2)" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <div class="feature-title">Proof of Life heartbeat</div>
+        <div class="feature-body">Regular check-ins confirm you're active. If you stop responding, your guardians are notified and the succession process can begin.</div>
+      </div>
+      <div class="feature-item" id="f3" onclick="activateFeature(3)">
+        <div class="feature-icon" style="background:rgba(74,124,89,.12)"><svg style="stroke:var(--sage2)" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div>
+        <div class="feature-title">Shamir's Secret Sharing</div>
+        <div class="feature-body">Your vault key is cryptographically split across multiple guardians. No single guardian can access your vault alone — only a quorum together.</div>
+      </div>
+      <div class="feature-item" id="f4" onclick="activateFeature(4)">
+        <div class="feature-icon" style="background:rgba(59,130,246,.1)"><svg style="stroke:#60a5fa" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg></div>
+        <div class="feature-title">Works with everything</div>
+        <div class="feature-body">Bank accounts, crypto, email, cloud storage, domain names, online businesses, subscriptions. Platform-agnostic — we work with every service.</div>
+      </div>
+    </div>
+    <!-- Feature preview -->
+    <div class="feature-preview reveal" id="feature-preview">
+      <!-- Preview 1 -->
+      <div id="preview-1" class="preview-inner">
+        <div style="width:72px;height:72px;border-radius:18px;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+          <svg style="width:34px;height:34px;stroke:var(--or);stroke-width:1.3;fill:none" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <div style="font-family:var(--fh);font-size:1.5rem;color:var(--white);margin-bottom:8px">AES-256 Encrypted</div>
+        <div style="font-size:13px;color:var(--muted2);line-height:1.65;margin-bottom:20px">Client-side only. The server receives only encrypted ciphertext — never your keys, never your data.</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="background:var(--bg3);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:12px;color:var(--off)">HDFC Savings</span>
+            <span style="font-family:var(--fm);font-size:10px;color:var(--sage2)">●  ENCRYPTED</span>
+          </div>
+          <div style="background:var(--bg3);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:12px;color:var(--off)">Gmail password</span>
+            <span style="font-family:var(--fm);font-size:10px;color:var(--sage2)">●  ENCRYPTED</span>
+          </div>
+          <div style="background:var(--bg3);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:12px;color:var(--off)">Will & Testament</span>
+            <span style="font-family:var(--fm);font-size:10px;color:var(--sage2)">●  ENCRYPTED</span>
+          </div>
+        </div>
+      </div>
+      <!-- Preview 2 -->
+      <div id="preview-2" class="preview-inner" style="display:none">
+        <div style="width:72px;height:72px;border-radius:18px;background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+          <svg style="width:34px;height:34px;stroke:var(--gold2);stroke-width:1.3;fill:none" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div style="font-family:var(--fh);font-size:1.5rem;color:var(--white);margin-bottom:8px">6 Days Remaining</div>
+        <div style="font-size:13px;color:var(--muted2);line-height:1.65;margin-bottom:20px">Regular heartbeats confirm you're active. Your guardians are only notified when you stop responding.</div>
+        <div style="background:var(--bg3);border:1px solid rgba(249,115,22,.2);border-radius:12px;padding:18px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:12px"><span style="font-size:13px;color:var(--off)">Proof of Life</span><span style="font-family:var(--fm);font-size:11px;color:var(--green)">ACTIVE</span></div>
+          <div style="background:var(--bg4);border-radius:4px;height:6px;overflow:hidden;margin-bottom:10px"><div style="width:20%;height:100%;background:linear-gradient(90deg,var(--or),var(--gold2));border-radius:4px"></div></div>
+          <div style="font-size:11px;color:var(--muted)">Next check-in required in 6 days</div>
+        </div>
+      </div>
+      <!-- Preview 3 -->
+      <div id="preview-3" class="preview-inner" style="display:none">
+        <div style="width:72px;height:72px;border-radius:18px;background:rgba(74,124,89,.12);border:1px solid rgba(74,124,89,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+          <svg style="width:34px;height:34px;stroke:var(--sage2);stroke-width:1.3;fill:none" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </div>
+        <div style="font-family:var(--fh);font-size:1.5rem;color:var(--white);margin-bottom:8px">Guardian Network</div>
+        <div style="font-size:13px;color:var(--muted2);line-height:1.65;margin-bottom:20px">Your key is split — 2-of-3 guardians needed. No single person can access your vault alone.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="background:rgba(74,124,89,.08);border:1px solid rgba(74,124,89,.2);border-radius:8px;padding:12px;text-align:center"><div style="font-size:12px;font-weight:500;color:var(--white);margin-bottom:2px">Priya G.</div><div style="font-size:10px;color:var(--sage2)">Key fragment 1</div></div>
+          <div style="background:rgba(74,124,89,.08);border:1px solid rgba(74,124,89,.2);border-radius:8px;padding:12px;text-align:center"><div style="font-size:12px;font-weight:500;color:var(--white);margin-bottom:2px">Rahul G.</div><div style="font-size:10px;color:var(--sage2)">Key fragment 2</div></div>
+          <div style="background:var(--bg3);border:1px dashed var(--border);border-radius:8px;padding:12px;text-align:center;grid-column:span 2"><div style="font-size:11px;color:var(--muted)">+ Add third guardian to complete quorum</div></div>
+        </div>
+      </div>
+      <!-- Preview 4 -->
+      <div id="preview-4" class="preview-inner" style="display:none">
+        <div style="width:72px;height:72px;border-radius:18px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+          <svg style="width:34px;height:34px;stroke:#60a5fa;stroke-width:1.3;fill:none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <div style="font-family:var(--fh);font-size:1.5rem;color:var(--white);margin-bottom:8px">All Asset Types</div>
+        <div style="font-size:13px;color:var(--muted2);line-height:1.65;margin-bottom:18px">Every digital asset type you own — in one place.</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center">
+          <span style="padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)">Bank accounts</span>
+          <span style="padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)">Passwords</span>
+          <span style="padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)">Crypto</span>
+          <span style="padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)">Photos & files</span>
+          <span style="padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)">Domain names</span>
+          <span style="padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)">Online businesses</span>
+          <span style="padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)">Subscriptions</span>
+          <span style="padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)">Insurance</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════ PRICING ══════════════ -->
+<div class="pricing-section" id="pricing">
+  <div class="section-eyebrow reveal"><div class="section-dot"></div><span class="section-tag">Simple pricing</span></div>
+  <h2 class="section-h reveal">One plan for your entire family.<br>No hidden fees. Ever.</h2>
+  <div class="pricing-grid">
+    <div class="price-card reveal reveal-delay-1">
+      <div class="price-badge" style="background:rgba(255,255,255,.06);color:var(--muted2);border:1px solid var(--border)">ESSENTIAL</div>
+      <div class="price-name">For individuals</div>
+      <div class="price-val">$99</div>
+      <div class="price-per">per year</div>
+      <div class="price-sep"></div>
+      <div class="price-features">
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>1 vault</div>
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>2 trusted guardians</div>
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Basic heir guide</div>
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Email support</div>
+      </div>
+      <button class="btn-price">Get started</button>
+    </div>
+    <div class="price-card featured reveal reveal-delay-2">
+      <div class="price-badge" style="background:rgba(249,115,22,.15);color:var(--or2);border:1px solid rgba(249,115,22,.3)">FOUNDING · MOST POPULAR</div>
+      <div class="price-name">For founding members</div>
+      <div class="price-val" style="color:var(--gold2)">$149</div>
+      <div class="price-per" style="color:var(--or)">per year · locked forever</div>
+      <div class="price-sep"></div>
+      <div class="price-features">
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>5 trusted guardians</div>
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Priority support</div>
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Founding badge</div>
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Price locked forever</div>
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Roadmap input</div>
+      </div>
+      <button class="btn-price btn-price-or">Claim founding price</button>
+    </div>
+    <div class="price-card reveal reveal-delay-3">
+      <div class="price-badge" style="background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.2)">FAMILY</div>
+      <div class="price-name">For families</div>
+      <div class="price-val">$249</div>
+      <div class="price-per">per year</div>
+      <div class="price-sep"></div>
+      <div class="price-features">
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>3 family vaults</div>
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>10 guardians</div>
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Video heir guides</div>
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Dedicated onboarding</div>
+      </div>
+      <button class="btn-price">Get started</button>
+    </div>
+    <div class="price-card reveal reveal-delay-4">
+      <div class="price-badge" style="background:rgba(139,92,246,.1);color:#a78bfa;border:1px solid rgba(139,92,246,.2)">ADVISOR</div>
+      <div class="price-name">For estate lawyers</div>
+      <div class="price-val">$499</div>
+      <div class="price-per">per year</div>
+      <div class="price-sep"></div>
+      <div class="price-features">
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Unlimited client links</div>
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>White-label heir guides</div>
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Lawyer dashboard</div>
+        <div class="pf-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Referral analytics</div>
+      </div>
+      <button class="btn-price">Contact us</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ TESTIMONIALS ══════════════ -->
+<div class="testimonials">
+<div class="test-inner">
+  <div class="section-eyebrow reveal"><div class="section-dot"></div><span class="section-tag">Early members</span></div>
+  <h2 class="section-h reveal">What founding members are saying.</h2>
+  <div class="test-grid">
+    <div class="test-card reveal reveal-delay-1">
+      <div class="test-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div class="test-quote">"I've been meaning to sort this out for years. My wife had no idea what accounts I held or how to access anything. Transfer Legacy is the first product that made this actually doable."</div>
+      <div class="test-author"><div class="test-av" style="background:rgba(249,115,22,.15);color:var(--or2)">AK</div><div><div class="test-name">Arjun K.</div><div class="test-role">Software engineer · Bangalore</div></div></div>
+    </div>
+    <div class="test-card reveal reveal-delay-2">
+      <div class="test-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div class="test-quote">"I'm an estate lawyer and my clients ask me every week about digital inheritance. I've been waiting for a product like this. The guardian system is exactly what I needed to recommend."</div>
+      <div class="test-author"><div class="test-av" style="background:rgba(74,124,89,.15);color:var(--sage2)">SM</div><div><div class="test-name">Sanya M.</div><div class="test-role">Estate lawyer · Mumbai</div></div></div>
+    </div>
+    <div class="test-card reveal reveal-delay-3">
+      <div class="test-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div class="test-quote">"My father passed away last year. It took us 14 months to access his accounts. I signed up for Transfer Legacy the same week. I won't put my kids through what we went through."</div>
+      <div class="test-author"><div class="test-av" style="background:rgba(59,130,246,.12);color:#60a5fa">RV</div><div><div class="test-name">Rohit V.</div><div class="test-role">Entrepreneur · Delhi</div></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════ FAQ ══════════════ -->
+<div class="faq-section" id="faq">
+  <div class="section-eyebrow reveal"><div class="section-dot"></div><span class="section-tag">FAQ</span></div>
+  <h2 class="section-h reveal">Questions you're probably thinking.</h2>
+  <div style="margin-top:48px" id="faq-list">
+    <div class="faq-item reveal" onclick="toggleFaq(this)"><div class="faq-q"><div class="faq-question">Can Transfer Legacy actually see my data?</div><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-answer">No. Everything is encrypted in your browser before it leaves your device using AES-256 encryption. We store only encrypted ciphertext. We have no ability to decrypt it — we never have your keys. We are the safe, not the bank.</div></div>
+    <div class="faq-item reveal reveal-delay-1" onclick="toggleFaq(this)"><div class="faq-q"><div class="faq-question">What happens if Transfer Legacy shuts down?</div><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-answer">Your encrypted data is always exportable. We also provide a self-hosted option and the open-source protocol specification so any technically capable person can access your data independently. Your family is never locked in.</div></div>
+    <div class="faq-item reveal reveal-delay-2" onclick="toggleFaq(this)"><div class="faq-q"><div class="faq-question">How does my family access everything when I'm gone?</div><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-answer">When 2-of-3 (or your configured quorum) guardians confirm the succession event, they can initiate the Transfer Guide — a plain-language, step-by-step process that walks any non-technical family member through accessing every asset you've stored. Average completion time: under 10 minutes.</div></div>
+    <div class="faq-item reveal reveal-delay-3" onclick="toggleFaq(this)"><div class="faq-q"><div class="faq-question">Is this only for crypto holders?</div><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-answer">Not at all. Transfer Legacy works for any digital asset — bank accounts, investment accounts, email, photos, online businesses, domain names, subscriptions, insurance policies, and yes, crypto too. If it's digital and valuable to your family, it belongs in your vault.</div></div>
+    <div class="faq-item reveal reveal-delay-4" onclick="toggleFaq(this)"><div class="faq-q"><div class="faq-question">What is the Proof of Life system?</div><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-answer">Proof of Life is a periodic check-in system. You confirm you're active every 30 days (configurable). If you stop responding, we alert your guardians with escalating notifications before any succession process begins. This prevents false triggers and gives you multiple opportunities to check in.</div></div>
+    <div class="faq-item reveal" onclick="toggleFaq(this)"><div class="faq-q"><div class="faq-question">What does the Founding Tier price lock mean?</div><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-answer">Founding members who sign up now at $149/year keep that price permanently — regardless of what we charge new users in the future. When we raise prices (which we will as the product matures), founding members are grandfathered in forever. It's our commitment to the people who believed in us early.</div></div>
+  </div>
+</div>
+
+<!-- ══════════════ CTA ══════════════ -->
+<div class="cta-section">
+  <div class="cta-bg"></div>
+  <div class="reveal">
+    <div class="cta-h">Every family deserves to inherit<br>the <em>digital life</em> their loved one built.</div>
+    <p class="cta-sub">Set up in 10 minutes. Protected forever. Your family gets everything when they need it most.</p>
+    <div style="max-width:420px;margin:0 auto 28px">
+      <div class="email-form">
+        <input class="email-inp" type="email" placeholder="your@email.com" id="cta-email">
+        <button class="btn-hero" style="white-space:nowrap;border-radius:9px;padding:13px 20px;font-size:14px" onclick="handleCTA()">Start free</button>
+      </div>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted)">No credit card required · 30-day free trial · Cancel anytime</p>
+  </div>
+</div>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+<div class="footer-inner">
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">
+        <div class="nav-logo"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="nav-name">Transfer Legacy</div>
+      </div>
+      <div class="footer-desc">Digital estate planning for everyone. Your entire digital life — protected, organised, and passed on to the people you love.</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Product</div>
+      <div class="footer-links">
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#">Dashboard</a>
+        <a href="#">API & Developers</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <div class="footer-links">
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Careers</a>
+        <a href="#">Press</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Legal</div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Security</a>
+        <a href="#">Cookie Policy</a>
+        <a href="#">Compliance</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Transfer Legacy. All rights reserved.</div>
+    <div class="footer-legal">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Security</a>
+    </div>
+  </div>
+</div>
+</footer>
+
+<script>
+// ── CURSOR ──
+const dot = document.getElementById('cur-dot');
+const ring = document.getElementById('cur-ring');
+document.addEventListener('mousemove', e => {
+  dot.style.left = e.clientX + 'px';
+  dot.style.top  = e.clientY + 'px';
+  ring.style.left = e.clientX + 'px';
+  ring.style.top  = e.clientY + 'px';
+});
+document.querySelectorAll('button,a,[onclick]').forEach(el => {
+  el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+  el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+});
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── FAQ ──
+function toggleFaq(el) {
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
+  if (!isOpen) el.classList.add('open');
+}
+
+// ── FEATURE SWITCHER ──
+function activateFeature(n) {
+  [1,2,3,4].forEach(i => {
+    document.getElementById('f'+i).classList.toggle('active', i===n);
+    const p = document.getElementById('preview-'+i);
+    if(p) p.style.display = i===n ? 'block' : 'none';
+  });
+}
+
+// ── CTA ──
+function handleCTA() {
+  const email = document.getElementById('cta-email').value;
+  if(!email) { document.getElementById('cta-email').style.borderColor = 'rgba(249,115,22,.6)'; return; }
+  alert('Welcome to Transfer Legacy! We\'ll be in touch at ' + email);
+}
+
+// ── SMOOTH HOVER EFFECTS on price cards ──
+document.querySelectorAll('.price-card,.step-card,.test-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 6;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -6;
+    card.style.transform = `perspective(600px) rotateY(${x}deg) rotateX(${y}deg) translateY(-4px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+    card.style.transition = 'transform .4s ease';
+  });
+  card.addEventListener('mouseenter', () => {
+    card.style.transition = 'none';
+  });
+});
+</script>
+</body>
+</html>

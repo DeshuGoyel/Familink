@@ -26,6 +26,22 @@ export default {
         'border-base':   'var(--color-border)',
         'border-strong': 'var(--color-border-strong)',
 
+        // Blueprint Colors
+        'blueprint-bg': '#080B0A',
+        'blueprint-bg2': '#0F1410',
+        'blueprint-bg3': '#161C17',
+        'blueprint-bg4': '#1E261F',
+        'blueprint-or': '#F97316',
+        'blueprint-or2': '#FB923C',
+        'blueprint-gold': '#D97706',
+        'blueprint-gold2': '#F59E0B',
+        'blueprint-sage': '#4A7C59',
+        'blueprint-sage2': '#6FAE84',
+        'blueprint-off': '#E8EDF0',
+        'blueprint-muted': 'rgba(255,255,255,0.38)',
+        'blueprint-muted2': 'rgba(255,255,255,0.58)',
+        'blueprint-border': 'rgba(255,255,255,0.07)',
+
         // ── Legacy / Absolute Palette ──────────────────────────────
         primary_blue: 'rgb(var(--color-primary) / <alpha-value>)', // Renamed from primary
         obsidian: {
@@ -79,10 +95,10 @@ export default {
       },
 
       fontFamily: {
-        sans:    ['Inter', 'SF Pro Text', 'system-ui', 'sans-serif'],
-        display: ['Instrument Serif', 'Georgia', 'serif'],
-        mono:    ['IBM Plex Mono', 'Cascadia Code', 'Courier New', 'monospace'],
-        digits:  ['IBM Plex Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
+        sans:    ['DM Sans', 'Inter', 'SF Pro Text', 'system-ui', 'sans-serif'],
+        display: ['Cormorant Garamond', 'Instrument Serif', 'Georgia', 'serif'],
+        mono:    ['DM Mono', 'IBM Plex Mono', 'Cascadia Code', 'Courier New', 'monospace'],
+        digits:  ['DM Mono', 'IBM Plex Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
         // backward compat
         body:    ['Inter', 'sans-serif'],
       },
@@ -153,6 +169,11 @@ export default {
         'blob-1':      'blob-drift-1 20s ease-in-out infinite',
         'blob-2':      'blob-drift-2 24s ease-in-out infinite',
         'blob-3':      'blob-drift-3 28s ease-in-out infinite',
+        'fadeUp':      'fadeUp 0.8s ease both',
+        'drift1':      'drift1 18s ease-in-out infinite',
+        'drift2':      'drift2 22s ease-in-out infinite',
+        'drift3':      'drift3 15s ease-in-out infinite',
+        'bp-pulse':    'bp-pulse 2s ease-in-out infinite',
       },
 
       keyframes: {
@@ -198,6 +219,26 @@ export default {
           '0%,100%': { transform: 'translate(0,0) scale(1)' },
           '50%':     { transform: 'translate(30px,-35px) scale(1.1)' },
         },
+        fadeUp: {
+          from: { opacity: '0', transform: 'translateY(22px)' },
+          to: { opacity: '1', transform: 'translateY(0)' }
+        },
+        drift1: {
+          '0%,100%': { transform: 'translate(0,0)' },
+          '50%': { transform: 'translate(-40px,30px)' }
+        },
+        drift2: {
+          '0%,100%': { transform: 'translate(0,0)' },
+          '50%': { transform: 'translate(30px,-40px)' }
+        },
+        drift3: {
+          '0%,100%': { transform: 'translate(-50%,-50%)' },
+          '50%': { transform: 'translate(-52%,-48%)' }
+        },
+        'bp-pulse': {
+          '0%,100%': { opacity: '1', transform: 'scale(1)' },
+          '50%': { opacity: '0.45', transform: 'scale(0.8)' }
+        }
       },
     },
   },

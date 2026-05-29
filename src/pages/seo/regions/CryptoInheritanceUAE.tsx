@@ -1,7 +1,9 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import SEO from '../../../components/seo/SEO';
-import { ArrowRight, Globe2, Building2, KeyRound, MapPin } from 'lucide-react';
+import { ArrowRight, Shield, Globe2, BookOpen, AlertTriangle, FileCheck, Landmark, Scale, Gavel, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Button from '../../../components/ui/Button';
 
 const CryptoInheritanceUAE = () => {
   const faqSchema = {
@@ -10,135 +12,119 @@ const CryptoInheritanceUAE = () => {
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "Is cryptocurrency recognized under UAE Law for inheritance?",
+        "name": "Is crypto inheritance taxed in the UAE?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, particularly under the new DIFC Digital Assets Law, cryptocurrency is officially recognized as a distinct category of property in the UAE. This means it can be legally transferred to heirs through a registered non-Muslim will or under Sharia law for Muslim residents."
+          "text": "The UAE currently imposes 0% inheritance tax on both physical and digital assets, making it a premier hub for digital wealth preservation."
         }
       },
       {
         "@type": "Question",
-        "name": "Do expats in Dubai need a separate will for their crypto?",
+        "name": "What is VARA?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Expats in Dubai and the wider UAE should register a will with the DIFC Wills and Probate Registry or the local Abu Dhabi courts to ensure their assets are distributed according to their home country's laws rather than local Sharia law. Crypto should be explicitly included in this estate plan."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I secure my crypto private keys for my heirs in the UAE?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "You should never put private keys or seed phrases in your registered DIFC will, as this compromises security. Instead, use a secure digital vault like Transfer Legacy to encrypt and store the credentials, and reference the vault's existence within your formal legal will."
+          "text": "The Virtual Assets Regulatory Authority (VARA) is the world's first specialized regulator for the virtual assets sector, based in Dubai."
         }
       }
     ]
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-white pt-24 pb-16">
+    <div className="min-h-screen bg-page text-primary pt-24 pb-16 relative overflow-hidden">
+      <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/5 blur-[120px] pointer-events-none" />
+
       <SEO 
-        title="Crypto Inheritance in the UAE & DIFC: Expert Guide (2024)"
-        description="Navigate crypto inheritance in Dubai, Abu Dhabi, and the DIFC. Learn how expats and residents can legally and securely pass Bitcoin and digital assets to heirs."
+        title="UAE Crypto Inheritance Law: VARA & DIFC Guide (2024)"
+        description="Master UAE crypto inheritance laws. Learn about VARA regulations, DIFC Wills, and how to securely pass Bitcoin in Dubai and Abu Dhabi."
         canonical="https://transferlegacy.com/crypto-inheritance-uae"
         schema={faqSchema}
       />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header Section */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 bg-emerald-500/10 text-emerald-400 px-4 py-2 rounded-full mb-6">
-            <Globe2 className="w-5 h-5" />
-            <span className="font-semibold tracking-wide uppercase text-sm">UAE & DIFC Jurisdiction Guide</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-            Crypto Inheritance in the UAE
-          </h1>
-          <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-            The UAE is a global crypto hub. Ensure your digital wealth is protected and legally transferred under the new DIFC Digital Assets Law.
-          </p>
-          <Link 
-            to="/"
-            className="inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-8 rounded-full transition duration-300"
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-20">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center space-x-2 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-4 py-2 rounded-full mb-8 shadow-[0_0_20px_rgba(79,92,255,0.1)]"
           >
-            Secure Your UAE Crypto Estate
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Link>
+            <Globe2 className="w-4 h-4" />
+            <span className="font-bold tracking-[0.2em] uppercase text-[10px]">UAE Jurisdiction Guide</span>
+          </motion.div>
+          
+          <h1 className="text-4xl md:text-6xl font-display font-bold mb-8 leading-[0.95] tracking-tight text-primary">
+            Digital Heritage <span className="italic text-brand-primary">in the UAE</span>
+          </h1>
+          
+          <p className="text-xl text-secondary mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+            Protecting virtual assets under VARA and DIFC legal frameworks. The ultimate guide for UAE residents and global investors using Dubai as a digital legacy hub.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button variant="primary" size="lg" className="px-10 h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
+              Initialize UAE Vault <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </div>
         </div>
 
-        {/* Content Section */}
-        <div className="prose prose-invert prose-lg max-w-none">
-          
-          <h2 className="flex items-center text-3xl font-bold mt-12 mb-6">
-            <MapPin className="w-8 h-8 mr-3 text-emerald-500" />
-            The UAE: A Global Hub for Digital Wealth
-          </h2>
-          <p>
-            With its forward-thinking regulatory environment, zero personal income tax, and establishment of authorities like VARA (Virtual Assets Regulatory Authority) in Dubai, the UAE has attracted thousands of crypto investors, founders, and High-Net-Worth Individuals (HNWIs).
-          </p>
-          <p>
-            However, amassing digital wealth in the UAE brings unique succession challenges, particularly for the large expatriate population navigating the intersection of local laws, Sharia principles, and the decentralized nature of cryptocurrency.
-          </p>
+        <div className="space-y-16">
+          <section className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 md:p-12">
+            <h2 className="flex items-center text-3xl font-display font-bold mb-8 text-primary tracking-tight">
+              <Scale className="w-8 h-8 mr-4 text-brand-primary" />
+              VARA & DIFC Compliance
+            </h2>
+            <div className="prose prose-invert max-w-none text-secondary">
+              <p className="text-lg leading-relaxed mb-6">
+                Dubai's <span className="text-primary font-bold">Virtual Assets Regulatory Authority (VARA)</span> provides a robust legal landscape for virtual asset service providers and individuals alike. Combined with the <span className="text-primary font-bold">DIFC Wills Service</span>, non-muslim residents can explicitly designate digital heirs.
+              </p>
+              <p className="text-lg leading-relaxed">
+                Transfer Legacy's protocol is designed to align with VARA standards, providing a secure, verifiable method for digital asset distribution that avoids the complexities of Sharia law distribution for non-muslim expats.
+              </p>
+            </div>
+          </section>
 
-          <h2 className="flex items-center text-3xl font-bold mt-12 mb-6">
-            <Building2 className="w-8 h-8 mr-3 text-emerald-500" />
-            The Legal Groundwork: DIFC Digital Assets Law
-          </h2>
-          <p>
-            The Dubai International Financial Centre (DIFC) recently enacted the <strong>Digital Assets Law No. 2 of 2024</strong>. This is a massive leap forward for crypto inheritance because it explicitly recognizes digital assets as a distinct category of property—not just intangible rights, but actual property that can be owned, transferred, and inherited.
-          </p>
-          <p>
-            This means that if you hold Bitcoin, Ethereum, or other digital assets, they officially form part of your legal estate in the UAE.
-          </p>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8">
+              <Landmark className="w-10 h-10 text-brand-gold mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">0% Inheritance Tax</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                The UAE is a global leader in wealth preservation, offering <span className="text-primary font-bold">zero inheritance tax</span>. This makes it the ideal location to center your global digital legacy vault.
+              </p>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-2 text-[11px] font-bold text-muted uppercase tracking-wider">
+                  <CheckCircle2 size={14} className="text-emerald-400" /> Tax-Free Transfer
+                </li>
+                <li className="flex items-center gap-2 text-[11px] font-bold text-muted uppercase tracking-wider">
+                  <CheckCircle2 size={14} className="text-brand-gold" /> Global Hub Compatibility
+                </li>
+              </ul>
+            </div>
 
-          <div className="bg-gradient-to-r from-emerald-500/10 to-transparent border-l-4 border-emerald-500 p-6 rounded-r-xl my-8">
-            <h3 className="flex items-center text-xl font-bold text-emerald-400 mb-3 mt-0">
-              Expats vs. Locals: The Sharia Law Factor
-            </h3>
-            <p className="text-gray-300 mb-0">
-              By default, inheritance in the UAE for Muslims is governed by Sharia law. For non-Muslim expats, the UAE allows individuals to register a will (such as a DIFC Will or an Abu Dhabi Will) to ensure their assets are distributed according to their wishes or their home country's laws. <strong>You must explicitly include your digital assets in this will.</strong>
-            </p>
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 border-brand-primary/20 bg-brand-primary/5">
+              <Gavel className="w-10 h-10 text-brand-primary mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">DIFC Will Integration</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                For expats in Dubai and Abu Dhabi, a <span className="text-primary font-bold">DIFC or ADGM Will</span> is essential. Our protocol acts as the technical execution layer that fulfills your legal wishes instantly.
+              </p>
+              <Button variant="ghost" className="text-[10px] font-bold uppercase tracking-widest text-brand-primary p-0">
+                UAE Digital Will Template
+              </Button>
+            </div>
           </div>
 
-          <h2 className="text-3xl font-bold mt-12 mb-6">The Fatal Flaw in Crypto Estate Planning</h2>
-          <p>
-            While the legal framework in the UAE is robust, the technical reality of cryptocurrency remains: <strong>Not your keys, not your coins.</strong>
-          </p>
-          <p>
-            If you die holding crypto in a self-custody wallet (like a Ledger or Trezor) and your heirs do not know the seed phrase, the DIFC courts cannot help them. A judge can issue an order declaring your spouse the rightful owner of your Bitcoin, but no court on earth can force the Bitcoin network to transfer the funds without the private key.
-          </p>
-          <p>
-            Conversely, if you write your seed phrase into your registered DIFC will, you compromise the security of your entire portfolio, exposing it during the drafting and execution process.
-          </p>
-
-          <h2 className="flex items-center text-3xl font-bold mt-12 mb-6">
-            <KeyRound className="w-8 h-8 mr-3 text-emerald-500" />
-            The Ultimate UAE Strategy: Transfer Legacy
-          </h2>
-          <p>
-            To successfully pass on digital wealth in the UAE, you need a hybrid approach:
-          </p>
-          <ol>
-            <li><strong>Legal Compliance:</strong> Register a formal will in the DIFC or Abu Dhabi that explicitly mentions your digital assets and appoints an executor.</li>
-            <li><strong>Technical Execution:</strong> Use Transfer Legacy to securely store your actual seed phrases, exchange logins, and transfer instructions. </li>
-          </ol>
-          <p>
-            With Transfer Legacy's Zero-Knowledge Vault and Dead Man's Switch, your sensitive credentials are kept entirely off the public record. Upon your passing, the information is automatically routed to your chosen heirs, allowing them to claim what is legally theirs without technical hurdles or security breaches.
-          </p>
-
-          {/* CTA Section */}
-          <div className="bg-gray-800/50 rounded-2xl p-8 mt-12 border border-gray-700 text-center">
-            <h3 className="text-2xl font-bold mb-4">Protect Your Digital Assets in the UAE</h3>
-            <p className="text-gray-300 mb-6">
-              Don't let your crypto be lost to the blockchain. Ensure a seamless transfer of wealth to your family with a zero-knowledge legacy plan.
+          <div className="bg-gradient-to-br from-brand-primary to-blue-900 text-obsidian-950 rounded-[40px] p-10 md:p-16 text-center shadow-2xl shadow-brand-primary/20">
+            <BookOpen className="w-16 h-16 mx-auto mb-8 opacity-80" />
+            <h3 className="text-3xl md:text-5xl font-display font-bold mb-6 tracking-tight leading-none">
+              Initialize Your <span className="italic">UAE Sovereign Vault</span>
+            </h3>
+            <p className="text-xl opacity-90 mb-12 max-w-2xl mx-auto font-medium">
+              Join the future of wealth preservation in the world's most advanced virtual asset jurisdiction.
             </p>
-            <Link 
-              to="/"
-              className="inline-block bg-white text-gray-900 hover:bg-gray-100 font-bold py-3 px-8 rounded-full transition duration-300"
-            >
-              Start Your Transfer Legacy Vault
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Button onClick={() => window.scrollTo(0,0)} className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest">
+                Secure Your Legacy
+              </Button>
+            </div>
           </div>
         </div>
       </div>

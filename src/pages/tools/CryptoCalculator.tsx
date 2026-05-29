@@ -1,81 +1,129 @@
-import { useState } from 'react';
-import { Calculator, ArrowRight, AlertTriangle } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Calculator, ArrowRight, AlertTriangle, Sparkles, Zap, Shield, Target, Lock } from 'lucide-react';
 import Button from '../../components/ui/Button';
-import { SEO } from '../../components/seo/SEO';
+import Card from '../../components/ui/Card';
+import SEO from '../../components/seo/SEO';
+
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+});
 
 export default function CryptoCalculator() {
-  const [assetValue, setAssetValue] = useState<number>(100000);
-  const [age, setAge] = useState<number>(40);
+  const [assetValue, setAssetValue] = useState(100000);
+  const [age, setAge] = useState(35);
 
-  // Simple heuristic for demonstration: 
-  // Risk of sudden loss without a plan (based on actuarial risk + 20% baseline loss rate)
   const baseLossRisk = 0.20; 
   const ageRiskMultiplier = Math.max(1, (age - 30) / 20);
-  const calculatedRiskPercentage = Math.min(100, (baseLossRisk * ageRiskMultiplier) * 100).toFixed(1);
-  const potentialLoss = (assetValue * (parseFloat(calculatedRiskPercentage) / 100)).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+  const calculatedRiskPercentage = Math.min(100, (baseLossRisk * ageRiskMultiplier) * 100);
+  const potentialLossValue = assetValue * (calculatedRiskPercentage / 100);
 
   return (
-    <div className="bg-secondary text-text min-h-screen font-sans pt-20">
-      <SEO 
-        title="Crypto Inheritance Calculator: Calculate Your Risk of Loss | Transfer Legacy"
-        description="Use our free crypto inheritance calculator to see how much of your Bitcoin and digital assets are at risk of permanent loss if you pass away without a plan."
-      />
+    <div className="min-h-screen bg-page text-primary pt-24 pb-20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
       
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <header className="mb-12 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary mb-6 border border-primary/20">
-            <Calculator size={16} />
-            <span className="text-sm font-semibold tracking-wide uppercase">Free Tool</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-            Crypto Inheritance Risk Calculator
+      <SEO 
+        title="Crypto Inheritance Risk Calculator | Transfer Legacy"
+        description="Estimate the probability of permanent asset loss. 20% of all Bitcoin is already lost—don't let your portfolio be next."
+        canonical="https://transferlegacy.com/tools/crypto-risk-calculator"
+      />
+
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-16">
+          <motion.div {...fadeUp(0)} className="flex items-center justify-center gap-2 mb-4">
+            <Lock size={16} className="text-red-400" />
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-400">
+              Security Risk Assessment
+            </p>
+          </motion.div>
+          <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-6">
+            Loss <span className="italic text-brand-primary">Exposure</span>
           </h1>
-          <p className="text-xl text-muted max-w-2xl mx-auto">
-            20% of all Bitcoin is permanently lost. Calculate how much of your portfolio is at risk of vanishing if you die without a digital estate plan.
+          <p className="text-secondary text-xl font-medium max-w-2xl mx-auto">
+            Quantify the structural risk of permanent asset abandonment across your digital portfolio.
           </p>
-        </header>
+        </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="bg-surface border border-border p-8 rounded-2xl">
-            <h3 className="text-2xl font-bold mb-6">Your Details</h3>
-            
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-muted mb-2">Total Crypto Portfolio Value ($)</label>
-              <input 
-                type="number" 
-                value={assetValue}
-                onChange={(e) => setAssetValue(Number(e.target.value))}
-                className="w-full bg-[#0D1117] border border-border rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors"
-              />
+        <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[40px] p-8 md:p-12 shadow-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="space-y-10">
+               <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted">Portfolio Value (USD)</label>
+                    <span className="text-2xl font-mono font-bold text-brand-primary">${assetValue.toLocaleString()}</span>
+                  </div>
+                  <input 
+                    type="range" min="10000" max="10000000" step="10000"
+                    value={assetValue} onChange={(e) => setAssetValue(Number(e.target.value))}
+                    className="w-full accent-brand-primary h-1 bg-base/40 rounded-full appearance-none cursor-pointer"
+                  />
+               </div>
+
+               <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted">Owner Age</label>
+                    <span className="text-2xl font-mono font-bold text-primary">{age}y</span>
+                  </div>
+                  <input 
+                    type="range" min="18" max="100" step="1"
+                    value={age} onChange={(e) => setAge(Number(e.target.value))}
+                    className="w-full accent-brand-primary h-1 bg-base/40 rounded-full appearance-none cursor-pointer"
+                  />
+               </div>
+
+               <div className="flex items-start gap-4 p-4 rounded-2xl bg-obsidian-950/50 border border-base/40">
+                  <AlertTriangle size={20} className="text-brand-gold shrink-0 mt-1" />
+                  <p className="text-[11px] font-medium text-secondary leading-relaxed">
+                    Based on Chainalysis 2024 data, roughly <span className="text-white font-bold">3.7M BTC</span> is already permanently lost due to abandoned private keys.
+                  </p>
+               </div>
             </div>
 
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-muted mb-2">Your Current Age</label>
-              <input 
-                type="number" 
-                value={age}
-                onChange={(e) => setAge(Number(e.target.value))}
-                className="w-full bg-[#0D1117] border border-border rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors"
-              />
-            </div>
-            <p className="text-sm text-muted">
-              * Calculations are based on Chainalysis data of permanently lost Bitcoin combined with baseline actuarial mortality tables for sudden incidents.
-            </p>
-          </div>
+            <Card className="p-10 bg-obsidian-950/80 border-red-400/30 rounded-[32px] text-center shadow-inner">
+               <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-400/10 rounded-full border border-red-400/20 mb-8">
+                  <Zap size={14} className="text-red-400" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-red-400">Exposure Alert</span>
+               </div>
 
-          <div className="bg-gradient-to-br from-[#0B0E14] to-surface border border-danger/30 p-8 rounded-2xl flex flex-col justify-center items-center text-center">
-            <AlertTriangle size={48} className="text-danger mb-4" />
-            <h3 className="text-xl font-bold mb-2">Value at Risk of Permanent Loss</h3>
-            <div className="text-5xl font-bold text-danger mb-4">{potentialLoss}</div>
-            <p className="text-muted mb-8">
-              Statistically, your family has a <strong className="text-white">{calculatedRiskPercentage}% chance</strong> of being locked out of your crypto permanently.
-            </p>
-            <Button size="lg" className="w-full glow-blue">
-              Eliminate This Risk Now <ArrowRight className="ml-2" size={20} />
-            </Button>
+               <div className="mb-12">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted mb-4">Value At Permanent Risk</p>
+                  <div className="text-6xl font-display font-bold text-primary leading-none tracking-tighter">
+                    ${Math.round(potentialLossValue).toLocaleString()}
+                  </div>
+                  <p className="text-[11px] font-bold text-red-400 mt-4 uppercase tracking-[0.2em]">
+                    {calculatedRiskPercentage.toFixed(1)}% Recovery Friction
+                  </p>
+               </div>
+
+               <Button 
+                 onClick={() => window.location.href = '/onboarding'}
+                 className="w-full h-14 rounded-2xl bg-brand-primary text-obsidian-950 font-bold uppercase tracking-widest text-[11px] shadow-2xl shadow-brand-primary/20"
+               >
+                 De-Risk My Assets <ArrowRight className="ml-2" size={16} />
+               </Button>
+            </Card>
           </div>
         </div>
-      </main>
+
+        {/* Comparison Ticker */}
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+           {[
+             { label: "Lost Bitcoin", val: "20.4%", icon: <AlertTriangle size={14} /> },
+             { label: "Forgotten 2FA", val: "12M+", icon: <Shield size={14} /> },
+             { label: "Abandoned Wallets", val: "45%", icon: <Target size={14} /> }
+           ].map((stat, i) => (
+             <motion.div key={i} {...fadeUp(0.3 + i * 0.1)} className="p-6 bg-surface/30 border border-base/40 rounded-3xl flex items-center gap-4">
+                <div className="text-brand-primary">{stat.icon}</div>
+                <div>
+                   <p className="text-xl font-display font-bold text-primary">{stat.val}</p>
+                   <p className="text-[10px] font-bold uppercase tracking-widest text-muted">{stat.label}</p>
+                </div>
+             </motion.div>
+           ))}
+        </div>
+      </div>
     </div>
   );
 }

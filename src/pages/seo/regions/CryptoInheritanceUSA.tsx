@@ -1,7 +1,9 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import SEO from '../../../components/seo/SEO';
-import { ArrowRight, ShieldAlert, Globe2, BookOpen, Landmark, Key } from 'lucide-react';
+import { ArrowRight, Shield, Globe2, BookOpen, AlertTriangle, FileCheck, Landmark, Scale, Gavel, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Button from '../../../components/ui/Button';
 
 const CryptoInheritanceUSA = () => {
   const faqSchema = {
@@ -10,142 +12,140 @@ const CryptoInheritanceUSA = () => {
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "How is inherited cryptocurrency taxed in the USA?",
+        "name": "Is crypto inheritance legal in the USA?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "In the US, inherited cryptocurrency generally receives a 'step-up in basis.' This means the tax basis is the fair market value of the crypto on the date of the original owner's death, not the price they originally bought it for. It is also subject to federal estate tax if the total estate exceeds the exemption limit."
+          "text": "Yes, digital assets are recognized as property in the US. They can be passed via a traditional will or trust, and many states have adopted RUFADAA to govern digital asset access."
         }
       },
       {
         "@type": "Question",
-        "name": "Does the IRS know about my inherited crypto?",
+        "name": "What is RUFADAA?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, if the crypto was held on a US-compliant exchange (like Coinbase or Kraken), the IRS is likely aware. Furthermore, executors of estates are legally required to report the fair market value of all digital assets on Form 706 if the estate is subject to estate tax."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I leave Bitcoin to my children in America?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "You should include a reference to your digital assets in your will or living trust, granting your fiduciary the power to access them under RUFADAA. Crucially, you must use a secure vault like Transfer Legacy to store the actual seed phrases or private keys, as placing them in a public will compromises their security."
+          "text": "The Revised Uniform Fiduciary Access to Digital Assets Act (RUFADAA) provides a legal framework for executors to access digital accounts while maintaining user privacy."
         }
       }
     ]
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-white pt-24 pb-16">
+    <div className="min-h-screen bg-page text-primary pt-24 pb-16 relative overflow-hidden">
+      <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/5 blur-[120px] pointer-events-none" />
+
       <SEO 
-        title="Crypto Inheritance USA: Estate Planning for Bitcoin (2024)"
-        description="Navigate Bitcoin and crypto estate planning in the USA. Understand IRS taxes, the step-up in basis, and how to securely pass digital assets to your heirs."
+        title="US Crypto Inheritance Law: RUFADAA & Federal Guide (2024)"
+        description="Master US crypto inheritance laws. Learn about RUFADAA, federal estate tax implications, and how to securely pass Bitcoin to heirs using Transfer Legacy."
         canonical="https://transferlegacy.com/crypto-inheritance-usa"
         schema={faqSchema}
       />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header Section */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 bg-blue-500/10 text-blue-400 px-4 py-2 rounded-full mb-6">
-            <Globe2 className="w-5 h-5" />
-            <span className="font-semibold tracking-wide uppercase text-sm">USA Jurisdiction Guide</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-            Bitcoin & Crypto Estate Planning in the USA
-          </h1>
-          <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-            Protect your digital wealth from being permanently lost or heavily penalized by the IRS. A comprehensive guide for US crypto investors.
-          </p>
-          <Link 
-            to="/"
-            className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full transition duration-300"
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-20">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center space-x-2 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-4 py-2 rounded-full mb-8 shadow-[0_0_20px_rgba(79,92,255,0.1)]"
           >
-            Secure Your US Crypto Estate
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Link>
+            <Globe2 className="w-4 h-4" />
+            <span className="font-bold tracking-[0.2em] uppercase text-[10px]">USA Jurisdiction Guide</span>
+          </motion.div>
+          
+          <h1 className="text-4xl md:text-6xl font-display font-bold mb-8 leading-[0.95] tracking-tight text-primary">
+            Digital Estate <span className="italic text-brand-primary">Planning in the US</span>
+          </h1>
+          
+          <p className="text-xl text-secondary mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+            Navigating RUFADAA and IRS regulations. Secure your digital legacy under federal and state frameworks with Transfer Legacy.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button variant="primary" size="lg" className="px-10 h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
+              Initialize US Vault <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+            <Link to="/legal/compliance" className="text-[11px] font-bold uppercase tracking-widest text-muted hover:text-primary transition-colors">
+              View Compliance Audit
+            </Link>
+          </div>
         </div>
 
-        {/* Content Section */}
-        <div className="prose prose-invert prose-lg max-w-none">
-          
-          <h2 className="flex items-center text-3xl font-bold mt-12 mb-6">
-            <Landmark className="w-8 h-8 mr-3 text-blue-500" />
-            The Reality of Crypto Inheritance in America
-          </h2>
-          <p>
-            The United States leads the world in cryptocurrency adoption, with millions holding Bitcoin, Ethereum, and other digital assets on exchanges like Coinbase, Kraken, or in self-custody hardware wallets. Yet, an alarming percentage of US crypto investors lack a formal estate plan for these assets.
-          </p>
-          <p>
-            When a US citizen passes away without transferring the private keys or establishing a clear legal pathway, those assets are functionally destroyed—but the IRS still expects their due.
-          </p>
+        <div className="space-y-16">
+          <section className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 md:p-12">
+            <h2 className="flex items-center text-3xl font-display font-bold mb-8 text-primary tracking-tight">
+              <Scale className="w-8 h-8 mr-4 text-brand-primary" />
+              RUFADAA Compliance
+            </h2>
+            <div className="prose prose-invert max-w-none text-secondary">
+              <p className="text-lg leading-relaxed mb-6">
+                Most US states have adopted the <span className="text-primary font-bold">Revised Uniform Fiduciary Access to Digital Assets Act (RUFADAA)</span>. This law gives users the power to decide who can access their digital accounts after death.
+              </p>
+              <p className="text-lg leading-relaxed">
+                Crucially, RUFADAA prioritizes a user's instructions given via an "online tool" (like <span className="text-brand-primary font-bold">Transfer Legacy</span>) over instructions in a traditional will. This makes our protocol the primary legal record for your digital asset distribution.
+              </p>
+            </div>
+          </section>
 
-          <div className="bg-gradient-to-r from-red-500/10 to-transparent border-l-4 border-red-500 p-6 rounded-r-xl my-8">
-            <h3 className="flex items-center text-xl font-bold text-red-500 mb-3 mt-0">
-              <ShieldAlert className="w-6 h-6 mr-2" />
-              The Worst-Case Scenario
-            </h3>
-            <p className="text-gray-300 mb-0">
-              If your family knows you had Bitcoin but cannot access the wallet, the IRS may still value that known wallet as part of your gross estate for tax purposes. Your heirs could owe estate taxes on crypto they can't even access to sell.
-            </p>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8">
+              <Landmark className="w-10 h-10 text-brand-gold mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">IRS Considerations</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                The IRS treats crypto as property. While federal estate tax exemption is high ($13.61M in 2024), "Cost Basis Step-up" at death is a critical benefit for US heirs that requires verifiable records.
+              </p>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-2 text-[11px] font-bold text-muted uppercase tracking-wider">
+                  <CheckCircle2 size={14} className="text-emerald-400" /> Basis Step-Up Eligible
+                </li>
+                <li className="flex items-center gap-2 text-[11px] font-bold text-muted uppercase tracking-wider">
+                  <CheckCircle2 size={14} className="text-brand-gold" /> Form 8949 Compliance
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 border-brand-primary/20 bg-brand-primary/5">
+              <Gavel className="w-10 h-10 text-brand-primary mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">State Law Parity</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                Whether you are in <span className="text-primary font-bold">California, New York, or Florida</span>, our protocol adapts to local digital asset mandates. We ensure your executors have "Full Disclosure" power when needed.
+              </p>
+              <Button variant="ghost" className="text-[10px] font-bold uppercase tracking-widest text-brand-primary p-0">
+                Download State Checklists
+              </Button>
+            </div>
           </div>
 
-          <h2 className="flex items-center text-3xl font-bold mt-12 mb-6">
-            <BookOpen className="w-8 h-8 mr-3 text-blue-500" />
-            IRS Taxation: The "Step-Up in Basis"
-          </h2>
-          <p>
-            The IRS treats cryptocurrency as property. This classification is incredibly important for your heirs due to the <strong>step-up in basis</strong> rule.
-          </p>
-          <ul>
-            <li><strong>How it works:</strong> If you bought 1 BTC at $10,000 and die when it is worth $60,000, your heir's "cost basis" becomes $60,000.</li>
-            <li><strong>The Benefit:</strong> If your heir immediately sells that BTC for $60,000, they owe <strong>$0 in capital gains tax</strong>. They are only taxed on gains that occur <em>after</em> they inherit it.</li>
-          </ul>
-          <p>
-            However, this entire financial benefit is lost if your heir cannot actually access the Bitcoin to claim it.
-          </p>
+          <section className="bg-obsidian-950/50 border border-brand-gold/20 rounded-[32px] p-8 md:p-12 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-10">
+              <AlertTriangle size={120} className="text-brand-gold" />
+            </div>
+            <div className="relative z-10">
+              <h2 className="text-3xl font-display font-bold mb-6 text-primary tracking-tight">The "Terms of Service" Trap</h2>
+              <p className="text-lg text-secondary leading-relaxed mb-8">
+                Traditional US estate planning often fails because exchange <span className="italic text-primary font-bold">Terms of Service (ToS)</span> strictly forbid sharing passwords. RUFADAA overrides this, but only if you've used a compliant tool like Transfer Legacy to authorize access.
+              </p>
+              <div className="flex items-center gap-4 p-4 bg-brand-gold/10 rounded-2xl border border-brand-gold/20">
+                <Shield className="text-brand-gold shrink-0" size={24} />
+                <p className="text-sm font-medium text-brand-gold leading-tight">
+                  Transfer Legacy provides the "express consent" required under federal law to allow fiduciary access to encrypted vaults.
+                </p>
+              </div>
+            </div>
+          </section>
 
-          <h2 className="text-3xl font-bold mt-12 mb-6">Custodial vs. Self-Custody Inheritance</h2>
-          <p>
-            The method of inheritance depends entirely on how you hold your assets:
-          </p>
-          
-          <h3>1. Exchanges (Coinbase, Gemini, etc.)</h3>
-          <p>
-            Exchanges require your executor to produce a death certificate, letters testamentary, and your ID to transfer the account. This process is slow, but possible—<strong>if</strong> the executor knows the account exists.
-          </p>
-
-          <h3>2. Self-Custody Wallets (Ledger, Trezor, MetaMask)</h3>
-          <p>
-            This is where millions are lost. No court order, judge, or death certificate can unlock a self-custody wallet. If your heir does not have your 12 or 24-word seed phrase, the crypto is gone forever.
-          </p>
-
-          <h2 className="flex items-center text-3xl font-bold mt-12 mb-6">
-            <Key className="w-8 h-8 mr-3 text-blue-500" />
-            How Transfer Legacy Protects US Investors
-          </h2>
-          <p>
-            Transfer Legacy is engineered to solve the exact problems US crypto investors face regarding self-custody and estate privacy.
-          </p>
-          <ol>
-            <li><strong>Bypass Probate Exposure:</strong> Wills go through probate, which is a public process in the US. If you put a seed phrase in a will, anyone can read it and steal your crypto. Transfer Legacy stores this securely off-record.</li>
-            <li><strong>Automated Dead Man's Switch:</strong> We ensure your encrypted seed phrases and exchange instructions are automatically delivered to your heirs upon your verified passing, ensuring zero loss.</li>
-            <li><strong>Zero-Knowledge Architecture:</strong> Transfer Legacy cannot access your keys. We are a secure conduit, not a custodian, keeping you fully compliant with self-custody principles.</li>
-          </ol>
-
-          {/* CTA Section */}
-          <div className="bg-gray-800/50 rounded-2xl p-8 mt-12 border border-gray-700 text-center">
-            <h3 className="text-2xl font-bold mb-4">Secure Your American Crypto Estate</h3>
-            <p className="text-gray-300 mb-6">
-              Ensure your heirs receive their step-up in basis and full access to your digital wealth. Protect your private keys today.
+          <div className="bg-gradient-to-br from-brand-primary to-blue-900 text-obsidian-950 rounded-[40px] p-10 md:p-16 text-center shadow-2xl shadow-brand-primary/20">
+            <BookOpen className="w-16 h-16 mx-auto mb-8 opacity-80" />
+            <h3 className="text-3xl md:text-5xl font-display font-bold mb-6 tracking-tight leading-none">
+              Initialize Your <span className="italic">US Sovereign Vault</span>
+            </h3>
+            <p className="text-xl opacity-90 mb-12 max-w-2xl mx-auto font-medium">
+              The only RUFADAA-compliant protocol for cross-border and US-domestic digital succession.
             </p>
-            <Link 
-              to="/"
-              className="inline-block bg-white text-gray-900 hover:bg-gray-100 font-bold py-3 px-8 rounded-full transition duration-300"
-            >
-              Start Your Digital Estate Plan
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Button onClick={() => window.scrollTo(0,0)} className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest">
+                Start Proactive Planning
+              </Button>
+            </div>
           </div>
         </div>
       </div>

@@ -1,132 +1,105 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import SEO from '../../components/seo/SEO';
+import { ArrowRight, Shield, Globe2, BookOpen, AlertTriangle, FileCheck, Landmark, Scale, Gavel, CheckCircle2, FileText, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { FileText, CheckCircle2, ArrowRight, HelpCircle } from 'lucide-react';
 import Button from '../../components/ui/Button';
-import Card from '../../components/ui/Card';
-import { SEO } from '../../components/seo/SEO';
 
-export default function DocumentStorage() {
-  const faqSchema = JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How to store important documents for family?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Important documents like wills, property deeds, and financial statements should be stored in a highly secure, encrypted digital safe deposit box like Transfer Legacy. This ensures they are protected from physical damage (fire/flood) and automatically delivered to your heirs when needed."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is Google Drive safe for storing legal documents?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Google Drive is convenient but not designed for estate planning. If you pass away, your family may not be able to access your Google account, and your documents could be lost. A dedicated zero-knowledge vault is required for inheritance."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is a digital safe deposit box?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A digital safe deposit box is an encrypted online storage system. The best platforms, like Transfer Legacy, use zero-knowledge encryption so even the company hosting the box cannot read your files, and include mechanisms to pass the contents to heirs."
-        }
-      }
-    ]
-  });
-
+const DocumentStorage = () => {
   return (
-    <div className="bg-secondary text-text min-h-screen font-sans pt-20">
+    <div className="min-h-screen bg-page text-primary pt-24 pb-16 relative overflow-hidden">
+      <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/5 blur-[120px] pointer-events-none" />
+
       <SEO 
-        title="Digital Safe Deposit Box: Store Important Documents for Family | Transfer Legacy"
-        description="The ultimate guide to storing important documents, wills, and files for your family. Secure your digital legacy with a zero-knowledge encrypted vault."
-        schema={faqSchema}
+        title="Secure Document Storage for Families: Protect Your Critical Files"
+        description="Learn the institutional standard for secure document storage. Protect your birth certificates, deeds, and legal papers with Transfer Legacy's encrypted vaults."
+        canonical="https://transferlegacy.com/store-important-documents-for-family"
       />
-      
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <header className="mb-16 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary mb-6 border border-primary/20">
-            <FileText size={16} />
-            <span className="text-sm font-semibold tracking-wide uppercase">Document Inheritance</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">
-            How to Store Important Documents for Your Family
-          </h1>
-          <p className="text-xl text-muted max-w-2xl mx-auto">
-            Filing cabinets burn. Physical safe deposit boxes get lost in probate. Here is how to build an unbreakable digital safe deposit box for your heirs.
-          </p>
-        </header>
 
-        <article className="prose prose-invert prose-lg max-w-none">
-          <h2>The Danger of Physical Document Storage</h2>
-          <p>
-            For generations, families have stored their most critical documents—wills, life insurance policies, property deeds, and birth certificates—in physical safe deposit boxes or home filing cabinets. 
-          </p>
-          <p>
-            This approach is fundamentally flawed in the modern era:
-          </p>
-          <ul>
-            <li><strong>Physical Destruction:</strong> Fires, floods, and natural disasters can wipe out a lifetime of records.</li>
-            <li><strong>Access Delays:</strong> When you pass away, banks immediately freeze safe deposit boxes until probate is complete, locking your family out of the exact documents they need to start the process.</li>
-            <li><strong>The "Where Is It?" Problem:</strong> Often, heirs simply don't know where the documents are kept.</li>
-          </ul>
-
-          <h2>Why Dropbox and Google Drive Aren't the Answer</h2>
-          <p>
-            Storing documents in standard cloud storage is better than paper, but introduces new risks:
-          </p>
-          <ol>
-            <li><strong>No Inheritance Mechanism:</strong> If your family doesn't have your Google password and 2FA device, they cannot access your Drive.</li>
-            <li><strong>Privacy Risks:</strong> Standard cloud providers scan your documents. They are not zero-knowledge encrypted.</li>
-          </ol>
-
-          <h2>The Digital Safe Deposit Box</h2>
-          <p>
-            The ultimate solution is a <strong>Zero-Knowledge Digital Vault</strong> like Transfer Legacy. It combines the security of a bank vault with the accessibility of the cloud, engineered specifically for estate planning.
-          </p>
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-24">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center space-x-2 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-4 py-2 rounded-full mb-8 shadow-[0_0_20px_rgba(79,92,255,0.1)]"
+          >
+            <FileText className="w-4 h-4" />
+            <span className="font-bold tracking-[0.2em] uppercase text-[10px]">Secure Documentation Guide</span>
+          </motion.div>
           
-          <div className="bg-surface border border-border rounded-xl p-6 my-8">
-            <h3 className="mt-0">What to store in your Transfer Legacy Vault:</h3>
-            <ul className="mb-0">
-              <li><CheckCircle2 className="inline text-primary mr-2" size={18}/> Scans of your Last Will and Testament</li>
-              <li><CheckCircle2 className="inline text-primary mr-2" size={18}/> Life insurance policy details</li>
-              <li><CheckCircle2 className="inline text-primary mr-2" size={18}/> Property deeds and titles</li>
-              <li><CheckCircle2 className="inline text-primary mr-2" size={18}/> A Letter of Instruction to your heirs</li>
-              <li><CheckCircle2 className="inline text-primary mr-2" size={18}/> Tax returns and financial statements</li>
-            </ul>
-          </div>
-
-          <p>
-            With Transfer Legacy, your documents are encrypted on your device. Only you, and your designated heirs (upon verification of your passing), can decrypt them.
+          <h1 className="text-5xl md:text-7xl font-display font-bold mb-8 leading-[0.95] tracking-tight text-primary">
+            Sovereign <span className="italic text-brand-primary">Document Vaults</span>
+          </h1>
+          
+          <p className="text-xl text-secondary mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+            Your most important physical documents deserve institutional-grade digital protection. Learn how to bridge the physical-digital divide for your family's heritage.
           </p>
 
-          <div className="mt-12 p-8 bg-gradient-to-r from-surface to-surface/50 border border-primary/20 rounded-2xl text-center">
-            <h3 className="text-2xl font-bold mt-0 mb-4">Build your digital safe today.</h3>
-            <p className="mb-6">Upload your critical documents to a zero-knowledge vault.</p>
-            <Link to="/onboarding">
-              <Button size="lg" className="glow-blue">
-                Create Your Vault <ArrowRight className="ml-2" size={20} />
-              </Button>
-            </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button variant="primary" size="lg" className="px-10 h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
+              Initialize Your Vault <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
           </div>
-        </article>
+        </div>
 
-        <section className="mt-20 pt-12 border-t border-border">
-          <h2 className="text-3xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
-          <div className="space-y-4">
-            {JSON.parse(faqSchema).mainEntity.map((faq: unknown, i: number) => (
-              <Card key={i} className="p-6">
-                <h3 className="text-lg font-bold text-text mb-2 flex items-start">
-                  <HelpCircle className="text-primary mr-3 mt-1 flex-shrink-0" size={20} />
-                  {faq.name}
-                </h3>
-                <p className="text-muted leading-relaxed ml-8">{faq.acceptedAnswer.text}</p>
-              </Card>
-            ))}
+        <div className="space-y-16">
+          <section className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 md:p-12">
+            <h2 className="flex items-center text-3xl font-display font-bold mb-8 text-primary tracking-tight">
+              <Lock className="w-8 h-8 mr-4 text-brand-primary" />
+              Beyond Google Drive
+            </h2>
+            <div className="prose prose-invert max-w-none text-secondary">
+              <p className="text-lg leading-relaxed mb-6">
+                Standard cloud storage (Google Drive, Dropbox) is built for convenience, not inheritance. If you lose access to your account, your family has almost <span className="text-primary font-bold">Zero Chance</span> of recovering your files through customer support.
+              </p>
+              <p className="text-lg leading-relaxed">
+                Transfer Legacy's vault is built on <span className="italic text-brand-primary font-bold">Zero-Knowledge Architecture</span>. We provide the technical assurance that your files are encrypted and only accessible to your verified heirs upon a protocol trigger.
+              </p>
+            </div>
+          </section>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8">
+              <FileCheck className="w-10 h-10 text-brand-gold mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">Verified Release</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                Our protocol ensures that sensitive documents like <span className="text-primary font-bold">Birth Certificates, Property Deeds, and Trust Documents</span> are only released after a multi-layered identity verification of your heirs.
+              </p>
+              <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-400 uppercase tracking-widest">
+                <CheckCircle2 size={14} /> Multi-Sig Verified
+              </div>
+            </div>
+
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 border-brand-primary/20 bg-brand-primary/5">
+              <Shield className="w-10 h-10 text-brand-primary mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">Tamper-Proof Storage</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                Every file upload is hashed and timestamped on our private audit log, providing <span className="text-primary font-bold">Mathematical Proof</span> of the document's existence and integrity.
+              </p>
+              <Button variant="ghost" className="text-[10px] font-bold uppercase tracking-widest text-brand-primary p-0">
+                View Security Audit
+              </Button>
+            </div>
           </div>
-        </section>
-      </main>
+
+          <div className="bg-gradient-to-br from-brand-primary to-blue-900 text-obsidian-950 rounded-[40px] p-10 md:p-16 text-center shadow-2xl shadow-brand-primary/20">
+            <h3 className="text-3xl md:text-5xl font-display font-bold mb-6 tracking-tight leading-none">
+              Protect Your <br /><span className="italic">Critical Documents</span>
+            </h3>
+            <p className="text-xl opacity-90 mb-12 max-w-2xl mx-auto font-medium">
+              Initialize your Sovereign Vault and ensure your family's history is never lost.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Button onClick={() => window.scrollTo(0,0)} className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest">
+                Start Document Vault
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default DocumentStorage;

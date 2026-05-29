@@ -1,293 +1,129 @@
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { Shield, Lock, Bot, KeyRound, CheckCircle2, Fingerprint, Globe as GlobeIcon, ArrowRight, Database, ShieldCheck } from 'lucide-react';
-import { Suspense, lazy } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
-import Button from '../components/ui/Button';
-import Card from '../components/ui/Card';
-import Hero from '../components/sections/Hero';
-import { SEO } from '../components/seo/SEO';
-
-const Globe = lazy(() => import('../components/3d/Globe'));
-const Problem = lazy(() => import('../components/sections/Problem'));
-const Testimonials = lazy(() => import('../components/sections/Testimonials'));
-const FinalCTA = lazy(() => import('../components/sections/FinalCTA'));
+import React, { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../landing.css';
 
 export default function Landing() {
-  const faqSchema = JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is digital asset succession?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Digital asset succession is the process of ensuring your digital wealth, identities, and memories are legally and securely transferred to your chosen heirs after you pass away. Transfer Legacy automates this process using zero-knowledge infrastructure."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How does seed phrase inheritance work?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Using zero-knowledge encryption and Shamir's Secret Sharing, your seed phrase is fragmented and stored securely. Your designated guardians combine their fragments after a verified event to release the access to your heirs."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can Transfer Legacy access my vault?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. Transfer Legacy uses a 100% zero-knowledge architecture. All encryption happens locally on your device before it ever reaches our servers. We mathematically cannot access your passwords, documents, or private keys."
-        }
+  const containerRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    // ── CURSOR ──
+    const dot = document.getElementById('cur-dot');
+    const ring = document.getElementById('cur-ring');
+    const handleMouseMove = (e: MouseEvent) => {
+      if (dot && ring) {
+        dot.style.left = e.clientX + 'px';
+        dot.style.top  = e.clientY + 'px';
+        ring.style.left = e.clientX + 'px';
+        ring.style.top  = e.clientY + 'px';
       }
-    ]
-  });
+    };
+    document.addEventListener('mousemove', handleMouseMove);
+
+    const handleMouseEnter = () => ring?.classList.add('hover');
+    const handleMouseLeave = () => ring?.classList.remove('hover');
+    document.querySelectorAll('button,a,[onclick],.faq-q').forEach(el => {
+      el.addEventListener('mouseenter', handleMouseEnter);
+      el.addEventListener('mouseleave', handleMouseLeave);
+    });
+
+    // ── NAV SCROLL ──
+    const handleScroll = () => {
+      document.getElementById('navbar')?.classList.toggle('scrolled', window.scrollY > 40);
+    };
+    window.addEventListener('scroll', handleScroll);
+
+    // ── SCROLL REVEAL ──
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ── FAQ ──
+    window.toggleFaq = (el: HTMLElement) => {
+      const isOpen = el.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
+      if (!isOpen) el.classList.add('open');
+    };
+
+    // ── FEATURE SWITCHER ──
+    window.activateFeature = (n: number) => {
+      [1,2,3,4].forEach(i => {
+        const item = document.getElementById('f'+i);
+        if (item) {
+          if (i === n) item.classList.add('active');
+          else item.classList.remove('active');
+        }
+        const p = document.getElementById('preview-'+i);
+        if (p) p.style.display = i === n ? 'block' : 'none';
+      });
+    };
+
+    // ── ROUTING & CTA ──
+    window.handleCTA = () => {
+      navigate('/onboarding');
+    };
+
+    const handleSignIn = (e: Event) => {
+      e.preventDefault();
+      navigate('/identity');
+    };
+    const handleGetStarted = (e: Event) => {
+      e.preventDefault();
+      navigate('/onboarding');
+    };
+
+    const signInBtns = document.querySelectorAll('.btn-ghost');
+    const getStartedBtns = document.querySelectorAll('.btn-primary, .btn-hero, .btn-price');
+
+    signInBtns.forEach(btn => btn.addEventListener('click', handleSignIn));
+    getStartedBtns.forEach(btn => btn.addEventListener('click', handleGetStarted));
+
+    // ── SMOOTH HOVER EFFECTS ──
+    const cards = document.querySelectorAll('.price-card,.step-card,.test-card') as NodeListOf<HTMLElement>;
+    cards.forEach(card => {
+      card.addEventListener('mousemove', (e: Event) => {
+        const mouseEvent = e as MouseEvent;
+        const rect = card.getBoundingClientRect();
+        const x = ((mouseEvent.clientX - rect.left) / rect.width - 0.5) * 6;
+        const y = ((mouseEvent.clientY - rect.top) / rect.height - 0.5) * -6;
+        card.style.transform = `perspective(600px) rotateY(${x}deg) rotateX(${y}deg) translateY(-4px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+        card.style.transition = 'transform .4s ease';
+      });
+      card.addEventListener('mouseenter', () => {
+        card.style.transition = 'none';
+      });
+    });
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
+      document.querySelectorAll('button,a,[onclick],.faq-q').forEach(el => {
+        el.removeEventListener('mouseenter', handleMouseEnter);
+        el.removeEventListener('mouseleave', handleMouseLeave);
+      });
+      signInBtns.forEach(btn => btn.removeEventListener('click', handleSignIn));
+      getStartedBtns.forEach(btn => btn.removeEventListener('click', handleGetStarted));
+    };
+  }, []);
+
+  const rawHtml = "\n\n<!-- Custom cursor -->\n<div class=\"cursor cursor-dot\" id=\"cur-dot\"></div>\n<div class=\"cursor cursor-ring\" id=\"cur-ring\"></div>\n\n<!-- ══════════════ NAV ══════════════ -->\n<nav id=\"navbar\">\n  <div class=\"nav-brand\">\n    <div class=\"nav-logo\"><svg viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/></svg></div>\n    <div class=\"nav-name\">Transfer Legacy</div>\n  </div>\n  <div class=\"nav-links\">\n    <a href=\"#how\">How it works</a>\n    <a href=\"#features\">Features</a>\n    <a href=\"#pricing\">Pricing</a>\n    <a href=\"#faq\">FAQ</a>\n  </div>\n  <div class=\"nav-cta\">\n    <button class=\"btn-ghost\">Sign in</button>\n    <button class=\"btn-primary\">Get started free</button>\n  </div>\n</nav>\n\n<!-- ══════════════ HERO ══════════════ -->\n<section class=\"hero\">\n  <div class=\"orb orb1\"></div>\n  <div class=\"orb orb2\"></div>\n  <div class=\"orb orb3\"></div>\n\n  <div class=\"hero-eyebrow\">\n    <div class=\"eyebrow-dot\"></div>\n    <span class=\"eyebrow-text\">Now in early access · Founding tier open</span>\n  </div>\n\n  <h1 class=\"hero-h1\">\n    <span class=\"line1\">Your entire digital life.</span>\n    <span class=\"line2\">Protected. Organised.</span>\n    <span class=\"line3\">Passed on.</span>\n  </h1>\n\n  <p class=\"hero-sub\">\n    Bank accounts, passwords, files, photos, subscriptions — your family accesses everything in under 10 minutes. No technical knowledge required.\n  </p>\n\n  <div class=\"hero-actions\">\n    <button class=\"btn-hero\">\n      Protect your family\n      <svg viewBox=\"0 0 24 24\"><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/><polyline points=\"12 5 19 12 12 19\"/></svg>\n    </button>\n    <button class=\"btn-hero-ghost\">\n      <svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polygon points=\"10 8 16 12 10 16 10 8\"/></svg>\n      Watch 2-min demo\n    </button>\n  </div>\n\n  <div class=\"hero-trust\">\n    <div class=\"trust-item\"><svg viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\"/><path d=\"M7 11V7a5 5 0 0110 0v4\"/></svg><span>Zero-knowledge encrypted</span></div>\n    <div class=\"trust-sep\"></div>\n    <div class=\"trust-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg><span>No technical knowledge needed</span></div>\n    <div class=\"trust-sep\"></div>\n    <div class=\"trust-item\"><svg viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/></svg><span>Your data — never ours</span></div>\n    <div class=\"trust-sep\"></div>\n    <div class=\"trust-item\"><svg viewBox=\"0 0 24 24\"><path d=\"M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/></svg><span>Guardian system</span></div>\n  </div>\n\n  <!-- Dashboard preview mockup -->\n  <div style=\"width:100%;max-width:880px;margin:72px auto 0;position:relative;z-index:2;animation:fadeUp 1.1s .6s ease both\">\n    <div style=\"background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:20px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.6)\">\n      <!-- Browser chrome -->\n      <div style=\"background:var(--bg2);padding:12px 20px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)\">\n        <div style=\"display:flex;gap:5px\"><div style=\"width:11px;height:11px;border-radius:50%;background:#FF5F57\"></div><div style=\"width:11px;height:11px;border-radius:50%;background:#FEBC2E\"></div><div style=\"width:11px;height:11px;border-radius:50%;background:#28C840\"></div></div>\n        <div style=\"flex:1;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:6px;padding:5px 14px;font-family:var(--fm);font-size:10px;color:var(--muted);max-width:260px;margin:0 auto\">app.transferlegacy.com</div>\n      </div>\n      <!-- App shell preview -->\n      <div style=\"display:grid;grid-template-columns:160px 1fr;min-height:420px;background:var(--bg)\">\n        <!-- Sidebar -->\n        <div style=\"background:var(--bg2);border-right:1px solid var(--border);padding:16px 10px\">\n          <div style=\"display:flex;align-items:center;gap:7px;margin-bottom:20px;padding:0 6px\">\n            <div style=\"width:20px;height:20px;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.3);border-radius:5px;display:flex;align-items:center;justify-content:center\"><svg width=\"10\" height=\"10\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"var(--or)\" stroke-width=\"2\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/></svg></div>\n            <span style=\"font-family:var(--fh);font-size:.75rem;color:var(--white);font-weight:600\">Transfer Legacy</span>\n          </div>\n          <div style=\"display:flex;flex-direction:column;gap:2px\">\n            <div style=\"display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:6px;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2)\">\n              <div style=\"width:11px;height:11px;border-radius:2px;border:1.5px solid var(--or)\"></div>\n              <span style=\"font-size:11px;color:var(--or);font-weight:500\">Dashboard</span>\n            </div>\n            <div style=\"display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:6px\">\n              <div style=\"width:11px;height:11px;border-radius:2px;border:1.5px solid var(--muted)\"></div>\n              <span style=\"font-size:11px;color:var(--muted)\">Asset Vault</span>\n            </div>\n            <div style=\"display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:6px\">\n              <div style=\"width:11px;height:11px;border-radius:2px;border:1.5px solid var(--muted)\"></div>\n              <span style=\"font-size:11px;color:var(--muted)\">Guardians</span>\n            </div>\n            <div style=\"display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:6px\">\n              <div style=\"width:11px;height:11px;border-radius:2px;border:1.5px solid var(--muted)\"></div>\n              <span style=\"font-size:11px;color:var(--muted)\">Trust Center</span>\n            </div>\n            <div style=\"display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:6px\">\n              <div style=\"width:11px;height:11px;border-radius:2px;border:1.5px solid var(--muted)\"></div>\n              <span style=\"font-size:11px;color:var(--muted)\">Analytics</span>\n            </div>\n          </div>\n        </div>\n        <!-- Dashboard content -->\n        <div style=\"padding:24px\">\n          <div style=\"display:flex;align-items:center;gap:6px;margin-bottom:10px\">\n            <div style=\"width:6px;height:6px;border-radius:50%;background:var(--or);animation:pulse 2s ease-in-out infinite\"></div>\n            <span style=\"font-family:var(--fm);font-size:8.5px;letter-spacing:.12em;color:var(--or);text-transform:uppercase\">Institutional Access Live</span>\n          </div>\n          <div style=\"font-family:var(--fh);font-size:1.6rem;font-weight:500;color:var(--white);margin-bottom:4px\">Welcome back, <em style=\"font-style:italic;color:var(--gold2)\">Deshu</em></div>\n          <div style=\"font-size:11px;color:var(--muted2);margin-bottom:18px\">Your succession protocol is active.</div>\n          <!-- Stat cards -->\n          <div style=\"display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px\">\n            <div style=\"background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:center\">\n              <div style=\"font-family:var(--fm);font-size:7.5px;letter-spacing:.1em;color:var(--or);text-transform:uppercase;margin-bottom:5px\">Score</div>\n              <div style=\"font-family:var(--fh);font-size:1.4rem;font-weight:500;color:var(--white)\">51</div>\n            </div>\n            <div style=\"background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:center\">\n              <div style=\"font-family:var(--fm);font-size:7.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:5px\">Assets</div>\n              <div style=\"font-family:var(--fh);font-size:1.4rem;font-weight:500;color:var(--white)\">9</div>\n            </div>\n            <div style=\"background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:center\">\n              <div style=\"font-family:var(--fm);font-size:7.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:5px\">Guardians</div>\n              <div style=\"font-family:var(--fh);font-size:1.4rem;font-weight:500;color:var(--white)\">0</div>\n            </div>\n            <div style=\"background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:center\">\n              <div style=\"font-family:var(--fm);font-size:7.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:5px\">Heirs</div>\n              <div style=\"font-family:var(--fh);font-size:1.4rem;font-weight:500;color:var(--white)\">2</div>\n            </div>\n          </div>\n          <!-- Mini vault row -->\n          <div style=\"background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px\">\n            <div><div style=\"font-size:11px;font-weight:500;color:var(--white);margin-bottom:2px\">HDFC Savings Account</div><div style=\"font-size:9px;color:var(--muted)\">Bank account · Protected</div></div>\n            <div style=\"font-family:var(--fm);font-size:11px;color:var(--or2)\">₹2,40,000</div>\n          </div>\n          <div style=\"background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between\">\n            <div><div style=\"font-size:11px;font-weight:500;color:var(--white);margin-bottom:2px\">Will & Testament</div><div style=\"font-size:9px;color:var(--muted)\">Legal document · Protected</div></div>\n            <div style=\"display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);font-size:9px;color:#4ade80\">Encrypted</div>\n          </div>\n        </div>\n      </div>\n    </div>\n    <!-- Glow -->\n    <div style=\"position:absolute;bottom:-60px;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,rgba(249,115,22,.3),transparent);filter:blur(8px)\"></div>\n  </div>\n</section>\n\n<!-- ══════════════ STATS ══════════════ -->\n<div class=\"stats-strip reveal\">\n  <div class=\"stat-item\"><div class=\"stat-num\">$<span>140</span>B</div><div class=\"stat-label\">Digital wealth permanently lost</div></div>\n  <div class=\"stat-item\"><div class=\"stat-num\"><span>4.9</span>B</div><div class=\"stat-label\">People with no digital estate plan</div></div>\n  <div class=\"stat-item\"><div class=\"stat-num\"><span>0</span></div><div class=\"stat-label\">Dominant solutions exist</div></div>\n  <div class=\"stat-item\"><div class=\"stat-num\"><span>10</span>m</div><div class=\"stat-label\">For your family to access everything</div></div>\n</div>\n\n<!-- ══════════════ PROBLEM ══════════════ -->\n<div class=\"problem-section\" id=\"problem\">\n<div class=\"problem-inner\">\n  <div class=\"section-eyebrow reveal\"><div class=\"section-dot\"></div><span class=\"section-tag\">The crisis nobody talks about</span></div>\n  <h2 class=\"section-h reveal\" style=\"max-width:620px\">The estate planning industry was built for a world that no longer exists.</h2>\n\n  <div class=\"story-quote reveal reveal-delay-1\">\n    <div class=\"story-text\">\"A man spent eleven years building $2.3 million in Bitcoin. He kept his seed phrase in his head — for security. He died. His wife found a Ledger in the drawer. She held it for an hour. She had no idea what it was. Every satoshi — gone forever.\"</div>\n    <div class=\"story-attr\">Real story · Digital inheritance crisis · 2024</div>\n  </div>\n\n  <p class=\"section-sub reveal\">This isn't just a crypto problem. Every person who dies leaves behind bank accounts, passwords, photos, subscriptions, online businesses — with no plan. Their family spends months fighting to access what was built. Most of it is lost.</p>\n\n  <div class=\"problem-grid reveal reveal-delay-1\">\n    <div class=\"prob-card\">\n      <div class=\"prob-accent\" style=\"background:var(--red,#EF4444)\"></div>\n      <div class=\"prob-num\">64<span style=\"font-size:1.4rem\">%</span></div>\n      <div class=\"prob-label\">of adults have no digital estate plan</div>\n      <div class=\"prob-sub\">They assume someone will figure it out. They won't — not without a plan, not without instructions, not without you.</div>\n    </div>\n    <div class=\"prob-card\">\n      <div class=\"prob-accent\" style=\"background:var(--or)\"></div>\n      <div class=\"prob-num\">100<span style=\"font-size:1.4rem\">M+</span></div>\n      <div class=\"prob-label\">accounts permanently locked every year</div>\n      <div class=\"prob-sub\">Bank accounts, email, photos, businesses, crypto. Not hacked. Not stolen. Just gone — because no plan existed.</div>\n    </div>\n    <div class=\"prob-card\">\n      <div class=\"prob-accent\" style=\"background:var(--gold)\"></div>\n      <div class=\"prob-num\">$<span style=\"font-size:2rem\">500</span>B</div>\n      <div class=\"prob-label\">industry built for physical assets only</div>\n      <div class=\"prob-sub\">Traditional wills, password managers, insurance — none of them were designed for the digital world we live in today.</div>\n    </div>\n  </div>\n</div>\n</div>\n\n<!-- ══════════════ HOW IT WORKS ══════════════ -->\n<div class=\"how-section\" id=\"how\">\n  <div class=\"section-eyebrow reveal\"><div class=\"section-dot\"></div><span class=\"section-tag\">How it works</span></div>\n  <h2 class=\"section-h reveal\">Four things working together<br>for the first time.</h2>\n  <div class=\"steps-grid\">\n    <div class=\"step-card reveal reveal-delay-1\">\n      <div class=\"step-num\" style=\"background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.2)\" data-num=\"\"></div>\n      <div style=\"width:44px;height:44px;border-radius:12px;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2);display:flex;align-items:center;justify-content:center;margin-bottom:20px\">\n        <svg style=\"width:20px;height:20px;stroke:var(--or);stroke-width:1.5;fill:none\" viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\"/><path d=\"M7 11V7a5 5 0 0110 0v4\"/></svg>\n      </div>\n      <div class=\"step-title\">The Vault</div>\n      <div class=\"step-body\">Zero-knowledge encrypted storage for bank credentials, passwords, seed phrases, files, photos, and digital access instructions. We never see your data.</div>\n    </div>\n    <div class=\"step-card reveal reveal-delay-2\">\n      <div style=\"width:44px;height:44px;border-radius:12px;background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.2);display:flex;align-items:center;justify-content:center;margin-bottom:20px\">\n        <svg style=\"width:20px;height:20px;stroke:var(--gold2);stroke-width:1.5;fill:none\" viewBox=\"0 0 24 24\"><path d=\"M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75\"/></svg>\n      </div>\n      <div class=\"step-title\">Guardian System</div>\n      <div class=\"step-body\">Designate 1–5 trusted guardians — your spouse, lawyer, adult child. They hold conditional access that activates only when needed. No technical knowledge required.</div>\n    </div>\n    <div class=\"step-card reveal reveal-delay-3\">\n      <div style=\"width:44px;height:44px;border-radius:12px;background:rgba(74,124,89,.12);border:1px solid rgba(74,124,89,.25);display:flex;align-items:center;justify-content:center;margin-bottom:20px\">\n        <svg style=\"width:20px;height:20px;stroke:var(--sage2);stroke-width:1.5;fill:none\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/><line x1=\"16\" y1=\"13\" x2=\"8\" y2=\"13\"/><line x1=\"16\" y1=\"17\" x2=\"8\" y2=\"17\"/></svg>\n      </div>\n      <div class=\"step-title\">Transfer Guide</div>\n      <div class=\"step-body\">Step-by-step heir experience. Your family accesses everything in under 10 minutes — even if they've never heard of a seed phrase, a password manager, or a 2FA code.</div>\n    </div>\n    <div class=\"step-card reveal reveal-delay-4\">\n      <div style=\"width:44px;height:44px;border-radius:12px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);display:flex;align-items:center;justify-content:center;margin-bottom:20px\">\n        <svg style=\"width:20px;height:20px;stroke:#60a5fa;stroke-width:1.5;fill:none\" viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/></svg>\n      </div>\n      <div class=\"step-title\">Legacy Organiser</div>\n      <div class=\"step-body\">Living digital inventory — bank accounts, investments, subscriptions, domain names, online businesses, insurance policies. Updated by you, ready for your family.</div>\n    </div>\n  </div>\n</div>\n\n<!-- ══════════════ FEATURES ══════════════ -->\n<div class=\"features-section\" id=\"features\">\n<div class=\"features-inner\">\n  <div class=\"section-eyebrow reveal\"><div class=\"section-dot\"></div><span class=\"section-tag\">Platform features</span></div>\n  <h2 class=\"section-h reveal\">Everything your family needs.<br>Nothing they don't.</h2>\n  <div class=\"features-grid\">\n    <div class=\"feature-list\">\n      <div class=\"feature-item active\" id=\"f1\" onclick=\"activateFeature(1)\">\n        <div class=\"feature-icon\" style=\"background:rgba(249,115,22,.1)\"><svg style=\"stroke:var(--or)\" viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\"/><path d=\"M7 11V7a5 5 0 0110 0v4\"/></svg></div>\n        <div class=\"feature-title\">Zero-knowledge encryption</div>\n        <div class=\"feature-body\">AES-256 client-side encryption. Your data is encrypted in your browser before it ever leaves your device. We are the safe, not the bank.</div>\n      </div>\n      <div class=\"feature-item\" id=\"f2\" onclick=\"activateFeature(2)\">\n        <div class=\"feature-icon\" style=\"background:rgba(217,119,6,.1)\"><svg style=\"stroke:var(--gold2)\" viewBox=\"0 0 24 24\"><path d=\"M22 11.08V12a10 10 0 11-5.93-9.14\"/><polyline points=\"22 4 12 14.01 9 11.01\"/></svg></div>\n        <div class=\"feature-title\">Proof of Life heartbeat</div>\n        <div class=\"feature-body\">Regular check-ins confirm you're active. If you stop responding, your guardians are notified and the succession process can begin.</div>\n      </div>\n      <div class=\"feature-item\" id=\"f3\" onclick=\"activateFeature(3)\">\n        <div class=\"feature-icon\" style=\"background:rgba(74,124,89,.12)\"><svg style=\"stroke:var(--sage2)\" viewBox=\"0 0 24 24\"><circle cx=\"18\" cy=\"5\" r=\"3\"/><circle cx=\"6\" cy=\"12\" r=\"3\"/><circle cx=\"18\" cy=\"19\" r=\"3\"/><line x1=\"8.59\" y1=\"13.51\" x2=\"15.42\" y2=\"17.49\"/><line x1=\"15.41\" y1=\"6.51\" x2=\"8.59\" y2=\"10.49\"/></svg></div>\n        <div class=\"feature-title\">Shamir's Secret Sharing</div>\n        <div class=\"feature-body\">Your vault key is cryptographically split across multiple guardians. No single guardian can access your vault alone — only a quorum together.</div>\n      </div>\n      <div class=\"feature-item\" id=\"f4\" onclick=\"activateFeature(4)\">\n        <div class=\"feature-icon\" style=\"background:rgba(59,130,246,.1)\"><svg style=\"stroke:#60a5fa\" viewBox=\"0 0 24 24\"><path d=\"M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22\"/></svg></div>\n        <div class=\"feature-title\">Works with everything</div>\n        <div class=\"feature-body\">Bank accounts, crypto, email, cloud storage, domain names, online businesses, subscriptions. Platform-agnostic — we work with every service.</div>\n      </div>\n    </div>\n    <!-- Feature preview -->\n    <div class=\"feature-preview reveal\" id=\"feature-preview\">\n      <!-- Preview 1 -->\n      <div id=\"preview-1\" class=\"preview-inner\">\n        <div style=\"width:72px;height:72px;border-radius:18px;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px\">\n          <svg style=\"width:34px;height:34px;stroke:var(--or);stroke-width:1.3;fill:none\" viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\"/><path d=\"M7 11V7a5 5 0 0110 0v4\"/></svg>\n        </div>\n        <div style=\"font-family:var(--fh);font-size:1.5rem;color:var(--white);margin-bottom:8px\">AES-256 Encrypted</div>\n        <div style=\"font-size:13px;color:var(--muted2);line-height:1.65;margin-bottom:20px\">Client-side only. The server receives only encrypted ciphertext — never your keys, never your data.</div>\n        <div style=\"display:flex;flex-direction:column;gap:8px\">\n          <div style=\"background:var(--bg3);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between\">\n            <span style=\"font-size:12px;color:var(--off)\">HDFC Savings</span>\n            <span style=\"font-family:var(--fm);font-size:10px;color:var(--sage2)\">●  ENCRYPTED</span>\n          </div>\n          <div style=\"background:var(--bg3);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between\">\n            <span style=\"font-size:12px;color:var(--off)\">Gmail password</span>\n            <span style=\"font-family:var(--fm);font-size:10px;color:var(--sage2)\">●  ENCRYPTED</span>\n          </div>\n          <div style=\"background:var(--bg3);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between\">\n            <span style=\"font-size:12px;color:var(--off)\">Will & Testament</span>\n            <span style=\"font-family:var(--fm);font-size:10px;color:var(--sage2)\">●  ENCRYPTED</span>\n          </div>\n        </div>\n      </div>\n      <!-- Preview 2 -->\n      <div id=\"preview-2\" class=\"preview-inner\" style=\"display:none\">\n        <div style=\"width:72px;height:72px;border-radius:18px;background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px\">\n          <svg style=\"width:34px;height:34px;stroke:var(--gold2);stroke-width:1.3;fill:none\" viewBox=\"0 0 24 24\"><path d=\"M22 11.08V12a10 10 0 11-5.93-9.14\"/><polyline points=\"22 4 12 14.01 9 11.01\"/></svg>\n        </div>\n        <div style=\"font-family:var(--fh);font-size:1.5rem;color:var(--white);margin-bottom:8px\">6 Days Remaining</div>\n        <div style=\"font-size:13px;color:var(--muted2);line-height:1.65;margin-bottom:20px\">Regular heartbeats confirm you're active. Your guardians are only notified when you stop responding.</div>\n        <div style=\"background:var(--bg3);border:1px solid rgba(249,115,22,.2);border-radius:12px;padding:18px\">\n          <div style=\"display:flex;justify-content:space-between;margin-bottom:12px\"><span style=\"font-size:13px;color:var(--off)\">Proof of Life</span><span style=\"font-family:var(--fm);font-size:11px;color:var(--green)\">ACTIVE</span></div>\n          <div style=\"background:var(--bg4);border-radius:4px;height:6px;overflow:hidden;margin-bottom:10px\"><div style=\"width:20%;height:100%;background:linear-gradient(90deg,var(--or),var(--gold2));border-radius:4px\"></div></div>\n          <div style=\"font-size:11px;color:var(--muted)\">Next check-in required in 6 days</div>\n        </div>\n      </div>\n      <!-- Preview 3 -->\n      <div id=\"preview-3\" class=\"preview-inner\" style=\"display:none\">\n        <div style=\"width:72px;height:72px;border-radius:18px;background:rgba(74,124,89,.12);border:1px solid rgba(74,124,89,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px\">\n          <svg style=\"width:34px;height:34px;stroke:var(--sage2);stroke-width:1.3;fill:none\" viewBox=\"0 0 24 24\"><circle cx=\"18\" cy=\"5\" r=\"3\"/><circle cx=\"6\" cy=\"12\" r=\"3\"/><circle cx=\"18\" cy=\"19\" r=\"3\"/><line x1=\"8.59\" y1=\"13.51\" x2=\"15.42\" y2=\"17.49\"/><line x1=\"15.41\" y1=\"6.51\" x2=\"8.59\" y2=\"10.49\"/></svg>\n        </div>\n        <div style=\"font-family:var(--fh);font-size:1.5rem;color:var(--white);margin-bottom:8px\">Guardian Network</div>\n        <div style=\"font-size:13px;color:var(--muted2);line-height:1.65;margin-bottom:20px\">Your key is split — 2-of-3 guardians needed. No single person can access your vault alone.</div>\n        <div style=\"display:grid;grid-template-columns:1fr 1fr;gap:8px\">\n          <div style=\"background:rgba(74,124,89,.08);border:1px solid rgba(74,124,89,.2);border-radius:8px;padding:12px;text-align:center\"><div style=\"font-size:12px;font-weight:500;color:var(--white);margin-bottom:2px\">Priya G.</div><div style=\"font-size:10px;color:var(--sage2)\">Key fragment 1</div></div>\n          <div style=\"background:rgba(74,124,89,.08);border:1px solid rgba(74,124,89,.2);border-radius:8px;padding:12px;text-align:center\"><div style=\"font-size:12px;font-weight:500;color:var(--white);margin-bottom:2px\">Rahul G.</div><div style=\"font-size:10px;color:var(--sage2)\">Key fragment 2</div></div>\n          <div style=\"background:var(--bg3);border:1px dashed var(--border);border-radius:8px;padding:12px;text-align:center;grid-column:span 2\"><div style=\"font-size:11px;color:var(--muted)\">+ Add third guardian to complete quorum</div></div>\n        </div>\n      </div>\n      <!-- Preview 4 -->\n      <div id=\"preview-4\" class=\"preview-inner\" style=\"display:none\">\n        <div style=\"width:72px;height:72px;border-radius:18px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 20px\">\n          <svg style=\"width:34px;height:34px;stroke:#60a5fa;stroke-width:1.3;fill:none\" viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/></svg>\n        </div>\n        <div style=\"font-family:var(--fh);font-size:1.5rem;color:var(--white);margin-bottom:8px\">All Asset Types</div>\n        <div style=\"font-size:13px;color:var(--muted2);line-height:1.65;margin-bottom:18px\">Every digital asset type you own — in one place.</div>\n        <div style=\"display:flex;flex-wrap:wrap;gap:6px;justify-content:center\">\n          <span style=\"padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)\">Bank accounts</span>\n          <span style=\"padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)\">Passwords</span>\n          <span style=\"padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)\">Crypto</span>\n          <span style=\"padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)\">Photos & files</span>\n          <span style=\"padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)\">Domain names</span>\n          <span style=\"padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)\">Online businesses</span>\n          <span style=\"padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)\">Subscriptions</span>\n          <span style=\"padding:5px 12px;border-radius:20px;font-size:11.5px;color:var(--off);background:var(--bg3);border:1px solid var(--border)\">Insurance</span>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n</div>\n\n<!-- ══════════════ PRICING ══════════════ -->\n<div class=\"pricing-section\" id=\"pricing\">\n  <div class=\"section-eyebrow reveal\"><div class=\"section-dot\"></div><span class=\"section-tag\">Simple pricing</span></div>\n  <h2 class=\"section-h reveal\">One plan for your entire family.<br>No hidden fees. Ever.</h2>\n  <div class=\"pricing-grid\">\n    <div class=\"price-card reveal reveal-delay-1\">\n      <div class=\"price-badge\" style=\"background:rgba(255,255,255,.06);color:var(--muted2);border:1px solid var(--border)\">ESSENTIAL</div>\n      <div class=\"price-name\">For individuals</div>\n      <div class=\"price-val\">$99</div>\n      <div class=\"price-per\">per year</div>\n      <div class=\"price-sep\"></div>\n      <div class=\"price-features\">\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>1 vault</div>\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>2 trusted guardians</div>\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>Basic heir guide</div>\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>Email support</div>\n      </div>\n      <button class=\"btn-price\">Get started</button>\n    </div>\n    <div class=\"price-card featured reveal reveal-delay-2\">\n      <div class=\"price-badge\" style=\"background:rgba(249,115,22,.15);color:var(--or2);border:1px solid rgba(249,115,22,.3)\">FOUNDING · MOST POPULAR</div>\n      <div class=\"price-name\">For founding members</div>\n      <div class=\"price-val\" style=\"color:var(--gold2)\">$149</div>\n      <div class=\"price-per\" style=\"color:var(--or)\">per year · locked forever</div>\n      <div class=\"price-sep\"></div>\n      <div class=\"price-features\">\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>5 trusted guardians</div>\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>Priority support</div>\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>Founding badge</div>\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>Price locked forever</div>\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>Roadmap input</div>\n      </div>\n      <button class=\"btn-price btn-price-or\">Claim founding price</button>\n    </div>\n    <div class=\"price-card reveal reveal-delay-3\">\n      <div class=\"price-badge\" style=\"background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.2)\">FAMILY</div>\n      <div class=\"price-name\">For families</div>\n      <div class=\"price-val\">$249</div>\n      <div class=\"price-per\">per year</div>\n      <div class=\"price-sep\"></div>\n      <div class=\"price-features\">\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>3 family vaults</div>\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>10 guardians</div>\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>Video heir guides</div>\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>Dedicated onboarding</div>\n      </div>\n      <button class=\"btn-price\">Get started</button>\n    </div>\n    <div class=\"price-card reveal reveal-delay-4\">\n      <div class=\"price-badge\" style=\"background:rgba(139,92,246,.1);color:#a78bfa;border:1px solid rgba(139,92,246,.2)\">ADVISOR</div>\n      <div class=\"price-name\">For estate lawyers</div>\n      <div class=\"price-val\">$499</div>\n      <div class=\"price-per\">per year</div>\n      <div class=\"price-sep\"></div>\n      <div class=\"price-features\">\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>Unlimited client links</div>\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>White-label heir guides</div>\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>Lawyer dashboard</div>\n        <div class=\"pf-item\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg>Referral analytics</div>\n      </div>\n      <button class=\"btn-price\">Contact us</button>\n    </div>\n  </div>\n</div>\n\n<!-- ══════════════ TESTIMONIALS ══════════════ -->\n<div class=\"testimonials\">\n<div class=\"test-inner\">\n  <div class=\"section-eyebrow reveal\"><div class=\"section-dot\"></div><span class=\"section-tag\">Early members</span></div>\n  <h2 class=\"section-h reveal\">What founding members are saying.</h2>\n  <div class=\"test-grid\">\n    <div class=\"test-card reveal reveal-delay-1\">\n      <div class=\"test-stars\"><svg viewBox=\"0 0 24 24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg><svg viewBox=\"0 0 24 24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg><svg viewBox=\"0 0 24 24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg><svg viewBox=\"0 0 24 24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg><svg viewBox=\"0 0 24 24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg></div>\n      <div class=\"test-quote\">\"I've been meaning to sort this out for years. My wife had no idea what accounts I held or how to access anything. Transfer Legacy is the first product that made this actually doable.\"</div>\n      <div class=\"test-author\"><div class=\"test-av\" style=\"background:rgba(249,115,22,.15);color:var(--or2)\">AK</div><div><div class=\"test-name\">Arjun K.</div><div class=\"test-role\">Software engineer · Bangalore</div></div></div>\n    </div>\n    <div class=\"test-card reveal reveal-delay-2\">\n      <div class=\"test-stars\"><svg viewBox=\"0 0 24 24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg><svg viewBox=\"0 0 24 24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg><svg viewBox=\"0 0 24 24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg><svg viewBox=\"0 0 24 24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg><svg viewBox=\"0 0 24 24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg></div>\n      <div class=\"test-quote\">\"I'm an estate lawyer and my clients ask me every week about digital inheritance. I've been waiting for a product like this. The guardian system is exactly what I needed to recommend.\"</div>\n      <div class=\"test-author\"><div class=\"test-av\" style=\"background:rgba(74,124,89,.15);color:var(--sage2)\">SM</div><div><div class=\"test-name\">Sanya M.</div><div class=\"test-role\">Estate lawyer · Mumbai</div></div></div>\n    </div>\n    <div class=\"test-card reveal reveal-delay-3\">\n      <div class=\"test-stars\"><svg viewBox=\"0 0 24 24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg><svg viewBox=\"0 0 24 24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg><svg viewBox=\"0 0 24 24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg><svg viewBox=\"0 0 24 24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg><svg viewBox=\"0 0 24 24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg></div>\n      <div class=\"test-quote\">\"My father passed away last year. It took us 14 months to access his accounts. I signed up for Transfer Legacy the same week. I won't put my kids through what we went through.\"</div>\n      <div class=\"test-author\"><div class=\"test-av\" style=\"background:rgba(59,130,246,.12);color:#60a5fa\">RV</div><div><div class=\"test-name\">Rohit V.</div><div class=\"test-role\">Entrepreneur · Delhi</div></div></div>\n    </div>\n  </div>\n</div>\n</div>\n\n<!-- ══════════════ FAQ ══════════════ -->\n<div class=\"faq-section\" id=\"faq\">\n  <div class=\"section-eyebrow reveal\"><div class=\"section-dot\"></div><span class=\"section-tag\">FAQ</span></div>\n  <h2 class=\"section-h reveal\">Questions you're probably thinking.</h2>\n  <div style=\"margin-top:48px\" id=\"faq-list\">\n    <div class=\"faq-item reveal\" onclick=\"toggleFaq(this)\"><div class=\"faq-q\"><div class=\"faq-question\">Can Transfer Legacy actually see my data?</div><div class=\"faq-icon\"><svg viewBox=\"0 0 24 24\"><line x1=\"12\" y1=\"5\" x2=\"12\" y2=\"19\"/><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/></svg></div></div><div class=\"faq-answer\">No. Everything is encrypted in your browser before it leaves your device using AES-256 encryption. We store only encrypted ciphertext. We have no ability to decrypt it — we never have your keys. We are the safe, not the bank.</div></div>\n    <div class=\"faq-item reveal reveal-delay-1\" onclick=\"toggleFaq(this)\"><div class=\"faq-q\"><div class=\"faq-question\">What happens if Transfer Legacy shuts down?</div><div class=\"faq-icon\"><svg viewBox=\"0 0 24 24\"><line x1=\"12\" y1=\"5\" x2=\"12\" y2=\"19\"/><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/></svg></div></div><div class=\"faq-answer\">Your encrypted data is always exportable. We also provide a self-hosted option and the open-source protocol specification so any technically capable person can access your data independently. Your family is never locked in.</div></div>\n    <div class=\"faq-item reveal reveal-delay-2\" onclick=\"toggleFaq(this)\"><div class=\"faq-q\"><div class=\"faq-question\">How does my family access everything when I'm gone?</div><div class=\"faq-icon\"><svg viewBox=\"0 0 24 24\"><line x1=\"12\" y1=\"5\" x2=\"12\" y2=\"19\"/><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/></svg></div></div><div class=\"faq-answer\">When 2-of-3 (or your configured quorum) guardians confirm the succession event, they can initiate the Transfer Guide — a plain-language, step-by-step process that walks any non-technical family member through accessing every asset you've stored. Average completion time: under 10 minutes.</div></div>\n    <div class=\"faq-item reveal reveal-delay-3\" onclick=\"toggleFaq(this)\"><div class=\"faq-q\"><div class=\"faq-question\">Is this only for crypto holders?</div><div class=\"faq-icon\"><svg viewBox=\"0 0 24 24\"><line x1=\"12\" y1=\"5\" x2=\"12\" y2=\"19\"/><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/></svg></div></div><div class=\"faq-answer\">Not at all. Transfer Legacy works for any digital asset — bank accounts, investment accounts, email, photos, online businesses, domain names, subscriptions, insurance policies, and yes, crypto too. If it's digital and valuable to your family, it belongs in your vault.</div></div>\n    <div class=\"faq-item reveal reveal-delay-4\" onclick=\"toggleFaq(this)\"><div class=\"faq-q\"><div class=\"faq-question\">What is the Proof of Life system?</div><div class=\"faq-icon\"><svg viewBox=\"0 0 24 24\"><line x1=\"12\" y1=\"5\" x2=\"12\" y2=\"19\"/><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/></svg></div></div><div class=\"faq-answer\">Proof of Life is a periodic check-in system. You confirm you're active every 30 days (configurable). If you stop responding, we alert your guardians with escalating notifications before any succession process begins. This prevents false triggers and gives you multiple opportunities to check in.</div></div>\n    <div class=\"faq-item reveal\" onclick=\"toggleFaq(this)\"><div class=\"faq-q\"><div class=\"faq-question\">What does the Founding Tier price lock mean?</div><div class=\"faq-icon\"><svg viewBox=\"0 0 24 24\"><line x1=\"12\" y1=\"5\" x2=\"12\" y2=\"19\"/><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/></svg></div></div><div class=\"faq-answer\">Founding members who sign up now at $149/year keep that price permanently — regardless of what we charge new users in the future. When we raise prices (which we will as the product matures), founding members are grandfathered in forever. It's our commitment to the people who believed in us early.</div></div>\n  </div>\n</div>\n\n<!-- ══════════════ CTA ══════════════ -->\n<div class=\"cta-section\">\n  <div class=\"cta-bg\"></div>\n  <div class=\"reveal\">\n    <div class=\"cta-h\">Every family deserves to inherit<br>the <em>digital life</em> their loved one built.</div>\n    <p class=\"cta-sub\">Set up in 10 minutes. Protected forever. Your family gets everything when they need it most.</p>\n    <div style=\"max-width:420px;margin:0 auto 28px\">\n      <div class=\"email-form\">\n        <input class=\"email-inp\" type=\"email\" placeholder=\"your@email.com\" id=\"cta-email\">\n        <button class=\"btn-hero\" style=\"white-space:nowrap;border-radius:9px;padding:13px 20px;font-size:14px\" onclick=\"handleCTA()\">Start free</button>\n      </div>\n    </div>\n    <p style=\"font-size:12.5px;color:var(--muted)\">No credit card required · 30-day free trial · Cancel anytime</p>\n  </div>\n</div>\n\n<!-- ══════════════ FOOTER ══════════════ -->\n<footer>\n<div class=\"footer-inner\">\n  <div class=\"footer-top\">\n    <div>\n      <div class=\"footer-brand\">\n        <div class=\"nav-logo\"><svg viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/></svg></div>\n        <div class=\"nav-name\">Transfer Legacy</div>\n      </div>\n      <div class=\"footer-desc\">Digital estate planning for everyone. Your entire digital life — protected, organised, and passed on to the people you love.</div>\n    </div>\n    <div>\n      <div class=\"footer-col-title\">Product</div>\n      <div class=\"footer-links\">\n        <a href=\"#how\">How it works</a>\n        <a href=\"#features\">Features</a>\n        <a href=\"#pricing\">Pricing</a>\n        <a href=\"#\">Dashboard</a>\n        <a href=\"#\">API & Developers</a>\n      </div>\n    </div>\n    <div>\n      <div class=\"footer-col-title\">Company</div>\n      <div class=\"footer-links\">\n        <a href=\"#\">About</a>\n        <a href=\"#\">Blog</a>\n        <a href=\"#\">Careers</a>\n        <a href=\"#\">Press</a>\n        <a href=\"#\">Contact</a>\n      </div>\n    </div>\n    <div>\n      <div class=\"footer-col-title\">Legal</div>\n      <div class=\"footer-links\">\n        <a href=\"#\">Privacy Policy</a>\n        <a href=\"#\">Terms of Service</a>\n        <a href=\"#\">Security</a>\n        <a href=\"#\">Cookie Policy</a>\n        <a href=\"#\">Compliance</a>\n      </div>\n    </div>\n  </div>\n  <div class=\"footer-bottom\">\n    <div class=\"footer-copy\">© 2026 Transfer Legacy. All rights reserved.</div>\n    <div class=\"footer-legal\">\n      <a href=\"#\">Privacy</a>\n      <a href=\"#\">Terms</a>\n      <a href=\"#\">Security</a>\n    </div>\n  </div>\n</div>\n</footer>\n\n\n";
 
   return (
-    <div className="bg-page text-primary min-h-screen font-sans selection:bg-brand-primary/20">
-      <SEO
-        title="Transfer Legacy | Institutional Digital Asset Succession"
-        description="A sovereign infrastructure for your digital world. Securely transfer Bitcoin, crypto, passwords, and digital businesses to your heirs with institutional-grade security."
-        schema={faqSchema}
-      />
-
-      {/* Hero Section */}
-      <Hero />
-
-      {/* Institutional Trust Marquee */}
-      <section className="py-12 border-y border-border-base bg-surface/50 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6">
-          <p className="text-center text-[10px] font-bold uppercase tracking-[0.3em] text-muted mb-8">Aligned with global security standards</p>
-          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-40 dark:opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
-            {/* Mock Institutional Logos */}
-            <div className="flex items-center gap-2 font-display text-xl font-bold tracking-tighter text-primary">
-               <ShieldCheck className="text-brand-primary" size={24} /> ISO/IEC 27001
-            </div>
-            <div className="flex items-center gap-2 font-display text-xl font-bold tracking-tighter text-primary">
-               <Lock className="text-brand-gold" size={24} /> RUFADAA COMPLIANT
-            </div>
-            <div className="flex items-center gap-2 font-display text-xl font-bold tracking-tighter text-primary">
-               <Fingerprint className="text-purple-500" size={24} /> SOC2 TYPE II
-            </div>
-            <div className="flex items-center gap-2 font-display text-xl font-bold tracking-tighter text-primary">
-               <Database className="text-emerald-500" size={24} /> GDPR SOVEREIGN
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <Suspense fallback={<div className="h-96 bg-surface animate-pulse" />}>
-        <Problem />
-      </Suspense>
-
-      {/* The Protocol Section — Bento Grid */}
-      <section className="py-32 relative bg-surface overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-primary/5 rounded-full blur-[120px] -z-10" />
-        
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-24">
-            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-8 text-primary">Architected for <br /><span className="gold-gradient italic">Permanence.</span></h2>
-            <p className="text-secondary text-xl max-w-2xl mx-auto font-medium">A multi-layered protocol designed to survive platform shutdowns, device loss, and time itself.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Bento Item 1 - Large */}
-            <div className="md:col-span-2 row-span-2 p-12 rounded-[32px] bg-page border border-border-base relative overflow-hidden group shadow-sm">
-              <div className="absolute top-0 right-0 p-12 opacity-[0.03] dark:opacity-[0.07] group-hover:opacity-[0.1] transition-opacity">
-                <Database size={240} className="text-brand-primary" />
-              </div>
-              <div className="relative z-10">
-                <div className="w-14 h-14 rounded-2xl bg-brand-primary/10 flex items-center justify-center text-brand-primary mb-8">
-                  <Fingerprint size={28} />
-                </div>
-                <h3 className="text-4xl font-bold tracking-tight mb-6 text-primary">Absolute Zero-Knowledge.</h3>
-                <p className="text-secondary text-xl leading-relaxed max-w-lg mb-8">
-                  Your vault is encrypted locally using AES-256-GCM. We never see your data, your keys, or your password. It is mathematically impossible for us to access your legacy.
-                </p>
-                <div className="flex gap-3">
-                   <span className="px-4 py-1.5 rounded-full bg-surface border border-border-base text-[10px] font-bold uppercase tracking-widest text-muted">End-to-End</span>
-                   <span className="px-4 py-1.5 rounded-full bg-surface border border-border-base text-[10px] font-bold uppercase tracking-widest text-muted">Shamir's Shared</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Bento Item 2 */}
-            <div className="p-8 rounded-[32px] bg-page border border-border-base flex flex-col justify-between hover:bg-surface transition-colors shadow-sm">
-              <div>
-                <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-6">
-                  <ShieldCheck size={24} />
-                </div>
-                <h3 className="text-2xl font-bold tracking-tight mb-4 text-primary">Shamir Protocol</h3>
-                <p className="text-secondary text-sm leading-relaxed">
-                  Fragment your master access key among multiple guardians. No single person—not even a malicious actor—can release your vault without a quorum.
-                </p>
-              </div>
-            </div>
-
-            {/* Bento Item 3 */}
-            <div className="p-8 rounded-[32px] bg-page border border-border-base flex flex-col justify-between hover:bg-surface transition-colors shadow-sm">
-              <div>
-                <div className="w-12 h-12 rounded-xl bg-brand-gold/10 flex items-center justify-center text-brand-gold mb-6">
-                   <Bot size={24} />
-                </div>
-                <h3 className="text-2xl font-bold tracking-tight mb-4 text-primary">AI Estate Advisor</h3>
-                <p className="text-secondary text-sm leading-relaxed">
-                  A sovereign AI agent monitors your check-in health and provides your heirs with a step-by-step recovery roadmap when the protocol is triggered.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Execution Protocol — How it Works */}
-      <section id="how-it-works" className="py-32 bg-page relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,rgba(249,115,22,0.03),transparent_70%)]" />
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="text-center mb-24">
-            <h2 className="text-5xl md:text-5xl font-bold tracking-tighter mb-6 text-primary">
-              In <span className="gold-gradient italic">15 Minutes.</span>
-            </h2>
-            <p className="text-secondary text-lg max-w-2xl mx-auto font-medium">
-              The world's most advanced succession journey. Three steps to secure your digital legacy for generations to come.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                step: '01',
-                title: 'SECURE YOUR VAULT',
-                desc: 'Connect your identities, private keys, and critical documents. Everything is encrypted locally via zero-knowledge proof before reaching our infrastructure.',
-              },
-              {
-                step: '02',
-                title: 'ASSIGN GUARDIANS',
-                desc: 'Designate trusted individuals or professional institutions as guardians. They never see your data—they only verify the release of the "Dead Man Switch".',
-              },
-              {
-                step: '03',
-                title: 'PEACE OF MIND',
-                desc: 'If a succession event is verified, Transfer Legacy automatically reconstructs your keys and releases access to your designated heirs.',
-              }
-            ].map((item, i) => (
-              <div key={i} className="group relative p-12 border border-border-base rounded-3xl hover:bg-surface transition-all duration-500 overflow-hidden">
-                <div className="text-[120px] font-black font-digits text-primary/[0.02] absolute -bottom-8 -right-8 group-hover:text-brand-gold/[0.05] transition-all duration-700 pointer-events-none select-none group-hover:-translate-x-4 group-hover:-translate-y-4">
-                  {item.step}
-                </div>
-                <div className="relative z-10">
-                  <h3 className="text-2xl font-bold tracking-tight mb-6 text-primary group-hover:text-brand-gold transition-colors">{item.title}</h3>
-                  <p className="text-secondary leading-relaxed font-medium">
-                    {item.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* The Comparison Section */}
-      <section className="py-32 bg-page relative overflow-hidden">
-        <div className="absolute inset-0 bg-dot-matrix opacity-30" />
-        <div className="absolute inset-0 bg-grid-white/[0.02]" />
-        <div className="max-w-7xl mx-auto px-6 relative">
-           <div className="text-center mb-20">
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-primary">Legacy Comparison</h2>
-              <p className="text-secondary font-medium">Why the world's elite choose Transfer Legacy over traditional methods.</p>
-           </div>
-           
-           <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                 <thead>
-                    <tr className="border-b border-border-base">
-                       <th className="py-8 px-6 text-sm font-bold uppercase tracking-widest text-muted">Feature</th>
-                       <th className="py-8 px-6 text-sm font-bold uppercase tracking-widest text-muted">Traditional Will</th>
-                       <th className="py-8 px-6 text-sm font-bold uppercase tracking-widest text-brand-primary">Transfer Legacy</th>
-                    </tr>
-                 </thead>
-                 <tbody className="text-secondary">
-                    {[
-                       { f: 'Private Key Succession', t: 'None / Paper Only', p: 'Automated ZK-Reconstruction' },
-                       { f: 'Zero-Knowledge Security', t: 'None (Attorney reads it)', p: 'Military-Grade Encryption' },
-                       { f: 'Verification Delay', t: 'Months (Probate)', p: 'Instant (Protocol Trigger)' },
-                       { f: 'Platform Support', t: 'Manual Recovery', p: '200+ Global Integrations' }
-                    ].map((row, i) => (
-                       <tr key={i} className="border-b border-divider hover:bg-surface transition-colors">
-                          <td className="py-8 px-6 font-bold text-primary">{row.f}</td>
-                          <td className="py-8 px-6 text-rose-500 font-medium">{row.t}</td>
-                          <td className="py-8 px-6 text-emerald-600 dark:text-emerald-400 font-bold">{row.p}</td>
-                       </tr>
-                    ))}
-                 </tbody>
-              </table>
-           </div>
-        </div>
-      </section>
-
-      {/* Signature Features */}
-      <section className="py-32 bg-surface">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-7xl font-display mb-6 text-primary">Designed for <span className="gold-gradient italic">generations.</span></h2>
-            <p className="text-xl text-secondary max-w-2xl mx-auto font-medium">Institutional infrastructure for the individual family office. Zero-knowledge. Absolute assurance.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {[
-              { title: 'Zero-Knowledge Privacy', icon: Fingerprint, desc: 'We mathematically cannot access your vault. All encryption happens locally on your device.', span: 'col-span-1 md:col-span-4 lg:col-span-4' },
-              { title: 'Multi-Guardian Trust', icon: ShieldCheck, desc: 'Distribute trust among multiple people. No single point of failure.', span: 'col-span-1 md:col-span-2 lg:col-span-2' },
-              { title: 'AI Estate Guide', icon: Bot, desc: 'Our AI guides non-technical heirs step-by-step through the recovery of your digital world.', span: 'col-span-1 md:col-span-2 lg:col-span-2' },
-              { title: 'Pass On Everything', icon: Database, desc: 'From seed phrases to social media handles and domain names. One vault for your entire digital existence.', span: 'col-span-1 md:col-span-4 lg:col-span-4' },
-              { title: 'Global Compliance', icon: Lock, desc: 'Built to align with RUFADAA (USA), DIFC (UAE), and digital succession laws in India and UK.', span: 'col-span-1 md:col-span-2 lg:col-span-3' },
-              { title: 'Vault-Grade Security', icon: KeyRound, desc: 'Military-grade encryption meets fintech-tier infrastructure. Built for perpetual resilience.', span: 'col-span-1 md:col-span-2 lg:col-span-3' }
-            ].map((feature, i) => (
-              <Card key={i} className={`group p-10 border-border-base hover:border-brand-primary/30 transition-all duration-500 bg-page hover:bg-surface shadow-sm ${feature.span}`}>
-                <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary mb-6 group-hover:scale-110 transition-transform">
-                  <feature.icon size={24} />
-                </div>
-                <h3 className="text-2xl font-bold mb-4 text-primary tracking-tight">{feature.title}</h3>
-                <p className="text-secondary leading-relaxed font-medium">{feature.desc}</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <Suspense fallback={<div className="h-96 bg-surface animate-pulse" />}>
-        <Testimonials />
-      </Suspense>
-
-      {/* FAQ Section */}
-      <section className="py-32 bg-page">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-primary mb-4">Common Protocols</h2>
-            <p className="text-secondary font-medium">Frequently asked questions about sovereign succession.</p>
-          </div>
-          
-          <div className="space-y-4">
-            {[
-              { q: 'Is Transfer Legacy a custodial service?', a: 'No. Transfer Legacy is a non-custodial protocol. We never hold your private keys or passwords in a readable format. Everything is encrypted locally on your device using zero-knowledge architecture.' },
-              { q: 'What happens if I lose my device?', a: 'The protocol uses a decentralized recovery mechanism. Your encrypted vault shards are distributed among your chosen guardians. You can reconstruct your vault using their collective verification.' },
-              { q: 'How does the protocol detect death or incapacitation?', a: 'We use a configurable "Proof of Life" heartbeat. If you fail to acknowledge multiple encrypted signals over a predefined period, the protocol triggers the legacy succession flow.' },
-              { q: 'Is this legally binding?', a: 'Transfer Legacy is built to integrate with legal frameworks like RUFADAA. While the protocol handles the technical succession of digital assets, we recommend linking your vault metadata to your traditional legal will for full estate compliance.' }
-            ].map((item, i) => (
-              <Card key={i} className="p-8 border-border-base bg-surface hover:bg-white/50 dark:hover:bg-white/[0.02] transition-all shadow-sm">
-                <h3 className="text-lg font-bold text-primary mb-4">{item.q}</h3>
-                <p className="text-secondary leading-relaxed font-medium">{item.a}</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <Suspense fallback={<div className="h-96 bg-surface animate-pulse" />}>
-        <FinalCTA />
-      </Suspense>
-    </div>
+    <div ref={containerRef} dangerouslySetInnerHTML={{ __html: rawHtml }} />
   );
+}
+
+// Add these to window for the onclick handlers in raw HTML to work
+declare global {
+  interface Window {
+    toggleFaq: (el: HTMLElement) => void;
+    activateFeature: (n: number) => void;
+    handleCTA: () => void;
+  }
 }

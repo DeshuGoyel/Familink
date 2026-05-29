@@ -1,6 +1,7 @@
 import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useStore } from '../../store/useStore';
 
 function Particles() {
   const count = useMemo(() => {
@@ -52,17 +53,24 @@ function Particles() {
     mesh.current.instanceMatrix.needsUpdate = true;
   });
 
+  const { theme } = useStore();
+  const isDark = theme === 'dark';
+
   return (
     <instancedMesh ref={mesh} args={[undefined, undefined, count]}>
       <sphereGeometry args={[0.02, 6, 6]} />
-      <meshBasicMaterial color="#ffffff" transparent opacity={0.4} />
+      <meshBasicMaterial 
+        color={isDark ? "#ffffff" : "#4F5CFF"} 
+        transparent 
+        opacity={isDark ? 0.4 : 0.3} 
+      />
     </instancedMesh>
   );
 }
 
 export default function ParticleBackground() {
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none bg-secondary/80">
+    <div className="fixed inset-0 z-0 pointer-events-none">
       <Canvas dpr={[1, 1.25]} camera={{ position: [0, 0, 15], fov: 60 }}>
         <Particles />
       </Canvas>

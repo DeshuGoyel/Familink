@@ -59,7 +59,7 @@ function ScoreGauge({ visible }: { visible: boolean }) {
   return (
     <div className="relative w-full max-w-xs aspect-square mx-auto flex items-center justify-center">
       <svg className="w-full h-full -rotate-90" viewBox="0 0 260 260">
-        <circle cx="130" cy="130" r="115" stroke="rgba(255,255,255,0.05)" strokeWidth="14" fill="none" />
+        <circle cx="130" cy="130" r="115" stroke="currentColor" className="text-muted/10" strokeWidth="14" fill="none" />
         <circle
           cx="130" cy="130" r="115"
           stroke="url(#gaugeGrad)"
@@ -80,9 +80,9 @@ function ScoreGauge({ visible }: { visible: boolean }) {
       </svg>
 
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-5xl font-bold text-white">{score}%</span>
-        <span className="text-xs font-bold text-white/35 tracking-widest uppercase mt-2">Legacy Score</span>
-        <span className="text-[10px] text-orange-400/60 mt-1">After 3 min setup</span>
+        <span className="text-5xl font-bold text-primary">{score}%</span>
+        <span className="text-xs font-bold text-secondary tracking-widest uppercase mt-2">Legacy Score</span>
+        <span className="text-[10px] text-brand-primary/60 mt-1">After 3 min setup</span>
       </div>
 
       {/* Axis labels */}
@@ -118,11 +118,8 @@ export default function Security() {
   }, []);
 
   return (
-    <section id="security" ref={ref} className="relative py-28 overflow-hidden" style={{ background: '#090B14' }}>
-      <div
-        className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(129,140,248,0.4), transparent)' }}
-      />
+    <section id="security" ref={ref} className="relative py-28 overflow-hidden bg-page">
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-primary/40 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
@@ -131,21 +128,13 @@ export default function Security() {
           viewport={{ once: true }}
           className="mb-20"
         >
-          <p
-            className="text-xs font-bold tracking-[0.22em] uppercase mb-5"
-            style={{
-              background: 'linear-gradient(135deg, #818cf8, #c084fc)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
+          <p className="text-xs font-bold tracking-[0.22em] uppercase mb-5 gradient-text-brand">
             Security
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 max-w-2xl leading-tight tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4 max-w-2xl leading-tight tracking-tight">
             We are mathematically incapable of reading your data.
           </h2>
-          <p className="text-white/40 text-lg max-w-xl">
+          <p className="text-secondary text-lg max-w-xl">
             Not "privacy policy" promises. Actual cryptographic impossibility.
           </p>
         </motion.div>
@@ -161,18 +150,14 @@ export default function Security() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="flex items-start gap-4 p-5 rounded-2xl border transition-all duration-300 group hover:-translate-y-0.5"
-                style={{ background: '#131722', borderColor: 'rgba(129,140,248,0.12)' }}
+                className="flex items-start gap-4 p-5 rounded-2xl border border-border-base bg-surface transition-all duration-300 group hover:-translate-y-0.5"
               >
-                <div
-                  className="flex-shrink-0 w-10 h-10 rounded-xl border flex items-center justify-center"
-                  style={{ background: 'rgba(129,140,248,0.1)', borderColor: 'rgba(129,140,248,0.2)' }}
-                >
-                  <CheckCircle2 size={18} style={{ color: '#818cf8' }} />
+                <div className="flex-shrink-0 w-10 h-10 rounded-xl border border-brand-primary/20 bg-brand-primary/10 flex items-center justify-center">
+                  <CheckCircle2 size={18} className="text-brand-primary" />
                 </div>
                 <div>
-                  <p className="font-bold text-white mb-0.5">{p.label}</p>
-                  <p className="text-sm text-white/40">{p.detail}</p>
+                  <p className="font-bold text-primary mb-0.5">{p.label}</p>
+                  <p className="text-sm text-secondary">{p.detail}</p>
                 </div>
               </motion.div>
             ))}
@@ -197,45 +182,34 @@ export default function Security() {
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
-          <h3 className="text-2xl font-bold text-white mb-8 tracking-tight">
+          <h3 className="text-2xl font-bold text-primary mb-8 tracking-tight">
             What actually happens when you die?
           </h3>
 
-          <div className="overflow-x-auto rounded-3xl border" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+          <div className="overflow-x-auto rounded-3xl border border-border-base bg-surface">
             <table className="w-full text-sm min-w-[640px]">
               <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <th className="text-left py-4 px-6 text-white/35 font-semibold w-[200px]">Scenario</th>
-                  <th
-                    className="py-4 px-6 text-center font-bold"
-                    style={{
-                      background: 'linear-gradient(135deg, #f9a8d4, #f97316)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                    }}
-                  >
+                <tr className="border-b border-border-base bg-muted/5">
+                  <th className="text-left py-4 px-6 text-secondary font-semibold w-[200px]">Scenario</th>
+                  <th className="py-4 px-6 text-center font-bold gradient-text-brand">
                     Transfer Legacy
                   </th>
-                  <th className="py-4 px-6 text-center text-white/30 font-medium">Hardware Wallet</th>
-                  <th className="py-4 px-6 text-center text-white/30 font-medium">Paper Backup</th>
-                  <th className="py-4 px-6 text-center text-white/30 font-medium">Password Mgr</th>
+                  <th className="py-4 px-6 text-center text-secondary font-medium">Hardware Wallet</th>
+                  <th className="py-4 px-6 text-center text-secondary font-medium">Paper Backup</th>
+                  <th className="py-4 px-6 text-center text-secondary font-medium">Password Mgr</th>
                 </tr>
               </thead>
               <tbody>
                 {comparisonRows.map((row, i) => (
                   <tr
                     key={i}
-                    style={{
-                      borderBottom: i < comparisonRows.length - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined,
-                      background: i % 2 === 0 ? 'rgba(255,255,255,0.015)' : undefined,
-                    }}
+                    className={`border-b border-border-base/50 ${i % 2 === 0 ? 'bg-muted/5' : ''}`}
                   >
-                    <td className="py-4 px-6 text-white/35 text-xs leading-relaxed font-medium">{row.factor}</td>
-                    <td className="py-4 px-6 text-center text-xs font-semibold" style={{ color: '#34d399' }}>{row.transferLegacy}</td>
-                    <td className="py-4 px-6 text-center text-xs text-white/30">{row.hardware}</td>
-                    <td className="py-4 px-6 text-center text-xs text-white/30">{row.paper}</td>
-                    <td className="py-4 px-6 text-center text-xs text-white/30">{row.manager}</td>
+                    <td className="py-4 px-6 text-secondary text-xs leading-relaxed font-medium">{row.factor}</td>
+                    <td className="py-4 px-6 text-center text-xs font-semibold text-emerald-600 dark:text-emerald-400">{row.transferLegacy}</td>
+                    <td className="py-4 px-6 text-center text-xs text-secondary">{row.hardware}</td>
+                    <td className="py-4 px-6 text-center text-xs text-secondary">{row.paper}</td>
+                    <td className="py-4 px-6 text-center text-xs text-secondary">{row.manager}</td>
                   </tr>
                 ))}
               </tbody>
@@ -244,10 +218,7 @@ export default function Security() {
         </motion.div>
       </div>
 
-      <div
-        className="absolute bottom-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(192,132,252,0.3), transparent)' }}
-      />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-primary/30 to-transparent" />
     </section>
   );
 }

@@ -1,242 +1,244 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Calculator, 
-  ShieldAlert, 
-  TrendingUp, 
-  CheckCircle2,
-  ArrowRight,
-  RefreshCcw,
-  ShieldCheck
-} from 'lucide-react';
+import { Calculator, Globe2, TrendingUp, AlertTriangle, ArrowRight, Shield, Zap, Info, ChevronRight } from 'lucide-react';
 import Button from '../../components/ui/Button';
-import SimulationCard from '../../components/ui/SimulationCard';
-import { SEO } from '../../components/seo/SEO';
+import Card from '../../components/ui/Card';
+import SEO from '../../components/seo/SEO';
 
-interface Question {
-  id: string;
-  text: string;
-  options: { text: string; score: number; color: string }[];
-}
-
-const questions: Question[] = [
-  {
-    id: 'keys',
-    text: 'How do you store your private keys/seed phrases?',
-    options: [
-      { text: 'Paper in a safe', score: 40, color: 'text-amber-500' },
-      { text: 'Digital file (Encrypted)', score: 60, color: 'text-blue-500' },
-      { text: 'Digital file (Unencrypted)', score: 10, color: 'text-error' },
-      { text: 'Memory only', score: 0, color: 'text-error' },
-      { text: 'Shamir Secret Sharing / Vault', score: 100, color: 'text-emerald-500' }
-    ]
-  },
-  {
-    id: 'guardians',
-    text: 'Do your heirs know how to access your assets if you pass away?',
-    options: [
-      { text: 'Yes, full access & training', score: 100, color: 'text-emerald-500' },
-      { text: 'They know a safe exists', score: 50, color: 'text-amber-500' },
-      { text: 'They have no idea', score: 0, color: 'text-error' },
-      { text: 'I have a legal will', score: 30, color: 'text-blue-500' }
-    ]
-  },
-  {
-    id: 'mfa',
-    text: 'What happens to your 2FA devices (YubiKey/Phone) if you pass away?',
-    options: [
-      { text: 'Backup codes in vault', score: 100, color: 'text-emerald-500' },
-      { text: 'Codes are in a physical safe', score: 60, color: 'text-amber-500' },
-      { text: 'Heirs dont have the PINs', score: 20, color: 'text-error' },
-      { text: 'No backup plan', score: 0, color: 'text-error' }
-    ]
-  }
-];
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+});
 
 export default function InheritanceCalculator() {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [scores, setScores] = useState<Record<string, number>>({});
-  const [isFinished, setIsFinished] = useState(false);
+  const [jurisdiction, setJurisdiction] = useState('USA');
+  const [assetValue, setAssetValue] = useState(100000);
+  const [growthRate, setGrowthRate] = useState(10);
+  const [years, setYears] = useState(20);
 
-  const handleSelect = (score: number) => {
-    const newScores = { ...scores, [questions[currentQuestion].id]: score };
-    setScores(newScores);
-
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      setIsFinished(true);
+  const taxLogic: Record<string, any> = {
+    'India': { 
+      rate: 0, 
+      threshold: Infinity, 
+      note: "No inheritance tax. Potential 20-30% LTCG on crypto gains.",
+      color: "text-emerald-400"
+    },
+    'USA': { 
+      rate: 0.4, 
+      threshold: 13610000, 
+      note: "40% above $13.61M threshold. Step-up in basis may apply.",
+      color: "text-brand-primary"
+    },
+    'UK': { 
+      rate: 0.4, 
+      threshold: 325000, 
+      note: "40% above £325k nil-rate band. Potential 7-year rule.",
+      color: "text-brand-gold"
+    },
+    'UAE': { 
+      rate: 0, 
+      threshold: Infinity, 
+      note: "0% tax environment. DIFC Wills required for non-Muslims.",
+      color: "text-purple-400"
     }
   };
 
-  const totalScore = Object.values(scores).reduce((a, b) => a + b, 0) / questions.length;
-
-  const getScoreInfo = () => {
-    if (totalScore < 30) return { label: 'CRITICAL RISK', color: 'text-error', desc: 'Your assets are at extreme risk of permanent loss.' };
-    if (totalScore < 70) return { label: 'MODERATE RISK', color: 'text-amber-500', desc: 'Significant gaps in your digital estate plan.' };
-    return { label: 'SECURE LEGACY', color: 'text-emerald-500', desc: 'You have institutional-grade protection in place.' };
+  const calculateProjection = () => {
+    const futureValue = assetValue * Math.pow(1 + growthRate / 100, years);
+    const logic = taxLogic[jurisdiction] || { rate: 0, threshold: Infinity };
+    
+    let taxAmount = 0;
+    if (futureValue > logic.threshold) {
+      taxAmount = (futureValue - logic.threshold) * logic.rate;
+    }
+    
+    return {
+      futureValue,
+      taxAmount,
+      netValue: futureValue - taxAmount
+    };
   };
 
+  const results = calculateProjection();
+
   return (
-    <div className="bg-page min-h-screen text-text">
+    <div className="min-h-screen bg-page text-primary pt-24 pb-20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
+      
       <SEO 
-        title="Crypto Inheritance Risk Calculator | Transfer Legacy"
-        description="Calculate the risk of your digital assets being permanently lost. Get a personalized Legacy Security Score in 60 seconds."
+        title="Inheritance Tax & Growth Calculator | Transfer Legacy"
+        description="Estimate your digital estate's future value and inheritance tax liability across USA, UK, India, and UAE jurisdictions."
+        canonical="https://transferlegacy.com/features/inheritance-calculator"
       />
 
-      <section className="relative pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="w-20 h-20 rounded-[2rem] bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 mx-auto mb-8 shadow-2xl shadow-amber-500/20"
-          >
-            <Calculator size={32} />
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-16">
+          <motion.div {...fadeUp(0)} className="flex items-center justify-center gap-2 mb-4">
+            <Calculator size={16} className="text-brand-primary" />
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-primary">
+              Institutional Projection Engine
+            </p>
           </motion.div>
-          <h1 className="text-5xl lg:text-5xl font-bold tracking-tighter mb-8 leading-[0.9]">
-            LEGACY SECURITY<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-amber-200">SCORE.</span>
+          <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-6">
+            Wealth <span className="italic text-brand-primary">Projection</span>
           </h1>
-          <p className="text-xl text-muted max-w-2xl mx-auto mb-12">
-            Most crypto users are one accident away from losing everything. Find out your score and close the gaps.
+          <p className="text-secondary text-xl font-medium max-w-2xl mx-auto">
+            Calculate the impact of time, growth, and jurisdiction-specific taxes on your digital legacy.
           </p>
         </div>
-      </section>
 
-      <section className="py-20 px-6 lg:px-8 max-w-4xl mx-auto">
-        <SimulationCard
-          title="Risk Assessment Tool"
-          description="Answer 3 questions to generate your institutional risk profile."
-          icon={<TrendingUp />}
-        >
-          <AnimatePresence mode="wait">
-            {!isFinished ? (
-              <motion.div
-                key="questions"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="space-y-8"
-              >
-                <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
-                  <span>Question {currentQuestion + 1} of {questions.length}</span>
-                  <div className="flex gap-1">
-                    {questions.map((_, i) => (
-                      <div key={i} className={cn("w-6 h-1 rounded-full transition-all", i === currentQuestion ? "bg-amber-500" : "bg-base")} />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Controls */}
+          <div className="lg:col-span-5 space-y-8">
+            <Card className="p-10 bg-surface/30 backdrop-blur-md border-base/60 rounded-[40px]">
+              <div className="space-y-10">
+                {/* Jurisdiction */}
+                <div>
+                  <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted mb-4">
+                    <Globe2 size={12} /> Target Jurisdiction
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {Object.keys(taxLogic).map((j) => (
+                      <button
+                        key={j}
+                        onClick={() => setJurisdiction(j)}
+                        className={`p-4 rounded-2xl border text-sm font-bold transition-all ${
+                          jurisdiction === j 
+                          ? 'bg-brand-primary border-brand-primary text-obsidian-950 shadow-lg shadow-brand-primary/20' 
+                          : 'bg-obsidian-950/50 border-base/40 text-secondary hover:border-brand-primary/40'
+                        }`}
+                      >
+                        {j}
+                      </button>
                     ))}
                   </div>
                 </div>
 
-                <h3 className="text-2xl font-bold italic tracking-tight">{questions[currentQuestion].text}</h3>
-
-                <div className="grid grid-cols-1 gap-3">
-                  {questions[currentQuestion].options.map((opt, i) => (
-                    <button
-                      key={i}
-                      onClick={() => handleSelect(opt.score)}
-                      className="group flex items-center justify-between p-6 rounded-2xl bg-surface border border-base hover:border-amber-500/50 hover:bg-amber-500/5 transition-all text-left"
-                    >
-                      <span className="font-bold text-sm group-hover:text-amber-500 transition-colors">{opt.text}</span>
-                      <ArrowRight size={16} className="text-muted group-hover:text-amber-500 group-hover:translate-x-1 transition-all" />
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="results"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-10"
-              >
-                <div className="relative inline-block mb-8">
-                  <svg className="w-48 h-48">
-                    <circle className="text-base" strokeWidth="12" stroke="currentColor" fill="transparent" r="80" cx="96" cy="96" />
-                    <motion.circle
-                      className={getScoreInfo().color}
-                      strokeWidth="12"
-                      strokeDasharray={502}
-                      initial={{ strokeDashoffset: 502 }}
-                      animate={{ strokeDashoffset: 502 - (502 * totalScore) / 100 }}
-                      transition={{ duration: 1.5, ease: "easeOut" }}
-                      strokeLinecap="round"
-                      stroke="currentColor"
-                      fill="transparent"
-                      r="80" cx="96" cy="96"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-5xl font-bold italic tracking-tighter">{Math.round(totalScore)}</span>
-                    <span className="text-[10px] font-bold uppercase text-muted tracking-widest">SCORE</span>
+                {/* Asset Value */}
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted">Initial Asset Value</label>
+                    <span className="text-xl font-mono font-bold text-primary">${assetValue.toLocaleString()}</span>
                   </div>
+                  <input 
+                    type="range" min="1000" max="10000000" step="10000"
+                    value={assetValue} onChange={(e) => setAssetValue(Number(e.target.value))}
+                    className="w-full accent-brand-primary h-1 bg-base/40 rounded-full appearance-none cursor-pointer"
+                  />
                 </div>
 
-                <h4 className={cn("text-3xl font-bold italic mb-2 tracking-tighter", getScoreInfo().color)}>
-                  {getScoreInfo().label}
-                </h4>
-                <p className="text-muted text-sm max-w-sm mx-auto mb-10 leading-relaxed">
-                  {getScoreInfo().desc}
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                  <div className="p-5 rounded-2xl bg-surface border border-base">
-                    <h5 className="flex items-center gap-2 text-xs font-bold mb-2">
-                      <ShieldAlert size={14} className="text-error" /> Top Risk
-                    </h5>
-                    <p className="text-[11px] text-muted">Lack of fragmented recovery shards makes your keys vulnerable to physical theft or local loss.</p>
+                {/* Growth Rate */}
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted">Annual Growth (%)</label>
+                    <span className="text-xl font-mono font-bold text-primary">{growthRate}%</span>
                   </div>
-                  <div className="p-5 rounded-2xl bg-surface border border-base">
-                    <h5 className="flex items-center gap-2 text-xs font-bold mb-2">
-                      <ShieldCheck size={14} className="text-emerald-500" /> Action Item
-                    </h5>
-                    <p className="text-[11px] text-muted">Implement Shamir's Secret Sharing to distribute trust across 3+ designated guardians.</p>
+                  <input 
+                    type="range" min="1" max="100" step="1"
+                    value={growthRate} onChange={(e) => setGrowthRate(Number(e.target.value))}
+                    className="w-full accent-brand-primary h-1 bg-base/40 rounded-full appearance-none cursor-pointer"
+                  />
+                </div>
+
+                {/* Horizon */}
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted">Projection Horizon (Years)</label>
+                    <span className="text-xl font-mono font-bold text-primary">{years}y</span>
                   </div>
+                  <input 
+                    type="range" min="1" max="50" step="1"
+                    value={years} onChange={(e) => setYears(Number(e.target.value))}
+                    className="w-full accent-brand-primary h-1 bg-base/40 rounded-full appearance-none cursor-pointer"
+                  />
                 </div>
+              </div>
+            </Card>
 
-                <div className="mt-10 flex gap-4">
-                  <Button onClick={() => { setIsFinished(false); setCurrentQuestion(0); setScores({}); }} variant="secondary" className="flex-1">
-                    <RefreshCcw size={16} className="mr-2" /> RE-CALCULATE
-                  </Button>
-                  <Button className="flex-1 glow-amber">
-                    Start Free Security Audit <ArrowRight size={16} className="ml-2" />
-                  </Button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </SimulationCard>
-      </section>
-
-      <section className="py-24 max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="bg-raised rounded-[3rem] border border-base p-12 lg:p-20 overflow-hidden relative">
-          <div className="absolute top-0 right-0 p-12 text-muted/5 pointer-events-none">
-            <Calculator size={300} strokeWidth={0.5} />
+            <div className="flex items-center gap-4 p-6 bg-brand-gold/10 rounded-3xl border border-brand-gold/20">
+               <Info size={24} className="text-brand-gold shrink-0" />
+               <p className="text-[11px] font-medium text-brand-gold leading-relaxed">
+                  Calculations are based on 2024 tax thresholds. Crypto is treated as property. Consult a professional for final estate planning.
+               </p>
+            </div>
           </div>
-          <div className="relative z-10 max-w-2xl">
-            <h2 className="text-4xl lg:text-5xl font-bold italic tracking-tighter mb-8 leading-tight">
-              STOP THE $189B <br />LEAKAGE.
-            </h2>
-            <p className="text-lg text-muted mb-10 leading-relaxed">
-              Every year, billions in digital assets vanish because of poor inheritance infrastructure. Transfer Legacy is the institutional fix for the single point of failure problem.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {[
-                "Zero-Knowledge Encryption",
-                "Self-Custodial Protocol",
-                "Legal-Technical Enforcement",
-                "Multi-Party Auth"
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500">
-                    <CheckCircle2 size={12} />
+
+          {/* Results */}
+          <div className="lg:col-span-7 space-y-8">
+            <Card className="p-12 bg-obsidian-950/80 backdrop-blur-2xl border-brand-primary/30 rounded-[48px] relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-8 opacity-10">
+                <TrendingUp size={160} className="text-brand-primary" />
+              </div>
+
+              <div className="relative z-10 space-y-12">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted mb-4">Projected Legacy Value</p>
+                  <div className="text-6xl md:text-8xl font-display font-bold text-primary tracking-tighter leading-none">
+                    ${Math.round(results.futureValue).toLocaleString()}
                   </div>
-                  <span className="text-sm font-bold text-primary italic">{item}</span>
                 </div>
-              ))}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted mb-2">Estimated {jurisdiction} Tax</p>
+                    <div className={`text-3xl font-display font-bold ${results.taxAmount > 0 ? 'text-red-400' : 'text-emerald-400'}`}>
+                      ${Math.round(results.taxAmount).toLocaleString()}
+                    </div>
+                    <p className={`text-[10px] mt-2 font-bold ${taxLogic[jurisdiction].color}`}>
+                       {taxLogic[jurisdiction].note}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted mb-2">Net Family Transfer</p>
+                    <div className="text-3xl font-display font-bold text-brand-primary">
+                      ${Math.round(results.netValue).toLocaleString()}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-12 border-t border-base/40">
+                   <div className="flex items-center justify-between mb-8">
+                      <div className="flex items-center gap-3">
+                         <div className="w-10 h-10 rounded-full bg-emerald-400/10 flex items-center justify-center text-emerald-400">
+                            <Shield size={20} />
+                         </div>
+                         <div>
+                            <p className="text-sm font-bold">Protocol Protection</p>
+                            <p className="text-[10px] text-muted uppercase font-bold tracking-widest">Active Succession Required</p>
+                         </div>
+                      </div>
+                      <Button variant="ghost" className="text-[10px] font-bold uppercase tracking-widest text-brand-primary">
+                         View Protection Plan <ChevronRight size={14} className="ml-1" />
+                      </Button>
+                   </div>
+                   
+                   <Button 
+                     onClick={() => window.location.href = '/onboarding'}
+                     className="w-full h-16 rounded-2xl bg-brand-primary text-obsidian-950 font-bold uppercase tracking-widest text-[11px] shadow-2xl shadow-brand-primary/20"
+                   >
+                     Initialize My Vault <ArrowRight className="ml-2" size={16} />
+                   </Button>
+                </div>
+              </div>
+            </Card>
+
+            {/* Micro Comparison */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+               <div className="p-8 rounded-[32px] bg-surface/30 border border-base/60">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted mb-4">Manual Probate Path</h4>
+                  <div className="text-2xl font-display font-bold text-red-400/80 mb-2">12-18 Months</div>
+                  <p className="text-[11px] text-secondary font-medium leading-relaxed italic">The typical delay for crypto asset recovery without a protocol switch.</p>
+               </div>
+               <div className="p-8 rounded-[32px] bg-brand-primary/5 border border-brand-primary/20">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-brand-primary mb-4">Transfer Legacy Path</h4>
+                  <div className="text-2xl font-display font-bold text-brand-primary mb-2">30 Days</div>
+                  <p className="text-[11px] text-secondary font-medium leading-relaxed italic">Verified triggers ensure zero-friction transfer of private keys to heirs.</p>
+               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

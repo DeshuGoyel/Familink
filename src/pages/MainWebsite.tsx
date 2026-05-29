@@ -57,6 +57,32 @@ import PrivacyProtocol from './legal/PrivacyProtocol';
 import SecurityArchitecture from './legal/SecurityArchitecture';
 import GlobalCompliance from './legal/GlobalCompliance';
 
+// SEO & Resource Pages
+import ResourcesHub from './seo/ResourcesHub';
+import CryptoInheritanceGuide from './seo/CryptoInheritanceGuide';
+import DigitalWillPillar from './seo/DigitalWillPillar';
+import WhatHappensToCrypto from './seo/WhatHappensToCrypto';
+import DocumentStorage from './seo/DocumentStorage';
+import SeedPhraseInheritance from './seo/SeedPhraseInheritance';
+import PrivateKeyInheritance from './seo/PrivateKeyInheritance';
+import PassBitcoinToFamily from './seo/PassBitcoinToFamily';
+import TransferCryptoWallet from './seo/TransferCryptoWallet';
+import PasswordInheritance from './seo/PasswordInheritance';
+import CompareDGLegacy from './seo/CompareDGLegacy';
+import CompareInheriti from './seo/CompareInheriti';
+import CompareTraditionalWills from './seo/CompareTraditionalWills';
+import WhitepaperSEO from './seo/Whitepaper';
+import LegalTemplates from './seo/LegalTemplates';
+import CryptoCalculator from './tools/CryptoCalculator';
+
+// Regional SEO
+import CryptoInheritanceIndia from './seo/regions/CryptoInheritanceIndia';
+import DigitalWillIndia from './seo/regions/DigitalWillIndia';
+import CryptoInheritanceUSA from './seo/regions/CryptoInheritanceUSA';
+import DigitalAssetLawUSA from './seo/regions/DigitalAssetLawUSA';
+import CryptoInheritanceUK from './seo/regions/CryptoInheritanceUK';
+import CryptoInheritanceUAE from './seo/regions/CryptoInheritanceUAE';
+
 function AppLayout() {
   const { isSidebarCollapsed, isNotificationOpen } = useStore();
   const location = useLocation();
@@ -109,15 +135,43 @@ function AppLayout() {
           <Route path="/resources/faq"                    element={<FAQPage />} />
           <Route path="/resources/blog"                   element={<BlogPage />} />
           <Route path="/resources/whitepaper"             element={<Whitepaper />} />
+          <Route path="/whitepaper"                       element={<WhitepaperSEO />} />
+          <Route path="/legal-templates"                  element={<LegalTemplates />} />
 
           <Route path="/tools/compare"                    element={<PlatformComparison />} />
           <Route path="/tools/roi-calculator"             element={<ROICalculator />} />
           <Route path="/tools/planner"                    element={<SuccessionPlanner />} />
+          <Route path="/tools/crypto-risk-calculator"     element={<CryptoCalculator />} />
 
           <Route path="/legal/privacy"                    element={<PrivacyProtocol />} />
           <Route path="/legal/terms"                      element={<TermsOfService />} />
           <Route path="/legal/security-architecture"       element={<SecurityArchitecture />} />
           <Route path="/legal/compliance"                 element={<GlobalCompliance />} />
+
+          {/* SEO & Knowledge Hub Routes */}
+          <Route path="/resources"                                element={<ResourcesHub />} />
+          <Route path="/crypto-inheritance"                       element={<CryptoInheritanceGuide />} />
+          <Route path="/digital-will"                             element={<DigitalWillPillar />} />
+          <Route path="/what-happens-to-crypto-when-you-die"      element={<WhatHappensToCrypto />} />
+          <Route path="/store-important-documents-for-family"     element={<DocumentStorage />} />
+          <Route path="/seed-phrase-inheritance"                  element={<SeedPhraseInheritance />} />
+          <Route path="/private-key-inheritance"                  element={<PrivateKeyInheritance />} />
+          <Route path="/how-to-pass-bitcoin-to-family"            element={<PassBitcoinToFamily />} />
+          <Route path="/transfer-crypto-wallet-to-family"         element={<TransferCryptoWallet />} />
+          <Route path="/password-inheritance"                     element={<PasswordInheritance />} />
+          
+          {/* Comparison Routes */}
+          <Route path="/transfer-legacy-vs-dglegacy"              element={<CompareDGLegacy />} />
+          <Route path="/transfer-legacy-vs-inheriti"              element={<CompareInheriti />} />
+          <Route path="/transfer-legacy-vs-traditional-wills"     element={<CompareTraditionalWills />} />
+
+          {/* Regional Compliance & Law Routes */}
+          <Route path="/crypto-inheritance-india"                 element={<CryptoInheritanceIndia />} />
+          <Route path="/digital-will-india"                       element={<DigitalWillIndia />} />
+          <Route path="/crypto-inheritance-usa"                   element={<CryptoInheritanceUSA />} />
+          <Route path="/digital-asset-inheritance-usa"            element={<DigitalAssetLawUSA />} />
+          <Route path="/crypto-inheritance-uk"                    element={<CryptoInheritanceUK />} />
+          <Route path="/crypto-inheritance-uae"                   element={<CryptoInheritanceUAE />} />
 
           {/* Legacy Features & Tools */}
           <Route path="/features/digital-wills"           element={<DigitalWill />} />

@@ -74,7 +74,7 @@ const guardianDegrees = [0, 120, 240];
 
 export default function Features() {
   return (
-    <section className="relative py-28 overflow-hidden" style={{ background: '#0C0E18' }}>
+    <section className="relative py-28 overflow-hidden bg-page">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <motion.div
@@ -84,21 +84,13 @@ export default function Features() {
           transition={{ duration: 0.7 }}
           className="mb-16"
         >
-          <p
-            className="text-xs font-bold tracking-[0.22em] uppercase mb-5"
-            style={{
-              background: 'linear-gradient(135deg, #fb923c, #f43f5e)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
+          <p className="text-xs font-bold tracking-[0.22em] uppercase mb-5 gradient-text-brand">
             Features
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-2">
+          <h2 className="text-4xl md:text-5xl font-bold text-primary tracking-tight mb-2">
             Everything your family needs.
           </h2>
-          <p className="text-xl text-white/35">And nothing they don't.</p>
+          <p className="text-xl text-secondary">And nothing they don't.</p>
         </motion.div>
 
         {/* Bento grid */}
@@ -112,8 +104,7 @@ export default function Features() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08, duration: 0.6 }}
-                className={`relative ${f.span} rounded-3xl border overflow-hidden group transition-all duration-300 hover:-translate-y-1`}
-                style={{ background: '#131722', borderColor: f.border }}
+                className={`relative ${f.span} rounded-3xl border border-border-base overflow-hidden group transition-all duration-300 hover:-translate-y-1 bg-surface`}
               >
                 {/* Hover glow */}
                 <div
@@ -129,13 +120,13 @@ export default function Features() {
                     <Icon size={20} style={{ color: f.accent }} />
                   </div>
 
-                  <h3 className="text-xl font-bold text-white mb-3 tracking-tight">{f.title}</h3>
-                  <p className="text-white/40 text-sm leading-relaxed mb-4">{f.desc}</p>
+                  <h3 className="text-xl font-bold text-primary mb-3 tracking-tight">{f.title}</h3>
+                  <p className="text-secondary text-sm leading-relaxed mb-4">{f.desc}</p>
 
                   {f.sub && (
                     <p
                       className="text-xs px-3 py-2 rounded-xl border font-mono w-fit mt-auto"
-                      style={{ color: `${f.accent}90`, background: f.glow, borderColor: f.border }}
+                      style={{ color: `${f.accent}`, background: f.glow, borderColor: f.border }}
                     >
                       {f.sub}
                     </p>
@@ -148,7 +139,7 @@ export default function Features() {
                         <span
                           key={t}
                           className="text-[10px] font-bold px-2.5 py-1 rounded-lg border"
-                          style={{ color: `${f.accent}80`, background: f.glow, borderColor: f.border }}
+                          style={{ color: `${f.accent}`, background: f.glow, borderColor: f.border }}
                         >
                           {t}
                         </span>
@@ -170,10 +161,10 @@ export default function Features() {
                                 animation: e.pulse ? 'pulse 1.5s infinite' : undefined,
                               }}
                             />
-                            <span className="text-[10px] text-white/35 whitespace-nowrap">{e.label}</span>
+                            <span className="text-[10px] text-secondary whitespace-nowrap">{e.label}</span>
                           </div>
                           {idx < timelineEvents.length - 1 && (
-                            <div className="w-10 h-px mb-3" style={{ background: 'rgba(255,255,255,0.1)' }} />
+                            <div className="w-10 h-px mb-3 bg-border-base" />
                           )}
                         </div>
                       ))}
@@ -184,9 +175,8 @@ export default function Features() {
                   {f.tall && (
                     <div className="flex-1 flex items-center justify-center mt-4 relative min-h-[160px]">
                       <div
-                        className="w-14 h-14 rounded-full border-2 flex items-center justify-center z-10"
+                        className="w-14 h-14 rounded-full border-2 flex items-center justify-center z-10 bg-raised"
                         style={{
-                          background: '#0C0E18',
                           borderColor: f.border,
                           boxShadow: `0 0 20px ${f.glow}`,
                         }}
@@ -200,9 +190,8 @@ export default function Features() {
                         return (
                           <div
                             key={idx}
-                            className="absolute w-10 h-10 rounded-full border flex items-center justify-center"
+                            className="absolute w-10 h-10 rounded-full border flex items-center justify-center bg-raised"
                             style={{
-                              background: '#0C0E18',
                               borderColor: f.border,
                               transform: `translate(${x}px, ${y}px)`,
                             }}

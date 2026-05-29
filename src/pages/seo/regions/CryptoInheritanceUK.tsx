@@ -1,7 +1,9 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import SEO from '../../../components/seo/SEO';
-import { ArrowRight, Globe2, Landmark, ShieldCheck, Cpu } from 'lucide-react';
+import { ArrowRight, Shield, Globe2, BookOpen, AlertTriangle, FileCheck, Landmark, Scale, Gavel, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Button from '../../../components/ui/Button';
 
 const CryptoInheritanceUK = () => {
   const faqSchema = {
@@ -10,136 +12,111 @@ const CryptoInheritanceUK = () => {
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "Is cryptocurrency recognized as property in the UK?",
+        "name": "How is crypto inheritance taxed in the UK?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, following the UK Law Commission's recommendations, digital assets and cryptocurrency are increasingly recognized as a distinct third category of personal property, making them fully capable of being inherited under English and Welsh law."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How is inherited crypto taxed by HMRC?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "In the UK, cryptocurrency forms part of your estate for Inheritance Tax (IHT) purposes. If your total estate exceeds the nil-rate band, IHT may be due. Additionally, when the beneficiary eventually sells the crypto, they may be liable for Capital Gains Tax (CGT) based on the value increase from the date of inheritance."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I leave my Bitcoin to someone in my UK will?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes, you can and should mention digital assets in your UK will. However, for security reasons, you must never write your private keys or seed phrases into the will document itself. Use a secure digital vault like Transfer Legacy to store the access credentials."
+          "text": "In the UK, cryptocurrency is subject to Inheritance Tax (IHT) if the total estate value exceeds the £325,000 threshold. The tax rate is generally 40% on the value above the threshold."
         }
       }
     ]
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-white pt-24 pb-16">
+    <div className="min-h-screen bg-page text-primary pt-24 pb-16 relative overflow-hidden">
+      <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/5 blur-[120px] pointer-events-none" />
+
       <SEO 
-        title="Digital Asset Inheritance UK: Crypto Estate Planning Guide"
-        description="Navigate cryptocurrency and digital asset inheritance in the UK. Understand HMRC tax rules, UK Law Commission property rights, and how to secure your Bitcoin."
+        title="UK Crypto Inheritance Law: HMRC & IHT Guide (2024)"
+        description="Navigate UK inheritance laws for digital assets. Learn about HMRC's treatment of crypto, Inheritance Tax (IHT) rates, and how to pass Bitcoin securely in the UK."
         canonical="https://transferlegacy.com/crypto-inheritance-uk"
         schema={faqSchema}
       />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header Section */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 bg-red-500/10 text-red-400 px-4 py-2 rounded-full mb-6">
-            <Globe2 className="w-5 h-5" />
-            <span className="font-semibold tracking-wide uppercase text-sm">United Kingdom Guide</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-            Digital Asset Inheritance in the UK
-          </h1>
-          <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-            A complete guide to passing on cryptocurrency, NFTs, and digital accounts under English and Welsh law. Protect your assets from HMRC complications and permanent loss.
-          </p>
-          <Link 
-            to="/"
-            className="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-8 rounded-full transition duration-300"
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-20">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center space-x-2 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-4 py-2 rounded-full mb-8 shadow-[0_0_20px_rgba(79,92,255,0.1)]"
           >
-            Secure Your UK Digital Estate
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Link>
+            <Globe2 className="w-4 h-4" />
+            <span className="font-bold tracking-[0.2em] uppercase text-[10px]">UK Jurisdiction Guide</span>
+          </motion.div>
+          
+          <h1 className="text-4xl md:text-6xl font-display font-bold mb-8 leading-[0.95] tracking-tight text-primary">
+            HMRC Compliance <span className="italic text-brand-primary">& UK Estate Law</span>
+          </h1>
+          
+          <p className="text-xl text-secondary mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+            Securing digital assets within the UK legal framework. Expert guidance on IHT, nil-rate bands, and HMRC reporting for crypto heirs.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button variant="primary" size="lg" className="px-10 h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
+              Initialize UK Vault <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </div>
         </div>
 
-        {/* Content Section */}
-        <div className="prose prose-invert prose-lg max-w-none">
-          
-          <h2 className="flex items-center text-3xl font-bold mt-12 mb-6">
-            <Landmark className="w-8 h-8 mr-3 text-red-500" />
-            The Evolving Legal Status of Crypto in the UK
-          </h2>
-          <p>
-            For years, the legal status of digital assets under English common law was ambiguous. Traditional property law recognized only two categories: "things in possession" (physical objects) and "things in action" (legal rights, like debts). Cryptocurrency didn't neatly fit either.
-          </p>
-          <p>
-            However, following a landmark review by the <strong>UK Law Commission</strong>, digital assets are now widely recognized as a "third category" of personal property. This cements the legal reality that your Bitcoin, Ethereum, and digital accounts form a tangible part of your estate and can be legally transferred to your beneficiaries upon your death.
-          </p>
+        <div className="space-y-16">
+          <section className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 md:p-12">
+            <h2 className="flex items-center text-3xl font-display font-bold mb-8 text-primary tracking-tight">
+              <Scale className="w-8 h-8 mr-4 text-brand-primary" />
+              Inheritance Tax (IHT)
+            </h2>
+            <div className="prose prose-invert max-w-none text-secondary">
+              <p className="text-lg leading-relaxed mb-6">
+                HMRC treats cryptocurrency as personal property for <span className="text-primary font-bold">Inheritance Tax (IHT)</span> purposes. If your total estate exceeds <span className="text-primary font-bold">£325,000</span>, your digital assets could be taxed at 40%.
+              </p>
+              <p className="text-lg leading-relaxed">
+                Properly documenting your holdings within a <span className="text-brand-primary font-bold">Sovereign Vault</span> ensures your executors can accurately report values to HMRC, avoiding heavy penalties and long delays in the probate process.
+              </p>
+            </div>
+          </section>
 
-          <h2 className="flex items-center text-3xl font-bold mt-12 mb-6">
-            <Scale className="w-8 h-8 mr-3 text-red-500" />
-            HMRC and Inheritance Tax (IHT) on Crypto
-          </h2>
-          <p>
-            Because cryptocurrency is recognized as property, HMRC treats it identically to other assets when it comes to estate taxation.
-          </p>
-          <ul>
-            <li><strong>Inheritance Tax (IHT):</strong> The value of your cryptocurrency at the time of your death will be added to your total estate. If your estate exceeds the standard nil-rate band (currently £325,000), the excess may be subject to a 40% inheritance tax.</li>
-            <li><strong>Location of Assets:</strong> HMRC generally considers the location of the crypto to be the residency of the beneficial owner. If you are a UK resident, your global crypto holdings are subject to UK IHT.</li>
-            <li><strong>Capital Gains Tax (CGT):</strong> Your beneficiaries acquire the crypto at its market value on the date of your death. If they later sell it for a profit, they will owe CGT on the gain from that inherited value.</li>
-          </ul>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8">
+              <Landmark className="w-10 h-10 text-brand-gold mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">Capital Gains Tax</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                When heirs sell inherited crypto, they must account for <span className="text-primary font-bold">Capital Gains Tax (CGT)</span>. The value at the date of death becomes the new "cost base" for the heir, making verification timing critical.
+              </p>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-2 text-[11px] font-bold text-muted uppercase tracking-wider">
+                  <CheckCircle2 size={14} className="text-emerald-400" /> Date of Death Valuation
+                </li>
+                <li className="flex items-center gap-2 text-[11px] font-bold text-muted uppercase tracking-wider">
+                  <CheckCircle2 size={14} className="text-brand-gold" /> CGT Reporting Ready
+                </li>
+              </ul>
+            </div>
 
-          <div className="bg-gradient-to-r from-red-500/10 to-transparent border-l-4 border-red-500 p-6 rounded-r-xl my-8">
-            <h3 className="flex items-center text-xl font-bold text-red-400 mb-3 mt-0">
-              <ShieldCheck className="w-6 h-6 mr-2" />
-              The Danger of HMRC Probate
-            </h3>
-            <p className="text-gray-300 mb-0">
-              If your family knows you had crypto, the executor must report its value to HMRC. If they cannot actually access the wallet because they lack the seed phrase, the estate could owe a 40% tax bill on funds they cannot touch or sell to cover the tax. This is a financial disaster for beneficiaries.
-            </p>
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 border-brand-primary/20 bg-brand-primary/5">
+              <Gavel className="w-10 h-10 text-brand-primary mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">English Law Parity</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                Following the <span className="text-primary font-bold">UK Jurisdiction Taskforce's</span> Legal Statement, crypto is legally recognized as property in England and Wales. Transfer Legacy is built to integrate with English probate requirements.
+              </p>
+              <Button variant="ghost" className="text-[10px] font-bold uppercase tracking-widest text-brand-primary p-0">
+                UK Probate Checklist
+              </Button>
+            </div>
           </div>
 
-          <h2 className="text-3xl font-bold mt-12 mb-6">How to Bequeath Crypto in the UK</h2>
-          <p>
-            Updating your UK will to include digital assets is the first step, but how you handle the execution is critical.
-          </p>
-          <p>
-            <strong>The Wrong Way:</strong> Writing your 24-word Ledger seed phrase into your paper will. In the UK, once a Grant of Probate is issued, a will becomes a public document. Anyone can order a copy online for £1.50 and drain your wallet.
-          </p>
-          <p>
-            <strong>The Right Way:</strong> Use <strong>Transfer Legacy</strong>.
-          </p>
-
-          <h2 className="flex items-center text-3xl font-bold mt-12 mb-6">
-            <Cpu className="w-8 h-8 mr-3 text-red-500" />
-            The Transfer Legacy Solution for UK Residents
-          </h2>
-          <p>
-            Transfer Legacy provides the essential technical layer to complement your legal UK will.
-          </p>
-          <ol>
-            <li><strong>Zero-Knowledge Storage:</strong> You encrypt your seed phrases, passwords, and exchange instructions in our vault. We have no access to the data.</li>
-            <li><strong>Legal Reference:</strong> In your physical will, you simply state that your digital assets are managed via Transfer Legacy, keeping the sensitive credentials entirely private and out of public probate records.</li>
-            <li><strong>Automated Execution:</strong> Our Dead Man's Switch protocol detects your passing and securely transmits the decrypted credentials directly to your chosen beneficiaries or executor, ensuring they have the access they need to settle the estate and pay any HMRC obligations.</li>
-          </ol>
-
-          {/* CTA Section */}
-          <div className="bg-gray-800/50 rounded-2xl p-8 mt-12 border border-gray-700 text-center">
-            <h3 className="text-2xl font-bold mb-4">Don't Let HMRC Complicate Your Crypto Legacy</h3>
-            <p className="text-gray-300 mb-6">
-              Ensure your digital assets are securely transferred and your beneficiaries have full access to manage their tax liabilities.
+          <div className="bg-gradient-to-br from-brand-primary to-blue-900 text-obsidian-950 rounded-[40px] p-10 md:p-16 text-center shadow-2xl shadow-brand-primary/20">
+            <BookOpen className="w-16 h-16 mx-auto mb-8 opacity-80" />
+            <h3 className="text-3xl md:text-5xl font-display font-bold mb-6 tracking-tight leading-none">
+              Initialize Your <span className="italic">UK Sovereign Vault</span>
+            </h3>
+            <p className="text-xl opacity-90 mb-12 max-w-2xl mx-auto font-medium">
+              Join thousands of UK investors ensuring their digital wealth is passed down securely and legally.
             </p>
-            <Link 
-              to="/"
-              className="inline-block bg-white text-gray-900 hover:bg-gray-100 font-bold py-3 px-8 rounded-full transition duration-300"
-            >
-              Start Your Digital Estate Plan
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Button onClick={() => window.scrollTo(0,0)} className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest">
+                Get Started
+              </Button>
+            </div>
           </div>
         </div>
       </div>

@@ -178,7 +178,7 @@ export default function Hero() {
                     <ShieldCheck size={20} />
                   </div>
                   <div className="text-left">
-                    <p className="text-primary text-xl font-bold font-digits leading-none">$189B+</p>
+                    <p className="text-primary text-xl font-bold leading-none">$189B+</p>
                     <p className="text-muted text-[10px] uppercase tracking-widest mt-1 font-bold">Permanently Lost</p>
                   </div>
                </div>
@@ -204,7 +204,7 @@ export default function Hero() {
                     ))}
                   </div>
                   <div>
-                    <p className="text-primary text-xl font-bold font-digits leading-none">2,847</p>
+                    <p className="text-primary text-xl font-bold leading-none">2,847</p>
                     <p className="text-muted text-[10px] uppercase tracking-widest mt-1 font-bold">Families Protected</p>
                   </div>
                </div>

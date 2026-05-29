@@ -52,16 +52,16 @@ export default function Pricing() {
   const progress = Math.round((CLAIMED / TOTAL) * 100);
 
   return (
-    <section id="pricing" ref={ref} className="relative py-28 overflow-hidden" style={{ background: '#090B14' }}>
+    <section id="pricing" ref={ref} className="relative py-28 overflow-hidden bg-page">
       <div
         className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(249,115,22,0.5), transparent)' }}
+        style={{ background: 'linear-gradient(90deg, transparent, var(--color-brand-primary), transparent)', opacity: 0.3 }}
       />
 
       {/* Ambient gradient */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[120px] pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(249,115,22,0.06), transparent 70%)' }}
+        style={{ background: 'radial-gradient(circle, var(--color-brand-primary-transparent), transparent 70%)', opacity: 0.1 }}
       />
 
       <div className="max-w-7xl mx-auto px-6">
@@ -73,19 +73,18 @@ export default function Pricing() {
           className="max-w-md mb-14"
         >
           <div className="flex items-center justify-between text-sm mb-3">
-            <span className="text-white/40">Founding spots claimed</span>
-            <span className="font-bold" style={{ color: '#fb923c' }}>{CLAIMED.toLocaleString()} / {TOTAL.toLocaleString()}</span>
+            <span className="text-secondary/60">Founding spots claimed</span>
+            <span className="font-bold text-brand-primary">{CLAIMED.toLocaleString()} / {TOTAL.toLocaleString()}</span>
           </div>
-          <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+          <div className="w-full h-1.5 rounded-full overflow-hidden bg-muted/10">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: visible ? `${progress}%` : 0 }}
               transition={{ duration: 2, ease: 'easeOut', delay: 0.3 }}
-              className="h-full rounded-full"
-              style={{ background: 'linear-gradient(90deg, #f97316, #fb923c)' }}
+              className="h-full rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary"
             />
           </div>
-          <p className="text-xs text-white/30 mt-2">{TOTAL - CLAIMED} founding spots remaining at this price.</p>
+          <p className="text-xs text-secondary/40 mt-2">{TOTAL - CLAIMED} founding spots remaining at this price.</p>
         </motion.div>
 
         {/* Header + toggle */}
@@ -96,27 +95,16 @@ export default function Pricing() {
           transition={{ duration: 0.7 }}
           className="mb-12"
         >
-          <p
-            className="text-xs font-bold tracking-[0.22em] uppercase mb-5"
-            style={{
-              background: 'linear-gradient(135deg, #fb923c, #f97316)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
+          <p className="text-xs font-bold tracking-[0.22em] uppercase mb-5 gradient-text-brand">
             Pricing
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4 tracking-tight">
             Founding Member Pricing
           </h2>
-          <p className="text-white/40 text-lg mb-8">Lock in your rate forever before public launch.</p>
+          <p className="text-secondary/60 text-lg mb-8">Lock in your rate forever before public launch.</p>
 
           {/* Toggle */}
-          <div
-            className="inline-flex items-center rounded-full p-1.5 border"
-            style={{ background: '#131722', borderColor: 'rgba(255,255,255,0.08)' }}
-          >
+          <div className="inline-flex items-center rounded-full p-1.5 border border-border-base bg-surface">
             {['Monthly', 'Yearly'].map((label) => {
               const active = yearly ? label === 'Yearly' : label === 'Monthly';
               return (
@@ -125,15 +113,15 @@ export default function Pricing() {
                   onClick={() => setYearly(label === 'Yearly')}
                   className="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-all duration-250"
                   style={active
-                    ? { background: 'linear-gradient(135deg, #f97316, #fb923c)', color: 'white' }
-                    : { color: 'rgba(255,255,255,0.35)' }
+                    ? { background: 'var(--color-brand-gradient)', color: 'white' }
+                    : { color: 'var(--color-text-secondary)', opacity: 0.6 }
                   }
                 >
                   {label}
                   {label === 'Yearly' && (
                     <span
                       className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                      style={active ? { background: 'rgba(255,255,255,0.2)' } : { background: 'rgba(249,115,22,0.15)', color: '#f97316' }}
+                      style={active ? { background: 'rgba(255,255,255,0.2)' } : { background: 'var(--color-brand-primary-transparent)', color: 'var(--color-brand-primary)' }}
                     >
                       SAVE 40%
                     </span>
@@ -153,23 +141,21 @@ export default function Pricing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.13, duration: 0.65 }}
-              className="relative rounded-3xl border flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1"
+              className={`relative rounded-3xl border flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 bg-surface ${
+                plan.highlighted ? 'border-brand-primary/50 shadow-brand-glow' : 'border-border-base'
+              }`}
               style={{
-                background: plan.highlighted
-                  ? 'linear-gradient(160deg, #1a1008 0%, #131722 100%)'
-                  : '#131722',
-                borderColor: plan.highlighted ? `${plan.accent}50` : 'rgba(255,255,255,0.07)',
-                boxShadow: plan.highlighted ? `0 0 50px ${plan.accent}18` : undefined,
+                background: plan.highlighted && !document.documentElement.classList.contains('dark')
+                  ? 'linear-gradient(160deg, rgba(249,115,22,0.05) 0%, var(--color-bg-surface) 100%)'
+                  : undefined
               }}
             >
               {/* Popular badge */}
               {plan.highlighted && (
                 <div
-                  className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-[10px] font-bold px-4 py-1.5 rounded-full whitespace-nowrap tracking-wide"
+                  className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-[10px] font-bold px-4 py-1.5 rounded-full whitespace-nowrap tracking-wide text-white shadow-lg"
                   style={{
-                    background: 'linear-gradient(135deg, #f97316, #fb923c)',
-                    color: '#fff',
-                    boxShadow: '0 0 20px rgba(249,115,22,0.5)',
+                    background: 'var(--color-brand-gradient)',
                   }}
                 >
                   {plan.badge}
@@ -183,11 +169,11 @@ export default function Pricing() {
                 <div className="mb-6">
                   <h3
                     className="text-xl font-bold tracking-tight"
-                    style={{ color: plan.highlighted ? plan.accent : 'white' }}
+                    style={{ color: plan.highlighted ? plan.accent : 'var(--color-text-primary)' }}
                   >
                     {plan.name}
                   </h3>
-                  <p className="text-xs text-white/35 mt-1">{plan.desc}</p>
+                  <p className="text-xs text-secondary/60 mt-1">{plan.desc}</p>
                 </div>
 
                 {/* Price */}
@@ -201,14 +187,14 @@ export default function Pricing() {
                       transition={{ duration: 0.2 }}
                       className="flex items-end gap-1"
                     >
-                      <span className="text-5xl font-bold text-white">
+                      <span className="text-5xl font-bold text-primary">
                         ${yearly ? plan.yearlyPrice : plan.monthlyPrice}
                       </span>
-                      <span className="text-white/30 mb-2 text-sm">/mo</span>
+                      <span className="text-secondary/40 mb-2 text-sm">/mo</span>
                     </motion.div>
                   </AnimatePresence>
                   {yearly && plan.monthlyPrice > plan.yearlyPrice && (
-                    <p className="text-xs text-emerald-400 mt-1 font-medium">
+                    <p className="text-xs text-emerald-500 dark:text-emerald-400 mt-1 font-medium">
                       Billed annually — was ${plan.monthlyPrice}/mo
                     </p>
                   )}
@@ -217,7 +203,7 @@ export default function Pricing() {
                 {/* Features */}
                 <ul className="space-y-3.5 mb-8 flex-1">
                   {plan.features.map((feat, idx) => (
-                    <li key={idx} className="flex items-center gap-3 text-sm text-white/45">
+                    <li key={idx} className="flex items-center gap-3 text-sm text-secondary/70">
                       <span className="text-base leading-none" style={{ color: plan.accent }}>✓</span>
                       {feat}
                     </li>
@@ -225,18 +211,15 @@ export default function Pricing() {
                 </ul>
 
                 <button
-                  className="w-full py-3.5 rounded-xl text-sm font-bold transition-all duration-300"
+                  className={`w-full py-3.5 rounded-xl text-sm font-bold transition-all duration-300 ${
+                    plan.highlighted ? 'text-white' : 'bg-muted/10 text-secondary border border-border-base hover:bg-muted/20'
+                  }`}
                   style={plan.highlighted
                     ? {
-                        background: 'linear-gradient(135deg, #f97316, #fb923c)',
-                        color: 'white',
+                        background: 'var(--color-brand-gradient)',
                         boxShadow: '0 0 20px rgba(249,115,22,0.35)',
                       }
-                    : {
-                        background: 'rgba(255,255,255,0.05)',
-                        color: 'rgba(255,255,255,0.7)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                      }
+                    : undefined
                   }
                 >
                   {plan.cta}
@@ -246,7 +229,7 @@ export default function Pricing() {
           ))}
         </div>
 
-        <p className="text-center text-xs text-white/25 mt-8 font-medium">
+        <p className="text-center text-xs text-secondary/40 mt-8 font-medium">
           Cancel any time. Price locks in at founding rate. No auto-upgrades.
         </p>
       </div>

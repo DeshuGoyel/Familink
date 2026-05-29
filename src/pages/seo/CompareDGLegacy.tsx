@@ -1,77 +1,114 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, XCircle } from 'lucide-react';
+import React from 'react';
+import { motion } from 'framer-motion';
+import SEO from '../../components/seo/SEO';
+import { ArrowRight, Shield, CheckCircle2, XCircle, Scale, Zap, Lock, Globe2 } from 'lucide-react';
 import Button from '../../components/ui/Button';
-import { SEO } from '../../components/seo/SEO';
 
-export default function CompareDGLegacy() {
+const CompareDGLegacy = () => {
+  const comparisons = [
+    {
+      feature: "Architecture",
+      legacy: "Sovereign Protocol (Dead Man's Switch)",
+      competitor: "Email-based Check-ins"
+    },
+    {
+      feature: "Jurisdiction Aware",
+      legacy: "Built-in Tax & Legal Logic (US/UK/IN/UAE)",
+      competitor: "Generic Storage"
+    },
+    {
+      feature: "Biometric Integration",
+      legacy: "Multi-layered Identity Verification",
+      competitor: "Password Only"
+    },
+    {
+      feature: "Institutional Grade",
+      legacy: "Military AES-256-GCM + Multi-Sig Quorum",
+      competitor: "Standard Cloud Encryption"
+    }
+  ];
+
   return (
-    <div className="bg-secondary text-text min-h-screen font-sans pt-20">
-      <SEO 
-        title="Transfer Legacy vs DGLegacy: Best Digital Legacy Platform 2026"
-        description="Comparing Transfer Legacy and DGLegacy. See why zero-knowledge encryption and Shamir's Secret Sharing makes Transfer Legacy the best alternative."
-      />
+    <div className="min-h-screen bg-page text-primary pt-24 pb-16 relative overflow-hidden">
+      <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
       
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <header className="mb-16 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-            Transfer Legacy vs. DGLegacy
+      <SEO 
+        title="Transfer Legacy vs. DGLegacy: Which Digital Inheritance Tool is Best?"
+        description="A technical and legal comparison between Transfer Legacy and DGLegacy. Discover why our sovereign protocols outperform traditional digital vaults."
+        canonical="https://transferlegacy.com/transfer-legacy-vs-dglegacy"
+      />
+
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-24">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center space-x-2 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-4 py-2 rounded-full mb-8"
+          >
+            <Scale className="w-4 h-4" />
+            <span className="font-bold tracking-[0.2em] uppercase text-[10px]">Comparative Analysis</span>
+          </motion.div>
+          
+          <h1 className="text-5xl md:text-7xl font-display font-bold mb-8 leading-[0.95] tracking-tight text-primary">
+            Transfer Legacy <span className="italic text-brand-primary">vs. DGLegacy</span>
           </h1>
-          <p className="text-xl text-muted max-w-2xl mx-auto">
-            Looking for a DGLegacy alternative? Discover why top crypto holders and privacy advocates choose Transfer Legacy for their digital estate planning.
+          
+          <p className="text-xl text-secondary mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+            In the institutional world, security isn't just a feature—it's the foundation. See how Transfer Legacy's sovereign protocol compares to DGLegacy's storage-first approach.
           </p>
-        </header>
+        </div>
 
-        <section className="mb-20">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse bg-surface/30 rounded-2xl overflow-hidden">
-              <thead>
-                <tr className="border-b border-border bg-surface/80">
-                  <th className="p-6 text-lg font-semibold">Feature</th>
-                  <th className="p-6 text-lg font-bold text-primary">Transfer Legacy</th>
-                  <th className="p-6 text-lg font-semibold text-muted">DGLegacy</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-border/50">
-                  <td className="p-6 font-medium">True Zero-Knowledge Encryption</td>
-                  <td className="p-6"><CheckCircle2 className="text-primary inline mr-2"/> Client-side encryption. We never see your keys.</td>
-                  <td className="p-6 text-muted"><XCircle className="text-danger inline mr-2"/> Standard encryption.</td>
-                </tr>
-                <tr className="border-b border-border/50">
-                  <td className="p-6 font-medium">Guardian Protocol (Shamir's Secret Sharing)</td>
-                  <td className="p-6"><CheckCircle2 className="text-primary inline mr-2"/> Yes, multi-party verification.</td>
-                  <td className="p-6 text-muted"><XCircle className="text-danger inline mr-2"/> No.</td>
-                </tr>
-                <tr className="border-b border-border/50">
-                  <td className="p-6 font-medium">AI-Guided Heir Recovery</td>
-                  <td className="p-6"><CheckCircle2 className="text-primary inline mr-2"/> Yes, for non-technical heirs.</td>
-                  <td className="p-6 text-muted"><XCircle className="text-danger inline mr-2"/> No.</td>
-                </tr>
-                <tr className="border-b border-border/50">
-                  <td className="p-6 font-medium">Built for Crypto Native (Web3)</td>
-                  <td className="p-6"><CheckCircle2 className="text-primary inline mr-2"/> Native support for Seed Phrases & Wallets.</td>
-                  <td className="p-6 text-muted"><XCircle className="text-danger inline mr-2"/> Primarily generic asset tracking.</td>
-                </tr>
-              </tbody>
-            </table>
+        <div className="space-y-16">
+          {/* Comparison Table */}
+          <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] overflow-hidden">
+            <div className="grid grid-cols-3 bg-obsidian-950/50 p-6 border-b border-base/60">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-muted">Feature</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-brand-primary text-center">Transfer Legacy</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-muted text-center">DGLegacy</div>
+            </div>
+            {comparisons.map((item, index) => (
+              <div key={index} className="grid grid-cols-3 p-6 border-b border-base/40 last:border-0 hover:bg-surface/50 transition-colors">
+                <div className="text-[13px] font-bold text-primary flex items-center">{item.feature}</div>
+                <div className="text-[12px] font-semibold text-emerald-400 text-center flex items-center justify-center gap-2">
+                  <CheckCircle2 size={14} /> {item.legacy}
+                </div>
+                <div className="text-[12px] font-semibold text-secondary text-center flex items-center justify-center gap-2">
+                  <XCircle size={14} className="text-red-400/50" /> {item.competitor}
+                </div>
+              </div>
+            ))}
           </div>
-        </section>
 
-        <section className="prose prose-invert prose-lg max-w-3xl mx-auto text-center">
-          <h2>Why Choose Transfer Legacy?</h2>
-          <p>
-            DGLegacy is a traditional asset tracking tool. Transfer Legacy is a <strong>cryptographic inheritance protocol</strong>. If you hold Bitcoin, Ethereum, or self-custody digital assets, you cannot rely on platforms that don't enforce mathematically absolute zero-knowledge security. 
-          </p>
-          <div className="mt-12 p-8 bg-surface border border-border rounded-2xl">
-            <h3 className="text-2xl font-bold mt-0 mb-4">Make the switch today.</h3>
-            <Link to="/onboarding">
-              <Button size="lg" className="glow-blue">
-                Start Your Secure Vault <ArrowRight className="ml-2" size={20} />
+          <section className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 md:p-12">
+            <h2 className="flex items-center text-3xl font-display font-bold mb-8 text-primary tracking-tight">
+              <Zap className="w-8 h-8 mr-4 text-brand-primary" />
+              The Sovereign Advantage
+            </h2>
+            <p className="text-lg text-secondary leading-relaxed mb-6">
+              While DGLegacy focus on digital vault storage, Transfer Legacy focuses on <span className="text-primary font-bold">Autonomous Protocol Execution</span>. We don't just store your data; we manage the entire lifecycle of your digital estate through verified triggers and localized legal logic.
+            </p>
+            <p className="text-lg text-secondary leading-relaxed">
+              Our <span className="italic text-brand-primary font-bold">Jurisdiction-Aware Engine</span> automatically adjusts your succession plan based on whether you are in the US, UK, India, or UAE, ensuring compliance with local inheritance taxes and digital asset laws.
+            </p>
+          </section>
+
+          <div className="bg-gradient-to-br from-brand-primary to-blue-900 text-obsidian-950 rounded-[40px] p-10 md:p-16 text-center shadow-2xl shadow-brand-primary/20">
+            <h3 className="text-3xl md:text-5xl font-display font-bold mb-6 tracking-tight leading-none">
+              Choose the <span className="italic">Institutional Standard</span>
+            </h3>
+            <p className="text-xl opacity-90 mb-12 max-w-2xl mx-auto font-medium">
+              Don't settle for simple storage. Secure your digital heritage with a sovereign protocol.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Button onClick={() => window.scrollTo(0,0)} className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest">
+                Start My Vault
               </Button>
-            </Link>
+            </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default CompareDGLegacy;

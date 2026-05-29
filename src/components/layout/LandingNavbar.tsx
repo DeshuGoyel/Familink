@@ -1,45 +1,55 @@
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Logo } from '../ui/Logo';
-import ThemeToggle from './ThemeToggle';
+import { cn } from '../../utils/cn';
 
 export default function LandingNavbar() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className="fixed top-0 left-0 right-0 z-50 h-20 flex items-center bg-page/80 backdrop-blur-xl border-b border-border-base"
+    <nav 
+      className={cn(
+        "fixed top-0 left-0 right-0 z-[100] px-6 md:px-16 py-5 flex items-center justify-between transition-all duration-300",
+        scrolled ? "bg-blueprint-bg/80 backdrop-blur-xl border-b border-white/5 py-4" : "bg-transparent border-transparent"
+      )}
     >
-      <div className="max-w-7xl mx-auto px-6 w-full flex items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="flex items-center">
-          <Logo size={32} showTagline={false} />
-        </Link>
-
-        {/* Nav Links - 3 Max */}
-        <div className="hidden md:flex items-center gap-10">
-          <a href="#protocol" className="text-sm font-bold text-secondary hover:text-primary transition-colors tracking-wide">How It Works</a>
-          <a href="#security" className="text-sm font-bold text-secondary hover:text-primary transition-colors tracking-wide">Security</a>
-          <a href="#pricing" className="text-sm font-bold text-secondary hover:text-primary transition-colors tracking-wide">Pricing</a>
+      <Link to="/" className="flex items-center gap-3 group">
+        <div className="w-8 h-8 bg-blueprint-or/10 border border-blueprint-or/30 rounded-lg flex items-center justify-center group-hover:bg-blueprint-or/20 transition-colors">
+          <svg viewBox="0 0 24 24" className="w-4 h-4 stroke-blueprint-or stroke-2 fill-none">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
         </div>
-
-        {/* CTAs */}
-        <div className="flex items-center gap-6">
-          <ThemeToggle />
-          <Link to="/login" className="hidden sm:block text-sm font-bold text-secondary hover:text-primary transition-colors">
-            Sign In
-          </Link>
-          <Link to="/onboarding">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="h-[44px] px-6 rounded-xl bg-[#14b8a6] text-white text-sm font-bold shadow-lg shadow-teal-500/20 hover:shadow-teal-500/40 transition-all"
-            >
-              Protect My Crypto
-            </motion.button>
-          </Link>
+        <div className="font-display text-lg font-semibold text-white tracking-wide">
+          Transfer Legacy
         </div>
+      </Link>
+      
+      <div className="hidden md:flex items-center gap-8">
+        <a href="#how" className="text-sm text-blueprint-muted2 hover:text-white transition-colors tracking-wide">How it works</a>
+        <a href="#features" className="text-sm text-blueprint-muted2 hover:text-white transition-colors tracking-wide">Features</a>
+        <a href="#pricing" className="text-sm text-blueprint-muted2 hover:text-white transition-colors tracking-wide">Pricing</a>
+        <a href="#faq" className="text-sm text-blueprint-muted2 hover:text-white transition-colors tracking-wide">FAQ</a>
       </div>
-    </motion.nav>
+
+      <div className="flex items-center gap-3">
+        <Link to="/login" className="hidden sm:block">
+          <button className="bg-transparent border border-white/10 text-blueprint-muted2 px-5 py-2 rounded-lg font-sans text-sm transition-all hover:border-white/20 hover:text-white">
+            Sign in
+          </button>
+        </Link>
+        <Link to="/onboarding">
+          <button className="bg-blueprint-or text-white px-5 py-2 rounded-lg font-sans text-sm font-medium transition-all relative overflow-hidden hover:bg-blueprint-or2 hover:-translate-y-px shadow-[0_8px_24px_rgba(249,115,22,0.35)]">
+            Get started free
+          </button>
+        </Link>
+      </div>
+    </nav>
   );
 }

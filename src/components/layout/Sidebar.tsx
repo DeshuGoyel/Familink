@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { cn } from '../../utils/cn';
+import ProtocolStatus from '../dashboard/ProtocolStatus';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard',  path: '/dashboard' },
@@ -75,6 +76,7 @@ export default function Sidebar() {
 
       {/* Bottom Actions */}
       <div className="p-3 border-t border-base space-y-1">
+        <ProtocolStatus isCollapsed={isSidebarCollapsed} />
         {bottomItems.map((item) => (
           <NavLink
             key={item.path}

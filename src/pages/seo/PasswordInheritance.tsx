@@ -1,115 +1,105 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import SEO from '../../components/seo/SEO';
+import { ArrowRight, Shield, Globe2, BookOpen, AlertTriangle, FileCheck, Landmark, Scale, Gavel, CheckCircle2, Lock, Key } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { KeyRound, AlertTriangle, ArrowRight, HelpCircle } from 'lucide-react';
 import Button from '../../components/ui/Button';
-import Card from '../../components/ui/Card';
-import { SEO } from '../../components/seo/SEO';
 
-export default function PasswordInheritance() {
-  const faqSchema = JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How to pass passwords to family after death?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The most secure way is to use a zero-knowledge digital legacy vault like Transfer Legacy. Unlike writing passwords down or using a standard password manager, it encrypts your passwords and automatically releases them to your heirs only after your death has been verified by trusted guardians."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What happens to my LastPass or 1Password when I die?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Most standard password managers do not have robust inheritance features. If your family doesn't know your master password, your accounts may be permanently locked. Transfer Legacy is designed specifically for this scenario."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is it safe to put passwords in a digital will?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "You should never put plaintext passwords in a legal will, as wills often become public records during probate. Passwords must be kept in an encrypted, zero-knowledge vault that is executed alongside your legal will."
-        }
-      }
-    ]
-  });
-
+const PasswordInheritance = () => {
   return (
-    <div className="bg-secondary text-text min-h-screen font-sans pt-20">
+    <div className="min-h-screen bg-page text-primary pt-24 pb-16 relative overflow-hidden">
+      <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/5 blur-[120px] pointer-events-none" />
+
       <SEO 
-        title="Password Inheritance: How to Pass Passwords to Family After Death | Transfer Legacy"
-        description="Learn the most secure way to pass passwords, 2FA codes, and digital accounts to your family after death. Don't rely on standard password managers."
-        schema={faqSchema}
+        title="Password Inheritance Guide: Passing Digital Access Securely"
+        description="Don't lose access to your digital life. Learn how to securely pass passwords, 2FA codes, and vault access to your heirs with Transfer Legacy."
+        canonical="https://transferlegacy.com/password-inheritance"
       />
-      
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <header className="mb-16 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary mb-6 border border-primary/20">
-            <KeyRound size={16} />
-            <span className="text-sm font-semibold tracking-wide uppercase">Digital Account Legacy</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">
-            How to Pass Passwords to Family After Death
-          </h1>
-          <p className="text-xl text-muted max-w-2xl mx-auto">
-            Standard password managers are built to protect your accounts while you're alive. They fail when you're gone. Here's how to securely transfer your digital life.
-          </p>
-        </header>
 
-        <article className="prose prose-invert prose-lg max-w-none">
-          <h2>The Problem with Standard Password Managers</h2>
-          <p>
-            If you use LastPass, 1Password, or Bitwarden, you've taken a great step toward securing your digital life. But what happens to your passwords when you die?
-          </p>
-          <p>
-            Standard password managers are designed with a single point of failure: <strong>The Master Password</strong>. If you pass away unexpectedly and your family doesn't know your master password, they are permanently locked out of your email, bank accounts, and crypto exchanges.
-          </p>
-          <div className="bg-danger/10 border border-danger/20 rounded-xl p-6 my-8 text-danger-foreground">
-            <h4 className="flex items-center gap-2 text-danger mt-0 mb-2"><AlertTriangle /> Do not put passwords in your legal will</h4>
-            <p className="mb-0">When a will goes through probate, it becomes a public document. Putting your master password or crypto seed phrases in a traditional will means anyone can access your accounts.</p>
-          </div>
-
-          <h2>The Solution: Zero-Knowledge Password Inheritance</h2>
-          <p>
-            To solve this, you need a system that acts as a secure vault while you are alive, and an automated executor when you pass away. 
-            <strong> Transfer Legacy</strong> is built exactly for this purpose.
-          </p>
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-24">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center space-x-2 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-4 py-2 rounded-full mb-8 shadow-[0_0_20px_rgba(79,92,255,0.1)]"
+          >
+            <Lock className="w-4 h-4" />
+            <span className="font-bold tracking-[0.2em] uppercase text-[10px]">Digital Access Guide</span>
+          </motion.div>
           
-          <h3>How Transfer Legacy Works:</h3>
-          <ol>
-            <li><strong>Zero-Knowledge Encryption:</strong> Your passwords and 2FA codes are encrypted locally on your device. We never see them.</li>
-            <li><strong>The Guardian Protocol:</strong> You assign trusted individuals (Guardians) who hold fragments of your vault's decryption key using Shamir's Secret Sharing.</li>
-            <li><strong>Automated Handover:</strong> Upon your passing, Guardians verify the event. Only then does the vault unlock, providing your heirs with secure, structured access to your passwords.</li>
-          </ol>
+          <h1 className="text-5xl md:text-7xl font-display font-bold mb-8 leading-[0.95] tracking-tight text-primary">
+            The Password <span className="italic text-brand-primary">Inheritance</span> Protocol
+          </h1>
+          
+          <p className="text-xl text-secondary mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+            Your digital life is locked behind passwords and 2FA. If you don't plan for their succession, your memories, accounts, and assets are permanently inaccessible.
+          </p>
 
-          <div className="mt-12 p-8 bg-surface/50 border border-border rounded-2xl text-center">
-            <h3 className="text-2xl font-bold mt-0 mb-4">Secure your digital life today.</h3>
-            <p className="mb-6">Set up your password inheritance vault in under 15 minutes.</p>
-            <Link to="/onboarding">
-              <Button size="lg" className="glow-blue">
-                Start Your Vault <ArrowRight className="ml-2" size={20} />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button variant="primary" size="lg" className="px-10 h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
+              Secure Your Access <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+
+        <div className="space-y-16">
+          <section className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 md:p-12">
+            <h2 className="flex items-center text-3xl font-display font-bold mb-8 text-primary tracking-tight">
+              <Key className="w-8 h-8 mr-4 text-brand-primary" />
+              The 2FA Deadlock
+            </h2>
+            <div className="prose prose-invert max-w-none text-secondary">
+              <p className="text-lg leading-relaxed mb-6">
+                Most modern accounts use <span className="text-primary font-bold">Two-Factor Authentication (2FA)</span>. Even if your family has your master password, they cannot bypass your phone's biometrics or authenticator apps. This creates a "Deadlock" that traditional probate cannot solve.
+              </p>
+              <p className="text-lg leading-relaxed">
+                Transfer Legacy's <span className="italic text-brand-primary font-bold">Emergency Vault</span> allows you to store backup codes, recovery phrases, and authenticator seeds in a zero-knowledge environment that only releases during a verified status event.
+              </p>
+            </div>
+          </section>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8">
+              <Shield className="w-10 h-10 text-brand-gold mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">Zero-Knowledge Storage</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                Your passwords are encrypted with <span className="text-primary font-bold">Client-Side AES-256</span>. We never see your data. We only facilitate the secure handover based on your predefined triggers.
+              </p>
+              <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-400 uppercase tracking-widest">
+                <CheckCircle2 size={14} /> Locally Encrypted
+              </div>
+            </div>
+
+            <div className="bg-surface/30 backdrop-blur-md border border-base/60 rounded-[32px] p-8 border-brand-primary/20 bg-brand-primary/5">
+              <BookOpen className="w-10 h-10 text-brand-primary mb-6" />
+              <h3 className="text-xl font-display font-bold mb-4 text-primary">Access Management</h3>
+              <p className="text-secondary text-sm leading-relaxed mb-6">
+                Define who gets access to what. You can give your spouse access to financial credentials and your children access to photos and social memories, ensuring the right people get the right data.
+              </p>
+              <Button variant="ghost" className="text-[10px] font-bold uppercase tracking-widest text-brand-primary p-0">
+                Configure Access Segregation
               </Button>
-            </Link>
+            </div>
           </div>
-        </article>
 
-        <section className="mt-20 pt-12 border-t border-border">
-          <h2 className="text-3xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
-          <div className="space-y-4">
-            {JSON.parse(faqSchema).mainEntity.map((faq: unknown, i: number) => (
-              <Card key={i} className="p-6">
-                <h3 className="text-lg font-bold text-text mb-2 flex items-start">
-                  <HelpCircle className="text-primary mr-3 mt-1 flex-shrink-0" size={20} />
-                  {faq.name}
-                </h3>
-                <p className="text-muted leading-relaxed ml-8">{faq.acceptedAnswer.text}</p>
-              </Card>
-            ))}
+          <div className="bg-gradient-to-br from-brand-primary to-blue-900 text-obsidian-950 rounded-[40px] p-10 md:p-16 text-center shadow-2xl shadow-brand-primary/20">
+            <h3 className="text-3xl md:text-5xl font-display font-bold mb-6 tracking-tight leading-none">
+              Don't Let Your <span className="italic">Digital Life</span> Be Locked
+            </h3>
+            <p className="text-xl opacity-90 mb-12 max-w-2xl mx-auto font-medium">
+              Initialize your Password Succession Protocol and ensure your heirs never lose access.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Button onClick={() => window.scrollTo(0,0)} className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest">
+                Start My Access Vault
+              </Button>
+            </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default PasswordInheritance;
