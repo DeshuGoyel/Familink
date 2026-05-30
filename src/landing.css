@@ -281,6 +281,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   .btn-hero, .btn-hero-ghost{width:100%;justify-content:center}
   .trust-item{width:100%;justify-content:center}
   .trust-sep{display:none}
+  .nav-cta .btn-ghost:not(#theme-toggle-btn) { display: none; }
 }
 
 /* ── MOCKUP CONTAINER & LIGHT MODE ── */
@@ -344,7 +345,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   --white: #0F172A;
   --off:   #334155;
   --muted: rgba(15,23,42, 0.5);
-  --muted2:rgba(15,23,42, 0.7);
+  --muted2:rgba(15,23,42, 0.85);
   --border:rgba(15,23,42, 0.08);
 }
 

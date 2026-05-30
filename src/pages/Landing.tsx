@@ -80,7 +80,7 @@ export default function Landing() {
       navigate('/onboarding');
     };
 
-    const signInBtns = document.querySelectorAll('.btn-ghost');
+    const signInBtns = document.querySelectorAll('.btn-ghost:not(#theme-toggle-btn)');
     const getStartedBtns = document.querySelectorAll('.btn-primary, .btn-hero, .btn-price');
 
     signInBtns.forEach(btn => btn.addEventListener('click', handleSignIn));
