@@ -36,15 +36,23 @@ const bottomItems = [
 ];
 
 export default function Sidebar() {
-  const { isSidebarCollapsed, toggleSidebar, user } = useStore();
+  const { isSidebarCollapsed, toggleSidebar, user, isMobileSidebarOpen, toggleMobileSidebar } = useStore();
 
   return (
-    <aside
-      className={cn(
-        "fixed left-0 top-16 h-[calc(100vh-4rem)] bg-surface border-r border-base transition-all duration-300 z-40 flex flex-col hidden lg:flex",
-        isSidebarCollapsed ? "w-20" : "w-64"
+    <>
+      {isMobileSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-30 lg:hidden backdrop-blur-sm"
+          onClick={toggleMobileSidebar}
+        />
       )}
-    >
+      <aside
+        className={cn(
+          "fixed left-0 top-16 h-[calc(100vh-4rem)] bg-surface border-r border-base transition-all duration-300 z-40 flex flex-col",
+          isMobileSidebarOpen ? "translate-x-0 w-64" : "-translate-x-full lg:translate-x-0",
+          isSidebarCollapsed ? "lg:w-20" : "lg:w-64"
+        )}
+      >
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-1 custom-scrollbar">
         {navItems.map((item) => (
@@ -129,5 +137,6 @@ export default function Sidebar() {
         {isSidebarCollapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
       </button>
     </aside>
+    </>
   );
 }
