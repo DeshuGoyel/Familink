@@ -96,8 +96,8 @@ function AppLayout() {
     : '';
 
   return (
-    <div className="relative z-10 min-h-screen flex flex-col pt-16 transition-all duration-300">
-      {isLanding ? <LandingNavbar /> : <Navbar />}
+    <div className={cn("relative z-10 min-h-screen flex flex-col transition-all duration-300", !isLanding ? "pt-16" : "")}>
+      {!isLanding && <Navbar />}
       {!isLanding && <Sidebar />}
 
       {/* Page content — offset for sidebar */}
@@ -185,7 +185,7 @@ function AppLayout() {
 
       {/* Footer — also offset to prevent Sidebar overlap */}
       <div className={cn("transition-all duration-300", offsetClass)}>
-        <Footer />
+        {!isLanding && <Footer />}
       </div>
 
       {isNotificationOpen && <NotificationDrawer />}
