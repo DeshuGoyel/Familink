@@ -140,7 +140,7 @@ export default function Landing() {
   }, []);
 
   return (
-    <div ref={containerRef} dangerouslySetInnerHTML={{ __html: rawHtml }} />
+    <div className="landing-page" ref={containerRef} dangerouslySetInnerHTML={{ __html: rawHtml }} />
   );
 }
 
