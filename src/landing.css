@@ -25,7 +25,7 @@ body{font-family:var(--fb);background:var(--bg);color:var(--off);overflow-x:hidd
 
 /* ── CUSTOM CURSOR ── */
 .landing-page *{cursor:none}
-.cursor{position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference}
+.cursor{position:fixed;pointer-events:none;z-index:9999}
 .cursor-dot{width:8px;height:8px;background:#fff;border-radius:50%;transform:translate(-50%,-50%);transition:transform .1s}
 .cursor-ring{width:36px;height:36px;border:1px solid rgba(255,255,255,.4);border-radius:50%;transform:translate(-50%,-50%);transition:all .18s ease;position:fixed}
 .cursor-ring.hover{transform:translate(-50%,-50%) scale(1.8);border-color:var(--or);background:rgba(249,115,22,.08)}
@@ -370,6 +370,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 :root.light .step-num { 
   background: var(--bg); 
   border-color: rgba(15,23,42,0.1); 
+  color: var(--white);
+}
+:root.light .step-num::after {
   color: var(--white);
 }
 :root.light .feature-item:hover:not(.active) { background: rgba(15,23,42,0.02); }
