@@ -1,10 +1,18 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+const rootElement = document.getElementById('root')!;
+
+// Only hydrate if the root has children AND it's not just the preloader
+const hasPreloader = rootElement.querySelector('.app-preloader');
+if (rootElement.hasChildNodes() && !hasPreloader) {
+  hydrateRoot(rootElement, <React.StrictMode><App /></React.StrictMode>);
+} else {
+  createRoot(rootElement).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+  )
+}
