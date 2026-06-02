@@ -161,6 +161,7 @@ export default function SocialProof() {
                 <button
                   key={i}
                   onClick={() => setActive(i)}
+                  aria-label={`View testimonial ${i + 1}`}
                   className="h-1 rounded-full transition-all duration-300"
                   style={{
                     width: i === active ? '24px' : '6px',
