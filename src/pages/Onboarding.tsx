@@ -64,7 +64,7 @@ export default function Onboarding() {
         // 1. Run real OPAQUE Registration Handshake against live backend
         const { userId, registrationRequest, blindFactor } = await initOpaqueRegistration(password);
 
-        const initResponse = await api.post<unknown>('/auth/register/init', {
+        const initResponse = await api.post<{ registration_response: string; session_id: string }>('/auth/register/init', {
           user_id: userId,
           registration_request: registrationRequest,
           credential_identifier: email, // maps to auth.users mapping on backend!
@@ -92,7 +92,7 @@ export default function Onboarding() {
 
         // 2. Perform Automatic OPAQUE Login immediately
         const loginInit = await initOpaqueLogin(password);
-        const loginInitResponse = await api.post<unknown>('/auth/login/init', {
+        const loginInitResponse = await api.post<{ credential_response?: string; registration_response?: string; session_id: string }>('/auth/login/init', {
           user_id: userId,
           credential_request: loginInit.credentialRequest,
         });
@@ -100,10 +100,10 @@ export default function Onboarding() {
         const loginFinishData = await finishOpaqueLogin(
           password,
           loginInit.blindFactor,
-          loginInitResponse.credential_response || loginInitResponse.registration_response
+          (loginInitResponse.credential_response || loginInitResponse.registration_response) as string
         );
 
-        const loginFinishResponse = await api.post<unknown>('/auth/login/finish', {
+        const loginFinishResponse = await api.post<{ session_token?: string; token?: string }>('/auth/login/finish', {
           session_id: loginInitResponse.session_id,
           credential_finalization: loginFinishData.registrationUpload,
         });
@@ -140,7 +140,8 @@ export default function Onboarding() {
         setStep(2);
       } catch (err: unknown) {
         console.error('Registration/Auto-Login failed:', err);
-        setError(err.message || 'Registration failed. Please check connection.');
+        const errorMessage = err instanceof Error ? err.message : 'Registration failed. Please check connection.';
+        setError(errorMessage);
         toast.error('Registration failed');
       } finally {
         setIsInitializing(false);

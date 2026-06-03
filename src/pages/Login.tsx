@@ -38,7 +38,7 @@ export default function Login() {
       const { credentialRequest, blindFactor } = await initOpaqueLogin(password);
 
       // Send start to backend
-      const initResponse = await api.post<unknown>('/auth/login/init', {
+      const initResponse = await api.post<{ credential_response?: string; registration_response?: string; session_id: string }>('/auth/login/init', {
         user_id: resolvedUserId,
         credential_request: credentialRequest,
       });
@@ -47,11 +47,11 @@ export default function Login() {
       const finishData = await finishOpaqueLogin(
         password,
         blindFactor,
-        initResponse.credential_response || initResponse.registration_response
+        (initResponse.credential_response || initResponse.registration_response) as string
       );
 
       // Send finish to backend to authenticate session
-      const finishResponse = await api.post<unknown>('/auth/login/finish', {
+      const finishResponse = await api.post<{ session_token?: string; token?: string }>('/auth/login/finish', {
         session_id: initResponse.session_id,
         credential_finalization: finishData.registrationUpload,
       });
@@ -104,7 +104,8 @@ export default function Login() {
       navigate('/dashboard');
     } catch (err: unknown) {
       console.error('Authentication error:', err);
-      setError(err.message || 'Invalid credentials or connection error');
+      const errorMessage = err instanceof Error ? err.message : 'Invalid credentials or connection error';
+      setError(errorMessage);
       toast.error('Authentication failed');
     } finally {
       setIsLoading(false);
