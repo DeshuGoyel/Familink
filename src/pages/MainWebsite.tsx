@@ -219,6 +219,18 @@ function AppLayout() {
 function AppCursor() {
   const location = useLocation();
   const isAppPage = APP_ROUTE_PREFIXES.some(p => location.pathname.startsWith(p));
+
+  // Explicitly remove custom-cursor-active when on app pages so the body class
+  // can't get stuck if the user navigated from a public/landing page.
+  useEffect(() => {
+    if (isAppPage) {
+      document.body.classList.remove('custom-cursor-active');
+      document.body.style.cursor = 'auto';
+    } else {
+      document.body.style.cursor = '';
+    }
+  }, [isAppPage]);
+
   // Don't render custom cursor on dashboard/app pages — use normal system cursor
   if (isAppPage) return null;
   return <CustomCursor />;
