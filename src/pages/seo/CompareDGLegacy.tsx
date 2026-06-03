@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import SEO from '../../components/seo/SEO';
-import { ArrowRight, Shield, CheckCircle2, XCircle, Scale, Zap, Lock, Globe2 } from 'lucide-react';
+import { CheckCircle2, XCircle, Scale, Zap } from 'lucide-react';
 import Button from '../../components/ui/Button';
 
 const CompareDGLegacy = () => {

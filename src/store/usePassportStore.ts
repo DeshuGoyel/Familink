@@ -23,7 +23,7 @@ interface PassportState {
 }
 
 const defaultPassport: IdentityPassport = {
-  fullName: "John Asha",
+  fullName: localStorage.getItem('tl_user_name') || "Secured User",
   dateOfBirth: "1985-06-15",
   country: "United States",
   emergencyContact: { name: "Sarah Asha", phone: "+1 555-0198", relation: "Spouse" },

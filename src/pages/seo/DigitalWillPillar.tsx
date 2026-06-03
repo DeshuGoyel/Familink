@@ -1,8 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import SEO from '../../components/seo/SEO';
-import { ArrowRight, Shield, Globe2, BookOpen, AlertTriangle, FileCheck, Landmark, Scale, Gavel, CheckCircle2, Scroll, PenTool } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ArrowRight, Shield, BookOpen, AlertTriangle, FileCheck, Landmark, CheckCircle2, Scroll, PenTool } from 'lucide-react';
 import Button from '../../components/ui/Button';
 
 const DigitalWillPillar = () => {

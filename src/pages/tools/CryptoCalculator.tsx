@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calculator, ArrowRight, AlertTriangle, Sparkles, Zap, Shield, Target, Lock } from 'lucide-react';
+import { ArrowRight, AlertTriangle, Zap, Shield, Target, Lock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import SEO from '../../components/seo/SEO';
@@ -12,6 +13,7 @@ const fadeUp = (delay = 0) => ({
 });
 
 export default function CryptoCalculator() {
+  const navigate = useNavigate();
   const [assetValue, setAssetValue] = useState(100000);
   const [age, setAge] = useState(35);
 
@@ -98,7 +100,7 @@ export default function CryptoCalculator() {
                </div>
 
                <Button 
-                 onClick={() => window.location.href = '/onboarding'}
+                 onClick={() => navigate('/onboarding')}
                  className="w-full h-14 rounded-2xl bg-brand-primary text-obsidian-950 font-bold uppercase tracking-widest text-[11px] shadow-2xl shadow-brand-primary/20"
                >
                  De-Risk My Assets <ArrowRight className="ml-2" size={16} />

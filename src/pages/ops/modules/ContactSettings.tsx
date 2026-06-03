@@ -65,7 +65,7 @@ export default function ContactSettings() {
   const removeEmail = (index: number) => setConfig(prev => prev ? ({ ...prev, emails: prev.emails.filter((_, _i) => i !== index) }) : null);
   
   const addPhone = () => setConfig(prev => prev ? ({ ...prev, phones: [...prev.phones, { label: '', number: '' }] }) : null);
-  const removePhone = (index: number) => setConfig(prev => prev ? ({ ...prev, phones: prev.phones.filter((_, i) => i !== index) }) : null);
+  const removePhone = (index: number) => setConfig(prev => prev ? ({ ...prev, phones: prev.phones.filter((_, _i) => i !== index) }) : null);
 
   const addWorkingHour = () => setConfig(prev => prev ? ({ ...prev, working_hours: [...prev.working_hours, { days: '', hours: '' }] }) : null);
   const removeWorkingHour = (index: number) => setConfig(prev => prev ? ({ ...prev, working_hours: prev.working_hours.filter((_, i) => i !== index) }) : null);

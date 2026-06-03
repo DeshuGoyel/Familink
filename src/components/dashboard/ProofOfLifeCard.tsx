@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ShieldAlert, ShieldCheck, Clock, Activity, Settings2 } from 'lucide-react';
+import { ShieldAlert, ShieldCheck, Activity, Settings2 } from 'lucide-react';
 import { useCheckinStore } from '../../store/useCheckinStore';
 import Button from '../ui/Button';
 import { trackEvent, EVENTS } from '../seo/Analytics';

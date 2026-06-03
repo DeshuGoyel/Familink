@@ -32,7 +32,7 @@ export default function ContactUs() {
           const data = await res.json();
           setConfig(data);
         }
-      } catch {
+      } catch (err) {
         console.error('Failed to fetch contact details', err);
       } finally {
         setLoading(false);

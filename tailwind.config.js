@@ -26,6 +26,11 @@ export default {
         'border-base':   'var(--color-border)',
         'border-strong': 'var(--color-border-strong)',
 
+        'error':   'var(--color-error)',
+        'success': 'var(--color-success)',
+        'warning': 'var(--color-warning)',
+        'info':    'var(--color-info)',
+
         // Blueprint Colors
         'blueprint-bg': '#080B0A',
         'blueprint-bg2': '#0F1410',
@@ -92,6 +97,11 @@ export default {
           200: '#A7F3D0',
           100: '#D1FAE5',
         },
+      },
+
+      borderColor: {
+        'base': 'var(--color-border)',
+        'strong': 'var(--color-border-strong)',
       },
 
       fontFamily: {

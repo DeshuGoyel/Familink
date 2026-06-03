@@ -1,103 +1,99 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { cn } from '../../utils/cn';
+import { useEffect, useState } from 'react';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 export default function CustomCursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+  
+  // Spring animations for trailing ring
+  const ringX = useSpring(cursorX, { damping: 25, stiffness: 220, mass: 0.5 });
+  const ringY = useSpring(cursorY, { damping: 25, stiffness: 220, mass: 0.5 });
 
   useEffect(() => {
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isVisible) setIsVisible(true);
-      
-      // Update dot instantly
-      if (dotRef.current) {
-        dotRef.current.style.left = `${e.clientX}px`;
-        dotRef.current.style.top = `${e.clientY}px`;
-      }
-      
-      // Update ring with a slight delay for smooth trailing effect
-      // We do this via requestAnimationFrame for better performance
-      if (ringRef.current) {
-        // Using transform for better performance, but here we update left/top since transform is used for translate(-50%,-50%) in CSS
-        ringRef.current.style.left = `${e.clientX}px`;
-        ringRef.current.style.top = `${e.clientY}px`;
-      }
-    };
+    // Only show custom cursor on real pointer devices (not touch)
+    const canUsePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!canUsePointer) {
+      setIsMobile(true);
+      return;
+    }
 
-    const onMouseLeave = () => setIsVisible(false);
-    const onMouseEnter = () => setIsVisible(true);
-
-    const onMouseDown = () => {
-      if (ringRef.current) {
-        ringRef.current.style.transform = 'translate(-50%, -50%) scale(0.8)';
-      }
-    };
-
-    const onMouseUp = () => {
-      if (ringRef.current) {
-        ringRef.current.style.transform = isHovering 
-          ? 'translate(-50%, -50%) scale(1.8)' 
-          : 'translate(-50%, -50%) scale(1)';
-      }
-    };
-
-    // Attach hover effects to clickable elements
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName.toLowerCase() === 'a' || 
-          target.tagName.toLowerCase() === 'button' ||
-          target.closest('a') ||
-          target.closest('button') ||
-          target.classList.contains('cursor-pointer')) {
-        setIsHovering(true);
-      } else {
-        setIsHovering(false);
-      }
-    };
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseleave', onMouseLeave);
-    document.addEventListener('mouseenter', onMouseEnter);
-    document.addEventListener('mousedown', onMouseDown);
-    document.addEventListener('mouseup', onMouseUp);
-    document.addEventListener('mouseover', handleMouseOver);
-    
-    // Add custom cursor class to body
+    setIsMobile(false);
     document.body.classList.add('custom-cursor-active');
 
-    return () => {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseleave', onMouseLeave);
-      document.removeEventListener('mouseenter', onMouseEnter);
-      document.removeEventListener('mousedown', onMouseDown);
-      document.removeEventListener('mouseup', onMouseUp);
-      document.removeEventListener('mouseover', handleMouseOver);
-      document.body.classList.remove('custom-cursor-active');
+    const onMove = (e: MouseEvent) => {
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
+      if (!isVisible) setIsVisible(true);
     };
-  }, [isVisible, isHovering]);
 
-  if (typeof window !== 'undefined' && window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
-    return null; // Don't render on touch devices
-  }
+    const onOver = (e: MouseEvent) => {
+      const t = e.target as HTMLElement;
+      setIsHovering(!!t.closest('button, a, input, select, textarea, [role="button"], [tabindex], .cursor-pointer'));
+    };
+
+    const onLeave = () => setIsVisible(false);
+    const onEnter = () => setIsVisible(true);
+
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseover', onOver);
+    document.addEventListener('mouseleave', onLeave);
+    document.addEventListener('mouseenter', onEnter);
+
+    return () => {
+      document.body.classList.remove('custom-cursor-active');
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseover', onOver);
+      document.removeEventListener('mouseleave', onLeave);
+      document.removeEventListener('mouseenter', onEnter);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (isMobile) return null;
 
   return (
     <>
-      <div 
-        ref={dotRef}
-        className={cn(
-          "blueprint-cursor-dot",
-          !isVisible && "opacity-0"
-        )}
+      {/* Dot */}
+      <motion.div
+        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full mix-blend-screen"
+        style={{
+          width: 8,
+          height: 8,
+          x: cursorX,
+          y: cursorY,
+          marginLeft: -4,
+          marginTop: -4,
+          backgroundColor: isHovering ? '#F59E0B' : '#F97316',
+          opacity: isVisible ? 1 : 0,
+          boxShadow: isHovering 
+            ? '0 0 10px #F59E0B, 0 0 20px rgba(245,158,11,0.5)' 
+            : '0 0 8px #F97316, 0 0 16px rgba(249,115,22,0.4)',
+        }}
+        animate={{ scale: isHovering ? 1.5 : 1 }}
+        transition={{ type: 'spring', stiffness: 450, damping: 25 }}
       />
-      <div 
-        ref={ringRef}
-        className={cn(
-          "blueprint-cursor-ring",
-          !isVisible && "opacity-0",
-          isHovering && "hover"
-        )}
+      {/* Ring */}
+      <motion.div
+        className="fixed top-0 left-0 pointer-events-none z-[9998] rounded-full"
+        style={{
+          width: 32,
+          height: 32,
+          x: ringX,
+          y: ringY,
+          marginLeft: -16,
+          marginTop: -16,
+          border: isHovering 
+            ? '1.5px solid rgba(245,158,11,0.8)' 
+            : '1.5px solid rgba(249,115,22,0.3)',
+          backgroundColor: isHovering ? 'rgba(245,158,11,0.06)' : 'rgba(249,115,22,0.01)',
+          opacity: isVisible ? 1 : 0,
+        }}
+        animate={{ scale: isHovering ? 1.6 : 1 }}
+        transition={{ type: 'spring', stiffness: 220, damping: 25 }}
       />
     </>
   );

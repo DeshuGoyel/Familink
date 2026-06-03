@@ -21,6 +21,11 @@ export default function Settings() {
   const [activeTab, setActiveTab] = useState('Profile');
   const [deleteConfirm, setDeleteConfirm] = useState('');
 
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
+  const [phone, setPhone] = useState(localStorage.getItem('tl_user_phone') || "+1 (555) 123-4567");
+  const [jurisdiction, setJurisdiction] = useState(user.jurisdiction || "Global / Sovereign");
+
   const tabs = [
     { name: 'Profile', icon: User, desc: 'Personal Identity' },
     { name: 'Security', icon: Shield, desc: 'Access & Auth' },
@@ -32,6 +37,17 @@ export default function Settings() {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    localStorage.setItem('tl_user_name', name);
+    localStorage.setItem('tl_user_email', email);
+    localStorage.setItem('tl_user_phone', phone);
+    useStore.setState({
+      user: {
+        ...user,
+        name,
+        email,
+        jurisdiction
+      }
+    });
     toast.success('Configuration synchronized successfully');
   };
 
@@ -141,7 +157,7 @@ export default function Settings() {
                       <div className="relative group">
                         <div className="w-32 h-32 rounded-[40px] bg-page border border-base flex items-center justify-center text-5xl font-display font-bold text-brand-primary group-hover:border-brand-primary/50 transition-all duration-700 shadow-2xl relative overflow-hidden">
                            <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                           <span className="relative z-10">{user.name.charAt(0)}</span>
+                           <span className="relative z-10">{name ? name.charAt(0) : ''}</span>
                         </div>
                         <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-2xl bg-brand-primary text-page flex items-center justify-center border-4 border-base shadow-xl cursor-pointer hover:scale-110 transition-transform">
                            <Activity size={18} />
@@ -157,10 +173,10 @@ export default function Settings() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                      <Input label="Full Identity Name" defaultValue={user.name} className="h-14 rounded-2xl" />
-                      <Input label="Protocol Email Address" defaultValue={user.email} disabled className="h-14 rounded-2xl opacity-60" />
-                      <Input label="Secure Communication Line" defaultValue="+1 (555) 123-4567" className="h-14 rounded-2xl" />
-                      <Input label="Institutional Jurisdiction" defaultValue="Global / Sovereign" className="h-14 rounded-2xl" />
+                      <Input label="Full Identity Name" value={name} onChange={e => setName(e.target.value)} className="h-14 rounded-2xl" />
+                      <Input label="Protocol Email Address" value={email} onChange={e => setEmail(e.target.value)} className="h-14 rounded-2xl" />
+                      <Input label="Secure Communication Line" value={phone} onChange={e => setPhone(e.target.value)} className="h-14 rounded-2xl" />
+                      <Input label="Institutional Jurisdiction" value={jurisdiction} onChange={e => setJurisdiction(e.target.value)} className="h-14 rounded-2xl" />
                     </div>
                     
                     <div className="pt-8 border-t border-base/60 flex justify-end">

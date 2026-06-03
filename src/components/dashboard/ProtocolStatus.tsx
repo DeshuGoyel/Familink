@@ -10,9 +10,19 @@ interface ProtocolStatusProps {
 export default function ProtocolStatus({ isCollapsed }: ProtocolStatusProps) {
   return (
     <div className={cn(
-      "mx-3 mb-4 p-4 rounded-2xl bg-surface-raised/30 border border-base/50 relative overflow-hidden group",
-      isCollapsed ? "px-2 py-4" : "p-4"
+      "mb-4 rounded-2xl bg-raised/30 border border-base/40 relative overflow-hidden group transition-all duration-300",
+      isCollapsed ? "mx-1 p-2 cursor-help" : "mx-3 p-4"
     )}>
+      {isCollapsed && (
+        <div className="absolute left-full top-0 ml-4 p-3 bg-raised border border-border-base rounded-xl text-xs opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-x-[-4px] group-hover:translate-x-0 pointer-events-none z-[60] shadow-xl min-w-[200px]">
+          <div className="font-bold text-primary mb-1 text-left">ZK-Protocol Active</div>
+          <div className="text-[10px] text-muted mb-2 text-left font-mono">Sovereign Layer 2 SECURE</div>
+          <div className="flex justify-between items-center text-[9px] font-medium text-muted uppercase tracking-wider">
+            <span>Vault Health</span>
+            <span className="text-brand-success font-bold">100%</span>
+          </div>
+        </div>
+      )}
       {/* Background Pulse */}
       <div className="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity">
         <motion.div

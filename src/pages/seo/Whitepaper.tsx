@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FileText, Shield, Zap, Lock, Globe, Server, Code, ArrowRight, Download, Eye } from 'lucide-react';
+import { FileText, Shield, Lock, Globe, Server, Code, ArrowRight, Download, Eye } from 'lucide-react';
 import SEO from '../../components/seo/SEO';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';

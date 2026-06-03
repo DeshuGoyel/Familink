@@ -423,6 +423,26 @@
 
 @layer utilities {
 
+  /* ── border-base FIX ──────────────────────────────────────────────────────
+     Tailwind's colors map has 'base' → --color-bg-base (a background token).
+     This causes `border-base` to apply an almost-invisible bg color as border.
+     These overrides redirect ALL border-base variants to --color-border.
+  ─────────────────────────────────────────────────────────────────────────── */
+  .border-base         { border-color: var(--color-border) !important; }
+  .border-t-base       { border-top-color: var(--color-border) !important; }
+  .border-b-base       { border-bottom-color: var(--color-border) !important; }
+  .border-l-base       { border-left-color: var(--color-border) !important; }
+  .border-r-base       { border-right-color: var(--color-border) !important; }
+  .border-x-base       { border-left-color: var(--color-border) !important; border-right-color: var(--color-border) !important; }
+  .border-y-base       { border-top-color: var(--color-border) !important; border-bottom-color: var(--color-border) !important; }
+
+  /* Opacity variants commonly used (e.g. border-base/40, border-base/60) */
+  /* These can't be overridden the same way in pure CSS — handled below via CSS vars */
+  .border-base\/40     { border-color: rgba(255,255,255,0.06) !important; }
+  .border-base\/60     { border-color: rgba(255,255,255,0.09) !important; }
+  .light .border-base\/40 { border-color: rgba(15,23,42,0.05) !important; }
+  .light .border-base\/60 { border-color: rgba(15,23,42,0.08) !important; }
+
   /* ── Aurora / Hero Background ── */
   .bg-aurora {
     background: var(--color-bg-page);
@@ -636,6 +656,25 @@
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  /* ── Custom Scrollbar utility ── */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+    border-radius: 99px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--color-brand-primary);
   }
 
   /* ── Custom cursor ── */

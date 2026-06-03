@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, ShieldCheck, Clock, ArrowRight, Zap, Target, BarChart3, AlertCircle } from 'lucide-react';
+import { ShieldCheck, Clock, ArrowRight, Target, BarChart3, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import SEO from '../../components/seo/SEO';
@@ -12,6 +13,7 @@ const fadeUp = (delay = 0) => ({
 });
 
 export default function ROICalculator() {
+  const navigate = useNavigate();
   const [assetValue, setAssetValue] = useState(250000);
   
   const potentialLoss = assetValue * 0.35; // 35% estimated loss (legal, recovery, lost access)
@@ -137,7 +139,7 @@ export default function ROICalculator() {
 
                   <div className="pt-8">
                     <Button 
-                      onClick={() => window.location.href = '/onboarding'}
+                      onClick={() => navigate('/onboarding')}
                       className="w-full h-16 rounded-2xl bg-brand-primary text-obsidian-950 font-bold uppercase tracking-widest text-[11px] shadow-2xl shadow-brand-primary/20"
                     >
                       Maximize My Legacy ROI <ArrowRight size={16} className="ml-2" />

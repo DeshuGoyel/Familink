@@ -41,7 +41,7 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             <button
               onClick={toggleSidebar}
-              className="hidden md:flex p-2 rounded-xl text-secondary hover:text-primary bg-surface/50 border border-base hover:border-brand-primary/20 transition-all shadow-sm"
+              className="hidden lg:flex p-2 rounded-xl text-secondary hover:text-primary bg-surface/50 border border-base hover:border-brand-primary/20 transition-all shadow-sm"
               title="Toggle Sidebar"
             >
               <Menu size={18} strokeWidth={2} />
@@ -53,7 +53,7 @@ export default function Navbar() {
           </div>
 
           {/* Centre – Navigation links */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1">
             {navLinks.map(({ label, to }) => {
               const isActive = location.pathname === to;
               return (
@@ -103,7 +103,7 @@ export default function Navbar() {
             </Link>
 
             {/* Mobile Actions */}
-            <div className="flex md:hidden items-center">
+            <div className="flex lg:hidden items-center">
               <button onClick={toggleMobileSidebar} className="p-2 text-secondary hover:text-primary rounded-xl transition" aria-label="Toggle Menu">
                 {isMobileSidebarOpen ? <X size={24} /> : <Menu size={24} />}
               </button>

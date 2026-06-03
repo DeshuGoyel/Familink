@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import SEO from '../../components/seo/SEO';
-import { BookOpen, Globe2, ShieldCheck, Scale, Calculator, ArrowRight, Zap, Target, Scroll, FileText, Database, Code } from 'lucide-react';
+import { BookOpen, Globe2, ShieldCheck, Scale, Calculator, ArrowRight, Zap, Target, Database, Code } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Button from '../../components/ui/Button';
 

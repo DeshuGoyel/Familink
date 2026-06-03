@@ -1,9 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 
-const htmlFile = path.join(__dirname, 'TransferLegacy_Landing.html');
-const cssFile = path.join(__dirname, 'src', 'landing.css');
-const tsxFile = path.join(__dirname, 'src', 'pages', 'Landing.tsx');
+const basePath = path.resolve(__dirname);
+
+const htmlFile = path.normalize(path.resolve(basePath, 'TransferLegacy_Landing.html'));
+const cssFile = path.normalize(path.resolve(basePath, 'src', 'landing.css'));
+const tsxFile = path.normalize(path.resolve(basePath, 'src', 'pages', 'Landing.tsx'));
+
+if (!htmlFile.startsWith(basePath) || !cssFile.startsWith(basePath) || !tsxFile.startsWith(basePath)) {
+  throw new Error("Path traversal detected: attempt to access files outside the project directory.");
+}
 
 const content = fs.readFileSync(htmlFile, 'utf-8');
 

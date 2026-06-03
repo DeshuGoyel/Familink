@@ -11,7 +11,7 @@ export default function ActivityFeed() {
   return (
     <div className="space-y-3">
       {activity.map((item, index) => {
-        const Icon = icons[item.icon] || Lock;
+        const Icon = (Object.prototype.hasOwnProperty.call(icons, item.icon) ? icons[item.icon] : null) || Lock;
         const isCritical = item.message.toLowerCase().includes('failed') || item.message.toLowerCase().includes('security');
         
         return (
@@ -81,6 +81,6 @@ export default function ActivityFeed() {
 }
 
 // Helper to avoid import bloat
-function cn(...classes: any[]) {
+function cn(...classes: unknown[]) {
   return classes.filter(Boolean).join(' ');
 }

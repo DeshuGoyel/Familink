@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Button from '../ui/Button';
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-24 pb-12 overflow-hidden">
     <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-page">
       {/* Dynamic Background */}
       <div className="absolute inset-0 bg-hero-gradient opacity-20" />

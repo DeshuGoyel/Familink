@@ -7,7 +7,7 @@ interface SEOProps {
   canonicalUrl?: string;
   type?: string;
   imageUrl?: string;
-  schema?: any;
+  schema?: unknown;
   noindex?: boolean;
   publishedTime?: string;
 }

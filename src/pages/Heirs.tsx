@@ -44,7 +44,7 @@ export default function Heirs() {
     reset();
   };
 
-  // const totalValue = assets.reduce((acc, a) => acc + (a.value || 0), 0);
+  // // const totalValue = assets.reduce((acc, a) => acc + (a.value || 0), 0);
 
   return (
     <div className="min-h-screen bg-page text-primary selection:bg-brand-primary/30 pt-6">

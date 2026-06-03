@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { Wallet, Plus, Edit2, Trash2, Box, TrendingUp, Briefcase, FileText, Globe, Search, Shield, LayoutGrid, List } from 'lucide-react';
 import Button from '../components/ui/Button';
@@ -29,11 +29,15 @@ const fadeUp = (delay = 0) => ({
 });
 
 export default function Assets() {
-  const { assets, addAsset, updateAsset, deleteAsset } = useStore();
+  const { assets, addAsset, updateAsset, deleteAsset, fetchAssets } = useStore();
   const [activeTab, setActiveTab] = useState('All');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+  useEffect(() => {
+    fetchAssets();
+  }, [fetchAssets]);
   
   const tabs = ['All', 'Crypto', 'NFTs', 'Documents', 'Accounts', 'Institutional', 'Other'];
   

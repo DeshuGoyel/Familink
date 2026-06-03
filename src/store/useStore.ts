@@ -1,5 +1,7 @@
 import { create } from 'zustand';
-import { mockAssets, mockGuardians, mockHeirs, mockActivity, mockNotifications } from '../data/mockData';
+import { mockActivity, mockNotifications } from '../data/mockData';
+import { api } from '../lib/api';
+import { toBase64Url } from '../lib/aeadClient';
 
 export interface Asset {
   id: string;
@@ -87,9 +89,10 @@ interface AppState {
   isSidebarCollapsed: boolean;
   isMobileSidebarOpen: boolean;
   
-  addAsset: (asset: Omit<Asset, 'id'>) => void;
+  fetchAssets: () => Promise<void>;
+  addAsset: (asset: Omit<Asset, 'id'>) => void | Promise<void>;
   updateAsset: (id: string, data: Partial<Asset>) => void;
-  deleteAsset: (id: string) => void;
+  deleteAsset: (id: string) => void | Promise<void>;
   addGuardian: (guardian: Omit<Guardian, 'id' | 'status'>) => void;
   confirmGuardian: (id: string) => void;
   removeGuardian: (id: string) => void;
@@ -99,7 +102,7 @@ interface AppState {
   toggleTheme: () => void;
   toggleNotifications: () => void;
   markNotificationAsRead: (id: string) => void;
-  performCheckIn: (method: string) => void;
+  performCheckIn: (method: string) => void | Promise<void>;
   toggleSidebar: () => void;
   toggleMobileSidebar: () => void;
   addAllocation: (allocation: Omit<Allocation, 'id'>) => void;
@@ -107,6 +110,9 @@ interface AppState {
   removeAllocation: (id: string) => void;
   calculateScore: () => void;
   setJurisdiction: (jurisdiction: string) => void;
+  isAuthenticated: boolean;
+  checkSession: () => Promise<void>;
+  logout: () => void;
 }
 
 const calculateNewScore = (state: Pick<AppState, 'guardians' | 'assets' | 'heirs'>) => {
@@ -136,26 +142,64 @@ const calculateNewScore = (state: Pick<AppState, 'guardians' | 'assets' | 'heirs
 
   return score;
 };
+const getInitialState = () => {
+  const isAuth = !!localStorage.getItem('tl_session_token');
+  if (!isAuth) {
+    return {
+      assets: [] as Asset[],
+      guardians: [] as Guardian[],
+      heirs: [] as Heir[],
+    };
+  }
 
-const initialState = {
-  assets: [...mockAssets],
-  guardians: mockGuardians.map(g => ({ ...g, status: g.status === 'confirmed' ? 'Confirmed' : 'Pending' })),
-  heirs: mockHeirs.map(h => ({ ...h, status: h.status === 'active' ? 'Record Secured' : h.status })),
+  let guardians: Guardian[] = [];
+  try {
+    const savedGuardians = localStorage.getItem('tl_guardians');
+    if (savedGuardians) {
+      guardians = JSON.parse(savedGuardians);
+    }
+  } catch (e) {
+    console.error('Failed to parse tl_guardians from localStorage', e);
+  }
+
+  let heirs: Heir[] = [];
+  try {
+    const savedHeirs = localStorage.getItem('tl_heirs');
+    if (savedHeirs) {
+      heirs = JSON.parse(savedHeirs);
+    }
+  } catch (e) {
+    console.error('Failed to parse tl_heirs from localStorage', e);
+  }
+
+  return {
+    assets: [] as Asset[],
+    guardians,
+    heirs,
+  };
 };
 
-export const useStore = create<AppState>((set) => ({
-  user: {
-    name: "John Asha",
-    email: "john@transferlegacy.com",
+const getInitialUser = (state: ReturnType<typeof getInitialState>) => {
+  const name = localStorage.getItem('tl_user_name') || "Secured User";
+  const email = localStorage.getItem('tl_user_email') || "";
+  return {
+    name,
+    email,
     avatar: null,
-    score: calculateNewScore(initialState as any),
+    score: calculateNewScore(state),
     plan: "Family",
     nextCheckInDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     checkInHistory: [
       { date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), method: 'App Tap' }
     ]
-  },
-  ...initialState,
+  };
+};
+
+const loadedState = getInitialState();
+
+export const useStore = create<AppState>((set) => ({
+  user: getInitialUser(loadedState),
+  ...loadedState,
   charities: [
     { id: 'c1', name: 'GiveWell', description: 'Maximum impact, evidence-based charities.', category: 'Global Health' },
     { id: 'c2', name: 'Electronic Frontier Foundation', description: 'Defending digital privacy and free speech.', category: 'Digital Rights' },
@@ -170,51 +214,223 @@ export const useStore = create<AppState>((set) => ({
   isNotificationOpen: false,
   isSidebarCollapsed: false,
   isMobileSidebarOpen: false,
+  isAuthenticated: !!localStorage.getItem('tl_session_token'),
 
-  addAsset: (asset) => set((state) => {
-    const newState = { ...state, assets: [...state.assets, { ...asset, id: Date.now().toString() }] };
-    return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
-  }),
+  checkSession: async () => {
+    const token = localStorage.getItem('tl_session_token');
+    const userId = localStorage.getItem('tl_user_id');
+    if (!token || !userId) {
+      set({ isAuthenticated: false });
+      return;
+    }
+    try {
+      // Validate session token by attempting a list request
+      await api.post('/vault/items/list', { user_id: userId });
+      const currentLoadedState = getInitialState();
+      set({ 
+        isAuthenticated: true,
+        ...currentLoadedState,
+        user: getInitialUser(currentLoadedState)
+      });
+    } catch (err) {
+      console.warn('Session verification failed, clearing tokens:', err);
+      localStorage.removeItem('tl_session_token');
+      localStorage.removeItem('tl_user_id');
+      localStorage.removeItem('tl_user_name');
+      localStorage.removeItem('tl_user_email');
+      localStorage.removeItem('tl_guardians');
+      localStorage.removeItem('tl_heirs');
+      set({ 
+        isAuthenticated: false,
+        assets: [],
+        guardians: [],
+        heirs: [],
+        user: {
+          name: "Secured User",
+          email: "",
+          avatar: null,
+          score: 0,
+          plan: "Family",
+          nextCheckInDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          checkInHistory: []
+        }
+      });
+    }
+  },
+
+  logout: async () => {
+    try {
+      await api.post('/auth/logout', {});
+    } catch (err) {
+      console.error('Logout API call failed:', err);
+    } finally {
+      localStorage.removeItem('tl_session_token');
+      localStorage.removeItem('tl_user_id');
+      localStorage.removeItem('tl_user_name');
+      localStorage.removeItem('tl_user_email');
+      localStorage.removeItem('tl_guardians');
+      localStorage.removeItem('tl_heirs');
+      set({ 
+        isAuthenticated: false,
+        assets: [],
+        guardians: [],
+        heirs: [],
+        user: {
+          name: "Secured User",
+          email: "",
+          avatar: null,
+          score: 0,
+          plan: "Family",
+          nextCheckInDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          checkInHistory: []
+        }
+      });
+    }
+  },
+
+  fetchAssets: async () => {
+    try {
+      const userId = localStorage.getItem('tl_user_id');
+      if (!userId) return;
+      const response = await api.post<{ items: unknown[] }>('/vault/items/list', { user_id: userId });
+      const items = response?.items || [];
+      const formattedAssets: Asset[] = items.map((item: any) => ({
+        id: item.item_id || item.id,
+        name: item.item_meta?.title || item.item_meta?.title_hash || 'Encrypted Asset',
+        type: item.item_meta?.type || 'password',
+        status: 'Secured',
+        value: 120000,
+        date: new Date(item.created_at || Date.now()).toLocaleDateString(),
+        instructions: 'Client decrypted instructions placeholder',
+      }));
+      set({ assets: formattedAssets });
+    } catch (err) {
+      console.error('Failed to fetch assets:', err);
+    }
+  },
+  addAsset: async (asset) => {
+    try {
+      const userId = localStorage.getItem('tl_user_id');
+      if (!userId) return;
+      const payload = {
+        user_id: userId,
+        ciphertext: toBase64Url(new TextEncoder().encode(JSON.stringify(asset))),
+        item_meta: { title: asset.name, type: asset.type },
+        crypto_version: 'v1'
+      };
+      await api.post('/vault/items', payload);
+      
+      // Refresh assets
+      const response = await api.post<{ items: unknown[] }>('/vault/items/list', { user_id: userId });
+      const items = response?.items || [];
+      const formattedAssets: Asset[] = items.map((item: any) => ({
+        id: item.item_id || item.id,
+        name: item.item_meta?.title || item.item_meta?.title_hash || 'Encrypted Asset',
+        type: item.item_meta?.type || 'password',
+        status: 'Secured',
+        value: 120000,
+        date: new Date(item.created_at || Date.now()).toLocaleDateString(),
+        instructions: 'Client decrypted instructions placeholder',
+      }));
+      
+      set((state) => {
+        const newState = { ...state, assets: formattedAssets };
+        return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
+      });
+    } catch (err) {
+      console.error('Failed to add asset:', err);
+    }
+  },
   updateAsset: (id, data) => set((state) => {
     const newState = { ...state, assets: state.assets.map(a => a.id === id ? { ...a, ...data } : a) };
     return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
   }),
-  deleteAsset: (id) => set((state) => {
-    const newState = { ...state, assets: state.assets.filter(a => a.id !== id) };
-    return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
-  }),
+  deleteAsset: async (id) => {
+    try {
+      const userId = localStorage.getItem('tl_user_id');
+      if (!userId) return;
+      await api.post('/vault/items/delete', { user_id: userId, item_id: id });
+      
+      // Refresh assets
+      const response = await api.post<{ items: unknown[] }>('/vault/items/list', { user_id: userId });
+      const items = response?.items || [];
+      const formattedAssets: Asset[] = items.map((item: any) => ({
+        id: item.item_id || item.id,
+        name: item.item_meta?.title || item.item_meta?.title_hash || 'Encrypted Asset',
+        type: item.item_meta?.type || 'password',
+        status: 'Secured',
+        value: 120000,
+        date: new Date(item.created_at || Date.now()).toLocaleDateString(),
+        instructions: 'Client decrypted instructions placeholder',
+      }));
+      
+      set((state) => {
+        const newState = { ...state, assets: formattedAssets };
+        return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
+      });
+    } catch (err) {
+      console.error('Failed to delete asset:', err);
+    }
+  },
   addGuardian: (guardian) => set((state) => {
-    const newState = { ...state, guardians: [...state.guardians, { ...guardian, id: Date.now().toString(), status: 'Pending' }] };
+    const updated = [...state.guardians, { ...guardian, id: Date.now().toString(), status: 'Pending' }];
+    localStorage.setItem('tl_guardians', JSON.stringify(updated));
+    const newState = { ...state, guardians: updated };
     return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
   }),
   confirmGuardian: (id) => set((state) => {
-    const newState = { ...state, guardians: state.guardians.map(g => g.id === id ? { ...g, status: 'Confirmed' } : g) };
+    const updated = state.guardians.map(g => g.id === id ? { ...g, status: 'Confirmed' } : g);
+    localStorage.setItem('tl_guardians', JSON.stringify(updated));
+    const newState = { ...state, guardians: updated };
     return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
   }),
   removeGuardian: (id) => set((state) => {
-    const newState = { ...state, guardians: state.guardians.filter(g => g.id !== id) };
+    const updated = state.guardians.filter(g => g.id !== id);
+    localStorage.setItem('tl_guardians', JSON.stringify(updated));
+    const newState = { ...state, guardians: updated };
     return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
   }),
   addHeir: (heir) => set((state) => {
-    const newState = { ...state, heirs: [...state.heirs, { ...heir, id: Date.now().toString(), status: 'Not Notified', progress: 0 }] };
+    const updated = [...state.heirs, { ...heir, id: Date.now().toString(), status: 'Not Notified', progress: 0 }];
+    localStorage.setItem('tl_heirs', JSON.stringify(updated));
+    const newState = { ...state, heirs: updated };
     return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
   }),
-  updateHeirStatus: (id, status) => set((state) => ({
-    heirs: state.heirs.map(h => h.id === id ? { ...h, status } : h)
-  })),
+  updateHeirStatus: (id, status) => set((state) => {
+    const updated = state.heirs.map(h => h.id === id ? { ...h, status } : h);
+    localStorage.setItem('tl_heirs', JSON.stringify(updated));
+    return { heirs: updated };
+  }),
   updateScore: (score) => set((state) => ({ user: { ...state.user, score } })),
   toggleTheme: () => set((state) => ({ theme: state.theme === 'dark' ? 'light' : 'dark' })),
   toggleNotifications: () => set((state) => ({ isNotificationOpen: !state.isNotificationOpen })),
   markNotificationAsRead: (id) => set((state) => ({
     notifications: state.notifications.map(n => n.id === id ? { ...n, read: true } : n)
   })),
-  performCheckIn: (method) => set((state) => ({
-    user: {
-      ...state.user,
-      nextCheckInDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-      checkInHistory: [{ date: new Date().toISOString(), method }, ...state.user.checkInHistory]
+  performCheckIn: async (method) => {
+    try {
+      const policy_id = '00000000-0000-0000-0000-000000000000'; // Default policy or dynamic
+      const ts = Math.floor(Date.now() / 1000);
+      const device_id = localStorage.getItem('tl_device_id') || 'dev-device';
+      
+      const response = await api.post<any>('/inheritance/heartbeat', {
+        policy_id,
+        ts,
+        device_id,
+        device_sig: 'device-signature-placeholder'
+      });
+      
+      set((state) => ({
+        user: {
+          ...state.user,
+          nextCheckInDate: new Date((response.pending_at || ts + 7 * 24 * 60 * 60) * 1000).toISOString(),
+          checkInHistory: [{ date: new Date().toISOString(), method }, ...state.user.checkInHistory]
+        }
+      }));
+    } catch (err) {
+      console.error('Failed to perform check-in:', err);
     }
-  })),
+  },
   toggleSidebar: () => set((state) => ({ isSidebarCollapsed: !state.isSidebarCollapsed })),
   toggleMobileSidebar: () => set((state) => ({ isMobileSidebarOpen: !state.isMobileSidebarOpen })),
   addAllocation: (allocation) => set((state) => ({

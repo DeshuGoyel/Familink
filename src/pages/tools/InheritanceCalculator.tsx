@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Calculator, Globe2, TrendingUp, AlertTriangle, ArrowRight, Shield, Zap, Info, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Calculator, Globe2, TrendingUp, ArrowRight, Shield, Info, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import SEO from '../../components/seo/SEO';
@@ -12,6 +13,7 @@ const fadeUp = (delay = 0) => ({
 });
 
 export default function InheritanceCalculator() {
+  const navigate = useNavigate();
   const [jurisdiction, setJurisdiction] = useState('USA');
   const [assetValue, setAssetValue] = useState(100000);
   const [growthRate, setGrowthRate] = useState(10);
@@ -214,7 +216,7 @@ export default function InheritanceCalculator() {
                    </div>
                    
                    <Button 
-                     onClick={() => window.location.href = '/onboarding'}
+                     onClick={() => navigate('/onboarding')}
                      className="w-full h-16 rounded-2xl bg-brand-primary text-obsidian-950 font-bold uppercase tracking-widest text-[11px] shadow-2xl shadow-brand-primary/20"
                    >
                      Initialize My Vault <ArrowRight className="ml-2" size={16} />

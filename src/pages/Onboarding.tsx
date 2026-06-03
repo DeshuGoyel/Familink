@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, ArrowLeft, Shield, Users, KeyRound, Wallet, CheckCircle2, Sparkles, Globe, Fingerprint, Lock, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Shield, Users, KeyRound, Wallet, CheckCircle2, Globe, Fingerprint, ShieldCheck } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Select from '../components/ui/Select';
 import ReactConfetti from 'react-confetti';
 import { useStore } from '../store/useStore';
+import { api } from '../lib/api';
+import { initOpaqueRegistration, finishOpaqueRegistration, initOpaqueLogin, finishOpaqueLogin } from '../lib/opaqueClient';
+import toast from 'react-hot-toast';
+
 
 const steps = [
   { label: 'Initialization', icon: Shield },
@@ -31,19 +35,116 @@ export default function Onboarding() {
   const navigate = useNavigate();
   const { addAsset, addGuardian, addHeir, setJurisdiction } = useStore();
 
+  useEffect(() => {
+    const { isAuthenticated } = useStore.getState();
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
+
   const [jurisdiction, setLocalJurisdiction] = useState('global');
   const [assetName, setAssetName] = useState('');
   const [guardianEmail, setGuardianEmail] = useState('');
   const [heirName, setHeirName] = useState('');
   const [heirEmail, setHeirEmail] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (step === 1) {
+      if (!fullName || !email || !password) {
+        toast.error('All account fields are required');
+        return;
+      }
       setIsInitializing(true);
-      setTimeout(() => {
-        setIsInitializing(false);
+      setError(null);
+      try {
+        // 1. Run real OPAQUE Registration Handshake against live backend
+        const { userId, registrationRequest, blindFactor } = await initOpaqueRegistration(password);
+
+        const initResponse = await api.post<unknown>('/auth/register/init', {
+          user_id: userId,
+          registration_request: registrationRequest,
+          credential_identifier: email, // maps to auth.users mapping on backend!
+        });
+
+        const finishData = await finishOpaqueRegistration(
+          password,
+          blindFactor,
+          initResponse.registration_response,
+          fullName,
+          email
+        );
+
+        await api.post<unknown>('/auth/register/finish', {
+          session_id: initResponse.session_id,
+          registration_upload: finishData.registrationUpload,
+          ed25519_pubkey: finishData.ed25519Pubkey,
+          x25519_pubkey: finishData.x25519Pubkey,
+          kyber768_pubkey: finishData.kyber768Pubkey,
+          emk_blob: finishData.emkBlob,
+          argon2_params: finishData.argon2Params,
+          enc_legal_name: finishData.encLegalName,
+          enc_email: finishData.encEmail,
+        });
+
+        // 2. Perform Automatic OPAQUE Login immediately
+        const loginInit = await initOpaqueLogin(password);
+        const loginInitResponse = await api.post<unknown>('/auth/login/init', {
+          user_id: userId,
+          credential_request: loginInit.credentialRequest,
+        });
+
+        const loginFinishData = await finishOpaqueLogin(
+          password,
+          loginInit.blindFactor,
+          loginInitResponse.credential_response || loginInitResponse.registration_response
+        );
+
+        const loginFinishResponse = await api.post<unknown>('/auth/login/finish', {
+          session_id: loginInitResponse.session_id,
+          credential_finalization: loginFinishData.registrationUpload,
+        });
+
+        const token = loginFinishResponse.session_token || loginFinishResponse.token;
+        if (!token) {
+          throw new Error('Automatic login did not return a session token');
+        }
+
+        // Set session token, user ID, and update authentication state
+        localStorage.setItem('tl_session_token', token);
+        localStorage.setItem('tl_user_id', userId);
+        localStorage.setItem('tl_user_name', fullName);
+        localStorage.setItem('tl_user_email', email);
+        localStorage.removeItem('tl_guardians');
+        localStorage.removeItem('tl_heirs');
+        useStore.setState({ 
+          isAuthenticated: true,
+          assets: [],
+          guardians: [],
+          heirs: [],
+          user: {
+            name: fullName,
+            email: email,
+            avatar: null,
+            score: 0,
+            plan: "Family",
+            nextCheckInDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+            checkInHistory: []
+          }
+        });
+        
+        toast.success('Zero-knowledge vault registered and unlocked!');
         setStep(2);
-      }, 3000);
+      } catch (err: unknown) {
+        console.error('Registration/Auto-Login failed:', err);
+        setError(err.message || 'Registration failed. Please check connection.');
+        toast.error('Registration failed');
+      } finally {
+        setIsInitializing(false);
+      }
       return;
     }
     if (step === 2) {
@@ -161,29 +262,53 @@ export default function Onboarding() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -24 }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full max-w-md text-center"
+              className="w-full max-w-md text-left bg-surface/40 border border-base/60 rounded-[32px] p-8 backdrop-blur-md shadow-2xl"
             >
-              <div className="w-20 h-20 rounded-[28px] bg-brand-primary/10 border border-brand-primary/30 flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(79,92,255,0.15)]">
-                <Shield size={36} className="text-brand-primary" />
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center">
+                  <Shield size={24} className="text-brand-primary" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-display font-bold text-primary tracking-tight">Create Secure Vault</h2>
+                  <p className="text-[10px] font-bold text-brand-primary uppercase tracking-widest mt-0.5">Sovereign Protocol Initialization</p>
+                </div>
               </div>
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse shadow-[0_0_8px_rgba(79,92,255,0.8)]" />
-                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-primary">Succession Initialization</p>
+
+              <div className="space-y-4 mb-6">
+                <Input
+                  label="Full Legal Name"
+                  placeholder="John Asha"
+                  value={fullName}
+                  onChange={e => setFullName(e.target.value)}
+                  required
+                />
+                <Input
+                  label="Email Address"
+                  placeholder="john@example.com"
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  required
+                />
+                <Input
+                  label="Master Password"
+                  placeholder="••••••••"
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                />
               </div>
-              <h1 className="text-4xl sm:text-5xl font-display font-bold text-primary tracking-tight leading-[0.95] mb-4">
-                Welcome to <span className="italic text-brand-primary">Transfer Legacy</span>
-              </h1>
-              <p className="text-secondary text-base mb-10 font-medium leading-relaxed max-w-sm mx-auto">
-                Secure your entire digital estate in under 5 minutes. Institutional-grade protection, zero knowledge.
-              </p>
+
+              {error && (
+                <div className="p-3 mb-6 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium">
+                  {error}
+                </div>
+              )}
+
               <Button variant="primary" size="lg" onClick={nextStep} fullWidth className="h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
                 Begin Protocol <ArrowRight className="ml-2 inline" size={18} />
               </Button>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-[10px] font-bold uppercase tracking-widest text-muted">
-                <span className="flex items-center gap-1.5"><CheckCircle2 size={10} className="text-brand-primary" /> AES-256 Encrypted</span>
-                <span className="flex items-center gap-1.5"><CheckCircle2 size={10} className="text-brand-primary" /> Zero Knowledge</span>
-                <span className="flex items-center gap-1.5"><CheckCircle2 size={10} className="text-brand-primary" /> SOC2 Compliant</span>
-              </div>
             </motion.div>
           )}
 

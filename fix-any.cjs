@@ -1,16 +1,27 @@
 const fs = require('fs');
 const path = require('path');
 
+const basePath = path.resolve(__dirname);
+
 function walk(dir) {
+  const resolvedDir = path.normalize(path.resolve(basePath, dir));
+  if (!resolvedDir.startsWith(basePath)) {
+    throw new Error("Path traversal detected: attempt to read directory outside the project root.");
+  }
+
   let results = [];
-  const list = fs.readdirSync(dir);
+  const list = fs.readdirSync(resolvedDir);
   list.forEach(file => {
-    file = path.join(dir, file);
-    const stat = fs.statSync(file);
+    const resolvedFile = path.normalize(path.join(resolvedDir, file));
+    if (!resolvedFile.startsWith(basePath)) {
+      throw new Error("Path traversal detected: attempt to access file outside the project root.");
+    }
+
+    const stat = fs.statSync(resolvedFile);
     if (stat && stat.isDirectory()) {
-      results = results.concat(walk(file));
-    } else if (file.endsWith('.tsx') || file.endsWith('.ts')) {
-      results.push(file);
+      results = results.concat(walk(resolvedFile));
+    } else if (resolvedFile.endsWith('.tsx') || resolvedFile.endsWith('.ts')) {
+      results.push(resolvedFile);
     }
   });
   return results;

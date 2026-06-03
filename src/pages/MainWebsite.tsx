@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
+import CustomCursor from '../components/layout/CustomCursor';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
-import LandingNavbar from '../components/layout/LandingNavbar';
 import Footer from '../components/layout/Footer';
 import Landing from '../pages/Landing';
 import Dashboard from '../pages/Dashboard';
@@ -12,12 +13,14 @@ import AIPlanner from '../pages/AIPlanner';
 import TrustCenter from '../pages/TrustCenter';
 import Settings from '../pages/Settings';
 import Onboarding from '../pages/Onboarding';
+import Login from '../pages/Login';
 import CheckInCenter from '../pages/CheckInCenter';
 import MemoryCapsules from '../pages/MemoryCapsules';
 import DigitalObituary from '../pages/DigitalObituary';
 import IdentityPassport from '../pages/IdentityPassport';
 import DeveloperPortal from '../pages/DeveloperPortal';
 import LegacyAnalytics from '../pages/LegacyAnalytics';
+import ContactUs from '../pages/ContactUs';
 import ParticleBackground from '../components/3d/ParticleBackground';
 import NotificationDrawer from '../components/layout/NotificationDrawer';
 import Sidebar from '../components/layout/Sidebar';
@@ -25,6 +28,16 @@ import { Toaster } from 'react-hot-toast';
 import { useStore } from '../store/useStore';
 import { useLocation } from 'react-router-dom';
 import { cn } from '../utils/cn';
+
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useStore();
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
+}
+
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useStore();
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : <>{children}</>;
+}
 
 // Feature Pages
 import VaultSecurity from './features/VaultSecurity';
@@ -104,24 +117,27 @@ function AppLayout() {
       <main className={cn("flex-grow transition-all duration-300", offsetClass)}>
         <Routes>
           <Route path="/"            element={<Landing />} />
-          <Route path="/dashboard"   element={<Dashboard />} />
-          <Route path="/analytics"   element={<LegacyAnalytics />} />
-          <Route path="/assets"      element={<Assets />} />
-          <Route path="/allocations" element={<Allocations />} />
-          <Route path="/guardians"   element={<Guardians />} />
-          <Route path="/heirs"       element={<Heirs />} />
-          <Route path="/ai-planner"  element={<AIPlanner />} />
-          <Route path="/trust"       element={<TrustCenter />} />
-          <Route path="/settings"    element={<Settings />} />
+          <Route path="/dashboard"   element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/analytics"   element={<ProtectedRoute><LegacyAnalytics /></ProtectedRoute>} />
+          <Route path="/assets"      element={<ProtectedRoute><Assets /></ProtectedRoute>} />
+          <Route path="/allocations" element={<ProtectedRoute><Allocations /></ProtectedRoute>} />
+          <Route path="/guardians"   element={<ProtectedRoute><Guardians /></ProtectedRoute>} />
+          <Route path="/heirs"       element={<ProtectedRoute><Heirs /></ProtectedRoute>} />
+          <Route path="/ai-planner"  element={<ProtectedRoute><AIPlanner /></ProtectedRoute>} />
+          <Route path="/trust"       element={<ProtectedRoute><TrustCenter /></ProtectedRoute>} />
+          <Route path="/settings"    element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           <Route path="/onboarding"  element={<Onboarding />} />
-          <Route path="/checkin"     element={<CheckInCenter />} />
-          <Route path="/check-in"    element={<CheckInCenter />} />
-          <Route path="/capsules"    element={<MemoryCapsules />} />
-          <Route path="/obituary"    element={<DigitalObituary />} />
-          <Route path="/passport"    element={<IdentityPassport />} />
-          <Route path="/identity"    element={<IdentityPassport />} />
-          <Route path="/developer"   element={<DeveloperPortal />} />
-          <Route path="/activity"    element={<LegacyAnalytics />} />
+          <Route path="/login"       element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path="/contact"     element={<ContactUs />} />
+          <Route path="/contact-us"  element={<ContactUs />} />
+          <Route path="/checkin"     element={<ProtectedRoute><CheckInCenter /></ProtectedRoute>} />
+          <Route path="/check-in"    element={<ProtectedRoute><CheckInCenter /></ProtectedRoute>} />
+          <Route path="/capsules"    element={<ProtectedRoute><MemoryCapsules /></ProtectedRoute>} />
+          <Route path="/obituary"    element={<ProtectedRoute><DigitalObituary /></ProtectedRoute>} />
+          <Route path="/passport"    element={<ProtectedRoute><IdentityPassport /></ProtectedRoute>} />
+          <Route path="/identity"    element={<ProtectedRoute><IdentityPassport /></ProtectedRoute>} />
+          <Route path="/developer"   element={<ProtectedRoute><DeveloperPortal /></ProtectedRoute>} />
+          <Route path="/activity"    element={<ProtectedRoute><LegacyAnalytics /></ProtectedRoute>} />
 
           {/* New Functional Feature Routes */}
           <Route path="/features/vault-security"          element={<VaultSecurity />} />
@@ -194,6 +210,12 @@ function AppLayout() {
 }
 
 export default function MainWebsite() {
+  const { checkSession } = useStore();
+
+  useEffect(() => {
+    checkSession();
+  }, [checkSession]);
+
   return (
     <>
       {/* Institutional Obsidian Background */}
@@ -205,6 +227,7 @@ export default function MainWebsite() {
         />
       </div>
 
+      <CustomCursor />
       <ParticleBackground />
       <AppLayout />
 

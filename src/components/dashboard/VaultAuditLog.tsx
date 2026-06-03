@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Shield, Clock, Lock, Key, Activity } from 'lucide-react';
+import { Clock, Lock, Activity } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 
 export default function VaultAuditLog() {

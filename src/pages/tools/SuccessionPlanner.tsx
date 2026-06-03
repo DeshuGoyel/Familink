@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Shield, Users, ArrowRight, CheckCircle2, Sparkles, Target, Zap, AlertTriangle, FileText } from 'lucide-react';
-import Card from '../../components/ui/Card';
+import { ArrowRight, Sparkles, Target, Zap, AlertTriangle, FileText } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../components/ui/Button';
 import SEO from '../../components/seo/SEO';
 
@@ -12,6 +12,7 @@ const fadeUp = (delay = 0) => ({
 });
 
 export default function SuccessionPlanner() {
+  const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [showResults, setShowResults] = useState(false);
@@ -157,7 +158,7 @@ export default function SuccessionPlanner() {
               </div>
 
               <Button 
-                onClick={() => window.location.href = '/onboarding'}
+                onClick={() => navigate('/onboarding')}
                 className="w-full h-16 rounded-[24px] bg-brand-primary text-obsidian-950 font-bold uppercase tracking-widest text-[11px] shadow-2xl shadow-brand-primary/20"
               >
                 Finalize My Succession Plan <ArrowRight className="ml-2" size={16} />

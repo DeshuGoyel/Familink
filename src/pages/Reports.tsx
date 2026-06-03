@@ -1,7 +1,7 @@
 import { useStore } from '../store/useStore';
 import { 
   FileText, Download, ShieldCheck, AlertCircle, 
-  BarChart3, Clock, Lock, ChevronRight 
+  BarChart3, Lock, ChevronRight 
 } from 'lucide-react';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';

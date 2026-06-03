@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import {
   Shield, Users, KeyRound, Plus, Wallet, Bot, ChevronRight
@@ -62,8 +63,12 @@ function QuickCard({ to, icon: Icon, label, colorClass }: {
 }
 
 export default function Dashboard() {
-  const { user, assets, guardians, heirs } = useStore();
+  const { user, assets, guardians, heirs, fetchAssets } = useStore();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchAssets();
+  }, [fetchAssets]);
 
   const totalValue = assets.reduce((acc, a) => acc + (a.value || 0), 0);
   const activeGuardians = guardians.filter(g => g.status === 'Confirmed').length;

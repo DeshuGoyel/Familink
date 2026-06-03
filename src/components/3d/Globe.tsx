@@ -38,7 +38,7 @@ function latLonToVector3(lat: number, lon: number, radius: number) {
   return new THREE.Vector3(x, y, z);
 }
 
-function Pin({ lat, lon, name, holders, families, color }: any) {
+function Pin({ lat, lon, name, holders, families, color }: unknown) {
   const [hovered, setHovered] = useState(false);
   const pos = useMemo(() => latLonToVector3(lat, lon, 3), [lat, lon]);
   const ringRef = useRef<THREE.Mesh>(null);
@@ -52,7 +52,7 @@ function Pin({ lat, lon, name, holders, families, color }: any) {
   });
 
   return (
-    <group position={pos.toArray() as any}>
+    <group position={pos.toArray() as unknown}>
       <mesh onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)}>
         <sphereGeometry args={[0.07, 16, 16]} />
         <meshStandardMaterial color={color} emissive={color} emissiveIntensity={3} />
