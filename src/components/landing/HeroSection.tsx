@@ -1,5 +1,3 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import Button from '../ui/Button';
 
 export default function HeroSection() {
@@ -29,7 +27,7 @@ export default function HeroSection() {
             <Button size="lg" className="w-full sm:w-auto font-bold tracking-wide">
               Deploy Vault
             </Button>
-            <Button variant="outline" size="lg" className="w-full sm:w-auto font-bold tracking-wide">
+            <Button variant="secondary" size="lg" className="w-full sm:w-auto font-bold tracking-wide">
               Read Whitepaper
             </Button>
           </div>

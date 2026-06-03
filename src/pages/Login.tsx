@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertCircle, Loader2, ArrowRight, Lock, Mail } from 'lucide-react';
+import { AlertCircle, Loader2, ArrowRight, Lock, Mail, Eye, EyeOff } from 'lucide-react';
 import { api } from '../lib/api';
 import { initOpaqueLogin, finishOpaqueLogin } from '../lib/opaqueClient';
 import Input from '../components/ui/Input';
@@ -14,11 +14,11 @@ export default function Login() {
   useBodyClass('allow-cursor');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
   const navigate = useNavigate();
-  const { user } = useStore();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,13 +75,17 @@ export default function Login() {
       try {
         const savedGuardians = localStorage.getItem('tl_guardians');
         if (savedGuardians) savedGuardiansList = JSON.parse(savedGuardians);
-      } catch (e) {}
+      } catch {
+        // Ignore error
+      }
 
       let savedHeirsList = [];
       try {
         const savedHeirs = localStorage.getItem('tl_heirs');
         if (savedHeirs) savedHeirsList = JSON.parse(savedHeirs);
-      } catch (e) {}
+      } catch {
+        // Ignore error
+      }
 
       useStore.setState({ 
         isAuthenticated: true,
@@ -158,14 +162,23 @@ export default function Login() {
             <div className="relative">
               <Input
                 label="Master Password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-slate-950/50 border-slate-800/80 focus:border-orange-500/50 pl-10"
+                className="bg-slate-950/50 border-slate-800/80 focus:border-orange-500/50 pl-10 pr-10"
               />
               <Lock className="absolute left-3.5 bottom-3.5 w-4 h-4 text-slate-500" />
+              <button
+                type="button"
+                onClick={() => setShowPassword(v => !v)}
+                className="absolute right-3.5 bottom-3 text-slate-500 hover:text-slate-300 transition-colors"
+                tabIndex={-1}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
 
             <div className="flex items-center justify-between text-xs pt-1">

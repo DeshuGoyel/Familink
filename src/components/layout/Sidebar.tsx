@@ -39,8 +39,8 @@ export default function Sidebar() {
   const { isSidebarCollapsed, toggleSidebar, user, isMobileSidebarOpen, toggleMobileSidebar, logout } = useStore();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/login');
   };
 
