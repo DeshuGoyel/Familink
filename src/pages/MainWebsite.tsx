@@ -96,22 +96,29 @@ import DigitalAssetLawUSA from './seo/regions/DigitalAssetLawUSA';
 import CryptoInheritanceUK from './seo/regions/CryptoInheritanceUK';
 import CryptoInheritanceUAE from './seo/regions/CryptoInheritanceUAE';
 
+// Routes that are public/pre-login — no sidebar, navbar, or footer
+const PUBLIC_ROUTES = new Set(['/', '/login', '/onboarding', '/contact', '/contact-us']);
+
+// Dashboard/app routes — use normal system cursor
+const APP_ROUTE_PREFIXES = ['/dashboard', '/assets', '/allocations', '/guardians', '/heirs', '/ai-planner', '/trust', '/settings', '/checkin', '/check-in', '/capsules', '/obituary', '/passport', '/identity', '/developer', '/activity', '/analytics', '/reports'];
+
 function AppLayout() {
   const { isSidebarCollapsed, isNotificationOpen } = useStore();
   const location = useLocation();
-  const isLanding = location.pathname === '/';
+  const isPublicPage = PUBLIC_ROUTES.has(location.pathname);
+  const isAppPage = APP_ROUTE_PREFIXES.some(p => location.pathname.startsWith(p));
 
   // Shared offset class for Sidebar parity
-  const offsetClass = !isLanding
+  const offsetClass = isAppPage
     ? isSidebarCollapsed
       ? 'lg:pl-20' // 80px (matches w-20)
       : 'lg:pl-64' // 256px (matches w-64)
     : '';
 
   return (
-    <div className={cn("relative z-10 min-h-screen flex flex-col transition-all duration-300", !isLanding ? "pt-16" : "")}>
-      {!isLanding && <Navbar />}
-      {!isLanding && <Sidebar />}
+    <div className={cn("relative z-10 min-h-screen flex flex-col transition-all duration-300", isAppPage ? "pt-16" : "")}>
+      {isAppPage && <Navbar />}
+      {isAppPage && <Sidebar />}
 
       {/* Page content — offset for sidebar */}
       <main className={cn("flex-grow transition-all duration-300", offsetClass)}>
@@ -201,12 +208,20 @@ function AppLayout() {
 
       {/* Footer — also offset to prevent Sidebar overlap */}
       <div className={cn("transition-all duration-300", offsetClass)}>
-        {!isLanding && <Footer />}
+        {!isPublicPage && !isAppPage && <Footer />}
       </div>
 
       {isNotificationOpen && <NotificationDrawer />}
     </div>
   );
+}
+
+function AppCursor() {
+  const location = useLocation();
+  const isAppPage = APP_ROUTE_PREFIXES.some(p => location.pathname.startsWith(p));
+  // Don't render custom cursor on dashboard/app pages — use normal system cursor
+  if (isAppPage) return null;
+  return <CustomCursor />;
 }
 
 export default function MainWebsite() {
@@ -227,7 +242,7 @@ export default function MainWebsite() {
         />
       </div>
 
-      <CustomCursor />
+      <AppCursor />
       <ParticleBackground />
       <AppLayout />
 
