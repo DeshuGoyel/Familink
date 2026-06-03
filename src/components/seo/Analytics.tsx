@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
  * Analytics Interface
  * Standardizes event tracking across the platform
  */
-export const trackEvent = (eventName: string, properties?: Record<string, any>) => {
+export const trackEvent = (eventName: string, properties?: Record<string, unknown>) => {
   if (typeof window !== 'undefined' && (window as unknown).gtag) {
     (window as unknown).gtag('event', eventName, properties);
   }

@@ -5,12 +5,7 @@ import Card from '../components/ui/Card';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../utils/cn';
 
-const aiReplies = [
-  "I can certainly help with that. Based on your current vault 72/100 score, I recommend adding at least one more guardian to the protocol.",
-  "That's a critical question. For digital business inheritance, you should provide direct instructions on how to access the registrar and DNS settings.",
-  "I've analyzed your setup. You have 3 guardians, which is excellent for Shamir's Secret Sharing. However, your beneficiary 'Raj' has not yet verified their recovery credentials.",
-  "To improve your vault integrity, consider adding detailed synthesis notes to your 'Institutional Portfolio'. Only 12% of high-net-worth users do this, but it increases recovery success by 80% with our perpetual storage layer."
-];
+
 
 const TypewriterText = ({ text }: { text: string }) => {
   const [displayed, setDisplayed] = useState('');

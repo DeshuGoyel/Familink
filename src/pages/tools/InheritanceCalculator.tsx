@@ -19,7 +19,7 @@ export default function InheritanceCalculator() {
   const [growthRate, setGrowthRate] = useState(10);
   const [years, setYears] = useState(20);
 
-  const taxLogic: Record<string, any> = {
+  const taxLogic: Record<string, { rate: number; threshold: number; note: string; color: string }> = {
     'India': { 
       rate: 0, 
       threshold: Infinity, 

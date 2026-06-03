@@ -63,6 +63,17 @@ export interface Allocation {
   percentage: number;
 }
 
+export interface RawItem {
+  id?: string;
+  item_id?: string;
+  created_at?: string;
+  item_meta?: {
+    title?: string;
+    title_hash?: string;
+    type?: string;
+  };
+}
+
 interface User {
   name: string;
   email: string;
@@ -294,7 +305,7 @@ export const useStore = create<AppState>((set) => ({
       if (!userId) return;
       const response = await api.post<{ items: unknown[] }>('/vault/items/list', { user_id: userId });
       const items = response?.items || [];
-      const formattedAssets: Asset[] = items.map((item: any) => ({
+      const formattedAssets: Asset[] = items.map((item: RawItem) => ({
         id: item.item_id || item.id,
         name: item.item_meta?.title || item.item_meta?.title_hash || 'Encrypted Asset',
         type: item.item_meta?.type || 'password',
@@ -323,7 +334,7 @@ export const useStore = create<AppState>((set) => ({
       // Refresh assets
       const response = await api.post<{ items: unknown[] }>('/vault/items/list', { user_id: userId });
       const items = response?.items || [];
-      const formattedAssets: Asset[] = items.map((item: any) => ({
+      const formattedAssets: Asset[] = items.map((item: RawItem) => ({
         id: item.item_id || item.id,
         name: item.item_meta?.title || item.item_meta?.title_hash || 'Encrypted Asset',
         type: item.item_meta?.type || 'password',
@@ -354,7 +365,7 @@ export const useStore = create<AppState>((set) => ({
       // Refresh assets
       const response = await api.post<{ items: unknown[] }>('/vault/items/list', { user_id: userId });
       const items = response?.items || [];
-      const formattedAssets: Asset[] = items.map((item: any) => ({
+      const formattedAssets: Asset[] = items.map((item: RawItem) => ({
         id: item.item_id || item.id,
         name: item.item_meta?.title || item.item_meta?.title_hash || 'Encrypted Asset',
         type: item.item_meta?.type || 'password',
@@ -413,7 +424,7 @@ export const useStore = create<AppState>((set) => ({
       const ts = Math.floor(Date.now() / 1000);
       const device_id = localStorage.getItem('tl_device_id') || 'dev-device';
       
-      const response = await api.post<any>('/inheritance/heartbeat', {
+      const response = await api.post<{ pending_at?: number }>('/inheritance/heartbeat', {
         policy_id,
         ts,
         device_id,

@@ -113,14 +113,13 @@ export default function Globe() {
     'https://unpkg.com/three-globe/example/img/earth-night.jpg',
   ]);
 
-  useFrame((state) => {
+  useFrame(() => {
     if (groupRef.current) {
       groupRef.current.rotation.y += 0.0015;
     }
   });
 
   const connections = useMemo(() => {
-    const lines = [];
     const arcs = [
       { startLat: 20.6, startLng: 78.9, endLat: 37.1, endLng: -95.7 },
       { startLat: 20.6, startLng: 78.9, endLat: 23.4, endLng: 53.8  },
