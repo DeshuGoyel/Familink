@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import CustomCursor from '../components/layout/CustomCursor';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
+import LandingNavbar from '../components/layout/LandingNavbar';
 import Footer from '../components/layout/Footer';
 import Landing from '../pages/Landing';
 import Dashboard from '../pages/Dashboard';
@@ -78,7 +79,7 @@ import WhatHappensToCrypto from './seo/WhatHappensToCrypto';
 import DocumentStorage from './seo/DocumentStorage';
 import SeedPhraseInheritance from './seo/SeedPhraseInheritance';
 import PrivateKeyInheritance from './seo/PrivateKeyInheritance';
-import PassBitcoinToFamily from './seo/PassBitcoinToFamily';
+import HowToPassBitcoinToFamily from './seo/PassBitcoinToFamily';
 import TransferCryptoWallet from './seo/TransferCryptoWallet';
 import PasswordInheritance from './seo/PasswordInheritance';
 import CompareDGLegacy from './seo/CompareDGLegacy';
@@ -107,6 +108,7 @@ function AppLayout() {
   const location = useLocation();
   const isPublicPage = PUBLIC_ROUTES.has(location.pathname);
   const isAppPage = APP_ROUTE_PREFIXES.some(p => location.pathname.startsWith(p));
+  const showLandingNavbar = !isAppPage && location.pathname !== '/login' && location.pathname !== '/onboarding';
 
   // Shared offset class for Sidebar parity
   const offsetClass = isAppPage
@@ -119,6 +121,7 @@ function AppLayout() {
     <div className={cn("relative z-10 min-h-screen flex flex-col transition-all duration-300", isAppPage ? "pt-16" : "")}>
       {isAppPage && <Navbar />}
       {isAppPage && <Sidebar />}
+      {showLandingNavbar && <LandingNavbar />}
 
       {/* Page content — offset for sidebar */}
       <main className={cn("flex-grow transition-all duration-300", offsetClass)}>

@@ -4,6 +4,7 @@ import { ArrowRight, Sparkles, Target, Zap, AlertTriangle, FileText } from 'luci
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/ui/Button';
 import SEO from '../../components/seo/SEO';
+import { useStore } from '../../store/useStore';
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
@@ -13,6 +14,7 @@ const fadeUp = (delay = 0) => ({
 
 export default function SuccessionPlanner() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useStore();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [showResults, setShowResults] = useState(false);
@@ -158,10 +160,10 @@ export default function SuccessionPlanner() {
               </div>
 
               <Button 
-                onClick={() => navigate('/onboarding')}
+                onClick={() => navigate(isAuthenticated ? '/dashboard' : '/onboarding')}
                 className="w-full h-16 rounded-[24px] bg-brand-primary text-obsidian-950 font-bold uppercase tracking-widest text-[11px] shadow-2xl shadow-brand-primary/20"
               >
-                Finalize My Succession Plan <ArrowRight className="ml-2" size={16} />
+                {isAuthenticated ? 'Go to Dashboard' : 'Finalize My Succession Plan'} <ArrowRight className="ml-2" size={16} />
               </Button>
 
               <button 

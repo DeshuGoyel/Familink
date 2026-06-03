@@ -32,11 +32,7 @@ export default function Landing() {
       el.addEventListener('mouseleave', handleMouseLeave);
     });
 
-    // ── NAV SCROLL ──
-    const handleScroll = () => {
-      document.getElementById('navbar')?.classList.toggle('scrolled', window.scrollY > 40);
-    };
-    window.addEventListener('scroll', handleScroll);
+
 
     // ── SCROLL REVEAL ──
     const observer = new IntersectionObserver(entries => {
@@ -261,7 +257,7 @@ export default function Landing() {
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('scroll', handleScroll);
+
       container.querySelectorAll('button,a,[onclick],.faq-q').forEach(el => {
         el.removeEventListener('mouseenter', handleMouseEnter);
         el.removeEventListener('mouseleave', handleMouseLeave);
@@ -313,64 +309,6 @@ export default function Landing() {
 
   return (
     <div ref={containerRef} className="landing-page-root">
-      {/* Native React Navbar */}
-      <nav id="navbar">
-        <div className="nav-brand">
-          <div className="nav-logo">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
-          </div>
-          <div className="nav-name">Transfer Legacy</div>
-        </div>
-        <div className="nav-links">
-          <a href="#how">How it works</a>
-          <a href="#features">Features</a>
-          <a href="#pricing">Pricing</a>
-          <a href="#faq">FAQ</a>
-        </div>
-        <div className="nav-cta">
-          {isAuthenticated ? (
-            <button
-              className="btn-primary"
-              id="nav-dashboard-btn"
-              onClick={(e) => {
-                e.preventDefault();
-                navigate('/dashboard');
-              }}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-            >
-              Go to Dashboard
-              <svg viewBox="0 0 24 24" style={{ width: '13px', height: '13px', stroke: 'currentColor', strokeWidth: 2, fill: 'none' }}>
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
-            </button>
-          ) : (
-            <>
-              <button
-                className="btn-ghost"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate('/login');
-                }}
-              >
-                Sign in
-              </button>
-              <button
-                className="btn-primary"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate('/onboarding');
-                }}
-              >
-                Get started free
-              </button>
-            </>
-          )}
-        </div>
-      </nav>
-
       <div dangerouslySetInnerHTML={{ __html: rawHtmlWithoutNavbar }} />
     </div>
   );

@@ -3,8 +3,12 @@ import { motion } from 'framer-motion';
 import SEO from '../../components/seo/SEO';
 import { ArrowRight, AlertTriangle, Scale, Gavel, CheckCircle2, XCircle } from 'lucide-react';
 import Button from '../../components/ui/Button';
+import { useNavigate } from 'react-router-dom';
+import { useStore } from '../../store/useStore';
 
 const CompareTraditionalWills = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useStore();
   return (
     <div className="min-h-screen bg-page text-primary pt-24 pb-16 relative overflow-hidden">
       <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
@@ -36,8 +40,11 @@ const CompareTraditionalWills = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button variant="primary" size="lg" className="px-10 h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
-              Upgrade Your Estate <ArrowRight className="ml-2 w-5 h-5" />
+            <Button 
+              onClick={() => navigate(isAuthenticated ? '/dashboard' : '/onboarding')}
+              variant="primary" size="lg" className="px-10 h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20"
+            >
+              {isAuthenticated ? 'Go to Dashboard' : 'Upgrade Your Estate'} <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </div>
         </div>
@@ -126,8 +133,11 @@ const CompareTraditionalWills = () => {
           {/* CTA */}
           <div className="text-center">
             <h2 className="text-4xl font-display font-bold mb-8">Ready to <span className="text-brand-primary italic">initialize</span>?</h2>
-            <Button variant="primary" size="lg" className="px-16 h-16 text-[12px] font-bold uppercase tracking-widest shadow-2xl shadow-brand-primary/30">
-              Get Started Free
+            <Button 
+              onClick={() => navigate(isAuthenticated ? '/dashboard' : '/onboarding')}
+              variant="primary" size="lg" className="px-16 h-16 text-[12px] font-bold uppercase tracking-widest shadow-2xl shadow-brand-primary/30"
+            >
+              {isAuthenticated ? 'Go to Dashboard' : 'Get Started Free'}
             </Button>
             <p className="mt-6 text-[10px] font-bold uppercase tracking-[0.2em] text-muted">No credit card required for basic setup</p>
           </div>

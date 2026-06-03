@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import SEO from '../../components/seo/SEO';
+import { useStore } from '../../store/useStore';
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
@@ -14,6 +15,7 @@ const fadeUp = (delay = 0) => ({
 
 export default function ROICalculator() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useStore();
   const [assetValue, setAssetValue] = useState(250000);
   
   const potentialLoss = assetValue * 0.35; // 35% estimated loss (legal, recovery, lost access)
@@ -139,10 +141,10 @@ export default function ROICalculator() {
 
                   <div className="pt-8">
                     <Button 
-                      onClick={() => navigate('/onboarding')}
+                      onClick={() => navigate(isAuthenticated ? '/dashboard' : '/onboarding')}
                       className="w-full h-16 rounded-2xl bg-brand-primary text-obsidian-950 font-bold uppercase tracking-widest text-[11px] shadow-2xl shadow-brand-primary/20"
                     >
-                      Maximize My Legacy ROI <ArrowRight size={16} className="ml-2" />
+                      {isAuthenticated ? 'Go to Dashboard' : 'Maximize My Legacy ROI'} <ArrowRight size={16} className="ml-2" />
                     </Button>
                   </div>
                </div>

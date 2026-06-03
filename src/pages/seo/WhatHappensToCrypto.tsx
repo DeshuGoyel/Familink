@@ -3,8 +3,12 @@ import { motion } from 'framer-motion';
 import SEO from '../../components/seo/SEO';
 import { ArrowRight, Shield, BookOpen, AlertTriangle, Skull, Zap } from 'lucide-react';
 import Button from '../../components/ui/Button';
+import { useNavigate } from 'react-router-dom';
+import { useStore } from '../../store/useStore';
 
 const WhatHappensToCrypto = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useStore();
   return (
     <div className="min-h-screen bg-page text-primary pt-24 pb-16 relative overflow-hidden">
       <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
@@ -90,8 +94,11 @@ const WhatHappensToCrypto = () => {
               Initialize your Sovereign Vault and secure your family's digital future.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <Button onClick={() => window.scrollTo(0,0)} className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest">
-                Start My Vault
+              <Button 
+                onClick={() => navigate(isAuthenticated ? '/dashboard' : '/onboarding')} 
+                className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest"
+              >
+                {isAuthenticated ? 'Go to Dashboard' : 'Start My Vault'}
               </Button>
             </div>
           </div>

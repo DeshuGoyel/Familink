@@ -3,8 +3,12 @@ import { motion } from 'framer-motion';
 import SEO from '../../components/seo/SEO';
 import { CheckCircle2, XCircle, Scale, Zap } from 'lucide-react';
 import Button from '../../components/ui/Button';
+import { useNavigate } from 'react-router-dom';
+import { useStore } from '../../store/useStore';
 
 const CompareDGLegacy = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useStore();
   const comparisons = [
     {
       feature: "Architecture",
@@ -100,8 +104,11 @@ const CompareDGLegacy = () => {
               Don't settle for simple storage. Secure your digital heritage with a sovereign protocol.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <Button onClick={() => window.scrollTo(0,0)} className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest">
-                Start My Vault
+              <Button 
+                onClick={() => navigate(isAuthenticated ? '/dashboard' : '/onboarding')} 
+                className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest"
+              >
+                {isAuthenticated ? 'Go to Dashboard' : 'Start My Vault'}
               </Button>
             </div>
           </div>

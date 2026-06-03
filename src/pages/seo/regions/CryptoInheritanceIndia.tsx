@@ -2,10 +2,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import SEO from '../../../components/seo/SEO';
 import { ArrowRight, Shield, Globe2, BookOpen, AlertTriangle, Landmark, Scale, Gavel } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
+import { useStore } from '../../../store/useStore';
 
 const CryptoInheritanceIndia = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useStore();
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -64,8 +67,11 @@ const CryptoInheritanceIndia = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button variant="primary" size="lg" className="px-10 h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
-              Initialize India Vault <ArrowRight className="ml-2 w-5 h-5" />
+            <Button 
+              onClick={() => navigate(isAuthenticated ? '/dashboard' : '/onboarding')}
+              variant="primary" size="lg" className="px-10 h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20"
+            >
+              {isAuthenticated ? 'Go to Dashboard' : 'Initialize India Vault'} <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
             <Link to="/legal/compliance" className="text-[11px] font-bold uppercase tracking-widest text-muted hover:text-primary transition-colors">
               View Global Framework
@@ -148,8 +154,11 @@ const CryptoInheritanceIndia = () => {
               Join 5,000+ Indian investors securing their digital family heritage. AES-256 protected, Zero-Knowledge verified.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <Button onClick={() => window.scrollTo(0,0)} className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest">
-                Get Started Free
+              <Button 
+                onClick={() => navigate(isAuthenticated ? '/dashboard' : '/onboarding')} 
+                className="bg-obsidian-950 text-white hover:bg-obsidian-900 px-12 h-16 rounded-2xl text-[12px] font-bold uppercase tracking-widest"
+              >
+                {isAuthenticated ? 'Go to Dashboard' : 'Get Started Free'}
               </Button>
               <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian-900/60">
                 Takes under 5 minutes
