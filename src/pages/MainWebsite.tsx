@@ -79,7 +79,7 @@ import WhatHappensToCrypto from './seo/WhatHappensToCrypto';
 import DocumentStorage from './seo/DocumentStorage';
 import SeedPhraseInheritance from './seo/SeedPhraseInheritance';
 import PrivateKeyInheritance from './seo/PrivateKeyInheritance';
-import HowToPassBitcoinToFamily from './seo/PassBitcoinToFamily';
+import PassBitcoinToFamily from './seo/PassBitcoinToFamily';
 import TransferCryptoWallet from './seo/TransferCryptoWallet';
 import PasswordInheritance from './seo/PasswordInheritance';
 import CompareDGLegacy from './seo/CompareDGLegacy';
