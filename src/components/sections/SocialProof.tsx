@@ -143,7 +143,6 @@ export default function SocialProof() {
                 <button
                   key={i}
                   onClick={() => setActive(i)}
-                  className="h-1 rounded-full transition-all duration-300"
                   style={{
                     width: i === active ? '24px' : '6px',
                     background: i === active ? t.accent : 'currentColor',
