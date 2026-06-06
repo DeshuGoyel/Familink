@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, AlertTriangle, Zap, Shield, Target, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { useStore } from '../../store/useStore';
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
-  transition: { delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+  transition: { delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
 });
 
 export default function CryptoCalculator() {
@@ -31,7 +31,7 @@ export default function CryptoCalculator() {
       <SEO 
         title="Crypto Inheritance Risk Calculator | Transfer Legacy"
         description="Estimate the probability of permanent asset loss. 20% of all Bitcoin is already lost—don't let your portfolio be next."
-        canonical="https://transferlegacy.com/tools/crypto-risk-calculator"
+        canonicalUrl="https://transferlegacy.com/tools/crypto-risk-calculator"
       />
 
       <div className="max-w-4xl mx-auto px-6 relative z-10">

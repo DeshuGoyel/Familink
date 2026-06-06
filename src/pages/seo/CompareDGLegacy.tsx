@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import SEO from '../../components/seo/SEO';
 import { CheckCircle2, XCircle, Scale, Zap } from 'lucide-react';
@@ -39,7 +38,7 @@ const CompareDGLegacy = () => {
       <SEO 
         title="Transfer Legacy vs. DGLegacy: Which Digital Inheritance Tool is Best?"
         description="A technical and legal comparison between Transfer Legacy and DGLegacy. Discover why our sovereign protocols outperform traditional digital vaults."
-        canonical="https://transferlegacy.com/transfer-legacy-vs-dglegacy"
+        canonicalUrl="https://transferlegacy.com/transfer-legacy-vs-dglegacy"
       />
 
       <div className="max-w-4xl mx-auto px-6 relative z-10">

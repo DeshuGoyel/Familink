@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useStore } from '../store/useStore';
+import { useStore, Asset } from '../store/useStore';
 import { Wallet, Plus, Edit2, Trash2, Box, TrendingUp, Briefcase, FileText, Globe, Search, Shield, LayoutGrid, List } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
@@ -25,7 +25,7 @@ const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 15 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
-  transition: { delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+  transition: { delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
 });
 
 export default function Assets() {
@@ -58,9 +58,9 @@ export default function Assets() {
     resolver: zodResolver(assetSchema)
   });
 
-  const onSubmit = (data: unknown) => {
+  const onSubmit = (data: z.infer<typeof assetSchema>) => {
     if (editingId) {
-      updateAsset(editingId, { ...data, date: new Date().toISOString().split('T')[0] });
+      updateAsset(editingId, { ...data, date: new Date().toISOString().split('T')[0] } as Partial<Asset>);
       toast.success('Vault record updated');
     } else {
       addAsset({
@@ -68,7 +68,7 @@ export default function Assets() {
         status: 'Protected',
         date: new Date().toISOString().split('T')[0],
         tags: [data.type.toLowerCase()]
-      });
+      } as Omit<Asset, 'id'>);
       toast.success('Asset secured in vault');
     }
     setIsModalOpen(false);
@@ -82,7 +82,7 @@ export default function Assets() {
     setIsModalOpen(true);
   };
 
-  const openEditModal = (asset: unknown) => {
+  const openEditModal = (asset: Asset) => {
     setEditingId(asset.id);
     reset(asset);
     setIsModalOpen(true);
@@ -98,7 +98,7 @@ export default function Assets() {
       date: new Date().toISOString().split('T')[0],
       tags: ['retirement', 'institutional', 'long-term'],
       notes: 'Institutional retirement fund. Managed via primary brokerage.'
-    } as unknown);
+    } as any);
     toast.success('Institutional template added');
   };
 
@@ -216,7 +216,7 @@ export default function Assets() {
                   </div>
                   
                   {/* Projections */}
-                  {((asset as unknown).growthRate || asset.type === 'Retirement' || asset.type === 'Crypto') && (
+                  {(asset.growthRate || asset.type === 'Retirement' || asset.type === 'Crypto') && (
                     <div className="mb-8 p-5 bg-page/80 rounded-2xl border border-base/40 group-hover:border-brand-primary/10 transition-colors shadow-inner">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
@@ -226,7 +226,7 @@ export default function Assets() {
                         <span className="text-[9px] font-bold text-trust-500/60 uppercase">10Y @ 7%</span>
                       </div>
                       <p className="text-2xl font-bold tracking-tight tabular-nums text-trust-500">
-                        ${calculateProjection(asset.value || 0, (asset as unknown).growthRate || 0.07, 10).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                        ${calculateProjection(asset.value || 0, asset.growthRate || 0.07, 10).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                       </p>
                     </div>
                   )}

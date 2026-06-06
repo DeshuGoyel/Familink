@@ -50,7 +50,7 @@ export async function finishOpaqueRegistration(
   });
   
   // 2. Decode and hash the exportKey (64 bytes) to derive a 32-byte KEK
-  const kek = sodium.crypto_generichash(32, fromBase64Url(exportKey));
+  const kek = sodium.crypto_generichash(32, fromBase64Url(exportKey), null);
   
   // 3. Generate randomized client keys (Zero-Knowledge)
   const edKeyPair = sodium.crypto_sign_keypair();
@@ -133,11 +133,17 @@ export async function finishOpaqueLogin(
 ): Promise<OpaqueLoginFinishData> {
   await opaque.ready;
   
-  const { finishLoginRequest, sessionKey } = opaque.client.finishLogin({
+  const result = opaque.client.finishLogin({
     clientLoginState,
     loginResponse: serverResponseB64, // Already base64url from backend
     password
   });
+  
+  if (!result) {
+    throw new Error('OPAQUE login finalization failed');
+  }
+  
+  const { finishLoginRequest, sessionKey } = result;
   
   return {
     registrationUpload: finishLoginRequest,

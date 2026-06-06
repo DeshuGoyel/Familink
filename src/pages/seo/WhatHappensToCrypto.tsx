@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import SEO from '../../components/seo/SEO';
 import { ArrowRight, Shield, BookOpen, AlertTriangle, Skull, Zap } from 'lucide-react';
@@ -17,7 +16,7 @@ const WhatHappensToCrypto = () => {
       <SEO 
         title="What Happens to Your Crypto When You Die? (The Brutal Truth)"
         description="The reality of cryptocurrency inheritance. Learn why Bitcoin is lost forever without a protocol and how to prevent your family from being locked out."
-        canonical="https://transferlegacy.com/what-happens-to-crypto-when-you-die"
+        canonicalUrl="https://transferlegacy.com/what-happens-to-crypto-when-you-die"
       />
 
       <div className="max-w-4xl mx-auto px-6 relative z-10">

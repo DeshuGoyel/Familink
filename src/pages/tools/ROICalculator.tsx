@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ShieldCheck, Clock, ArrowRight, Target, BarChart3, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { useStore } from '../../store/useStore';
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
-  transition: { delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+  transition: { delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
 });
 
 export default function ROICalculator() {
@@ -30,7 +30,7 @@ export default function ROICalculator() {
       <SEO 
         title="Capital Preservation ROI Calculator | Transfer Legacy"
         description="Calculate the return on investment for securing your digital legacy. Compare protocol efficiency against traditional probate."
-        canonical="https://transferlegacy.com/tools/roi-calculator"
+        canonicalUrl="https://transferlegacy.com/tools/roi-calculator"
       />
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">

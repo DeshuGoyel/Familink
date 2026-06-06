@@ -6,8 +6,8 @@ import { useLocation } from 'react-router-dom';
  * Standardizes event tracking across the platform
  */
 export const trackEvent = (eventName: string, properties?: Record<string, unknown>) => {
-  if (typeof window !== 'undefined' && (window as unknown).gtag) {
-    (window as unknown).gtag('event', eventName, properties);
+  if (typeof window !== 'undefined' && (window as any).gtag) {
+    (window as any).gtag('event', eventName, properties);
   }
   // Console logging for dev mode parity
   if (process.env.NODE_ENV === 'development') {
@@ -21,8 +21,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   useEffect(() => {
     // Page View Tracking
     // PRODUCTION_READY: Replace G-XXXXXXXXXX with your actual Google Analytics 4 Measurement ID
-    if (typeof window !== 'undefined' && (window as unknown).gtag) {
-      (window as unknown).gtag('config', 'G-XXXXXXXXXX', {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('config', 'G-XXXXXXXXXX', {
         page_path: location.pathname + location.search,
       });
     }

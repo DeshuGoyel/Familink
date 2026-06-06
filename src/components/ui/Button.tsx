@@ -44,7 +44,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       lg: "text-base px-8 py-3.5",
     };
 
-    const text = getButtonText(children).trim().toLowerCase();
+    const text = getButtonText(children as React.ReactNode).trim().toLowerCase();
     const isSpecialCta = 
       text.includes('start my vault') || 
       text.includes('get started') || 

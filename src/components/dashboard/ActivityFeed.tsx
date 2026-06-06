@@ -11,8 +11,10 @@ export default function ActivityFeed() {
   return (
     <div className="space-y-3">
       {activity.map((item, index) => {
-        const Icon = (Object.prototype.hasOwnProperty.call(icons, item.icon) ? icons[item.icon] : null) || Lock;
-        const isCritical = item.message.toLowerCase().includes('failed') || item.message.toLowerCase().includes('security');
+        const iconName = item.icon || '';
+        const Icon = (Object.prototype.hasOwnProperty.call(icons, iconName) ? icons[iconName] : null) || Lock;
+        const message = item.message || '';
+        const isCritical = message.toLowerCase().includes('failed') || message.toLowerCase().includes('security');
         
         return (
           <motion.div 
@@ -44,7 +46,7 @@ export default function ActivityFeed() {
                     {isCritical ? 'Critical' : 'Protocol Log'}
                   </span>
                   <span className="text-[10px] font-bold text-primary tracking-tight truncate max-w-[140px]">
-                    {item.message}
+                    {message}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">

@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import SEO from '../../components/seo/SEO';
 import { CheckCircle2, XCircle, Scale, Zap } from 'lucide-react';
@@ -39,7 +38,7 @@ const CompareInheriti = () => {
       <SEO 
         title="Transfer Legacy vs. Inheriti: The Ultimate Crypto Succession Comparison"
         description="Technical comparison between Transfer Legacy and Inheriti. Discover why institutional investors prefer our dead man's switch over social sharding."
-        canonical="https://transferlegacy.com/transfer-legacy-vs-inheriti"
+        canonicalUrl="https://transferlegacy.com/transfer-legacy-vs-inheriti"
       />
 
       <div className="max-w-4xl mx-auto px-6 relative z-10">

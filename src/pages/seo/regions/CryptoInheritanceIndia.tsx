@@ -1,7 +1,6 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import SEO from '../../../components/seo/SEO';
-import { ArrowRight, Shield, Globe2, BookOpen, AlertTriangle, Landmark, Scale, Gavel } from 'lucide-react';
+import { ArrowRight, Shield, Globe2, BookOpen, AlertTriangle, Landmark, Scale, Gavel, CheckCircle2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import { useStore } from '../../../store/useStore';
@@ -41,7 +40,7 @@ const CryptoInheritanceIndia = () => {
       <SEO 
         title="Crypto Inheritance Law in India: The Ultimate Guide (2024)"
         description="Navigate crypto inheritance laws in India. Learn about digital wills, tax implications, and how to securely pass your Bitcoin to your family under the Hindu Succession Act."
-        canonical="https://transferlegacy.com/crypto-inheritance-india"
+        canonicalUrl="https://transferlegacy.com/crypto-inheritance-india"
         schema={faqSchema}
       />
 

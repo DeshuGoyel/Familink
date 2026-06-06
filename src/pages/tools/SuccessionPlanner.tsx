@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Sparkles, Target, Zap, AlertTriangle, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ import { useStore } from '../../store/useStore';
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
-  transition: { delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+  transition: { delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
 });
 
 export default function SuccessionPlanner() {
@@ -62,7 +62,7 @@ export default function SuccessionPlanner() {
       <SEO 
         title="Interactive Succession Planner | Transfer Legacy"
         description="Audit your digital estate readiness. Get a custom succession checklist and risk score in 2 minutes."
-        canonical="https://transferlegacy.com/tools/planner"
+        canonicalUrl="https://transferlegacy.com/tools/planner"
       />
 
       <div className="max-w-4xl mx-auto px-6 relative z-10">

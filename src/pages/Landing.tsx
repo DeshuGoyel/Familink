@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import '../landing.css';
@@ -92,10 +92,6 @@ export default function Landing() {
     });
 
     // ── NAVIGATION REDIRECTS ──
-    const handleLogin = (e: Event) => {
-      e.preventDefault();
-      navigate('/login');
-    };
 
     const handleSignup = (e: Event) => {
       e.preventDefault();

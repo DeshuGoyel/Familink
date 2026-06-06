@@ -15,6 +15,7 @@ export interface Asset {
   instructions?: string;
   beneficiaryId?: string;
   encryptionLevel?: 'Standard' | 'Military' | 'Quantum-Resistant';
+  growthRate?: number;
 }
 
 export interface Guardian {
@@ -303,10 +304,10 @@ export const useStore = create<AppState>((set) => ({
     try {
       const userId = localStorage.getItem('tl_user_id');
       if (!userId) return;
-      const response = await api.post<{ items: unknown[] }>('/vault/items/list', { user_id: userId });
+      const response = await api.post<{ items: RawItem[] }>('/vault/items/list', { user_id: userId });
       const items = response?.items || [];
-      const formattedAssets: Asset[] = items.map((item: RawItem) => ({
-        id: item.item_id || item.id,
+      const formattedAssets: Asset[] = items.map((item) => ({
+        id: item.item_id || item.id || '',
         name: item.item_meta?.title || item.item_meta?.title_hash || 'Encrypted Asset',
         type: item.item_meta?.type || 'password',
         status: 'Secured',
@@ -332,10 +333,10 @@ export const useStore = create<AppState>((set) => ({
       await api.post('/vault/items', payload);
       
       // Refresh assets
-      const response = await api.post<{ items: unknown[] }>('/vault/items/list', { user_id: userId });
+      const response = await api.post<{ items: RawItem[] }>('/vault/items/list', { user_id: userId });
       const items = response?.items || [];
-      const formattedAssets: Asset[] = items.map((item: RawItem) => ({
-        id: item.item_id || item.id,
+      const formattedAssets: Asset[] = items.map((item) => ({
+        id: item.item_id || item.id || '',
         name: item.item_meta?.title || item.item_meta?.title_hash || 'Encrypted Asset',
         type: item.item_meta?.type || 'password',
         status: 'Secured',
@@ -363,10 +364,10 @@ export const useStore = create<AppState>((set) => ({
       await api.post('/vault/items/delete', { user_id: userId, item_id: id });
       
       // Refresh assets
-      const response = await api.post<{ items: unknown[] }>('/vault/items/list', { user_id: userId });
+      const response = await api.post<{ items: RawItem[] }>('/vault/items/list', { user_id: userId });
       const items = response?.items || [];
-      const formattedAssets: Asset[] = items.map((item: RawItem) => ({
-        id: item.item_id || item.id,
+      const formattedAssets: Asset[] = items.map((item) => ({
+        id: item.item_id || item.id || '',
         name: item.item_meta?.title || item.item_meta?.title_hash || 'Encrypted Asset',
         type: item.item_meta?.type || 'password',
         status: 'Secured',

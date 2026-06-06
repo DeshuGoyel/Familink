@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import SEO from '../../components/seo/SEO';
 import { ArrowRight, AlertTriangle, Scale, Gavel, CheckCircle2, XCircle } from 'lucide-react';
@@ -17,7 +16,7 @@ const CompareTraditionalWills = () => {
       <SEO 
         title="Transfer Legacy vs. Traditional Wills: The Truth About Digital Succession"
         description="Why traditional wills fail for crypto and digital assets. Compare Transfer Legacy's Sovereign Protocol with paper-based inheritance systems."
-        canonical="https://transferlegacy.com/transfer-legacy-vs-traditional-wills"
+        canonicalUrl="https://transferlegacy.com/transfer-legacy-vs-traditional-wills"
       />
 
       <div className="max-w-4xl mx-auto px-6 relative z-10">

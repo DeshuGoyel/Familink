@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calculator, Globe2, TrendingUp, ArrowRight, Shield, Info, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { useStore } from '../../store/useStore';
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
-  transition: { delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+  transition: { delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
 });
 
 export default function InheritanceCalculator() {
@@ -73,7 +73,7 @@ export default function InheritanceCalculator() {
       <SEO 
         title="Inheritance Tax & Growth Calculator | Transfer Legacy"
         description="Estimate your digital estate's future value and inheritance tax liability across USA, UK, India, and UAE jurisdictions."
-        canonical="https://transferlegacy.com/features/inheritance-calculator"
+        canonicalUrl="https://transferlegacy.com/features/inheritance-calculator"
       />
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
