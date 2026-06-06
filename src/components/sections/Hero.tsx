@@ -1,10 +1,13 @@
-import { useRef, Suspense } from 'react';
+import { useRef, Suspense, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Environment } from '@react-three/drei';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Lock, Sparkles, ChevronDown, ShieldCheck, ArrowRight } from 'lucide-react';
 import Globe from '../3d/Globe';
 import { Link } from 'react-router-dom';
+import { api } from '../../lib/api';
+import { WaitlistForm } from '../ui/WaitlistForm';
+import { CountdownTimer } from '../ui/CountdownTimer';
 
 /* ─── Avatar stack ─────────────────────────────────────────── */
 const avatars = [
@@ -36,11 +39,32 @@ export default function Hero() {
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
   const contentOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
+  const [branding, setBranding] = useState({
+    waitlist_enabled: true,
+  });
+
+  useEffect(() => {
+    async function loadBranding() {
+      try {
+        const res = await api.get<any>('/app/branding', { skipAead: true });
+        const data = res.data ? res.data : res;
+        if (data && typeof data.waitlist_enabled === 'boolean') {
+          setBranding(data);
+        }
+      } catch (err) {
+        console.warn('Failed to load branding in Hero, using defaults:', err);
+      }
+    }
+    loadBranding();
+  }, []);
+
+  const launchDate = import.meta.env.VITE_LAUNCH_DATE || '2026-09-01T00:00:00Z';
+
   return (
     <section
       ref={sectionRef}
       id="hero"
-      className="relative min-h-[110vh] flex flex-col items-center justify-center overflow-hidden bg-page"
+      className="relative min-h-screen flex flex-col items-center justify-start pt-28 pb-16 overflow-hidden bg-page"
     >
       {/* ── Advanced Background Layer ── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -80,22 +104,8 @@ export default function Hero() {
 
       <motion.div
         style={{ opacity: contentOpacity }}
-        className="relative z-20 w-full max-w-7xl mx-auto px-6 lg:px-8 py-20 flex flex-col items-center text-center"
+        className="relative z-20 w-full max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col items-center text-center"
       >
-        {/* Top Badge */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface/50 border border-border-base backdrop-blur-md mb-12 shadow-sm"
-        >
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-primary"></span>
-          </span>
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">4,200+ Families Protected</span>
-        </motion.div>
-
         {/* Massive Headline */}
         <div className="max-w-5xl mb-12 relative">
           <motion.h1
@@ -132,28 +142,42 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 1 }}
-          className="flex flex-col items-center gap-4 mb-24"
+          className="w-full max-w-md mx-auto mb-24"
         >
-          <div className="flex flex-col sm:flex-row items-center gap-6">
-            <Link to="/onboarding">
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="h-16 px-12 rounded-2xl bg-brand-primary text-white text-lg font-bold flex items-center gap-3 shadow-lg hover:shadow-brand transition-all duration-500"
-              >
-                Create Your Free Vault — Takes 15 Minutes <ArrowRight size={20} />
-              </motion.div>
-            </Link>
-            <Link to="/dashboard">
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="h-16 px-12 rounded-2xl bg-surface border border-border-base text-primary text-lg font-bold flex items-center gap-3 backdrop-blur-xl transition-all"
-              >
-                Access Dashboard
-              </motion.div>
-            </Link>
-          </div>
-          <p className="text-muted text-sm font-medium">No credit card. No seed phrase shared with us. Ever.</p>
+          {branding.waitlist_enabled ? (
+            <div className="flex flex-col gap-8 w-full">
+              <WaitlistForm />
+              <div className="pt-8 border-t border-border-base/50">
+                <p className="text-xs text-muted mb-4 font-semibold uppercase tracking-widest">
+                  Beta Launches In:
+                </p>
+                <CountdownTimer targetDate={launchDate} />
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <Link to="/onboarding">
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="h-16 px-12 rounded-2xl bg-brand-primary text-white text-lg font-bold flex items-center gap-3 shadow-lg hover:shadow-brand transition-all duration-500"
+                  >
+                    Create Your Free Vault — Takes 15 Minutes <ArrowRight size={20} />
+                  </motion.div>
+                </Link>
+                <Link to="/dashboard">
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    className="h-16 px-12 rounded-2xl bg-surface border border-border-base text-primary text-lg font-bold flex items-center gap-3 backdrop-blur-xl transition-all"
+                  >
+                    Access Dashboard
+                  </motion.div>
+                </Link>
+              </div>
+              <p className="text-muted text-sm font-medium">No credit card. No seed phrase shared with us. Ever.</p>
+            </div>
+          )}
         </motion.div>
 
         {/* 3D Scene / Stats Overlay */}

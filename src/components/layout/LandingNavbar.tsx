@@ -2,9 +2,21 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { cn } from '../../utils/cn';
 import { useStore } from '../../store/useStore';
+import { api } from '../../lib/api';
+
+interface BrandingData {
+  brand_name: string;
+  logo_url?: string;
+  waitlist_enabled: boolean;
+}
 
 export default function LandingNavbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [branding, setBranding] = useState<BrandingData>({
+    brand_name: 'Transfer Legacy',
+    logo_url: '',
+    waitlist_enabled: true,
+  });
   const { isAuthenticated } = useStore();
   const navigate = useNavigate();
 
@@ -13,6 +25,22 @@ export default function LandingNavbar() {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
+    
+    async function fetchBranding() {
+      try {
+        const res = await api.get<BrandingData>('/app/branding', { skipAead: true });
+        // Under local setup / skipAead, get resolves to SuccessEnvelope<BrandingData>
+        // Let's handle both envelope wrap and raw data cases
+        const data = (res as any).data ? (res as any).data : res;
+        if (data && data.brand_name) {
+          setBranding(data);
+        }
+      } catch (err) {
+        console.warn('Failed to load navbar branding, using defaults:', err);
+      }
+    }
+    
+    fetchBranding();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -24,13 +52,17 @@ export default function LandingNavbar() {
       )}
     >
       <Link to="/" className="flex items-center gap-3 group">
-        <div className="w-8 h-8 bg-blueprint-or/10 border border-blueprint-or/30 rounded-lg flex items-center justify-center group-hover:bg-blueprint-or/20 transition-colors">
-          <svg viewBox="0 0 24 24" className="w-4 h-4 stroke-blueprint-or stroke-2 fill-none">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          </svg>
+        <div className="w-8 h-8 bg-blueprint-or/10 border border-blueprint-or/30 rounded-lg flex items-center justify-center group-hover:bg-blueprint-or/20 transition-colors overflow-hidden">
+          {branding.logo_url ? (
+            <img src={branding.logo_url} alt="Logo" className="w-full h-full object-contain p-1" />
+          ) : (
+            <svg viewBox="0 0 24 24" className="w-4 h-4 stroke-blueprint-or stroke-2 fill-none">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          )}
         </div>
         <div className="font-display text-lg font-semibold text-white tracking-wide">
-          Transfer Legacy
+          {branding.brand_name}
         </div>
       </Link>
       
@@ -60,11 +92,26 @@ export default function LandingNavbar() {
                 Sign in
               </button>
             </Link>
-            <Link to="/onboarding">
-              <button className="bg-blueprint-or text-white px-5 py-2 rounded-lg font-sans text-sm font-medium transition-all relative overflow-hidden hover:bg-blueprint-or2 hover:-translate-y-px shadow-[0_8px_24px_rgba(249,115,22,0.35)]">
-                Get started free
-              </button>
-            </Link>
+            {branding.waitlist_enabled ? (
+              <a href="#cta-email" onClick={(e) => {
+                e.preventDefault();
+                const ctaEl = document.getElementById('cta-email');
+                if (ctaEl) {
+                  ctaEl.scrollIntoView({ behavior: 'smooth' });
+                  ctaEl.focus();
+                }
+              }}>
+                <button className="bg-blueprint-or text-white px-5 py-2 rounded-lg font-sans text-sm font-medium transition-all relative overflow-hidden hover:bg-blueprint-or2 hover:-translate-y-px shadow-[0_8px_24px_rgba(249,115,22,0.35)]">
+                  Join Waitlist
+                </button>
+              </a>
+            ) : (
+              <Link to="/onboarding">
+                <button className="bg-blueprint-or text-white px-5 py-2 rounded-lg font-sans text-sm font-medium transition-all relative overflow-hidden hover:bg-blueprint-or2 hover:-translate-y-px shadow-[0_8px_24px_rgba(249,115,22,0.35)]">
+                  Get started free
+                </button>
+              </Link>
+            )}
           </>
         )}
       </div>

@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { api } from '../../lib/api';
+import { WaitlistForm } from '../ui/WaitlistForm';
 
 const words = ["Bitcoin", "Ethereum", "Family", "Legacy"];
 
@@ -14,12 +16,30 @@ const trustBadges = [
 
 export default function FinalCTA() {
   const [index, setIndex] = useState(0);
+  const [branding, setBranding] = useState({
+    waitlist_enabled: true,
+  });
 
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % words.length);
     }, 2500);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    async function loadBranding() {
+      try {
+        const res = await api.get<any>('/app/branding', { skipAead: true });
+        const data = res.data ? res.data : res;
+        if (data && typeof data.waitlist_enabled === 'boolean') {
+          setBranding(data);
+        }
+      } catch (err) {
+        console.warn('Failed to load branding in FinalCTA, using defaults:', err);
+      }
+    }
+    loadBranding();
   }, []);
 
   return (
@@ -71,7 +91,7 @@ export default function FinalCTA() {
                    {words[index]}.
                  </motion.span>
                </AnimatePresence>
-            </div>
+             </div>
           </div>
 
           <p className="text-xl text-secondary mb-12 max-w-2xl mx-auto leading-relaxed">
@@ -79,16 +99,24 @@ export default function FinalCTA() {
           </p>
 
           <div className="flex flex-col items-center gap-4 mb-16">
-            <Link to="/onboarding">
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="h-16 px-12 rounded-2xl bg-brand-primary text-white text-lg font-bold flex items-center gap-3 shadow-lg hover:shadow-brand transition-all duration-500"
-              >
-                Create Your Free Vault <ArrowRight size={20} />
-              </motion.div>
-            </Link>
-            <p className="text-muted text-sm font-medium italic">14-day full refund. No questions. And your free vault stays free forever.</p>
+            {branding.waitlist_enabled ? (
+              <div className="w-full max-w-md mx-auto">
+                <WaitlistForm />
+              </div>
+            ) : (
+              <>
+                <Link to="/onboarding">
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="h-16 px-12 rounded-2xl bg-brand-primary text-white text-lg font-bold flex items-center gap-3 shadow-lg hover:shadow-brand transition-all duration-500"
+                  >
+                    Create Your Free Vault <ArrowRight size={20} />
+                  </motion.div>
+                </Link>
+                <p className="text-muted text-sm font-medium italic">14-day full refund. No questions. And your free vault stays free forever.</p>
+              </>
+            )}
           </div>
 
           {/* Trust chips */}

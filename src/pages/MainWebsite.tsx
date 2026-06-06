@@ -4,7 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import LandingNavbar from '../components/layout/LandingNavbar';
 import Footer from '../components/layout/Footer';
-import Landing from '../pages/Landing';
+import LandingSelector from '../pages/LandingSelector';
 import Dashboard from '../pages/Dashboard';
 import Assets from '../pages/Assets';
 import Allocations from '../pages/Allocations';
@@ -88,6 +88,8 @@ import CompareTraditionalWills from './seo/CompareTraditionalWills';
 import WhitepaperSEO from './seo/Whitepaper';
 import LegalTemplates from './seo/LegalTemplates';
 import CryptoCalculator from './tools/CryptoCalculator';
+import OpsLogin from './ops/Login';
+import OpsPortal from './ops/OpsPortal';
 
 // Regional SEO
 import CryptoInheritanceIndia from './seo/regions/CryptoInheritanceIndia';
@@ -108,7 +110,8 @@ function AppLayout() {
   const location = useLocation();
   const isPublicPage = PUBLIC_ROUTES.has(location.pathname);
   const isAppPage = APP_ROUTE_PREFIXES.some(p => location.pathname.startsWith(p));
-  const showLandingNavbar = !isAppPage && location.pathname !== '/login' && location.pathname !== '/onboarding';
+  const isOpsPage = location.pathname.startsWith('/ops');
+  const showLandingNavbar = !isAppPage && !isOpsPage && location.pathname !== '/login' && location.pathname !== '/onboarding';
 
   // Shared offset class for Sidebar parity
   const offsetClass = isAppPage
@@ -126,7 +129,7 @@ function AppLayout() {
       {/* Page content — offset for sidebar */}
       <main className={cn("flex-grow transition-all duration-300", offsetClass)}>
         <Routes>
-          <Route path="/"            element={<Landing />} />
+          <Route path="/"            element={<LandingSelector />} />
           <Route path="/dashboard"   element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/analytics"   element={<ProtectedRoute><LegacyAnalytics /></ProtectedRoute>} />
           <Route path="/assets"      element={<ProtectedRoute><Assets /></ProtectedRoute>} />
@@ -205,13 +208,17 @@ function AppLayout() {
           <Route path="/features/inheritance-calculator"  element={<InheritanceCalculator />} />
           <Route path="/reports"                          element={<Reports />} />
           
+          {/* Administrative Ops Routes */}
+          <Route path="/ops/login"                        element={<OpsLogin />} />
+          <Route path="/ops/*"                            element={<OpsPortal />} />
+          
           <Route path="*"            element={<Navigate to="/" />} />
         </Routes>
       </main>
 
       {/* Footer — also offset to prevent Sidebar overlap */}
       <div className={cn("transition-all duration-300", offsetClass)}>
-        {!isPublicPage && !isAppPage && <Footer />}
+        {!isPublicPage && !isAppPage && !isOpsPage && <Footer />}
       </div>
 
       {isNotificationOpen && <NotificationDrawer />}

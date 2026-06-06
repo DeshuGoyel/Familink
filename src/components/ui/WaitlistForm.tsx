@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import confetti from 'canvas-confetti';
 import { Lock, Loader2, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
-const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/\/$/, '');
+import { api } from '../../lib/api';
 
 export function WaitlistForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,31 +52,20 @@ export function WaitlistForm() {
   const onSubmit = async (data: WaitlistFormData) => {
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/waitlist`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email: data.email })
-      });
+      const result = await api.post<any>('/app/waitlist', { email: data.email, name: null }, { skipAead: true });
+      const waitlistData = result.data ? result.data : result;
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || 'Something went wrong');
-      }
-
-      setPosition(result.position);
+      setPosition(waitlistData.position);
       setIsSuccess(true);
       triggerConfetti();
 
-      if (result.isNew) {
+      if (waitlistData.isNew) {
         toast.success('Successfully joined waitlist!');
       } else {
         toast('You are already on the list!', { icon: '👋' });
       }
 
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error('Waitlist error:', error);
       toast.error(error.message || 'Something went wrong. Please try again.');
     } finally {

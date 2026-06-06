@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import LandingNavbar from '../components/landing/LandingNavbar';
 import LandingFooter from '../components/landing/LandingFooter';
 import Hero from '../components/sections/Hero';
 import SocialProof from '../components/sections/SocialProof';
@@ -23,7 +22,6 @@ export default function LandingPage() {
   return (
     <div className="bg-page text-primary min-h-screen font-sans selection:bg-brand-primary/30 overflow-x-hidden relative">
       <div className="absolute inset-0 z-0 pointer-events-none bg-aurora opacity-40" />
-      <LandingNavbar />
 
       <main>
         {/* ... */}
