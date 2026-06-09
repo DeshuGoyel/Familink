@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useStore } from '../store/useStore';
+import { useStore, Allocation } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
@@ -13,7 +13,7 @@ const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 15 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
-  transition: { delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+  transition: { delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] as const },
 });
 
 export default function Allocations() {
@@ -55,7 +55,7 @@ export default function Allocations() {
     toast.success('Recipient synchronized');
   };
 
-  const getRecipientDetails = (a: unknown) => {
+  const getRecipientDetails = (a: Allocation) => {
     if (a.type === 'heir') {
       const h = heirs.find(heir => heir.id === a.recipientId);
       return { name: h?.name || 'Unknown Heir', icon: Users, color: '#4F5CFF' }; // brand-primary

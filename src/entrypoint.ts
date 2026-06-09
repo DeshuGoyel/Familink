@@ -6,8 +6,6 @@ interface Env {
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    const url = new URL(request.url);
-    
     try {
       // Try to serve the static asset from the ASSETS binding
       const response = await env.ASSETS.fetch(request);
@@ -22,7 +20,7 @@ export default {
     }
     
     // SPA Routing Fallback: Serve index.html for client-side routes (like /dashboard)
-    const indexRequest = new Request(new URL('/index.html', request.url).toString(), request);
+    const indexRequest = new Request(new URL('/', request.url).toString(), request);
     return await env.ASSETS.fetch(indexRequest);
   }
 };
