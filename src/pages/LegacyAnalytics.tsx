@@ -170,7 +170,7 @@ export default function LegacyAnalytics() {
               <h3 className="text-lg font-display font-bold text-primary mb-2">Confidence Dimensions</h3>
               <p className="text-muted text-xs mb-8">Multi-vector analysis of legacy integrity.</p>
               <div style={{ width: '100%', height: 320 }}>
-                <ResponsiveContainer width="100%" height={320}>
+                <ResponsiveContainer width="100%" height={320} minWidth={0}>
                   <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
                     <PolarGrid stroke="rgba(255,255,255,0.05)" />
                     <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748B', fontSize: 10, fontWeight: 'bold' }} />
@@ -194,7 +194,7 @@ export default function LegacyAnalytics() {
               <h3 className="text-lg font-display font-bold text-primary mb-2">Allocation Distribution</h3>
               <p className="text-muted text-xs mb-8">Current asset weight per designated recipient.</p>
               <div style={{ width: '100%', height: 320 }}>
-                <ResponsiveContainer width="100%" height={320}>
+                <ResponsiveContainer width="100%" height={320} minWidth={0}>
                   <BarChart data={heirData} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
                     <XAxis type="number" hide />
@@ -217,7 +217,7 @@ export default function LegacyAnalytics() {
               <p className="text-muted text-xs mb-8">Asset concentration by institutional category.</p>
               <div className="flex flex-col md:flex-row items-center gap-4">
                 <div style={{ width: '100%', height: 280 }}>
-                  <ResponsiveContainer width="100%" height={280}>
+                  <ResponsiveContainer width="100%" height={280} minWidth={0}>
                     <PieChart>
                       <Pie
                         data={pieData}

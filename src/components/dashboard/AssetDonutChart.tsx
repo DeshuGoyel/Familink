@@ -31,7 +31,7 @@ export default function AssetDonutChart() {
 
   return (
     <div className="h-64 w-full relative">
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
         <PieChart>
           {!isEmpty && (
             <Pie
