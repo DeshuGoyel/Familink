@@ -22,6 +22,8 @@ import IdentityPassport from '../pages/IdentityPassport';
 import DeveloperPortal from '../pages/DeveloperPortal';
 import LegacyAnalytics from '../pages/LegacyAnalytics';
 import ContactUs from '../pages/ContactUs';
+import ForgotPassword from './ForgotPassword';
+import ResetPassword from './ResetPassword';
 import ParticleBackground from '../components/3d/ParticleBackground';
 import NotificationDrawer from '../components/layout/NotificationDrawer';
 import Sidebar from '../components/layout/Sidebar';
@@ -100,7 +102,7 @@ import CryptoInheritanceUK from './seo/regions/CryptoInheritanceUK';
 import CryptoInheritanceUAE from './seo/regions/CryptoInheritanceUAE';
 
 // Routes that are public/pre-login — no sidebar, navbar, or footer
-const PUBLIC_ROUTES = new Set(['/', '/login', '/onboarding', '/contact', '/contact-us']);
+const PUBLIC_ROUTES = new Set(['/', '/login', '/onboarding', '/contact', '/contact-us', '/forgot-password', '/reset-password']);
 
 // Dashboard/app routes — use normal system cursor
 const APP_ROUTE_PREFIXES = ['/dashboard', '/assets', '/allocations', '/guardians', '/heirs', '/ai-planner', '/trust', '/settings', '/checkin', '/check-in', '/capsules', '/obituary', '/passport', '/identity', '/developer', '/activity', '/analytics', '/reports'];
@@ -141,6 +143,8 @@ function AppLayout() {
           <Route path="/settings"    element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           <Route path="/onboarding"  element={<Onboarding />} />
           <Route path="/login"       element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+          <Route path="/reset-password"  element={<PublicRoute><ResetPassword /></PublicRoute>} />
           <Route path="/contact"     element={<ContactUs />} />
           <Route path="/contact-us"  element={<ContactUs />} />
           <Route path="/checkin"     element={<ProtectedRoute><CheckInCenter /></ProtectedRoute>} />

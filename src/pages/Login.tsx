@@ -186,7 +186,7 @@ export default function Login() {
                 <input type="checkbox" className="rounded border-slate-800 bg-slate-950 text-orange-500 focus:ring-0 focus:ring-offset-0" />
                 Remember this device
               </label>
-              <Link to="/onboarding" className="text-orange-500 hover:underline">Forgot password?</Link>
+              <Link to="/forgot-password" className="text-orange-500 hover:underline">Forgot password?</Link>
             </div>
 
             <AnimatePresence>

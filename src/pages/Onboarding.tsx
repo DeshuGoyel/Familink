@@ -29,6 +29,13 @@ const jurisdictions = [
   { value: 'uae', label: 'UAE (VARA & DIFC Regulations)' },
 ];
 
+interface VerifyOtpResponseEnvelope {
+  data: {
+    verification_token: string;
+  };
+  requestId: string;
+}
+
 export default function Onboarding() {
   const [step, setStep] = useState(1);
   const [isInitializing, setIsInitializing] = useState(false);
@@ -51,6 +58,25 @@ export default function Onboarding() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [showOtpEntry, setShowOtpEntry] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+
+  const handleResendOtp = async () => {
+    setIsSendingOtp(true);
+    setError(null);
+    try {
+      await api.post('/auth/register/send-otp', { email }, { skipAead: true });
+      toast.success('Verification code resent to your email!');
+    } catch (err: unknown) {
+      console.error('Failed to resend OTP:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to send OTP code.';
+      setError(errorMessage);
+      toast.error('Resend failed');
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
 
   const nextStep = async () => {
     if (step === 1) {
@@ -58,16 +84,48 @@ export default function Onboarding() {
         toast.error('All account fields are required');
         return;
       }
+
+      if (!showOtpEntry) {
+        setIsSendingOtp(true);
+        setError(null);
+        try {
+          await api.post('/auth/register/send-otp', { email }, { skipAead: true });
+          toast.success('Verification code sent to your email!');
+          setShowOtpEntry(true);
+        } catch (err: unknown) {
+          console.error('Failed to send OTP:', err);
+          const errorMessage = err instanceof Error ? err.message : 'Failed to send OTP code.';
+          setError(errorMessage);
+          toast.error('Failed to send OTP');
+        } finally {
+          setIsSendingOtp(false);
+        }
+        return;
+      }
+
+      if (!otpCode || otpCode.length !== 6) {
+        toast.error('Please enter a valid 6-digit verification code');
+        return;
+      }
+
       setIsInitializing(true);
       setError(null);
       try {
-        // 1. Run real OPAQUE Registration Handshake against live backend
+        // 1. Verify OTP with backend to get registration verification token
+        const verifyRes = await api.post<VerifyOtpResponseEnvelope>('/auth/register/verify-otp', {
+          email,
+          code: otpCode,
+        }, { skipAead: true });
+        const token = verifyRes.data.verification_token;
+
+        // 2. Run real OPAQUE Registration Handshake against live backend
         const { userId, registrationRequest, blindFactor } = await initOpaqueRegistration(password);
 
         const initResponse = await api.post<{ registration_response: string; session_id: string }>('/auth/register/init', {
           user_id: userId,
           registration_request: registrationRequest,
           credential_identifier: email, // maps to auth.users mapping on backend!
+          verification_token: token,
         });
 
         const finishData = await finishOpaqueRegistration(
@@ -90,7 +148,7 @@ export default function Onboarding() {
           enc_email: finishData.encEmail,
         });
 
-        // 2. Perform Automatic OPAQUE Login immediately
+        // 3. Perform Automatic OPAQUE Login immediately
         const loginInit = await initOpaqueLogin(password);
         const loginInitResponse = await api.post<{ credential_response?: string; registration_response?: string; session_id: string }>('/auth/login/init', {
           user_id: userId,
@@ -108,13 +166,13 @@ export default function Onboarding() {
           credential_finalization: loginFinishData.registrationUpload,
         });
 
-        const token = loginFinishResponse.session_token || loginFinishResponse.token;
-        if (!token) {
+        const loginToken = loginFinishResponse.session_token || loginFinishResponse.token;
+        if (!loginToken) {
           throw new Error('Automatic login did not return a session token');
         }
 
         // Set session token, user ID, and update authentication state
-        localStorage.setItem('tl_session_token', token);
+        localStorage.setItem('tl_session_token', loginToken);
         localStorage.setItem('tl_user_id', userId);
         localStorage.setItem('tl_user_name', fullName);
         localStorage.setItem('tl_user_email', email);
@@ -270,46 +328,115 @@ export default function Onboarding() {
                   <Shield size={24} className="text-brand-primary" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-display font-bold text-primary tracking-tight">Create Secure Vault</h2>
-                  <p className="text-[10px] font-bold text-brand-primary uppercase tracking-widest mt-0.5">Sovereign Protocol Initialization</p>
+                  <h2 className="text-2xl font-display font-bold text-primary tracking-tight">
+                    {showOtpEntry ? 'Verify Email' : 'Create Secure Vault'}
+                  </h2>
+                  <p className="text-[10px] font-bold text-brand-primary uppercase tracking-widest mt-0.5">
+                    {showOtpEntry ? 'Onboarding Code Verification' : 'Sovereign Protocol Initialization'}
+                  </p>
                 </div>
               </div>
 
-              <div className="space-y-4 mb-6">
-                <Input
-                  label="Full Legal Name"
-                  placeholder="John Asha"
-                  value={fullName}
-                  onChange={e => setFullName(e.target.value)}
-                  required
-                />
-                <Input
-                  label="Email Address"
-                  placeholder="john@example.com"
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  required
-                />
-                <Input
-                  label="Master Password"
-                  placeholder="••••••••"
-                  type="password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  required
-                />
-              </div>
+              {!showOtpEntry ? (
+                <>
+                  <div className="space-y-4 mb-6">
+                    <Input
+                      label="Full Legal Name"
+                      placeholder="John Asha"
+                      value={fullName}
+                      onChange={e => setFullName(e.target.value)}
+                      required
+                    />
+                    <Input
+                      label="Email Address"
+                      placeholder="john@example.com"
+                      type="email"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      required
+                    />
+                    <Input
+                      label="Master Password"
+                      placeholder="••••••••"
+                      type="password"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
 
-              {error && (
-                <div className="p-3 mb-6 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium">
-                  {error}
-                </div>
+                  {error && (
+                    <div className="p-3 mb-6 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium">
+                      {error}
+                    </div>
+                  )}
+
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={nextStep}
+                    disabled={isSendingOtp}
+                    fullWidth
+                    className="h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20"
+                  >
+                    {isSendingOtp ? 'Sending...' : 'Begin Protocol'} <ArrowRight className="ml-2 inline" size={18} />
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <div className="space-y-4 mb-6">
+                    <p className="text-muted text-xs font-medium leading-relaxed">
+                      We have sent a 6-digit verification code to <span className="text-primary font-bold">{email}</span>. Please enter it below.
+                    </p>
+                    <Input
+                      label="Verification Code"
+                      placeholder="e.g. 123456"
+                      type="text"
+                      maxLength={6}
+                      value={otpCode}
+                      onChange={e => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                      required
+                      className="text-center tracking-[0.5em] text-lg font-bold"
+                    />
+                  </div>
+
+                  {error && (
+                    <div className="p-3 mb-6 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium">
+                      {error}
+                    </div>
+                  )}
+
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={nextStep}
+                    fullWidth
+                    className="h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20 mb-3"
+                  >
+                    Verify & Create Vault <ArrowRight className="ml-2 inline" size={18} />
+                  </Button>
+
+                  <div className="flex justify-between mt-4">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => setShowOtpEntry(false)}
+                      className="text-[10px] font-bold uppercase tracking-widest text-muted p-0"
+                    >
+                      <ArrowLeft className="mr-1 inline" size={12} /> Back
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={handleResendOtp}
+                      disabled={isSendingOtp}
+                      className="text-[10px] font-bold uppercase tracking-widest text-brand-primary p-0"
+                    >
+                      {isSendingOtp ? 'Sending...' : 'Resend Code'}
+                    </Button>
+                  </div>
+                </>
               )}
-
-              <Button variant="primary" size="lg" onClick={nextStep} fullWidth className="h-14 text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-brand-primary/20">
-                Begin Protocol <ArrowRight className="ml-2 inline" size={18} />
-              </Button>
             </motion.div>
           )}
 
