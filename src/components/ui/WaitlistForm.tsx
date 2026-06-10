@@ -62,7 +62,17 @@ export function WaitlistForm() {
       if (waitlistData.isNew) {
         toast.success('Successfully joined waitlist!');
       } else {
-        toast('You are already on the list!', { icon: '👋' });
+        // More prominent notification for existing users
+        toast.error('You are already on the list!', {
+          duration: 5000,
+          icon: '⚠️',
+          style: {
+            border: '1px solid var(--color-brand-primary)',
+            padding: '16px',
+            color: 'var(--color-text-primary)',
+            background: 'var(--color-bg-surface)',
+          },
+        });
       }
 
     } catch (error: any) {
@@ -148,12 +158,12 @@ export function WaitlistForm() {
                 {isSubmitting ? (
                   <>
                     <Loader2 size={20} className="animate-spin" />
-                    Securing Archive...
+                    Securing Spot...
                   </>
                 ) : (
                   <>
                     <Lock size={18} className="opacity-80" />
-                    Secure Your Legacy
+                    Claim Your Spot
                   </>
                 )}
               </Button>

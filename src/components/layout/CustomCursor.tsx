@@ -14,9 +14,9 @@ export default function CustomCursor() {
   const ringY = useSpring(cursorY, { damping: 25, stiffness: 220, mass: 0.5 });
 
   useEffect(() => {
-    // Only show custom cursor on real pointer devices (not touch)
-    const canUsePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (!canUsePointer) {
+    // Only disable custom cursor on mobile viewports
+    const isMobileViewport = window.innerWidth < 768;
+    if (isMobileViewport) {
       setIsMobile(true);
       return;
     }

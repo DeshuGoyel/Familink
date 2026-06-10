@@ -58,7 +58,7 @@ export default function LandingNavbar() {
               <span
                 className="font-bold"
                 style={{
-                  background: 'linear-gradient(135deg, #3B82F6, #D4A72C)',
+                  background: 'linear-gradient(135deg, var(--color-brand-primary), var(--color-gradient-purple))',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
@@ -98,13 +98,13 @@ export default function LandingNavbar() {
             </button>
             <button
               onClick={() => scrollTo('#waitlist')}
-              className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_0_25px_rgba(59,130,246,0.2)] hover:shadow-[0_0_35px_rgba(59,130,246,0.4)]"
+              className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_0_25px_rgba(249,115,22,0.2)] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)]"
               style={{
-                background: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #D4A72C 100%)',
+                background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
                 color: 'white',
               }}
             >
-              Secure Legacy
+              Join Waitlist
             </button>
           </div>
 
@@ -157,10 +157,12 @@ export default function LandingNavbar() {
             <div className="mt-auto">
               <button
                 onClick={() => scrollTo('#waitlist')}
-                className="w-full py-4 rounded-2xl text-base font-bold text-white shadow-[0_0_30px_rgba(59,130,246,0.3)]"
-                style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #D4A72C 100%)' }}
+                className="w-full py-4 rounded-2xl text-base font-bold text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]"
+                style={{
+                  background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
+                }}
               >
-                Secure Your Legacy
+                Claim Your Spot
               </button>
             </div>
           </motion.div>

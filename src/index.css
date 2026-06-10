@@ -678,13 +678,9 @@
   }
 
   /* ── Custom cursor ── */
+  body.custom-cursor-active,
   body.custom-cursor-active * {
-    cursor: none;
-  }
-
-  body.custom-cursor-active a,
-  body.custom-cursor-active button {
-    cursor: none;
+    cursor: none !important;
   }
 
   .blueprint-cursor-dot {
