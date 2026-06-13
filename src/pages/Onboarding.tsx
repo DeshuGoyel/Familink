@@ -69,10 +69,12 @@ export default function Onboarding() {
       await api.post('/auth/register/send-otp', { email }, { skipAead: true });
       toast.success('Verification code resent to your email!');
     } catch (err: unknown) {
-      console.error('Failed to resend OTP:', err);
       let errorMessage = err instanceof Error ? err.message : 'Failed to send OTP code.';
-      if (errorMessage.toLowerCase().includes('conflict')) {
+      const isConflict = errorMessage.toLowerCase().includes('conflict');
+      if (isConflict) {
         errorMessage = 'An account with this email already exists.';
+      } else {
+        console.error('Failed to resend OTP:', err);
       }
       setError(errorMessage);
       toast.error(errorMessage);
@@ -96,10 +98,12 @@ export default function Onboarding() {
           toast.success('Verification code sent to your email!');
           setShowOtpEntry(true);
         } catch (err: unknown) {
-          console.error('Failed to send OTP:', err);
           let errorMessage = err instanceof Error ? err.message : 'Failed to send OTP code.';
-          if (errorMessage.toLowerCase().includes('conflict')) {
+          const isConflict = errorMessage.toLowerCase().includes('conflict');
+          if (isConflict) {
             errorMessage = 'An account with this email already exists.';
+          } else {
+            console.error('Failed to send OTP:', err);
           }
           setError(errorMessage);
           toast.error(errorMessage);
