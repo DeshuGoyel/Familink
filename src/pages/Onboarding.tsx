@@ -70,9 +70,12 @@ export default function Onboarding() {
       toast.success('Verification code resent to your email!');
     } catch (err: unknown) {
       console.error('Failed to resend OTP:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to send OTP code.';
+      let errorMessage = err instanceof Error ? err.message : 'Failed to send OTP code.';
+      if (errorMessage.toLowerCase().includes('conflict')) {
+        errorMessage = 'An account with this email already exists.';
+      }
       setError(errorMessage);
-      toast.error('Resend failed');
+      toast.error(errorMessage);
     } finally {
       setIsSendingOtp(false);
     }
@@ -94,9 +97,12 @@ export default function Onboarding() {
           setShowOtpEntry(true);
         } catch (err: unknown) {
           console.error('Failed to send OTP:', err);
-          const errorMessage = err instanceof Error ? err.message : 'Failed to send OTP code.';
+          let errorMessage = err instanceof Error ? err.message : 'Failed to send OTP code.';
+          if (errorMessage.toLowerCase().includes('conflict')) {
+            errorMessage = 'An account with this email already exists.';
+          }
           setError(errorMessage);
-          toast.error('Failed to send OTP');
+          toast.error(errorMessage);
         } finally {
           setIsSendingOtp(false);
         }
