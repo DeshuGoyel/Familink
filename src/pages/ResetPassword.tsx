@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, Loader2, ArrowRight, Lock, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
-import { api } from '../lib/api';
+import { api, ApiError } from '../lib/api';
 import { initOpaqueRegistration, finishOpaqueRegistration } from '../lib/opaqueClient';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
@@ -100,7 +100,21 @@ export default function ResetPassword() {
       toast.success('Password successfully reset!');
     } catch (err: unknown) {
       console.error('Password reset confirmation failed:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to reset password. Link may be expired.';
+      let errorMessage = 'Failed to reset password. Link may be expired.';
+      if (err instanceof ApiError) {
+        if (err.status === 401 || err.status === 404) {
+          errorMessage = 'Password reset link has expired or is invalid. Please request a new link.';
+        } else {
+          errorMessage = err.message;
+        }
+      } else if (err instanceof Error) {
+        const msg = err.message.toLowerCase();
+        if (msg.includes('authentication required') || msg.includes('not found') || msg.includes('unauthorized')) {
+          errorMessage = 'Password reset link has expired or is invalid. Please request a new link.';
+        } else {
+          errorMessage = err.message;
+        }
+      }
       setError(errorMessage);
       toast.error('Password reset failed');
     } finally {

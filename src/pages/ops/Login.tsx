@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, AlertCircle, Loader2, ArrowRight } from 'lucide-react';
 import { useOpsStore } from '../../store/useOpsStore';
-import { opsApi } from '../../lib/opsApi';
+import { opsApi, ApiError } from '../../lib/opsApi';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import toast from 'react-hot-toast';
@@ -41,7 +41,13 @@ export default function OpsLogin() {
       toast.success('Welcome back, Admin');
       navigate('/ops/dashboard');
     } catch (err: unknown) {
-      setError(err.message || 'Invalid credentials');
+      let errorMessage = 'Invalid credentials';
+      if (err instanceof ApiError) {
+        errorMessage = err.message;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
       toast.error('Authentication failed');
     } finally {
       setIsLoading(false);
