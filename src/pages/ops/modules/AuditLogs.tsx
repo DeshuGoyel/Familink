@@ -25,7 +25,7 @@ interface AuditLog {
   action: string;
   entity_type: string | null;
   entity_id: string | null;
-  metadata: unknown | null;
+  metadata: Record<string, unknown> | null;
   ip_address: string | null;
   created_at: string;
 }
@@ -54,8 +54,8 @@ export default function AuditLogs() {
         }
       });
       setLogs(data || []);
-    } catch {
-      toast.error('Failed to load activity logs');
+    } catch (err) {
+      toast.error((err as Error).message || 'Failed to load activity logs');
       setLogs([]);
     } finally {
       setIsLoading(false);
@@ -174,7 +174,7 @@ export default function AuditLogs() {
                   <span className="mx-1 text-slate-800">|</span>
                   {new Date(log.created_at).toLocaleDateString()}
                 </div>
-                {log.metadata && (
+                {!!log.metadata && (
                   <button 
                     onClick={() => setExpandedLog(expandedLog === log.id ? null : log.id)}
                     className="text-[10px] text-indigo-400 hover:text-indigo-300 flex items-center gap-1 group/meta transition-colors"
@@ -187,7 +187,7 @@ export default function AuditLogs() {
             </motion.div>
             
             <AnimatePresence>
-              {expandedLog === log.id && log.metadata && (
+              {expandedLog === log.id && !!log.metadata && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}

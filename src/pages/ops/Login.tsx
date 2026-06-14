@@ -48,7 +48,7 @@ export default function OpsLogin() {
         errorMessage = err.message;
       }
       setError(errorMessage);
-      toast.error('Authentication failed');
+      toast.error(errorMessage || 'Authentication failed');
     } finally {
       setIsLoading(false);
     }

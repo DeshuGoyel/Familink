@@ -6,8 +6,15 @@ import Card from '../../../components/ui/Card';
 import Button from '../../../components/ui/Button';
 import toast from 'react-hot-toast';
 
+interface BrandingConfig {
+  brand_name: string;
+  logo_url: string;
+  support_email: string;
+  theme_config: Record<string, unknown>;
+}
+
 export default function BrandingStudio() {
-  const [config, setConfig] = useState<unknown>({
+  const [config, setConfig] = useState<BrandingConfig>({
     brand_name: '',
     logo_url: '',
     support_email: '',
@@ -24,8 +31,8 @@ export default function BrandingStudio() {
     try {
       const data = await opsApi.get('/ops/branding');
       setConfig(data);
-    } catch {
-      toast.error('Failed to load branding');
+    } catch (err) {
+      toast.error((err as Error).message || 'Failed to load branding');
     } finally {
       setIsLoading(false);
     }
@@ -37,8 +44,8 @@ export default function BrandingStudio() {
     try {
       await opsApi.put('/ops/branding', config);
       toast.success('Theme assets updated');
-    } catch {
-      toast.error('Failed to save changes');
+    } catch (err) {
+      toast.error((err as Error).message || 'Failed to save changes');
     } finally {
       setIsSaving(false);
     }
