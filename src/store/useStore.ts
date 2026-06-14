@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { mockActivity, mockNotifications } from '../data/mockData';
 import { api } from '../lib/api';
 import { toBase64Url } from '../lib/aeadClient';
+import toast from 'react-hot-toast';
 
 export interface Asset {
   id: string;
@@ -318,6 +319,7 @@ export const useStore = create<AppState>((set) => ({
       set({ assets: formattedAssets });
     } catch (err) {
       console.error('Failed to fetch assets:', err);
+      toast.error((err as Error).message || 'Failed to fetch assets');
     }
   },
   addAsset: async (asset) => {
@@ -351,6 +353,7 @@ export const useStore = create<AppState>((set) => ({
       });
     } catch (err) {
       console.error('Failed to add asset:', err);
+      toast.error((err as Error).message || 'Failed to add asset');
     }
   },
   updateAsset: (id, data) => set((state) => {
@@ -382,6 +385,7 @@ export const useStore = create<AppState>((set) => ({
       });
     } catch (err) {
       console.error('Failed to delete asset:', err);
+      toast.error((err as Error).message || 'Failed to delete asset');
     }
   },
   addGuardian: (guardian) => set((state) => {
@@ -441,6 +445,7 @@ export const useStore = create<AppState>((set) => ({
       }));
     } catch (err) {
       console.error('Failed to perform check-in:', err);
+      toast.error((err as Error).message || 'Failed to perform check-in');
     }
   },
   toggleSidebar: () => set((state) => ({ isSidebarCollapsed: !state.isSidebarCollapsed })),

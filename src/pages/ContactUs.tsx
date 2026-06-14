@@ -55,10 +55,11 @@ export default function ContactUs() {
         toast.success('Message sent! We will get back to you soon.');
         setFormData({ name: '', email: '', subject: '', message: '' });
       } else {
-        throw new Error('Failed to send message');
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error?.message || errorData.message || 'Failed to send message');
       }
-    } catch {
-      toast.error('Failed to send message. Please try again.');
+    } catch (err) {
+      toast.error((err as Error).message || 'Failed to send message. Please try again.');
     } finally {
       setSubmitting(false);
     }

@@ -7,7 +7,7 @@ import Input from '../components/ui/Input';
 import Select from '../components/ui/Select';
 import ReactConfetti from 'react-confetti';
 import { useStore } from '../store/useStore';
-import { api } from '../lib/api';
+import { api, ApiError } from '../lib/api';
 import { initOpaqueRegistration, finishOpaqueRegistration, initOpaqueLogin, finishOpaqueLogin } from '../lib/opaqueClient';
 import toast from 'react-hot-toast';
 
@@ -69,10 +69,19 @@ export default function Onboarding() {
       await api.post('/auth/register/send-otp', { email }, { skipAead: true });
       toast.success('Verification code resent to your email!');
     } catch (err: unknown) {
-      console.error('Failed to resend OTP:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to send OTP code.';
+      let errorMessage = 'Failed to send OTP code.';
+      if (err instanceof ApiError && err.status === 409) {
+        errorMessage = 'An account with this email already exists.';
+      } else if (err instanceof Error) {
+        if (err.message.toLowerCase().includes('conflict')) {
+          errorMessage = 'An account with this email already exists.';
+        } else {
+          errorMessage = err.message;
+          console.error('Failed to resend OTP:', err);
+        }
+      }
       setError(errorMessage);
-      toast.error('Resend failed');
+      toast.error(errorMessage);
     } finally {
       setIsSendingOtp(false);
     }
@@ -93,10 +102,19 @@ export default function Onboarding() {
           toast.success('Verification code sent to your email!');
           setShowOtpEntry(true);
         } catch (err: unknown) {
-          console.error('Failed to send OTP:', err);
-          const errorMessage = err instanceof Error ? err.message : 'Failed to send OTP code.';
+          let errorMessage = 'Failed to send OTP code.';
+          if (err instanceof ApiError && err.status === 409) {
+            errorMessage = 'An account with this email already exists.';
+          } else if (err instanceof Error) {
+            if (err.message.toLowerCase().includes('conflict')) {
+              errorMessage = 'An account with this email already exists.';
+            } else {
+              errorMessage = err.message;
+              console.error('Failed to send OTP:', err);
+            }
+          }
           setError(errorMessage);
-          toast.error('Failed to send OTP');
+          toast.error(errorMessage);
         } finally {
           setIsSendingOtp(false);
         }
@@ -110,13 +128,14 @@ export default function Onboarding() {
 
       setIsInitializing(true);
       setError(null);
+      let token: string | undefined;
       try {
         // 1. Verify OTP with backend to get registration verification token
         const verifyRes = await api.post<VerifyOtpResponseEnvelope>('/auth/register/verify-otp', {
           email,
           code: otpCode,
         }, { skipAead: true });
-        const token = verifyRes.data.verification_token;
+        token = verifyRes.data.verification_token;
 
         // 2. Run real OPAQUE Registration Handshake against live backend
         const { userId, registrationRequest, blindFactor } = await initOpaqueRegistration(password);
@@ -198,9 +217,37 @@ export default function Onboarding() {
         setStep(2);
       } catch (err: unknown) {
         console.error('Registration/Auto-Login failed:', err);
-        const errorMessage = err instanceof Error ? err.message : 'Registration failed. Please check connection.';
+        let errorMessage = 'Registration failed. Please check connection.';
+        if (!token) {
+          if (err instanceof ApiError) {
+            if (err.status === 401) {
+              errorMessage = 'Incorrect verification code. Please try again.';
+            } else if (err.status === 404) {
+              errorMessage = 'Verification code has expired or is invalid. Please request a new code.';
+            } else if (err.status === 429) {
+              errorMessage = 'Too many verification attempts. Please try again later.';
+            } else {
+              errorMessage = err.message;
+            }
+          } else if (err instanceof Error) {
+            const msg = err.message.toLowerCase();
+            if (msg.includes('authentication required') || msg.includes('unauthorized') || msg.includes('status 401')) {
+              errorMessage = 'Incorrect verification code. Please try again.';
+            } else if (msg.includes('resource not found') || msg.includes('not found') || msg.includes('status 404')) {
+              errorMessage = 'Verification code has expired or is invalid. Please request a new code.';
+            } else if (msg.includes('too many requests') || msg.includes('status 429')) {
+              errorMessage = 'Too many verification attempts. Please try again later.';
+            } else {
+              errorMessage = err.message;
+            }
+          }
+        } else {
+          if (err instanceof Error) {
+            errorMessage = err.message;
+          }
+        }
         setError(errorMessage);
-        toast.error('Registration failed');
+        toast.error(errorMessage);
       } finally {
         setIsInitializing(false);
       }

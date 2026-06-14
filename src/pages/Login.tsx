@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, Loader2, ArrowRight, Lock, Mail, Eye, EyeOff } from 'lucide-react';
-import { api } from '../lib/api';
+import { api, ApiError } from '../lib/api';
 import { initOpaqueLogin, finishOpaqueLogin } from '../lib/opaqueClient';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
@@ -108,9 +108,27 @@ export default function Login() {
       navigate('/dashboard');
     } catch (err: unknown) {
       console.error('Authentication error:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Invalid credentials or connection error';
+      let errorMessage = 'Invalid credentials or connection error';
+      if (err instanceof ApiError) {
+        if (err.status === 401 || err.status === 404) {
+          errorMessage = 'Incorrect email or password.';
+        } else if (err.status === 429) {
+          errorMessage = 'Too many login attempts. Please try again later.';
+        } else {
+          errorMessage = err.message;
+        }
+      } else if (err instanceof Error) {
+        const msg = err.message.toLowerCase();
+        if (msg.includes('authentication required') || msg.includes('not found') || msg.includes('unauthorized')) {
+          errorMessage = 'Incorrect email or password.';
+        } else if (msg.includes('too many requests')) {
+          errorMessage = 'Too many login attempts. Please try again later.';
+        } else {
+          errorMessage = err.message;
+        }
+      }
       setError(errorMessage);
-      toast.error('Authentication failed');
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

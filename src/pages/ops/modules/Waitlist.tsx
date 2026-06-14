@@ -7,8 +7,14 @@ import Button from '../../../components/ui/Button';
 import Badge from '../../../components/ui/Badge';
 import toast from 'react-hot-toast';
 
+interface WaitlistEntry {
+  email: string;
+  name?: string;
+  created_at?: string;
+}
+
 export default function WaitlistManager() {
-  const [entries, setEntries] = useState<unknown[]>([]);
+  const [entries, setEntries] = useState<WaitlistEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -18,10 +24,10 @@ export default function WaitlistManager() {
 
   const fetchEntries = async () => {
     try {
-      const data = await opsApi.get<unknown[]>('/ops/waitlist');
+      const data = await opsApi.get<WaitlistEntry[]>('/ops/waitlist');
       setEntries(data);
-    } catch {
-      toast.error('Failed to load waitlist');
+    } catch (err) {
+      toast.error((err as Error).message || 'Failed to load waitlist');
     } finally {
       setIsLoading(false);
     }

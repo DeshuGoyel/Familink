@@ -23,9 +23,23 @@ import { cn } from '../../../utils/cn';
 
 type Tab = 'identity' | 'theme' | 'controls';
 
+interface SystemConfigData {
+  brand_name: string;
+  logo_url: string;
+  support_email: string;
+  support_phone: string;
+  support_address: string;
+  waitlist_enabled: boolean;
+  theme_config: {
+    primaryColor: string;
+    darkMode: boolean;
+    maintenanceMode: boolean;
+  };
+}
+
 export default function SystemSettings() {
   const [activeTab, setActiveTab] = useState<Tab>('identity');
-  const [config, setConfig] = useState<unknown>({
+  const [config, setConfig] = useState<SystemConfigData>({
     brand_name: '',
     logo_url: '',
     support_email: '',
@@ -51,21 +65,21 @@ export default function SystemSettings() {
     try {
       const data = await opsApi.get('/ops/branding');
       setConfig(data);
-    } catch {
-      toast.error('Failed to load settings');
+    } catch (err) {
+      toast.error((err as Error).message || 'Failed to load settings');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setIsSaving(true);
     try {
       await opsApi.put('/ops/branding', config);
       toast.success('Configuration updated successfully');
-    } catch {
-      toast.error('Failed to save changes');
+    } catch (err) {
+      toast.error((err as Error).message || 'Failed to save changes');
     } finally {
       setIsSaving(false);
     }
@@ -89,10 +103,10 @@ export default function SystemSettings() {
 
       // In a real environment, we would PUT to presign.upload_url
       // For this demo, we'll simulate the upload success
-      setConfig((prev: unknown) => ({ ...prev, logo_url: presign.public_url }));
+      setConfig((prev) => ({ ...prev, logo_url: presign.public_url }));
       toast.success('Logo uploaded. Save settings to publish.');
-    } catch (err: unknown) {
-      toast.error(err.message || 'Failed to upload logo');
+    } catch (err) {
+      toast.error((err as Error).message || 'Failed to upload logo');
     } finally {
       setIsUploadingLogo(false);
     }

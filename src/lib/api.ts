@@ -7,6 +7,20 @@ interface RequestOptions extends RequestInit {
   skipAead?: boolean; // Set to true for unencrypted endpoints (like /health or /v1/server-capabilities)
 }
 
+export class ApiError extends Error {
+  status: number;
+  code?: string;
+  requestId?: string;
+
+  constructor(message: string, status: number, code?: string, requestId?: string) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.code = code;
+    this.requestId = requestId;
+  }
+}
+
 interface SuccessEnvelope<T> {
   data: T;
   requestId: string;
@@ -62,7 +76,10 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error?.message || errorData.message || `Request failed with status ${response.status}`);
+    const message = errorData.error?.message || errorData.message || `Request failed with status ${response.status}`;
+    const code = errorData.error?.code || errorData.code;
+    const reqId = errorData.error?.request_id || errorData.requestId || response.headers.get('x-request-id') || undefined;
+    throw new ApiError(message, response.status, code, reqId);
   }
 
   const jsonResult = await response.json();

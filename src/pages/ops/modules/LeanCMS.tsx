@@ -29,7 +29,8 @@ const DEFAULT_STRUCTURES: Record<string, unknown> = {
 
 export default function LeanCMS() {
   const [selectedSlug, setSelectedSlug] = useState<string>(DEFAULT_SLUGS[0]);
-  const [formData, setFormData] = useState<unknown>({});
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [formData, setFormData] = useState<any>({});
   const [currentVersion, setCurrentVersion] = useState<number>(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -46,7 +47,11 @@ export default function LeanCMS() {
       const data = await opsApi.get<unknown>(`/app/content/${selectedSlug}`);
       setFormData((data as { body?: unknown }).body || DEFAULT_STRUCTURES[selectedSlug] || {});
       setCurrentVersion((data as { version?: number }).version || 1);
-    } catch {
+    } catch (err) {
+      const error = err as { status?: number; message?: string };
+      if (error.status !== 404) {
+        toast.error(error.message || 'Failed to load content');
+      }
       // If content doesn't exist, initialize with default structure
       setFormData(DEFAULT_STRUCTURES[selectedSlug] || {});
       setCurrentVersion(1);
