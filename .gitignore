@@ -6,3 +6,9 @@ dist/
 *.log
 
 tl-temp-backend/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
