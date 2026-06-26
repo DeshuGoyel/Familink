@@ -249,6 +249,7 @@ export const useStore = create<AppState>((set) => ({
       console.warn('Session verification failed, clearing tokens:', err);
       localStorage.removeItem('tl_session_token');
       localStorage.removeItem('tl_user_id');
+      localStorage.removeItem('tl_person_id');
       localStorage.removeItem('tl_user_name');
       localStorage.removeItem('tl_user_email');
       localStorage.removeItem('tl_guardians');
@@ -279,6 +280,7 @@ export const useStore = create<AppState>((set) => ({
     } finally {
       localStorage.removeItem('tl_session_token');
       localStorage.removeItem('tl_user_id');
+      localStorage.removeItem('tl_person_id');
       localStorage.removeItem('tl_user_name');
       localStorage.removeItem('tl_user_email');
       localStorage.removeItem('tl_guardians');

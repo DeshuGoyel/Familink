@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, Loader2, ArrowRight, Lock, Mail, Eye, EyeOff } from 'lucide-react';
 import { api, ApiError } from '../lib/api';
 import { initOpaqueLogin, finishOpaqueLogin } from '../lib/opaqueClient';
+import { registerDevice } from '../lib/deviceClient';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import toast from 'react-hot-toast';
@@ -51,7 +52,7 @@ export default function Login() {
       );
 
       // Send finish to backend to authenticate session
-      const finishResponse = await api.post<{ session_token?: string; token?: string }>('/auth/login/finish', {
+      const finishResponse = await api.post<{ session_token?: string; token?: string; person_id?: string }>('/auth/login/finish', {
         session_id: initResponse.session_id,
         credential_finalization: finishData.registrationUpload,
       });
@@ -63,6 +64,16 @@ export default function Login() {
       }
       localStorage.setItem('tl_session_token', token);
       localStorage.setItem('tl_user_id', resolvedUserId);
+      if (finishResponse.person_id) {
+        localStorage.setItem('tl_person_id', finishResponse.person_id);
+      }
+
+      // Automatically register the device on login
+      try {
+        await registerDevice(resolvedUserId);
+      } catch (devErr) {
+        console.error('Device registration failed:', devErr);
+      }
 
       const derivedName = email.split('@')[0]
         .split(/[._-]/)

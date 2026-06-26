@@ -10,6 +10,7 @@ import { useStore } from '../store/useStore';
 import { api, ApiError } from '../lib/api';
 import { initOpaqueRegistration, finishOpaqueRegistration, initOpaqueLogin, finishOpaqueLogin } from '../lib/opaqueClient';
 import toast from 'react-hot-toast';
+import { registerDevice } from '../lib/deviceClient';
 
 
 const steps = [
@@ -155,7 +156,7 @@ export default function Onboarding() {
           email
         );
 
-        await api.post<unknown>('/auth/register/finish', {
+        const regFinishRes = await api.post<{ user_id: string; person_id?: string }>('/auth/register/finish', {
           session_id: initResponse.session_id,
           registration_upload: finishData.registrationUpload,
           ed25519_pubkey: finishData.ed25519Pubkey,
@@ -166,6 +167,9 @@ export default function Onboarding() {
           enc_legal_name: finishData.encLegalName,
           enc_email: finishData.encEmail,
         });
+        if (regFinishRes.person_id) {
+          localStorage.setItem('tl_person_id', regFinishRes.person_id);
+        }
 
         // 3. Perform Automatic OPAQUE Login immediately
         const loginInit = await initOpaqueLogin(password);
@@ -180,7 +184,7 @@ export default function Onboarding() {
           (loginInitResponse.credential_response || loginInitResponse.registration_response) as string
         );
 
-        const loginFinishResponse = await api.post<{ session_token?: string; token?: string }>('/auth/login/finish', {
+        const loginFinishResponse = await api.post<{ session_token?: string; token?: string; person_id?: string }>('/auth/login/finish', {
           session_id: loginInitResponse.session_id,
           credential_finalization: loginFinishData.registrationUpload,
         });
@@ -193,6 +197,17 @@ export default function Onboarding() {
         // Set session token, user ID, and update authentication state
         localStorage.setItem('tl_session_token', loginToken);
         localStorage.setItem('tl_user_id', userId);
+        if (loginFinishResponse.person_id) {
+          localStorage.setItem('tl_person_id', loginFinishResponse.person_id);
+        }
+
+        // Automatically register the device on onboarding completion
+        try {
+          await registerDevice(userId);
+        } catch (devErr) {
+          console.error('Device registration failed:', devErr);
+        }
+
         localStorage.setItem('tl_user_name', fullName);
         localStorage.setItem('tl_user_email', email);
         localStorage.removeItem('tl_guardians');

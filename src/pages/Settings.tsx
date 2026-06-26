@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { User, Shield, Bell, Palette, AlertTriangle, Activity, ChevronRight, HardDrive, Fingerprint, Globe, ShieldAlert } from 'lucide-react';
 import Button from '../components/ui/Button';
@@ -7,12 +7,17 @@ import Card from '../components/ui/Card';
 import toast from 'react-hot-toast';
 import { useTheme } from 'next-themes';
 import { motion, AnimatePresence } from 'framer-motion';
+import { api } from '../lib/api';
+import { QRCodeSVG } from 'qrcode.react';
+import { registerDevice } from '../lib/deviceClient';
+import { toBase64Url, fromBase64Url } from '../lib/aeadClient';
+import sodium from 'libsodium-wrappers-sumo';
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 15 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
-  transition: { delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+  transition: { delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] as any },
 });
 
 export default function Settings() {
@@ -25,6 +30,234 @@ export default function Settings() {
   const [email, setEmail] = useState(user.email);
   const [phone, setPhone] = useState(localStorage.getItem('tl_user_phone') || "+1 (555) 123-4567");
   const [jurisdiction, setJurisdiction] = useState(user.jurisdiction || "Global / Sovereign");
+
+  // MFA States
+  const [isMfaEnrolled, setIsMfaEnrolled] = useState(false);
+  const [mfaQrUrl, setMfaQrUrl] = useState<string | null>(null);
+  const [mfaBackupCodes, setMfaBackupCodes] = useState<string[]>([]);
+  const [mfaCode, setMfaCode] = useState('');
+  const [isMfaLoading, setIsMfaLoading] = useState(false);
+  const [showMfaSetup, setShowMfaSetup] = useState(false);
+
+  // Active Devices States
+  const [devices, setDevices] = useState<any[]>([]);
+  const [isLoadingDevices, setIsLoadingDevices] = useState(false);
+
+  // GDPR States
+  const [isExporting, setIsExporting] = useState(false);
+  const [isErasing, setIsErasing] = useState(false);
+
+  // Helper: UUID to raw 16 bytes for GDPR export AAD
+  const uuidToBytes = (uuidStr: string): Uint8Array => {
+    const hex = uuidStr.replace(/-/g, '');
+    const bytes = new Uint8Array(16);
+    for (let i = 0; i < 16; i++) {
+      bytes[i] = parseInt(hex.substring(i * 2, i * 2 + 2), 16);
+    }
+    return bytes;
+  };
+
+  const handleMfaEnroll = async () => {
+    setIsMfaLoading(true);
+    try {
+      const userId = localStorage.getItem('tl_user_id');
+      if (!userId) {
+        toast.error('Authentication session invalid');
+        return;
+      }
+      const res = await api.post<{ otpauth_url: string; backup_codes: string[] }>(
+        '/auth/mfa/totp/enroll',
+        { user_id: userId },
+        { skipAead: true }
+      );
+      setMfaQrUrl(res.otpauth_url);
+      setMfaBackupCodes(res.backup_codes || []);
+      setShowMfaSetup(true);
+      toast.success('MFA enrollment handshake completed');
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message || 'Failed to initiate MFA enrollment');
+    } finally {
+      setIsMfaLoading(false);
+    }
+  };
+
+  const handleMfaVerify = async () => {
+    if (!mfaCode || mfaCode.length !== 6) {
+      toast.error('Please enter a 6-digit verification code');
+      return;
+    }
+    setIsMfaLoading(true);
+    try {
+      const userId = localStorage.getItem('tl_user_id');
+      if (!userId) return;
+      await api.post(
+        '/auth/mfa/totp/verify',
+        { user_id: userId, code: mfaCode },
+        { skipAead: true }
+      );
+      setIsMfaEnrolled(true);
+      setShowMfaSetup(false);
+      toast.success('MFA successfully enabled!');
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message || 'MFA verification failed');
+    } finally {
+      setIsMfaLoading(false);
+    }
+  };
+
+  const registerCurrentDevice = async () => {
+    const userId = localStorage.getItem('tl_user_id');
+    if (!userId) return;
+    try {
+      await registerDevice(userId);
+      await fetchDevices();
+    } catch (err: any) {
+      console.error('Failed to auto-register current device:', err);
+    }
+  };
+
+  const fetchDevices = async () => {
+    setIsLoadingDevices(true);
+    try {
+      const userId = localStorage.getItem('tl_user_id');
+      if (!userId) return;
+      const res = await api.post<{ devices: any[] }>(
+        '/devices/',
+        { user_id: userId },
+        { skipAead: true }
+      );
+      const list = res.devices || [];
+      setDevices(list);
+      
+      const currentDevId = localStorage.getItem('tl_device_id');
+      const hasCurrent = list.some((d: any) => d.device_id === currentDevId);
+      if (!hasCurrent) {
+        await registerCurrentDevice();
+      }
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message || 'Failed to list active devices');
+    } finally {
+      setIsLoadingDevices(false);
+    }
+  };
+
+  const handleRevokeDevice = async (deviceId: string) => {
+    const userId = localStorage.getItem('tl_user_id');
+    if (!userId) return;
+    const currentDevId = localStorage.getItem('tl_device_id');
+    const isCurrent = deviceId === currentDevId;
+    
+    setIsLoadingDevices(true);
+    try {
+      await api.delete('/devices/' + deviceId, {
+        body: JSON.stringify({ user_id: userId })
+      });
+      toast.success('Device authorization revoked successfully');
+      if (isCurrent) {
+        useStore.getState().logout();
+      } else {
+        await fetchDevices();
+      }
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message || 'Failed to revoke device');
+    } finally {
+      setIsLoadingDevices(false);
+    }
+  };
+
+  const handleExportData = async () => {
+    setIsExporting(true);
+    try {
+      const userId = localStorage.getItem('tl_user_id');
+      const personId = localStorage.getItem('tl_person_id');
+      if (!userId || !personId) {
+        toast.error('Session parameters incomplete');
+        return;
+      }
+      
+      const exportKey = crypto.getRandomValues(new Uint8Array(32));
+      const exportKeyB64 = toBase64Url(exportKey);
+      
+      const res = await api.post<{ nonce_b64: string; ciphertext_b64: string }>(
+        '/gdpr/export',
+        {
+          user_id: userId,
+          person_id: personId,
+          export_key_b64: exportKeyB64
+        }
+      );
+      
+      const nonce = fromBase64Url(res.nonce_b64);
+      const ciphertext = fromBase64Url(res.ciphertext_b64);
+      const aad = uuidToBytes(userId);
+      
+      await sodium.ready;
+      
+      const decryptedBytes = sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(
+        null,
+        ciphertext,
+        aad,
+        nonce,
+        exportKey
+      );
+      
+      const plaintext = new TextDecoder().decode(decryptedBytes);
+      const data = JSON.parse(plaintext);
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `transfer-legacy-export-${Date.now()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      toast.success('Archival export completed successfully.');
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message || 'Data export failed');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleEraseData = async () => {
+    if (deleteConfirm !== 'DELETE') return;
+    setIsErasing(true);
+    try {
+      const userId = localStorage.getItem('tl_user_id');
+      const personId = localStorage.getItem('tl_person_id');
+      if (!userId || !personId) {
+        toast.error('Session parameters incomplete');
+        return;
+      }
+      
+      await api.post('/gdpr/erase', {
+        user_id: userId,
+        person_id: personId
+      });
+      
+      toast.success('Vault decommissioned. All identity assets deleted.');
+      useStore.getState().logout();
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message || 'Erase request failed');
+    } finally {
+      setIsErasing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'Security') {
+      fetchDevices();
+    }
+  }, [activeTab]);
 
   const tabs = [
     { name: 'Profile', icon: User, desc: 'Personal Identity' },
@@ -51,12 +284,7 @@ export default function Settings() {
     toast.success('Configuration synchronized successfully');
   };
 
-  const handleDelete = () => {
-    if (deleteConfirm === 'DELETE') {
-      toast.error('Account decommissioning sequence initiated');
-      setDeleteConfirm('');
-    }
-  };
+
 
   return (
     <div className="min-h-screen bg-page text-primary selection:bg-brand-primary/30 pt-6">
@@ -196,23 +424,91 @@ export default function Settings() {
                     <div className="space-y-4">
                       <h2 className="text-3xl font-display font-bold text-primary tracking-tight">Access Infrastructure</h2>
                       <p className="text-sm text-secondary font-medium italic">Cryptographic authentication layers and hardware authorization protocols.</p>
-                    </div>
-                    
-                    <div className="space-y-8">
+                    </div>                    <div className="space-y-8">
                       <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary flex items-center gap-3">
                          <Shield size={14} className="text-brand-primary"/> Multi-Factor Authentication
                       </h3>
-                      <div className="p-8 bg-page/60 rounded-[32px] border border-base group hover:border-brand-primary/20 transition-all flex flex-col md:flex-row items-center justify-between gap-8">
-                        <div className="flex gap-6 items-center">
-                          <div className="w-16 h-16 rounded-2xl bg-brand-primary/10 flex items-center justify-center text-brand-primary border border-brand-primary/20 shadow-inner">
-                             <Fingerprint size={32} />
+                      <div className="p-8 bg-page/60 rounded-[32px] border border-base group hover:border-brand-primary/20 transition-all flex flex-col items-stretch gap-8">
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+                          <div className="flex gap-6 items-center">
+                            <div className="w-16 h-16 rounded-2xl bg-brand-primary/10 flex items-center justify-center text-brand-primary border border-brand-primary/20 shadow-inner">
+                               <Fingerprint size={32} />
+                            </div>
+                            <div>
+                              <p className="text-xl font-display font-bold text-primary tracking-tight">Authenticator Synthesis</p>
+                              <p className="text-xs text-secondary font-medium mt-1 leading-relaxed">Hardware-grade verification required for all vault decrypts.</p>
+                            </div>
                           </div>
-                          <div>
-                            <p className="text-xl font-display font-bold text-primary tracking-tight">Authenticator Synthesis</p>
-                            <p className="text-xs text-secondary font-medium mt-1 leading-relaxed">Hardware-grade verification required for all vault decrypts.</p>
-                          </div>
+                          {isMfaEnrolled ? (
+                            <span className="text-[10px] font-bold uppercase tracking-widest bg-trust-500/10 text-trust-500 border border-trust-500/20 px-5 py-2.5 rounded-full">
+                              Active & Verified
+                            </span>
+                          ) : !showMfaSetup ? (
+                            <Button 
+                              variant="secondary" 
+                              onClick={handleMfaEnroll}
+                              disabled={isMfaLoading}
+                              className="h-12 px-8 text-[10px] font-bold uppercase tracking-widest border-brand-primary/30 text-brand-primary hover:bg-brand-primary/10"
+                            >
+                              {isMfaLoading ? 'Configuring...' : 'Enable MFA Handshake'}
+                            </Button>
+                          ) : null}
                         </div>
-                        <Button variant="secondary" className="h-12 px-8 text-[10px] font-bold uppercase tracking-widest border-brand-primary/30 text-brand-primary hover:bg-brand-primary/10">Enable MFA Handshake</Button>
+
+                        {showMfaSetup && mfaQrUrl && (
+                          <motion.div 
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="pt-8 border-t border-base/60 space-y-8"
+                          >
+                            <div className="flex flex-col md:flex-row gap-10 items-center">
+                              <div className="bg-white p-4 rounded-3xl border border-base shrink-0">
+                                <QRCodeSVG value={mfaQrUrl} size={160} />
+                              </div>
+                              <div className="space-y-4 flex-1">
+                                <p className="text-[11px] font-bold uppercase tracking-widest text-brand-primary">Scan QR Code</p>
+                                <p className="text-xs text-secondary leading-relaxed">
+                                  Scan this QR code with Google Authenticator or any TOTP app to synthesize your cryptographic key.
+                                </p>
+                                <div className="space-y-2">
+                                  <label className="text-[10px] font-bold text-muted uppercase tracking-[0.1em]">Verification Code</label>
+                                  <div className="flex gap-4">
+                                    <Input 
+                                      value={mfaCode}
+                                      onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, ''))}
+                                      maxLength={6}
+                                      placeholder="000000"
+                                      className="h-12 w-36 text-center text-lg font-mono tracking-widest rounded-xl"
+                                    />
+                                    <Button 
+                                      onClick={handleMfaVerify}
+                                      disabled={isMfaLoading}
+                                      className="h-12 px-8 text-[10px] font-bold uppercase tracking-widest"
+                                    >
+                                      {isMfaLoading ? 'Verifying...' : 'Verify Code'}
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {mfaBackupCodes.length > 0 && (
+                              <div className="p-6 bg-surface/50 border border-base rounded-2xl space-y-4">
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-secondary">Backup Access Keys</p>
+                                <p className="text-[11px] text-muted leading-relaxed">
+                                  Store these backup codes securely. They can bypass TOTP if you lose your authentication device.
+                                </p>
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-[11px] text-secondary">
+                                  {mfaBackupCodes.map((code, idx) => (
+                                    <div key={idx} className="bg-page/40 p-2.5 rounded-lg border border-base/40 text-center select-all">
+                                      {code}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </motion.div>
+                        )}
                       </div>
                     </div>
 
@@ -220,28 +516,44 @@ export default function Settings() {
                       <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary flex items-center gap-3">
                          <Globe size={14} className="text-brand-primary"/> Active Protocol Handshakes
                       </h3>
-                      <div className="space-y-4">
-                        {[
-                          { device: 'Institutional Workstation - Brave', location: 'New York, USA', current: true },
-                          { device: 'Encrypted Mobile - Safari', location: 'Geneva, Switzerland', current: false }
-                        ].map((s, i) => (
-                          <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-page/40 rounded-[24px] border border-base/60 gap-6 group hover:bg-page/60 transition-all">
-                            <div className="flex items-center gap-6">
-                               <div className="w-12 h-12 rounded-xl bg-surface border border-base flex items-center justify-center text-secondary group-hover:text-brand-primary transition-colors shadow-inner">
-                                  <HardDrive size={20} />
-                               </div>
-                               <div>
-                                <p className="font-display font-bold text-primary text-lg flex items-center gap-4 tracking-tight">
-                                  {s.device} 
-                                  {s.current && <span className="text-[9px] font-bold uppercase tracking-[0.2em] bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-3 py-1 rounded-full">Primary Node</span>}
-                                </p>
-                                <p className="text-[10px] font-bold text-secondary mt-1 uppercase tracking-widest">{s.location} · Active now</p>
+                      {isLoadingDevices && devices.length === 0 ? (
+                        <p className="text-xs text-muted">Synchronizing device catalog...</p>
+                      ) : (
+                        <div className="space-y-4">
+                          {devices.map((s) => {
+                            const currentDevId = localStorage.getItem('tl_device_id');
+                            const isCurrent = s.device_id === currentDevId;
+                            const browser = s.device_meta?.browser || 'Secured Client Node';
+                            const location = s.device_meta?.location || 'Unknown Node';
+                            
+                            return (
+                              <div key={s.device_id} className="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-page/40 rounded-[24px] border border-base/60 gap-6 group hover:bg-page/60 transition-all">
+                                <div className="flex items-center gap-6">
+                                   <div className="w-12 h-12 rounded-xl bg-surface border border-base flex items-center justify-center text-secondary group-hover:text-brand-primary transition-colors shadow-inner">
+                                      <HardDrive size={20} />
+                                   </div>
+                                   <div>
+                                    <p className="font-display font-bold text-primary text-lg flex items-center gap-4 tracking-tight">
+                                      {browser} 
+                                      {isCurrent && <span className="text-[9px] font-bold uppercase tracking-[0.2em] bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-3 py-1 rounded-full">Current Node</span>}
+                                    </p>
+                                    <p className="text-[10px] font-bold text-secondary mt-1 uppercase tracking-widest">
+                                      {location} · Last seen {new Date(s.last_seen_at || s.created_at).toLocaleString()}
+                                    </p>
+                                  </div>
+                                </div>
+                                <button 
+                                  onClick={() => handleRevokeDevice(s.device_id)}
+                                  disabled={isLoadingDevices}
+                                  className="text-[10px] font-bold text-red-500 hover:text-red-400 uppercase tracking-widest px-4 py-2 bg-red-500/10 rounded-xl border border-red-500/20 disabled:opacity-40"
+                                >
+                                  {isCurrent ? 'Revoke & Logout' : 'Revoke Token'}
+                                </button>
                               </div>
-                            </div>
-                            {!s.current && <button className="text-[10px] font-bold text-red-500 hover:text-red-400 uppercase tracking-widest px-4 py-2 bg-red-500/10 rounded-xl border border-red-500/20">Revoke Token</button>}
-                          </div>
-                        ))}
-                      </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 )}
@@ -353,6 +665,21 @@ export default function Settings() {
                       <p className="text-sm text-red-500/60 font-medium italic">Critical sequence to permanently decommission your succession infrastructure.</p>
                     </div>
 
+                    <div className="p-8 bg-page/60 border border-base rounded-[32px] space-y-6 relative overflow-hidden group">
+                      <p className="text-[10px] font-bold text-brand-primary uppercase tracking-[0.2em]">Institutional Archival Export</p>
+                      <p className="text-xs text-secondary leading-relaxed">
+                        Export a raw, decrypted copy of all metadata, active policy parameters, registered devices, and vault configurations.
+                      </p>
+                      <Button 
+                        onClick={handleExportData} 
+                        disabled={isExporting}
+                        variant="secondary" 
+                        className="h-12 px-8 text-[10px] font-bold uppercase tracking-widest border-brand-primary/30 text-brand-primary hover:bg-brand-primary/10 shadow-2xl"
+                      >
+                        {isExporting ? 'Generating Archive...' : 'Export Vault Data'}
+                      </Button>
+                    </div>
+
                     <div className="p-10 bg-red-500/5 border border-red-500/20 rounded-[40px] space-y-10 relative overflow-hidden">
                       <div className="absolute top-0 right-0 p-10 opacity-5">
                          <AlertTriangle size={180} className="text-red-500" />
@@ -374,11 +701,11 @@ export default function Settings() {
                         </div>
                         <Button 
                           variant="ghost" 
-                          disabled={deleteConfirm !== 'DELETE'}
-                          onClick={handleDelete}
+                          disabled={deleteConfirm !== 'DELETE' || isErasing}
+                          onClick={handleEraseData}
                           className="w-full h-16 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border-red-500/20 font-bold uppercase tracking-[0.2em] disabled:opacity-30 transition-all duration-500 shadow-xl shadow-red-500/5"
                         >
-                          Decommission Vault Protocol
+                          {isErasing ? 'Purging Archive...' : 'Decommission Vault Protocol'}
                         </Button>
                       </div>
                     </div>
