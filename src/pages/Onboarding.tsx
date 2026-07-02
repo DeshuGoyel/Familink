@@ -5,7 +5,7 @@ import { ArrowRight, ArrowLeft, Shield, Users, KeyRound, Wallet, CheckCircle2, G
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Select from '../components/ui/Select';
-import ReactConfetti from 'react-confetti';
+import confetti from 'canvas-confetti';
 import { useStore } from '../store/useStore';
 import { api } from '../lib/api';
 import { initOpaqueRegistration, finishOpaqueRegistration, initOpaqueLogin, finishOpaqueLogin } from '../lib/opaqueClient';
@@ -48,6 +48,16 @@ export default function Onboarding() {
       navigate('/dashboard');
     }
   }, [navigate]);
+
+  useEffect(() => {
+    if (step === 6) {
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+    }
+  }, [step]);
 
   const [jurisdiction, setLocalJurisdiction] = useState('global');
   const [assetName, setAssetName] = useState('');
@@ -600,7 +610,7 @@ export default function Onboarding() {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="w-full max-w-md text-center"
             >
-              <ReactConfetti width={window.innerWidth} height={window.innerHeight} recycle={false} numberOfPieces={300} colors={['#4F5CFF', '#D4AF37', '#10B981', '#F97316']} />
+              {/* Confetti triggered via useEffect */}
 
               <div className="w-20 h-20 rounded-[28px] bg-trust-500/10 border border-trust-500/30 flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(16,185,129,0.15)]">
                 <ShieldCheck size={36} className="text-trust-500" />

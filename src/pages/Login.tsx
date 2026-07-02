@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, Loader2, ArrowRight, Lock, Mail, Eye, EyeOff } from 'lucide-react';
 import { api } from '../lib/api';
 import { initOpaqueLogin, finishOpaqueLogin } from '../lib/opaqueClient';
+import { fromBase64Url } from '../lib/aeadClient';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import toast from 'react-hot-toast';
@@ -28,6 +29,7 @@ export default function Login() {
     try {
       let resolvedUserId = '';
       let token = '';
+      let displayName = '';
 
       try {
         // 1. Resolve email to user_id (unencrypted route)
@@ -55,7 +57,12 @@ export default function Login() {
         );
 
         // Send finish to backend to authenticate session
-        const finishResponse = await api.post<{ session_token?: string; token?: string }>('/auth/login/finish', {
+        const finishResponse = await api.post<{
+          session_token?: string;
+          token?: string;
+          enc_legal_name?: string;
+          emk_blob?: string;
+        }>('/auth/login/finish', {
           session_id: initResponse.session_id,
           credential_finalization: finishData.registrationUpload,
         });
@@ -64,6 +71,46 @@ export default function Login() {
         token = finishResponse.session_token || finishResponse.token || '';
         if (!token) {
           throw new Error('Authentication did not return a valid session token');
+        }
+
+        // 5. Decrypt stored real name if returned
+        if (finishResponse.enc_legal_name && finishResponse.emk_blob) {
+          try {
+            const sodium = (await import('libsodium-wrappers-sumo')).default;
+            await sodium.ready;
+            const exportKey = finishData.exportKey;
+            
+            // Derive Key Encryption Key (KEK)
+            const kek = sodium.crypto_generichash(32, fromBase64Url(exportKey), null);
+            
+            // Parse and decrypt the Encrypted Master Key (EMK)
+            const emkBlobString = new TextDecoder().decode(fromBase64Url(finishResponse.emk_blob));
+            const emk = JSON.parse(emkBlobString);
+            const emkNonce = fromBase64Url(emk.nonce);
+            const emkCiphertext = fromBase64Url(emk.ciphertext);
+            const mk = sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(
+              null,
+              emkCiphertext,
+              new Uint8Array(),
+              emkNonce,
+              kek
+            );
+
+            // Decrypt profile legal name using Master Key and prepended nonce
+            const combined = fromBase64Url(finishResponse.enc_legal_name);
+            const nameNonce = combined.slice(0, 24);
+            const nameCiphertext = combined.slice(24);
+            const decryptedNameBytes = sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(
+              null,
+              nameCiphertext,
+              null,
+              nameNonce,
+              mk
+            );
+            displayName = new TextDecoder().decode(decryptedNameBytes);
+          } catch (decErr) {
+            console.warn('Failed to decrypt profile name, falling back to email-derived name:', decErr);
+          }
         }
       } catch (apiErr) {
         if (import.meta.env.DEV) {
@@ -78,11 +125,13 @@ export default function Login() {
       localStorage.setItem('tl_session_token', token);
       localStorage.setItem('tl_user_id', resolvedUserId);
 
-      const derivedName = email.split('@')[0]
-        .split(/[._-]/)
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-      localStorage.setItem('tl_user_name', derivedName);
+      if (!displayName) {
+        displayName = email.split('@')[0]
+          .split(/[._-]/)
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+      }
+      localStorage.setItem('tl_user_name', displayName);
       localStorage.setItem('tl_user_email', email);
 
       let savedGuardiansList = [];
@@ -118,7 +167,7 @@ export default function Login() {
           { id: 'h1', name: 'Emily Asha', email: 'emily@email.com', relation: 'Daughter', status: 'Not Notified', progress: 0 }
         ] : []),
         user: {
-          name: derivedName,
+          name: displayName,
           email: email,
           avatar: null,
           score: 0,

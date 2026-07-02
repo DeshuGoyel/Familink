@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import confetti from 'canvas-confetti';
 
 export default function FinalCTA() {
-  const [branding, setBranding] = useState({ waitlist_enabled: true });
+  const [branding, setBranding] = useState({ waitlist_enabled: false });
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -20,7 +20,7 @@ export default function FinalCTA() {
         if (data && typeof data.waitlist_enabled === 'boolean') {
           setBranding(data);
         }
-      } catch { /* defaults to waitlist_enabled: true */ }
+      } catch { /* defaults to waitlist_enabled: false */ }
     }
     loadBranding();
   }, []);

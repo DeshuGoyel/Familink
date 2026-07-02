@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import CustomCursor from '../components/layout/CustomCursor';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
-import LandingNavbar from '../components/layout/LandingNavbar';
 import Footer from '../components/layout/Footer';
 import LandingSelector from '../pages/LandingSelector';
 import Dashboard from '../pages/Dashboard';
@@ -123,7 +122,7 @@ function AppLayout() {
     <div className={cn("relative z-10 min-h-screen flex flex-col", isAppPage ? "pt-14" : "")}>
       {isAppPage && <Navbar />}
       {isAppPage && <Sidebar />}
-      {showLandingNavbar && <LandingNavbar />}
+      {showLandingNavbar && <Navbar variant="marketing" />}
 
       {/* Page content — offset for sidebar */}
       <main className={cn("flex-grow", offsetClass)}>

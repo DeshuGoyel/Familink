@@ -120,21 +120,7 @@ export default function Founders() {
                   {f.quote}
                 </blockquote>
 
-                <div
-                  className="flex items-center gap-4 pt-4 border-t"
-                  style={{ borderColor: 'rgba(255,255,255,0.05)' }}
-                >
-                  {['Twitter', 'LinkedIn'].map((link) => (
-                    <a
-                      key={link}
-                      href="#"
-                      className="flex items-center gap-1.5 text-xs font-medium text-white/30 hover:text-white transition-colors"
-                    >
-                      <ExternalLink size={12} />
-                      {link}
-                    </a>
-                  ))}
-                </div>
+
               </div>
             </motion.div>
           ))}

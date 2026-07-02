@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, Shield, Download, ArrowRight, ArrowLeft, Users } from 'lucide-react';
 import Button from './ui/Button';
 import ProgressBar from './ui/ProgressBar';
-import ReactConfetti from 'react-confetti';
+import confetti from 'canvas-confetti';
+import { useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import RisingKey from './3d/RisingKey';
 
@@ -22,6 +23,16 @@ export default function RecoveryWizard({ heirName, onClose }: Props) {
   const [step, setStep] = useState(1);
   const [isSimulating, setIsSimulating] = useState(false);
   const totalSteps = 4;
+
+  useEffect(() => {
+    if (step === 4) {
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+    }
+  }, [step]);
 
   const handleNext = () => {
     if (step === 2) {
@@ -108,9 +119,7 @@ export default function RecoveryWizard({ heirName, onClose }: Props) {
 
             {step === 4 && (
               <motion.div key="4" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-2xl text-center relative z-50">
-                <div className="fixed inset-0 pointer-events-none z-[-1]">
-                  <ReactConfetti width={window.innerWidth} height={window.innerHeight} recycle={false} numberOfPieces={500} colors={['#4F5CFF', '#22C55E', '#EC4899', '#F59E0B']} />
-                </div>
+                {/* Confetti triggered via useEffect */}
                 <div className="w-24 h-24 bg-accent/20 rounded-full flex items-center justify-center text-accent mx-auto mb-6 glow-green relative z-10">
                   <CheckCircle2 size={48} />
                 </div>

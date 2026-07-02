@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import LandingFooter from '../components/landing/LandingFooter';
+import Footer from '../components/layout/Footer';
 import Hero from '../components/sections/Hero';
 import SocialProof from '../components/sections/SocialProof';
 import Problem from '../components/sections/Problem';
@@ -49,7 +49,7 @@ export default function LandingPage() {
       </main>
 
       {/* 10. Footer */}
-      <LandingFooter />
+      <Footer variant="marketing" />
     </div>
   );
 }

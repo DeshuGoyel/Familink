@@ -5,7 +5,7 @@ import LandingPage from './LandingPage';
 
 export default function LandingSelector() {
   const [branding, setBranding] = useState({
-    waitlist_enabled: true,
+    waitlist_enabled: false,
   });
   const [loading, setLoading] = useState(true);
 
