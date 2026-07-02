@@ -10,7 +10,7 @@ const BASE_URL = process.env.BASE_URL || 'http://localhost:5173';
 
 Given('I open the Familink app', async function (this: ICustomWorld) {
   await this.page.goto(BASE_URL);
-  await this.page.waitForLoadState('networkidle');
+  await this.page.waitForLoadState('domcontentloaded');
 });
 
 Given('I am on the login page', async function (this: ICustomWorld) {
@@ -19,7 +19,7 @@ Given('I am on the login page', async function (this: ICustomWorld) {
 
 Given('I am on the forgot password page', async function (this: ICustomWorld) {
   await this.page.goto(`${BASE_URL}/forgot-password`);
-  await this.page.waitForLoadState('networkidle');
+  await this.page.waitForLoadState('domcontentloaded');
 });
 
 Given('I am logged in', async function (this: ICustomWorld) {
@@ -85,9 +85,7 @@ When('I save the settings', async function (this: ICustomWorld) {
   await this.page.click('button:has-text("Save"), button[type="submit"]');
 });
 
-When('I click on {string} link', async function (this: ICustomWorld, linkText: string) {
-  await this.page.click(`a:has-text("${linkText}")`);
-});
+// Duplicate link click definition removed
 
 When('I type {string} in the AI input', async function (this: ICustomWorld, text: string) {
   await this.page.fill('textarea, input[placeholder*="Ask" i], [data-testid="ai-input"]', text);

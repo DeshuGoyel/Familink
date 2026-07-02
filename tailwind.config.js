@@ -105,8 +105,9 @@ export default {
       },
 
       fontFamily: {
-        sans:    ['DM Sans', 'Inter', 'SF Pro Text', 'system-ui', 'sans-serif'],
-        display: ['Cormorant Garamond', 'Instrument Serif', 'Georgia', 'serif'],
+        sans:    ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Fraunces', 'Cormorant Garamond', 'Instrument Serif', 'Georgia', 'serif'],
+        script:  ['Caveat', 'cursive'],
         mono:    ['DM Mono', 'IBM Plex Mono', 'Cascadia Code', 'Courier New', 'monospace'],
         digits:  ['DM Mono', 'IBM Plex Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
         // backward compat

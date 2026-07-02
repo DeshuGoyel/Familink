@@ -7,7 +7,7 @@ Feature: Smoke Test Suite - Familink Critical Flows
 
   Scenario: User can navigate to Login page
     Given I open the Familink app
-    When I click on "Login" link
+    When I click on "Sign in" link
     Then I should be on the login page
 
   Scenario: User can login with valid credentials

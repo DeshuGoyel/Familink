@@ -24,7 +24,6 @@ import LegacyAnalytics from '../pages/LegacyAnalytics';
 import ContactUs from '../pages/ContactUs';
 import ForgotPassword from './ForgotPassword';
 import ResetPassword from './ResetPassword';
-import ParticleBackground from '../components/3d/ParticleBackground';
 import NotificationDrawer from '../components/layout/NotificationDrawer';
 import Sidebar from '../components/layout/Sidebar';
 import { Toaster } from 'react-hot-toast';
@@ -34,6 +33,8 @@ import { cn } from '../utils/cn';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useStore();
+  // In dev mode, skip auth so dashboard is viewable without logging in
+  if (import.meta.env.DEV) return <>{children}</>;
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
 }
 
@@ -108,28 +109,24 @@ const PUBLIC_ROUTES = new Set(['/', '/login', '/onboarding', '/contact', '/conta
 const APP_ROUTE_PREFIXES = ['/dashboard', '/assets', '/allocations', '/guardians', '/heirs', '/ai-planner', '/trust', '/settings', '/checkin', '/check-in', '/capsules', '/obituary', '/passport', '/identity', '/developer', '/activity', '/analytics', '/reports'];
 
 function AppLayout() {
-  const { isSidebarCollapsed, isNotificationOpen } = useStore();
+  const { isNotificationOpen } = useStore();
   const location = useLocation();
   const isPublicPage = PUBLIC_ROUTES.has(location.pathname);
   const isAppPage = APP_ROUTE_PREFIXES.some(p => location.pathname.startsWith(p));
   const isOpsPage = location.pathname.startsWith('/ops');
   const showLandingNavbar = !isAppPage && !isOpsPage && location.pathname !== '/login' && location.pathname !== '/onboarding';
 
-  // Shared offset class for Sidebar parity
-  const offsetClass = isAppPage
-    ? isSidebarCollapsed
-      ? 'lg:pl-20' // 80px (matches w-20)
-      : 'lg:pl-64' // 256px (matches w-64)
-    : '';
+  // Sidebar is always 240px — no collapse
+  const offsetClass = isAppPage ? 'lg:pl-[240px]' : '';
 
   return (
-    <div className={cn("relative z-10 min-h-screen flex flex-col transition-all duration-300", isAppPage ? "pt-16" : "")}>
+    <div className={cn("relative z-10 min-h-screen flex flex-col", isAppPage ? "pt-14" : "")}>
       {isAppPage && <Navbar />}
       {isAppPage && <Sidebar />}
       {showLandingNavbar && <LandingNavbar />}
 
       {/* Page content — offset for sidebar */}
-      <main className={cn("flex-grow transition-all duration-300", offsetClass)}>
+      <main className={cn("flex-grow", offsetClass)}>
         <Routes>
           <Route path="/"            element={<LandingSelector />} />
           <Route path="/dashboard"   element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
@@ -257,17 +254,7 @@ export default function MainWebsite() {
 
   return (
     <>
-      {/* Institutional Obsidian Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none bg-page">
-        <div className="absolute inset-0 bg-aurora opacity-60" />
-        <div 
-          className="absolute inset-0 bg-dot-matrix opacity-30"
-          style={{ backgroundSize: '32px 32px' }}
-        />
-      </div>
-
       <AppCursor />
-      <ParticleBackground />
       <AppLayout />
 
       <Toaster

@@ -8,11 +8,11 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test:smoke": "cucumber-js --config cucumber.config.ts --tags @smoke",
-    "test:e2e": "cucumber-js --config cucumber.config.ts",
-    "test:auth": "cucumber-js --config cucumber.config.ts --tags @auth",
-    "test:headed": "cross-env HEADLESS=false cucumber-js --config cucumber.config.ts",
-    "test:report": "cucumber-js --config cucumber.config.ts && echo 'Report generated at e2e/reports/report.html'"
+    "test:smoke": "cucumber-js --config cucumber.config.cjs --tags @smoke",
+    "test:e2e": "cucumber-js --config cucumber.config.cjs",
+    "test:auth": "cucumber-js --config cucumber.config.cjs --tags @auth",
+    "test:headed": "cross-env HEADLESS=false cucumber-js --config cucumber.config.cjs",
+    "test:report": "cucumber-js --config cucumber.config.cjs && echo 'Report generated at e2e/reports/report.html'"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@cucumber/cucumber": "^10.9.0",
-    "@cucumber/html-formatter": "^24.0.0",
+    "@cucumber/messages": "24.1.0",
     "@eslint/js": "^9.13.0",
     "@playwright/test": "^1.61.1",
     "@types/libsodium-wrappers": "^0.7.14",
@@ -68,6 +68,7 @@
     "postcss": "^8.5.8",
     "tailwindcss": "^3.4.19",
     "ts-node": "^10.9.2",
+    "tsx": "^4.22.4",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.11.0",
     "vite": "^6.0.0"

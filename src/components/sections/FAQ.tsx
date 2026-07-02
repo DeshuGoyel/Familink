@@ -1,124 +1,88 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
-type Category = 'security' | 'inheritance' | 'technical' | 'pricing';
-
-const categoryStyle: Record<Category, { fg: string; bg: string; border: string; barColor: string }> = {
-  security:    { fg: '#818cf8', bg: 'rgba(129,140,248,0.08)', border: 'rgba(129,140,248,0.2)', barColor: '#818cf8' },
-  inheritance: { fg: '#fb923c', bg: 'rgba(251,146,60,0.08)',  border: 'rgba(251,146,60,0.2)',  barColor: '#fb923c' },
-  technical:   { fg: '#c084fc', bg: 'rgba(192,132,252,0.08)', border: 'rgba(192,132,252,0.2)', barColor: '#c084fc' },
-  pricing:     { fg: '#34d399', bg: 'rgba(52,211,153,0.08)',  border: 'rgba(52,211,153,0.2)',  barColor: '#34d399' },
-};
-
-const faqs: { q: string; a: string; category: Category }[] = [
-  { category: 'security', q: 'Can Transfer Legacy employees see my vault?',
-    a: "Absolutely not. We use a strict zero-knowledge architecture. Your master password never leaves your browser, meaning we physically cannot decrypt your vault items. We store only mathematically scrambled ciphertext — even if our servers were breached, there's nothing useful to steal." },
-  { category: 'security', q: 'What happens to my data if Transfer Legacy shuts down?',
-    a: "Your vault is encrypted before it ever leaves your device. We also provide a downloadable open-source recovery tool. Even if our servers permanently disappear, your family can run the tool offline and reassemble your legacy using guardian keys." },
-  { category: 'inheritance', q: "How does the dead man's switch actually work?",
-    a: "We monitor your check-ins. If you miss your threshold, you receive escalating warnings via email and SMS. Guardians are then asked to contact you physically. Only after all escalation steps fail does your vault enter Transfer Mode — and that's after a customizable delay you set." },
-  { category: 'inheritance', q: "What if I'm still alive but temporarily inactive?",
-    a: "Multiple fail-safes are in place. Before any transfer begins, you'll get urgent notifications and guardians will be instructed to attempt contact. The trigger period is fully customizable — anywhere from 7 days to 12 months, and you can check in at any time to reset the clock." },
-  { category: 'inheritance', q: 'How do my guardians receive my assets?',
-    a: "Guardians never receive your actual assets. They each receive unique cryptographic shards. When your vault triggers, they combine their shards on our secure portal — guided step by step — to regenerate the decrypt key and access exactly what you designated for them." },
-  { category: 'technical', q: 'What cryptocurrencies and assets do you support?',
-    a: "Because your vault stores encrypted text, you can protect any asset. We provide optimized templates for BTC, ETH, SOL wallets, hardware wallet seed phrases, exchange accounts, social media credentials, and legal documents." },
-  { category: 'technical', q: 'How is this different from a hardware wallet backup?',
-    a: "Hardware wallets protect against hackers — not against life. If your family doesn't know what a wallet is, doesn't have the PIN, or can't locate the seed phrase, your assets are gone regardless. We ensure the right people get access exactly when needed, with zero technical knowledge required." },
-  { category: 'pricing', q: 'Is Transfer Legacy legal in my country?',
-    a: "We provide an encryption and storage protocol, legal to use globally. Inheritance laws around decrypted digital assets vary by jurisdiction. We recommend storing a digital copy of your formal will alongside your assets." },
+const faqs = [
+  {
+    q: "Can Transfer Legacy see my private key or vault data?",
+    a: "No. We utilize a strict client-side zero-knowledge architecture. Your passwords, documents, and private keys are encrypted directly on your local device using XChaCha20-Poly1305 before uploading. We store only scrambled ciphertext — we physically cannot decrypt your data."
+  },
+  {
+    q: "How does the Dead Man's Switch actually work?",
+    a: "We monitor your pings. If you miss your check-in interval, we send warning alerts via email and SMS. If you remain inactive past the grace period, your guardians are authorized to submit their shards. Shards are mathematically compiled, and only then is the key reconstituted to decrypt the vault."
+  },
+  {
+    q: "What happens if Transfer Legacy goes out of business?",
+    a: "Your vault is encrypted client-side. We also provide a downloadable open-source recovery script. Even if our servers permanently go offline, your family can run the script locally and reassemble your legacy offline using the guardian shards."
+  },
+  {
+    q: "How is this different from sharing passwords in 1Password?",
+    a: "Standard sharing grants immediate access. Transfer Legacy is built for inheritance. Access is sealed behind a liveness trigger. No single person (not even a guardian) can view your data until the switch conditions are met, protecting you from premature disclosure."
+  },
+  {
+    q: "Is this legally binding in my country?",
+    a: "Yes. Transfer Legacy is a cryptographic storage and transfer protocol. In most jurisdictions, digital assets can be passed via private contract or trusts. We recommend storing a copy of your formal will alongside your digital assets."
+  }
 ];
 
 export default function FAQ() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section id="faq" className="relative py-28 overflow-hidden bg-page">
-      <div
-        className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, var(--color-brand-primary), transparent)', opacity: 0.2 }}
-      />
-
-      <div className="max-w-4xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="mb-16"
-        >
-          <p className="text-xs font-bold tracking-[0.22em] uppercase mb-5 gradient-text-brand">
+    <section id="faq" className="py-24 bg-page relative overflow-hidden">
+      <div className="max-w-[800px] mx-auto px-6">
+        
+        {/* Section Header */}
+        <div className="mb-16 space-y-4">
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-primary">
             FAQ
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4 tracking-tight">
-            Real questions from real people.
+          <h2 className="font-display font-light text-primary leading-[1.08] tracking-tight text-[clamp(2.2rem,5vw,3.5rem)]">
+            Frequently Asked Questions
           </h2>
-          <p className="text-secondary text-lg">No marketing fluff — just honest answers.</p>
-        </motion.div>
+        </div>
 
-        <div className="space-y-2.5">
+        {/* Linear-Style Accordion list */}
+        <div className="border-t border-border-base divide-y divide-border-base">
           {faqs.map((faq, i) => {
             const isOpen = openIndex === i;
-            const style = categoryStyle[faq.category];
-
             return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05, duration: 0.5 }}
-                className="rounded-2xl border overflow-hidden transition-all duration-300 bg-surface"
-                style={{
-                  borderColor: isOpen ? style.border : 'var(--color-border-base)',
-                  borderLeftWidth: '3px',
-                  borderLeftColor: isOpen ? style.barColor : 'var(--color-border-base)',
-                }}
-              >
+              <div key={i} className="py-5">
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : i)}
-                  className="w-full flex items-start justify-between p-6 text-left gap-4"
+                  className="w-full flex items-center justify-between text-left gap-4 group cursor-pointer"
                 >
-                  <div className="flex items-start gap-4">
-                    <span
-                      className="text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg border whitespace-nowrap mt-0.5 flex-shrink-0"
-                      style={{ color: style.fg, background: style.bg, borderColor: style.border }}
-                    >
-                      {faq.category}
-                    </span>
-                    <span className="text-[15px] font-semibold text-primary leading-snug">{faq.q}</span>
-                  </div>
-                  <div
-                    className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-300 mt-0.5"
-                    style={isOpen ? { background: style.bg, border: `1px solid ${style.border}` } : { background: 'var(--color-muted)', opacity: 0.1 }}
-                  >
-                    <ChevronDown
-                      size={15}
-                      className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
-                      style={{ color: isOpen ? style.fg : 'var(--color-text-secondary)' }}
-                    />
-                  </div>
+                  <span className="text-[15px] font-medium text-secondary group-hover:text-primary transition-colors leading-snug">
+                    {faq.q}
+                  </span>
+                  <ChevronRight
+                    size={16}
+                    className="text-secondary/50 group-hover:text-primary transition-transform duration-300 shrink-0"
+                    style={{ transform: isOpen ? 'rotate(90deg)' : 'none' }}
+                  />
                 </button>
 
-                <AnimatePresence>
+                <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div
+                      key="content"
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden"
                     >
-                      <div className="px-6 pb-6 text-sm text-secondary leading-relaxed" style={{ paddingLeft: 'calc(1.5rem + 56px)' }}>
+                      <p className="text-secondary text-[13px] leading-relaxed font-light mt-3 pr-8">
                         {faq.a}
-                      </div>
+                      </p>
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </motion.div>
+              </div>
             );
           })}
         </div>
+
       </div>
     </section>
   );

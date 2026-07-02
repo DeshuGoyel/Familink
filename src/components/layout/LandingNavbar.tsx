@@ -1,120 +1,138 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Lock, Menu, X } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 import { cn } from '../../utils/cn';
-import { useStore } from '../../store/useStore';
-import { api } from '../../lib/api';
 
-interface BrandingData {
-  brand_name: string;
-  logo_url?: string;
-  waitlist_enabled: boolean;
-}
+const navLinks = [
+  { label: 'How it works', href: '#how' },
+  { label: 'Security',  href: '#security' },
+  { label: 'Pricing',   href: '#pricing' },
+  { label: 'FAQ',       href: '#faq' },
+];
 
 export default function LandingNavbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [branding, setBranding] = useState<BrandingData>({
-    brand_name: 'Transfer Legacy',
-    logo_url: '',
-    waitlist_enabled: true,
-  });
-  const { isAuthenticated } = useStore();
-  const navigate = useNavigate();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    
-    async function fetchBranding() {
-      try {
-        const res = await api.get<BrandingData>('/app/branding', { skipAead: true });
-        // Under local setup / skipAead, get resolves to SuccessEnvelope<BrandingData>
-        // Let's handle both envelope wrap and raw data cases
-        const data = (res as any).data ? (res as any).data : res;
-        if (data && data.brand_name) {
-          setBranding(data);
-        }
-      } catch (err) {
-        console.warn('Failed to load navbar branding, using defaults:', err);
-      }
-    }
-    
-    fetchBranding();
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 32);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
-    <nav 
-      className={cn(
-        "fixed top-0 left-0 right-0 z-[100] px-6 md:px-16 py-5 flex items-center justify-between transition-all duration-300",
-        scrolled ? "bg-blueprint-bg/80 backdrop-blur-xl border-b border-white/5 py-4" : "bg-transparent border-transparent"
-      )}
-    >
-      <Link to="/" className="flex items-center gap-3 group">
-        <div className="w-8 h-8 bg-blueprint-or/10 border border-blueprint-or/30 rounded-lg flex items-center justify-center group-hover:bg-blueprint-or/20 transition-colors overflow-hidden">
-          {branding.logo_url ? (
-            <img src={branding.logo_url} alt="Logo" className="w-full h-full object-contain p-1" />
-          ) : (
-            <svg viewBox="0 0 24 24" className="w-4 h-4 stroke-blueprint-or stroke-2 fill-none">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-          )}
-        </div>
-        <div className="font-display text-lg font-semibold text-white tracking-wide">
-          {branding.brand_name}
-        </div>
-      </Link>
-      
-      <div className="hidden md:flex items-center gap-8">
-        <a href="/#how" className="text-sm text-blueprint-muted2 hover:text-white transition-colors tracking-wide">How it works</a>
-        <a href="/#features" className="text-sm text-blueprint-muted2 hover:text-white transition-colors tracking-wide">Features</a>
-        <a href="/#pricing" className="text-sm text-blueprint-muted2 hover:text-white transition-colors tracking-wide">Pricing</a>
-        <a href="/#faq" className="text-sm text-blueprint-muted2 hover:text-white transition-colors tracking-wide">FAQ</a>
-      </div>
+    <>
+      <nav
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 h-16 flex items-center",
+          scrolled 
+            ? "bg-page/90 backdrop-blur-xl border-b border-base" 
+            : "bg-transparent border-b border-transparent"
+        )}
+      >
+        <div className="max-w-[1100px] mx-auto w-full px-6 flex items-center justify-between">
 
-      <div className="flex items-center gap-3">
-        {isAuthenticated ? (
-          <button 
-            onClick={() => navigate('/dashboard')}
-            className="bg-blueprint-or text-white px-5 py-2 rounded-lg font-sans text-sm font-medium transition-all relative overflow-hidden hover:bg-blueprint-or2 hover:-translate-y-px shadow-[0_8px_24px_rgba(249,115,22,0.35)] flex items-center gap-2"
-          >
-            Go to Dashboard
-            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 stroke-white stroke-2 fill-none">
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
-          </button>
-        ) : (
-          <>
-            <Link to="/login" className="hidden sm:block">
-              <button className="bg-transparent border border-white/10 text-blueprint-muted2 px-5 py-2 rounded-lg font-sans text-sm transition-all hover:border-white/20 hover:text-white">
-                Sign in
-              </button>
-            </Link>
-            {branding.waitlist_enabled ? (
-              <a href="#cta-email" onClick={(e) => {
-                e.preventDefault();
-                const ctaEl = document.getElementById('cta-email');
-                if (ctaEl) {
-                  ctaEl.scrollIntoView({ behavior: 'smooth' });
-                  ctaEl.focus();
-                }
-              }}>
-                <button className="bg-blueprint-or text-white px-5 py-2 rounded-lg font-sans text-sm font-medium transition-all relative overflow-hidden hover:bg-blueprint-or2 hover:-translate-y-px shadow-[0_8px_24px_rgba(249,115,22,0.35)]">
-                  Join Waitlist
-                </button>
+          {/* Brand */}
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div
+              className="w-7 h-7 rounded-full relative flex items-center justify-center"
+              style={{
+                background: 'conic-gradient(from 220deg, var(--color-brand-primary), var(--color-brand-primary-hover), var(--color-brand-gold), var(--color-brand-primary))'
+              }}
+            >
+              <div className="w-[11px] h-[11px] rounded-full bg-page transition-colors duration-400" />
+            </div>
+            <span
+              className="font-display font-medium text-[1.24rem] text-primary transition-opacity group-hover:opacity-75"
+              style={{ letterSpacing: '-0.01em' }}
+            >
+              Transfer Legacy
+            </span>
+          </Link>
+
+          {/* Desktop nav links */}
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map(({ label, href }) => (
+              <a
+                key={label}
+                href={href}
+                className="text-[13px] font-medium transition-colors text-secondary hover:text-primary"
+              >
+                {label}
               </a>
-            ) : (
-              <Link to="/onboarding">
-                <button className="bg-blueprint-or text-white px-5 py-2 rounded-lg font-sans text-sm font-medium transition-all relative overflow-hidden hover:bg-blueprint-or2 hover:-translate-y-px shadow-[0_8px_24px_rgba(249,115,22,0.35)]">
-                  Get started free
+            ))}
+          </div>
+
+          {/* Right CTAs */}
+          <div className="hidden md:flex items-center gap-4">
+            <ThemeToggle />
+            <Link
+              to="/login"
+              className="text-[13px] font-medium transition-colors text-secondary hover:text-primary"
+            >
+              Sign in
+            </Link>
+            <Link
+              to="/onboarding"
+              className="inline-flex items-center px-4 py-2 rounded-[6px] text-[13px] font-semibold text-black transition-opacity hover:opacity-85"
+              style={{ background: 'var(--color-brand-primary)' }}
+            >
+              Get started
+            </Link>
+          </div>
+
+          {/* Mobile hamburger */}
+          <div className="flex md:hidden items-center gap-3">
+            <ThemeToggle />
+            <button
+              onClick={() => setMobileOpen(o => !o)}
+              className="p-2 rounded-md text-secondary hover:text-primary transition-colors"
+              aria-label="Menu"
+            >
+              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile drawer */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 md:hidden flex flex-col bg-page pt-16"
+        >
+          <div className="flex flex-col p-6 gap-1">
+            {navLinks.map(({ label, href }) => (
+              <a
+                key={label}
+                href={href}
+                onClick={() => setMobileOpen(false)}
+                className="px-4 py-3 rounded-[8px] text-[15px] font-medium transition-colors hover:bg-[rgba(255,255,255,0.05)] text-primary"
+              >
+                {label}
+              </a>
+            ))}
+            <div className="mt-6 flex flex-col gap-3">
+              <Link to="/login" onClick={() => setMobileOpen(false)}>
+                <button
+                  className="w-full py-3 rounded-[6px] text-[14px] font-medium border border-base text-secondary bg-transparent hover:bg-surface/50"
+                >
+                  Sign in
                 </button>
               </Link>
-            )}
-          </>
-        )}
-      </div>
-    </nav>
+              <Link to="/onboarding" onClick={() => setMobileOpen(false)}>
+                <button
+                  className="w-full py-3 rounded-[6px] text-[14px] font-semibold text-black"
+                  style={{ background: 'var(--color-brand-primary)' }}
+                >
+                  Get started
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

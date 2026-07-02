@@ -17,7 +17,7 @@ export class GenericPage extends BasePage {
 
   async isPageLoaded(): Promise<boolean> {
     // Check page is not showing a loading spinner or error
-    const hasError = await this.isElementVisible('[data-testid="error-page"], .error-boundary');
+    const hasError = await this.page.locator('[data-testid="error-page"], .error-boundary').isVisible();
     return !hasError;
   }
 

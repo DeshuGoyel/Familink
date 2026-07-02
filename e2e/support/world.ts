@@ -12,6 +12,8 @@ export interface ICustomWorld extends World {
   dashboardPage: DashboardPage;
   genericPage: GenericPage;
   isLoggedIn: boolean;
+  init(): Promise<void>;
+  destroy(): Promise<void>;
 }
 
 export class CustomWorld extends World implements ICustomWorld {

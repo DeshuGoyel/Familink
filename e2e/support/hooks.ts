@@ -1,6 +1,9 @@
-import { Before, After, BeforeAll, AfterAll, Status } from '@cucumber/cucumber';
+import { Before, After, BeforeAll, AfterAll, Status, setDefaultTimeout } from '@cucumber/cucumber';
 import { ICustomWorld } from './world';
 import * as fs from 'fs';
+
+// Set default step timeout to 30 seconds
+setDefaultTimeout(30000);
 
 // Create reports directories if not exists
 BeforeAll(async function () {

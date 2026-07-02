@@ -1,128 +1,111 @@
 import { Link } from 'react-router-dom';
-
-const footerLinks = {
-  Product: ['How It Works', 'Security', 'Pricing', 'Roadmap'],
-  Legal: ['Privacy Policy', 'Terms of Service', 'Cookie Policy'],
-  Company: ['About Us', 'Blog', 'Careers', 'Contact'],
-};
+import ThemeToggle from '../layout/ThemeToggle';
 
 export default function LandingFooter() {
   return (
-    <footer
-      className="relative overflow-hidden bg-page border-t border-base"
-    >
-      {/* Ambient glow top-left */}
-      <div
-        className="absolute top-0 left-0 w-[400px] h-[200px] pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse at top left, rgba(249,115,22,0.06), transparent 70%)' }}
-      />
-
-      <div className="max-w-7xl mx-auto px-6 pt-16 pb-8 relative z-10">
-        {/* Grid */}
-        <div
-          className="grid grid-cols-1 md:grid-cols-5 gap-12 pb-12 border-b border-base"
-        >
-          {/* Brand */}
-          <div className="md:col-span-2">
-            {/* Logo */}
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 overflow-hidden flex items-center justify-center">
-                <img src="/logo-dark.png" alt="Transfer Legacy" className="w-full h-full object-contain dark:block hidden" />
-                <img src="/logo-light.png" alt="Transfer Legacy" className="w-full h-full object-contain dark:hidden block" />
+    <footer className="relative overflow-hidden bg-page border-t border-border-base select-none">
+      <div className="max-w-[1100px] mx-auto px-6 py-16 relative z-10">
+        
+        {/* Footer Top Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-12 pb-12 border-b border-border-base">
+          
+          {/* Col 1: Brand & Security Badges */}
+          <div className="md:col-span-2 space-y-6">
+            <Link to="/" className="flex items-center gap-2.5 group">
+              <div
+                className="w-7 h-7 rounded-full relative flex items-center justify-center"
+                style={{
+                  background: 'conic-gradient(from 220deg, var(--color-brand-primary), var(--color-brand-primary-hover), var(--color-brand-gold), var(--color-brand-primary))'
+                }}
+              >
+                <div className="w-[11px] h-[11px] rounded-full bg-page transition-colors duration-400" />
               </div>
-              <span className="font-bold text-[17px] tracking-tight text-primary">
-                Transfer{' '}
-                <span
-                  style={{
-                    background: 'linear-gradient(135deg, var(--color-gradient-pink), var(--color-brand-primary))',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                    fontWeight: 900,
-                  }}
-                >
-                  Legacy
-                </span>
+              <span className="font-display font-medium text-[1.18rem] text-primary transition-opacity group-hover:opacity-75">
+                Transfer Legacy
               </span>
-            </div>
-
-            <p className="text-sm text-secondary max-w-xs leading-relaxed mb-6 font-sans">
-              The zero-knowledge digital inheritance platform. Protect your crypto, accounts, and
-              documents for the people you love — with mathematical certainty.
+            </Link>
+            
+            <p className="text-[13px] text-secondary leading-relaxed font-light max-w-xs">
+              Client-side encrypted estate planning vault. Math-based digital inheritance for bank accounts, files, and crypto.
             </p>
 
-            {/* Social icons */}
-            <div className="flex items-center gap-3">
-              {['𝕏', 'in', 'gh'].map((icon, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold text-secondary transition-all duration-200 hover:text-primary"
-                  style={{
-                    border: '1px solid var(--color-border)',
-                    background: 'rgba(255,255,255,0.02)',
-                  }}
-                  onMouseEnter={e => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-brand-primary)';
-                    (e.currentTarget as HTMLElement).style.background = 'rgba(249,115,22,0.08)';
-                  }}
-                  onMouseLeave={e => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-border)';
-                    (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.02)';
-                  }}
-                >
-                  {icon}
-                </a>
-              ))}
+            {/* Security Badges */}
+            <div className="flex flex-wrap gap-3 items-center opacity-30 text-[10px] font-bold uppercase tracking-widest text-secondary">
+              <span className="border border-border-base rounded-[4px] px-2 py-1 bg-surface">SOC 2 Type II</span>
+              <span className="border border-border-base rounded-[4px] px-2 py-1 bg-surface">GDPR</span>
+              <span className="border border-border-base rounded-[4px] px-2 py-1 bg-surface">ISO 27001</span>
             </div>
           </div>
 
-          {/* Links */}
-          {Object.entries(footerLinks).map(([group, items]) => (
-            <div key={group}>
-              <h4 className="text-primary font-black text-xs uppercase tracking-widest mb-5">
-                {group}
-              </h4>
-              <ul className="space-y-3.5">
-                {items.map((item) => (
-                  <li key={item}>
-                    {item === 'Privacy Policy' ? (
-                      <Link to="/legal/privacy" className="text-sm text-secondary hover:text-primary transition-colors duration-200">Privacy Policy</Link>
-                    ) : item === 'Terms of Service' ? (
-                      <Link to="/legal/terms" className="text-sm text-secondary hover:text-primary transition-colors duration-200">Terms of Service</Link>
-                    ) : item === 'Blog' ? (
-                      <Link to="/resources/blog" className="text-sm text-secondary hover:text-primary transition-colors duration-200 font-sans">Blog</Link>
-                    ) : item === 'Contact' ? (
-                      <Link to="/contact" className="text-sm text-secondary hover:text-primary transition-colors duration-200 font-sans">Contact</Link>
-                    ) : (
-                      <a
-                        href={item === 'How It Works' ? '#how' : item === 'Security' ? '#features' : item === 'Pricing' ? '#pricing' : '#'}
-                        className="text-sm text-secondary hover:text-primary transition-colors duration-200 font-sans"
-                      >
-                        {item}
-                      </a>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Col 2: Product */}
+          <div>
+            <h4 className="text-primary font-semibold text-[12px] uppercase tracking-wider mb-4">Product</h4>
+            <ul className="space-y-3 text-[13px] font-light">
+              <li>
+                <a href="#how" className="text-secondary hover:text-primary transition-colors">How it works</a>
+              </li>
+              <li>
+                <a href="#security" className="text-secondary hover:text-primary transition-colors">Security</a>
+              </li>
+              <li>
+                <a href="#pricing" className="text-secondary hover:text-primary transition-colors">Pricing</a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 3: Legal */}
+          <div>
+            <h4 className="text-primary font-semibold text-[12px] uppercase tracking-wider mb-4">Legal</h4>
+            <ul className="space-y-3 text-[13px] font-light">
+              <li>
+                <Link to="/legal/privacy" className="text-secondary hover:text-primary transition-colors">Privacy Protocol</Link>
+              </li>
+              <li>
+                <Link to="/legal/terms" className="text-secondary hover:text-primary transition-colors">Terms of Service</Link>
+              </li>
+              <li>
+                <Link to="/legal/security-architecture" className="text-secondary hover:text-primary transition-colors">Security Spec</Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 4: Company */}
+          <div>
+            <h4 className="text-primary font-semibold text-[12px] uppercase tracking-wider mb-4">Company</h4>
+            <ul className="space-y-3 text-[13px] font-light">
+              <li>
+                <Link to="/resources/blog" className="text-secondary hover:text-primary transition-colors">Journal</Link>
+              </li>
+              <li>
+                <Link to="/contact" className="text-secondary hover:text-primary transition-colors">Contact</Link>
+              </li>
+              <li>
+                <span className="text-secondary/40">Careers — hiring</span>
+              </li>
+            </ul>
+          </div>
+
         </div>
 
-        {/* Bottom bar */}
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted">
-          <p>© {new Date().getFullYear()} Transfer Legacy, Inc. All rights reserved.</p>
-          <div className="flex items-center gap-2">
-            <span
-              className="inline-block w-1.5 h-1.5 rounded-full"
-              style={{ background: '#34d399', boxShadow: '0 0 8px rgba(52,211,153,0.8)', animation: 'pulse 2s infinite' }}
-            />
-            All systems operational
+        {/* Footer Bottom Bar */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-[12px] text-secondary/50">
+          <div className="flex items-center gap-4">
+            <p>© {new Date().getFullYear()} Transfer Legacy, Inc.</p>
+            <span className="text-secondary/20">•</span>
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
+              <span>All networks operational</span>
+            </div>
           </div>
-          <p>
-            Built with <span style={{ color: 'var(--color-brand-primary)' }}>♥</span> for families worldwide.
-          </p>
+
+          {/* Theme Toggle & Accent */}
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <span className="text-secondary/20">•</span>
+            <p className="font-light">Built with restraint for the sovereign.</p>
+          </div>
         </div>
+
       </div>
     </footer>
   );

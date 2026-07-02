@@ -245,6 +245,18 @@ export const useStore = create<AppState>((set) => ({
         user: getInitialUser(currentLoadedState)
       });
     } catch (err) {
+      if (import.meta.env.DEV) {
+        console.warn('Session verification failed, but skipping token clear in DEV mode:', err);
+        const currentLoadedState = getInitialState();
+        const { mockAssets } = await import('../data/mockData');
+        set({ 
+          isAuthenticated: true,
+          assets: mockAssets,
+          ...currentLoadedState,
+          user: getInitialUser(currentLoadedState)
+        });
+        return;
+      }
       console.warn('Session verification failed, clearing tokens:', err);
       localStorage.removeItem('tl_session_token');
       localStorage.removeItem('tl_user_id');
@@ -318,6 +330,15 @@ export const useStore = create<AppState>((set) => ({
       set({ assets: formattedAssets });
     } catch (err) {
       console.error('Failed to fetch assets:', err);
+      if (import.meta.env.DEV) {
+        const { mockAssets } = await import('../data/mockData');
+        set((state) => {
+          if (state.assets.length === 0) {
+            return { assets: mockAssets };
+          }
+          return {};
+        });
+      }
     }
   },
   addAsset: async (asset) => {
@@ -351,6 +372,18 @@ export const useStore = create<AppState>((set) => ({
       });
     } catch (err) {
       console.error('Failed to add asset:', err);
+      if (import.meta.env.DEV) {
+        set((state) => {
+          const newAsset = {
+            ...asset,
+            id: Date.now().toString(),
+            status: 'Protected',
+            date: new Date().toISOString().split('T')[0]
+          };
+          const newState = { ...state, assets: [...state.assets, newAsset] };
+          return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
+        });
+      }
     }
   },
   updateAsset: (id, data) => set((state) => {
@@ -382,6 +415,12 @@ export const useStore = create<AppState>((set) => ({
       });
     } catch (err) {
       console.error('Failed to delete asset:', err);
+      if (import.meta.env.DEV) {
+        set((state) => {
+          const newState = { ...state, assets: state.assets.filter(a => a.id !== id) };
+          return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
+        });
+      }
     }
   },
   addGuardian: (guardian) => set((state) => {

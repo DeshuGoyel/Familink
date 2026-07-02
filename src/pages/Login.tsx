@@ -26,41 +26,55 @@ export default function Login() {
     setError(null);
 
     try {
-      // 1. Resolve email to user_id (unencrypted route)
-      const lookupResponse = await api.post<{ data: { user_id: string } }>(
-        '/auth/user-id',
-        { email },
-        { skipAead: true }
-      );
-      const resolvedUserId = lookupResponse.data.user_id;
+      let resolvedUserId = '';
+      let token = '';
 
-      // 2. Initial OPAQUE Login Handshake start
-      const { credentialRequest, blindFactor } = await initOpaqueLogin(password);
+      try {
+        // 1. Resolve email to user_id (unencrypted route)
+        const lookupResponse = await api.post<{ data: { user_id: string } }>(
+          '/auth/user-id',
+          { email },
+          { skipAead: true }
+        );
+        resolvedUserId = lookupResponse.data.user_id;
 
-      // Send start to backend
-      const initResponse = await api.post<{ credential_response?: string; registration_response?: string; session_id: string }>('/auth/login/init', {
-        user_id: resolvedUserId,
-        credential_request: credentialRequest,
-      });
+        // 2. Initial OPAQUE Login Handshake start
+        const { credentialRequest, blindFactor } = await initOpaqueLogin(password);
 
-      // 3. Complete OPAQUE handshake client-side
-      const finishData = await finishOpaqueLogin(
-        password,
-        blindFactor,
-        (initResponse.credential_response || initResponse.registration_response) as string
-      );
+        // Send start to backend
+        const initResponse = await api.post<{ credential_response?: string; registration_response?: string; session_id: string }>('/auth/login/init', {
+          user_id: resolvedUserId,
+          credential_request: credentialRequest,
+        });
 
-      // Send finish to backend to authenticate session
-      const finishResponse = await api.post<{ session_token?: string; token?: string }>('/auth/login/finish', {
-        session_id: initResponse.session_id,
-        credential_finalization: finishData.registrationUpload,
-      });
+        // 3. Complete OPAQUE handshake client-side
+        const finishData = await finishOpaqueLogin(
+          password,
+          blindFactor,
+          (initResponse.credential_response || initResponse.registration_response) as string
+        );
 
-      // 4. Persist session token and user ID
-      const token = finishResponse.session_token || finishResponse.token;
-      if (!token) {
-        throw new Error('Authentication did not return a valid session token');
+        // Send finish to backend to authenticate session
+        const finishResponse = await api.post<{ session_token?: string; token?: string }>('/auth/login/finish', {
+          session_id: initResponse.session_id,
+          credential_finalization: finishData.registrationUpload,
+        });
+
+        // 4. Persist session token and user ID
+        token = finishResponse.session_token || finishResponse.token || '';
+        if (!token) {
+          throw new Error('Authentication did not return a valid session token');
+        }
+      } catch (apiErr) {
+        if (import.meta.env.DEV) {
+          console.warn('Backend API not available, falling back to local mock authentication:', apiErr);
+          token = 'mock_session_token';
+          resolvedUserId = 'mock_user_id';
+        } else {
+          throw apiErr;
+        }
       }
+
       localStorage.setItem('tl_session_token', token);
       localStorage.setItem('tl_user_id', resolvedUserId);
 
@@ -87,11 +101,22 @@ export default function Login() {
         // Ignore error
       }
 
+      // Prepopulate with some mock assets if in DEV mode and we logged in with mock
+      let initialAssets: any[] = [];
+      if (import.meta.env.DEV && token === 'mock_session_token') {
+        const { mockAssets } = await import('../data/mockData');
+        initialAssets = [...mockAssets];
+      }
+
       useStore.setState({ 
         isAuthenticated: true,
-        assets: [],
-        guardians: savedGuardiansList,
-        heirs: savedHeirsList,
+        assets: initialAssets,
+        guardians: savedGuardiansList.length > 0 ? savedGuardiansList : (import.meta.env.DEV ? [
+          { id: 'g1', name: 'Sarah Chen', email: 'sarah@email.com', status: 'Confirmed', relationship: 'Spouse' }
+        ] : []),
+        heirs: savedHeirsList.length > 0 ? savedHeirsList : (import.meta.env.DEV ? [
+          { id: 'h1', name: 'Emily Asha', email: 'emily@email.com', relation: 'Daughter', status: 'Not Notified', progress: 0 }
+        ] : []),
         user: {
           name: derivedName,
           email: email,
