@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useStore } from '../../store/useStore';
 import { Bell, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -47,6 +47,8 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
     notifications,
     isMobileSidebarOpen,
     toggleMobileSidebar,
+    isSidebarCollapsed,
+    toggleSidebar,
   } = useStore();
 
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -189,31 +191,100 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
     );
   }
 
+  const handleSidebarToggle = () => {
+    if (window.innerWidth < 1024) {
+      toggleMobileSidebar();
+    } else {
+      toggleSidebar();
+    }
+  };
+
   // App Layout
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center border-b border-[rgba(255,255,255,0.07)] lg:pl-[240px]"
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 h-14 flex items-center border-b border-[rgba(255,255,255,0.07)] transition-all duration-200",
+        isSidebarCollapsed ? "lg:pl-0" : "lg:pl-[240px]"
+      )}
       style={{ background: 'var(--color-bg-page)' }}
     >
       <div className="flex items-center justify-between w-full px-5">
         <div className="flex items-center gap-3">
+          {/* Toggle sidebar button */}
           <button
-            onClick={toggleMobileSidebar}
-            className="flex lg:hidden p-1.5 rounded-md transition-colors"
+            onClick={handleSidebarToggle}
+            className="p-1.5 rounded-md transition-colors hover:bg-[rgba(255,255,255,0.05)]"
             style={{ color: '#9B97A3' }}
             aria-label="Toggle menu"
           >
             {isMobileSidebarOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
 
-          <Link to="/" className="lg:hidden flex items-center gap-2">
+          {/* Logo and name */}
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div
+              className="w-[22px] h-[22px] rounded-full relative flex items-center justify-center shrink-0"
+              style={{
+                background: 'conic-gradient(from 220deg, var(--color-brand-primary), var(--color-brand-primary-hover), var(--color-brand-gold), var(--color-brand-primary))'
+              }}
+            >
+              <div className="w-[9px] h-[9px] rounded-full bg-page transition-colors duration-400" />
+            </div>
             <span
-              className="font-display text-sm font-normal"
-              style={{ color: '#E9E6DF', letterSpacing: '-0.01em' }}
+              className="font-display text-[13px] font-medium tracking-wide text-[#E9E6DF] transition-opacity group-hover:opacity-75"
+              style={{ letterSpacing: '-0.01em' }}
             >
               Transfer Legacy
             </span>
           </Link>
+
+          {/* Home etc. Links in Title Bar */}
+          <div className="hidden lg:flex items-center gap-6 ml-8 border-l border-[rgba(255,255,255,0.08)] pl-8">
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                cn(
+                  "text-[12px] font-medium transition-colors hover:text-white",
+                  isActive ? "text-brand-primary" : "text-[#9B97A3]"
+                )
+              }
+            >
+              Home
+            </NavLink>
+            <NavLink
+              to="/assets"
+              className={({ isActive }) =>
+                cn(
+                  "text-[12px] font-medium transition-colors hover:text-white",
+                  isActive ? "text-brand-primary" : "text-[#9B97A3]"
+                )
+              }
+            >
+              Vault
+            </NavLink>
+            <NavLink
+              to="/guardians"
+              className={({ isActive }) =>
+                cn(
+                  "text-[12px] font-medium transition-colors hover:text-white",
+                  isActive ? "text-brand-primary" : "text-[#9B97A3]"
+                )
+              }
+            >
+              Guardians
+            </NavLink>
+            <NavLink
+              to="/settings"
+              className={({ isActive }) =>
+                cn(
+                  "text-[12px] font-medium transition-colors hover:text-white",
+                  isActive ? "text-brand-primary" : "text-[#9B97A3]"
+                )
+              }
+            >
+              Settings
+            </NavLink>
+          </div>
         </div>
 
         <div className="flex items-center gap-1 ml-auto">

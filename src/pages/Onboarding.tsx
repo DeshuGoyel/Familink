@@ -505,8 +505,8 @@ export default function Onboarding() {
               className="w-full max-w-md"
             >
               <div className="p-8 bg-surface/40 border border-base/60 rounded-[32px] backdrop-blur-md shadow-2xl">
-                <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-6">
-                  <Wallet size={26} className="text-orange-400" />
+                <div className="w-14 h-14 rounded-2xl bg-brand-primary-dim border border-brand-primary/20 flex items-center justify-center mb-6">
+                  <Wallet size={26} className="text-brand-primary" />
                 </div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-primary mb-2">Step 3 of 5</p>
                 <h2 className="text-3xl font-display font-bold text-primary tracking-tight mb-2">First Asset</h2>

@@ -29,6 +29,7 @@ import { Toaster } from 'react-hot-toast';
 import { useStore } from '../store/useStore';
 import { useLocation } from 'react-router-dom';
 import { cn } from '../utils/cn';
+import { Menu, X } from 'lucide-react';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useStore();
@@ -108,15 +109,15 @@ const PUBLIC_ROUTES = new Set(['/', '/login', '/onboarding', '/contact', '/conta
 const APP_ROUTE_PREFIXES = ['/dashboard', '/assets', '/allocations', '/guardians', '/heirs', '/ai-planner', '/trust', '/settings', '/checkin', '/check-in', '/capsules', '/obituary', '/passport', '/identity', '/developer', '/activity', '/analytics', '/reports'];
 
 function AppLayout() {
-  const { isNotificationOpen } = useStore();
+  const { isNotificationOpen, isSidebarCollapsed } = useStore();
   const location = useLocation();
   const isPublicPage = PUBLIC_ROUTES.has(location.pathname);
   const isAppPage = APP_ROUTE_PREFIXES.some(p => location.pathname.startsWith(p));
   const isOpsPage = location.pathname.startsWith('/ops');
   const showLandingNavbar = !isAppPage && !isOpsPage && location.pathname !== '/login' && location.pathname !== '/onboarding';
 
-  // Sidebar is always 240px — no collapse
-  const offsetClass = isAppPage ? 'lg:pl-[240px]' : '';
+  // Sidebar is always 240px — collapsed changes offset to 0
+  const offsetClass = (isAppPage && !isSidebarCollapsed) ? 'lg:pl-[240px]' : '';
 
   return (
     <div className={cn("relative z-10 min-h-screen flex flex-col", isAppPage ? "pt-14" : "")}>
@@ -218,7 +219,7 @@ function AppLayout() {
 
       {/* Footer — also offset to prevent Sidebar overlap */}
       <div className={cn("transition-all duration-300", offsetClass)}>
-        {!isPublicPage && !isAppPage && !isOpsPage && <Footer />}
+        {!isPublicPage && !isOpsPage && <Footer />}
       </div>
 
       {isNotificationOpen && <NotificationDrawer />}

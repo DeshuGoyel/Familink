@@ -45,7 +45,7 @@ export default function ForgotPassword() {
     <div className="min-h-screen bg-[#020409] flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background Ambience */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-brand-primary/5 rounded-full blur-[120px] animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[120px] animate-pulse delay-1000" />
       </div>
 
@@ -57,8 +57,8 @@ export default function ForgotPassword() {
         {/* Brand Area */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-3 group mb-4">
-            <div className="w-10 h-10 bg-orange-500/10 border border-orange-500/30 rounded-xl flex items-center justify-center group-hover:bg-orange-500/20 transition-colors">
-              <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-orange-500 stroke-2 fill-none">
+            <div className="w-10 h-10 bg-brand-primary-dim border border-brand-primary/30 rounded-xl flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
+              <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-brand-primary stroke-2 fill-none">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
               </svg>
             </div>
@@ -92,7 +92,7 @@ export default function ForgotPassword() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="bg-slate-950/50 border-slate-800/80 focus:border-orange-500/50 pl-10"
+                      className="bg-slate-950/50 border-slate-800/80 focus:border-brand-primary/50 pl-10"
                     />
                     <Mail className="absolute left-3.5 bottom-3.5 w-4 h-4 text-slate-500" />
                   </div>
@@ -108,7 +108,7 @@ export default function ForgotPassword() {
                     <Button
                       type="submit"
                       variant="primary"
-                      className="w-full h-12 rounded-xl text-sm font-semibold bg-orange-500 hover:bg-orange-600 text-white shadow-lg shadow-orange-500/20 transition-all flex items-center justify-center gap-2 group"
+                      className="w-full h-12 rounded-xl text-sm font-semibold bg-brand-primary hover:bg-brand-primary-hover text-white shadow-lg shadow-brand/20 transition-all flex items-center justify-center gap-2 group"
                       disabled={isLoading}
                     >
                       {isLoading ? (

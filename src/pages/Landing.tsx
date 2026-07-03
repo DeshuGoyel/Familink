@@ -1,295 +1,98 @@
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { Shield, ChevronDown, Lock, Users, Bot, KeyRound, CheckCircle2, ShieldCheck, Fingerprint, Database } from 'lucide-react';
-import Button from '../components/ui/Button';
-import Card from '../components/ui/Card';
-import { Canvas } from '@react-three/fiber';
-import { Environment } from '@react-three/drei';
-import LandingVaultObject from '../components/3d/LandingVaultObject';
-import LegacyTransferObject from '../components/3d/LegacyTransferObject';
+import React, { useEffect, useRef } from 'react';
+import { useTheme } from 'next-themes';
+import '../landing.css';
 
 export default function Landing() {
-  const words = "Your Digital Legacy, Protected Forever.".split(" ");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { theme, setTheme } = useTheme();
+
+  // Sync next-themes state with the data-theme attribute on document root
+  useEffect(() => {
+    if (theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  }, [theme]);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    // ── NAV SCROLL ──
+    const handleScroll = () => {
+      document.getElementById('nav')?.classList.toggle('scrolled', window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+
+    // ── THEME TOGGLE ──
+    const themeBtn = document.getElementById('themeBtn');
+    const handleThemeClick = () => {
+      setTheme(theme === 'dark' ? 'light' : 'dark');
+    };
+    themeBtn?.addEventListener('click', handleThemeClick);
+
+    // ── SCROLL REVEAL ──
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { 
+        if (e.isIntersecting) {
+          e.target.classList.add('in'); 
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.rv').forEach(el => observer.observe(el));
+
+    // ── FAQ ACCORDION ──
+    const faqQuestions = document.querySelectorAll('.faq-q');
+    const handleFaqClick = (e: Event) => {
+      const q = e.currentTarget as HTMLElement;
+      if (q && q.parentElement) {
+        q.parentElement.classList.toggle('open');
+      }
+    };
+    faqQuestions.forEach(q => q.addEventListener('click', handleFaqClick));
+
+    // ── WAITLIST FORM CTA ──
+    const heroForms = document.querySelectorAll('.hero-form');
+    const handleFormSubmit = (e: Event) => {
+      e.preventDefault();
+      const form = e.currentTarget as HTMLFormElement;
+      const input = form.querySelector('input') as HTMLInputElement;
+      const email = input?.value;
+      if (email) {
+        alert('Welcome to Transfer Legacy! We\'ll be in touch at ' + email);
+      }
+    };
+    heroForms.forEach(form => form.addEventListener('submit', handleFormSubmit));
+
+    // ── SMOOTH HOVER CARD TILT ──
+    const cards = document.querySelectorAll('.plan,.prob,.tcard') as NodeListOf<HTMLElement>;
+    cards.forEach(card => {
+      card.addEventListener('mousemove', (e: Event) => {
+        const mouseEvent = e as MouseEvent;
+        const rect = card.getBoundingClientRect();
+        const x = ((mouseEvent.clientX - rect.left) / rect.width - 0.5) * 6;
+        const y = ((mouseEvent.clientY - rect.top) / rect.height - 0.5) * -6;
+        card.style.transform = `perspective(600px) rotateY(${x}deg) rotateX(${y}deg) translateY(-4px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+        card.style.transition = 'transform .4s ease';
+      });
+      card.addEventListener('mouseenter', () => {
+        card.style.transition = 'none';
+      });
+    });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      themeBtn?.removeEventListener('click', handleThemeClick);
+      faqQuestions.forEach(q => q.removeEventListener('click', handleFaqClick));
+      heroForms.forEach(form => form.removeEventListener('submit', handleFormSubmit));
+    };
+  }, [theme, setTheme]);
+
+  const rawHtml = "\n\n<!-- NAV -->\n<nav id=\"nav\">\n  <div class=\"nav-in\">\n    <a class=\"brand\" href=\"#\">\n      <span class=\"brand-mark\"></span>\n      <span class=\"brand-name\">Transfer Legacy</span>\n    </a>\n    <div class=\"nav-links\">\n      <a href=\"#how\">How it works</a>\n      <a href=\"#security\">Security</a>\n      <a href=\"#pricing\">Pricing</a>\n      <a href=\"#faq\">FAQ</a>\n    </div>\n    <div class=\"nav-right\">\n      <button class=\"theme-btn\" id=\"themeBtn\" aria-label=\"Toggle theme\">\n        <svg class=\"moon\" viewBox=\"0 0 24 24\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"/></svg>\n        <svg class=\"sun\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"4.5\"/><path d=\"M12 1v3M12 20v3M4.2 4.2l2 2M17.8 17.8l2 2M1 12h3M20 12h3M4.2 19.8l2-2M17.8 6.2l2-2\"/></svg>\n      </button>\n      <a class=\"nav-signin\" href=\"#\">Sign in</a>\n      <a class=\"btn btn-primary\" style=\"height:40px;padding:0 20px\" href=\"#waitlist\">Get started</a>\n    </div>\n  </div>\n</nav>\n\n<!-- HERO -->\n<header class=\"hero\">\n  <div class=\"wrap\">\n    <div class=\"hero-grid\">\n      <div class=\"hero-copy rv in\">\n        <div class=\"hero-badge\"><span class=\"yc\">Y</span> Backed by <b>founding members in 14 countries</b></div>\n        <h1 class=\"serif\">Your family gets<br>everything you built —<br><span class=\"script\">automatically</span>.</h1>\n        <p class=\"hero-sub\">Bank accounts, Gmail, Zerodha, iCloud, crypto — protected in one encrypted vault and passed on the moment your family needs it. No lawyers. No technical steps.</p>\n        <form class=\"hero-form\" onsubmit=\"return false\">\n          <input class=\"hero-input\" type=\"email\" placeholder=\"you@email.com\" aria-label=\"Email\">\n          <button class=\"btn btn-primary\">Claim your spot <span class=\"arw\">→</span></button>\n        </form>\n        <div class=\"hero-trust\">\n          <div class=\"avatars\"><span>SP</span><span>RM</span><span>AK</span><span>+</span></div>\n          <span>2,417 families protected</span>\n          <span class=\"dot\"></span>\n          <span>Free plan · no card</span>\n        </div>\n      </div>\n\n      <div class=\"hero-visual rv in\">\n        <div class=\"hero-blob\"></div>\n        <!-- notif -->\n        <div class=\"ncard\">\n          <div class=\"ncard-ic\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></div>\n          <div><div class=\"ncard-t\">Legacy Score: 87</div><div class=\"ncard-s\">Your family is protected</div></div>\n        </div>\n        <!-- main product card -->\n        <div class=\"pcard\">\n          <!-- Browser controls / title bar -->\n          <div style=\"background:var(--bg-2);padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line)\">\n            <div style=\"display:flex;gap:5px\">\n              <div style=\"width:8px;height:8px;border-radius:50%;background:#FF5F57\"></div>\n              <div style=\"width:8px;height:8px;border-radius:50%;background:#FEBC2E\"></div>\n              <div style=\"width:8px;height:8px;border-radius:50%;background:#28C840\"></div>\n            </div>\n            <div style=\"flex:1;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:3px 10px;font-size:10px;color:var(--muted);max-width:200px;margin:0 auto;text-align:center;font-family:Inter,sans-serif\">app.transferlegacy.com</div>\n          </div>\n          <div class=\"pcard-head\">\n            <span class=\"pcard-title\">Your Vault</span>\n            <div class=\"pcard-score\"><b>87</b><span>/ 100</span></div>\n          </div>\n          <div class=\"pcard-body\">\n            <div class=\"acct\">\n              <div class=\"acct-ic\">🏦</div>\n              <div class=\"acct-main\"><div class=\"acct-name\">HDFC Bank</div><div class=\"acct-sub\">Salary · ₹3.2L</div></div>\n              <div class=\"acct-status\"><span class=\"tick\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Secured</div>\n            </div>\n            <div class=\"acct\">\n              <div class=\"acct-ic\">✉️</div>\n              <div class=\"acct-main\"><div class=\"acct-name\">Gmail</div><div class=\"acct-sub\">Master key to all accounts</div></div>\n              <div class=\"acct-status\"><span class=\"tick\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Secured</div>\n            </div>\n            <div class=\"acct\">\n              <div class=\"acct-ic\">📈</div>\n              <div class=\"acct-main\"><div class=\"acct-name\">Zerodha</div><div class=\"acct-sub\">Portfolio · ₹18.4L</div></div>\n              <div class=\"acct-status\"><span class=\"tick\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Secured</div>\n            </div>\n            <div class=\"acct\">\n              <div class=\"acct-ic\">₿</div>\n              <div class=\"acct-main\"><div class=\"acct-name\">Bitcoin</div><div class=\"acct-sub\">Hardware wallet · seed phrase</div></div>\n              <div class=\"acct-status\"><span class=\"tick\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Secured</div>\n            </div>\n          </div>\n        </div>\n        <!-- guardian card -->\n        <div class=\"gcard\">\n          <div class=\"gcard-top\">\n            <div class=\"gcard-ic\">🤝</div>\n            <div><div class=\"gcard-t\">3 Guardians</div><div class=\"gcard-s\">Any 2 can unlock</div></div>\n          </div>\n          <div class=\"gcard-people\">\n            <div class=\"gp\"><span class=\"gp-av\" style=\"background:#6B8E6B\">S</span><span class=\"gp-n\">Sunita · Mother</span><span class=\"gp-c\">✓</span></div>\n            <div class=\"gp\"><span class=\"gp-av\" style=\"background:#4A7FB5\">R</span><span class=\"gp-n\">Rohan · Brother</span><span class=\"gp-c\">✓</span></div>\n            <div class=\"gp\"><span class=\"gp-av\" style=\"background:#B08D3E\">P</span><span class=\"gp-n\">Priya · Spouse</span><span class=\"gp-c\">✓</span></div>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n\n  <!-- trust strip -->\n  <div class=\"trust-strip\">\n    <div class=\"wrap trust-in\">\n      <span class=\"trust-lab\">Protecting</span>\n      <span class=\"trust-item\">🏦 Bank customers</span>\n      <span class=\"trust-item\">📈 Zerodha investors</span>\n      <span class=\"trust-item\">🌍 NRIs abroad</span>\n      <span class=\"trust-item\">₿ Crypto holders</span>\n      <span class=\"trust-item\">💼 Founders</span>\n    </div>\n  </div>\n</header>\n\n<!-- PROBLEM -->\n<section>\n  <div class=\"wrap\">\n    <div class=\"sec-head rv\"><span class=\"kick\">The problem</span></div>\n    <p class=\"big-claim serif rv\">When someone passes, families don't lose the money. They lose <span class=\"u\">access to it</span> — accounts freeze, passwords vanish, and $140 billion disappears every year.</p>\n    <div class=\"prob-row\">\n      <div class=\"prob rv\"><span class=\"prob-ic\">🏦</span><h3>Banks freeze on day one</h3><p>Even a listed nominee waits 4–7 months through succession certificates, NOCs and indemnity bonds.</p></div>\n      <div class=\"prob rv\"><span class=\"prob-ic\">✉️</span><h3>Gmail is the master key</h3><p>Every reset and statement runs through email. Google deletes inactive accounts — and everything linked locks with it.</p></div>\n      <div class=\"prob rv\"><span class=\"prob-ic\">📈</span><h3>A nominee can't just log in</h3><p>Being named isn't access. Your family still needs a court certificate and months before a single rupee moves.</p></div>\n      <div class=\"prob rv\"><span class=\"prob-ic\">📸</span><h3>Memories vanish for good</h3><p>Apple's process to reach a lost iCloud runs 18+ months. Most accounts close first. The photos never come back.</p></div>\n    </div>\n  </div>\n</section>\n\n<!-- HOW IT WORKS -->\n<section id=\"how\">\n  <div class=\"wrap\">\n    <div class=\"sec-head rv\">\n      <span class=\"kick\">How it works</span>\n      <h2 class=\"serif\">Three quiet steps.<br>Ten minutes. Protected for good.</h2>\n    </div>\n\n    <div class=\"frow rv\">\n      <div class=\"fr-text\">\n        <div class=\"fr-step serif\">Step one</div>\n        <h3 class=\"serif\">Add your accounts. Encrypted before they leave your device.</h3>\n        <p>Everything your family might need, sealed in a vault only you can open. We store scrambled text — reading it ourselves is mathematically impossible.</p>\n        <div class=\"fr-list\">\n          <div class=\"fr-li\"><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Banks, Gmail, Zerodha, iCloud, Apple ID</div>\n          <div class=\"fr-li\"><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Crypto wallets, seed phrases, hardware keys</div>\n          <div class=\"fr-li\"><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Online businesses, domains, insurance</div>\n        </div>\n      </div>\n      <div class=\"fr-panel\">\n        <div class=\"fr-panel-lab\">Your vault · encrypted</div>\n        <div class=\"frp-row\"><div class=\"frp-ic\">🏦</div><span class=\"frp-n\">HDFC Bank</span><span class=\"frp-v\">₹3.2L</span><span class=\"frp-badge\">Secured</span></div>\n        <div class=\"frp-row\"><div class=\"frp-ic\">✉️</div><span class=\"frp-n\">Gmail</span><span class=\"frp-v\">Master key</span><span class=\"frp-badge\">Secured</span></div>\n        <div class=\"frp-row\"><div class=\"frp-ic\">📈</div><span class=\"frp-n\">Zerodha</span><span class=\"frp-v\">₹18.4L</span><span class=\"frp-badge\">Secured</span></div>\n        <div class=\"frp-row\"><div class=\"frp-ic\">₿</div><span class=\"frp-n\">Bitcoin seed</span><span class=\"frp-v\">Ledger</span><span class=\"frp-badge\">Secured</span></div>\n      </div>\n    </div>\n\n    <div class=\"frow rev rv\">\n      <div class=\"fr-text\">\n        <div class=\"fr-step serif\">Step two</div>\n        <h3 class=\"serif\">Choose guardians. No single one can open it alone.</h3>\n        <p>Your trusted people each hold one fragment of the key. It takes two of them together to unlock — the same maths that guards the world's most sensitive systems.</p>\n        <div class=\"fr-list\">\n          <div class=\"fr-li\"><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Pick 2 to 5 people you trust</div>\n          <div class=\"fr-li\"><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Any 2 of 3 fragments reconstruct the key</div>\n          <div class=\"fr-li\"><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Change guardians anytime — vault stays sealed</div>\n        </div>\n      </div>\n      <div class=\"fr-panel\">\n        <div class=\"fr-panel-lab\">Your guardians</div>\n        <div class=\"frp-g\"><span class=\"frp-gav\" style=\"background:#6B8E6B\">S</span><div style=\"flex:1\"><div class=\"frp-n\">Sunita · Mother</div><div class=\"frp-v\">Fragment 1 of 3</div></div><span class=\"frp-badge\">Accepted</span></div>\n        <div class=\"frp-g\"><span class=\"frp-gav\" style=\"background:#4A7FB5\">R</span><div style=\"flex:1\"><div class=\"frp-n\">Rohan · Brother</div><div class=\"frp-v\">Fragment 2 of 3</div></div><span class=\"frp-badge\">Accepted</span></div>\n        <div class=\"frp-g\"><span class=\"frp-gav\" style=\"background:#B08D3E\">P</span><div style=\"flex:1\"><div class=\"frp-n\">Priya · Spouse</div><div class=\"frp-v\">Fragment 3 of 3</div></div><span class=\"frp-badge\">Accepted</span></div>\n        <div class=\"frp-note\">🔐 Any 2 of 3 can unlock — no one holds full access alone.</div>\n      </div>\n    </div>\n\n    <div class=\"frow rv\">\n      <div class=\"fr-text\">\n        <div class=\"fr-step serif\">Step three</div>\n        <h3 class=\"serif\">Your family inherits — guided, gentle, automatic.</h3>\n        <p>If you stop checking in, we reach out first — quietly, several times. Only then do guardians receive plain-language steps for every account. No jargon in a hard moment.</p>\n        <div class=\"fr-list\">\n          <div class=\"fr-li\"><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Smart check-ins — knows travel from emergency</div>\n          <div class=\"fr-li\"><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Reminders long before anything is shared</div>\n          <div class=\"fr-li\"><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Plain-English guidance, account by account</div>\n        </div>\n      </div>\n      <div class=\"fr-panel\">\n        <div class=\"fr-panel-lab\">Check-in status</div>\n        <div class=\"track\">\n          <span class=\"tline\" style=\"left:12.5%;right:62.5%\"></span>\n          <span class=\"tline\" style=\"left:37.5%;right:37.5%;background:var(--line-2)\"></span>\n          <span class=\"tline\" style=\"left:62.5%;right:12.5%;background:var(--line-2)\"></span>\n          <div class=\"tnode now\"><span class=\"tdot\"></span><span class=\"tlab\">Active</span></div>\n          <div class=\"tnode\"><span class=\"tdot\"></span><span class=\"tlab\">Remind</span></div>\n          <div class=\"tnode\"><span class=\"tdot\"></span><span class=\"tlab\">Alert</span></div>\n          <div class=\"tnode\"><span class=\"tdot\"></span><span class=\"tlab\">Release</span></div>\n        </div>\n        <div class=\"frp-row\"><div class=\"frp-ic\">✅</div><span class=\"frp-n\" style=\"color:var(--accent)\">Checked in 2 days ago</span></div>\n        <div class=\"frp-note\">If activated, guardians get step-by-step access guidance for every account in your vault.</div>\n      </div>\n    </div>\n  </div>\n</section>\n\n<!-- SECURITY -->\n<section class=\"security\" id=\"security\">\n  <div class=\"wrap\">\n    <div class=\"sec-head rv\" style=\"margin-bottom:56px\">\n      <span class=\"kick\">Security</span>\n      <h2 class=\"serif\">We can't read your vault.<br>Not by policy — by mathematics.</h2>\n      <p class=\"lead\">Everything is encrypted on your device before it reaches us. We hold scrambled text and nothing else. Even a full breach of our servers reveals nothing about you.</p>\n    </div>\n    <div class=\"sec-cards\">\n      <div class=\"scard rv\"><span class=\"scard-tag\">Encryption</span><h3>AES-256, on your device</h3><p>Your phone encrypts everything before sending. Our servers only ever see ciphertext — meaningless without a key we never hold.</p></div>\n      <div class=\"scard rv\"><span class=\"scard-tag\">Key sharing</span><h3>Shamir's Secret Sharing</h3><p>Your key splits into fragments — the same protocol that guards critical infrastructure. No one fragment, and no one person, is ever enough.</p></div>\n      <div class=\"scard rv\"><span class=\"scard-tag\">Architecture</span><h3>Zero-knowledge by design</h3><p>Even we can't open your vault. It isn't a promise we make — it's a property the system's design makes impossible to break.</p></div>\n    </div>\n  </div>\n</section>\n\n<!-- TESTIMONIALS -->\n<section>\n  <div class=\"wrap\">\n    <div class=\"sec-head center rv\">\n      <span class=\"kick\" style=\"justify-content:center\">In their words</span>\n      <h2 class=\"serif\">Quiet relief, from<br>every kind of family.</h2>\n    </div>\n    <div class=\"tgrid\">\n      <div class=\"tcard rv\">\n        <div class=\"stars\">★★★★★</div>\n        <p class=\"tq serif\">\"Set it up in ten minutes. My wife said she could breathe again. I hadn't realised how much I'd been carrying.\"</p>\n        <div class=\"tperson\"><span class=\"tav\" style=\"background:#6B8E6B\">RM</span><div><div class=\"tname\">Rohan M.</div><div class=\"trole\">Software Engineer · Pune</div></div></div>\n      </div>\n      <div class=\"tcard rv\">\n        <div class=\"stars\">★★★★★</div>\n        <p class=\"tq serif\">\"My Bitcoin seed was only in my head. This is the first thing I trusted to hold it for the people I love.\"</p>\n        <div class=\"tperson\"><span class=\"tav\" style=\"background:#4A7FB5\">AK</span><div><div class=\"tname\">Aditya K.</div><div class=\"trole\">Trader · Bangalore</div></div></div>\n      </div>\n      <div class=\"tcard rv\">\n        <div class=\"stars\">★★★★★</div>\n        <p class=\"tq serif\">\"I'm an NRI with accounts in two countries. This is the only place I could keep both sides in one clear plan.\"</p>\n        <div class=\"tperson\"><span class=\"tav\" style=\"background:#B08D3E\">SJ</span><div><div class=\"tname\">Siddharth J.</div><div class=\"trole\">Engineer · Dubai</div></div></div>\n      </div>\n    </div>\n  </div>\n</section>\n\n<!-- PRICING -->\n<section id=\"pricing\">\n  <div class=\"wrap\">\n    <div class=\"sec-head center rv\">\n      <span class=\"kick\" style=\"justify-content:center\">Pricing</span>\n      <h2 class=\"serif\">Honest pricing.<br>Founding rate locked for life.</h2>\n      <p>Founding members keep today's price forever — even as it rises after launch. 2,583 spots left.</p>\n    </div>\n    <div class=\"pgrid\">\n      <div class=\"plan rv\">\n        <div class=\"plan-tier\">Free forever</div>\n        <div class=\"plan-name serif\">Guardian</div>\n        <div class=\"plan-price serif\">$0<sub>/mo</sub></div>\n        <p class=\"plan-desc\">Protect your most important accounts. No card, ever.</p>\n        <div class=\"plan-line\"></div>\n        <ul>\n          <li><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Up to 10 vault items</li>\n          <li><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>2 guardians</li>\n          <li><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Account templates</li>\n        </ul>\n        <button class=\"btn btn-ghost\">Start free</button>\n      </div>\n      <div class=\"plan feat rv\">\n        <div class=\"plan-tier\">Founding rate</div>\n        <div class=\"plan-name serif\">Legacy</div>\n        <div class=\"plan-price serif\">$12<sub>/mo</sub></div>\n        <p class=\"plan-desc\">Your entire digital life, protected. Rate locked forever.</p>\n        <div class=\"plan-line\"></div>\n        <ul>\n          <li><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Unlimited vault items</li>\n          <li><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>5 guardians</li>\n          <li><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Crypto & hardware wallets</li>\n          <li><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>AI Legacy Planner</li>\n          <li><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Priority support</li>\n        </ul>\n        <button class=\"btn btn-primary\">Claim founding spot</button>\n      </div>\n      <div class=\"plan rv\">\n        <div class=\"plan-tier\">Founding rate</div>\n        <div class=\"plan-name serif\">Dynasty</div>\n        <div class=\"plan-price serif\">$29<sub>/mo</sub></div>\n        <p class=\"plan-desc\">For NRIs and complex, multi-country estates.</p>\n        <div class=\"plan-line\"></div>\n        <ul>\n          <li><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Everything in Legacy</li>\n          <li><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Family sub-accounts</li>\n          <li><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>Attorney delivery</li>\n          <li><span class=\"ck\"><svg viewBox=\"0 0 24 24\"><path d=\"M20 6L9 17l-5-5\"/></svg></span>White-glove onboarding</li>\n        </ul>\n        <button class=\"btn btn-ghost\">Claim founding spot</button>\n      </div>\n    </div>\n  </div>\n</section>\n\n<!-- FAQ -->\n<section id=\"faq\">\n  <div class=\"wrap\">\n    <div class=\"sec-head center rv\">\n      <span class=\"kick\" style=\"justify-content:center\">Questions</span>\n      <h2 class=\"serif\">Everything worth<br>knowing first.</h2>\n    </div>\n    <div class=\"faq rv\">\n      <div class=\"faq-item\"><button class=\"faq-q\">Can you read my passwords and accounts?<span class=\"pm\"></span></button><div class=\"faq-a\"><div class=\"faq-a-inner\">No — and it isn't just a promise. Your vault is encrypted on your device before it reaches us. We hold only scrambled text, meaningless without a key that never leaves you. Even a full breach of our servers would reveal nothing readable.</div></div></div>\n      <div class=\"faq-item\"><button class=\"faq-q\">What happens if Transfer Legacy shuts down?<span class=\"pm\"></span></button><div class=\"faq-a\"><div class=\"faq-a-inner\">You can export your encrypted vault anytime. The standards we use — AES-256 and Shamir's Secret Sharing — are open and permanent, so your guardians can recover everything with any compatible tool. We're built to never lock you in.</div></div></div>\n      <div class=\"faq-item\"><button class=\"faq-q\">Could one guardian misuse their fragment?<span class=\"pm\"></span></button><div class=\"faq-a\"><div class=\"faq-a-inner\">A single fragment is useless alone. It takes at least two of three (or three of five) to reconstruct the key. No one guardian can reach your vault by themselves — cooperation is required, and it can't happen quietly.</div></div></div>\n      <div class=\"faq-item\"><button class=\"faq-q\">How does the check-in system actually work?<span class=\"pm\"></span></button><div class=\"faq-a\"><div class=\"faq-a-inner\">You choose an interval from 7 days to 12 months. If you go quiet, we send reminders by email and SMS, then a final warning — with every chance to cancel a false alarm — before anything ever reaches your guardians. It's a careful, multi-stage process, not a blunt timer.</div></div></div>\n      <div class=\"faq-item\"><button class=\"faq-q\">Does this replace a will?<span class=\"pm\"></span></button><div class=\"faq-a\"><div class=\"faq-a-inner\">No — it makes your will usable. A will tells a court who inherits what. Transfer Legacy ensures your family can actually reach the accounts in practice. We work alongside your lawyer, not instead of one.</div></div></div>\n    </div>\n  </div>\n</section>\n\n<!-- FINAL CTA -->\n<section class=\"finalcta\" id=\"waitlist\">\n  <div class=\"blob\"></div>\n  <div class=\"wrap finalcta-in rv\">\n    <h2 class=\"serif\">Give your family<br>what they <span class=\"script\">deserve</span>.</h2>\n    <p>Ten minutes today. Peace of mind for good. 2,583 founding spots remain before the price rises.</p>\n    <form class=\"hero-form\" onsubmit=\"return false\">\n      <input class=\"hero-input\" type=\"email\" placeholder=\"you@email.com\" aria-label=\"Email\">\n      <button class=\"btn btn-primary\">Claim founding spot <span class=\"arw\">→</span></button>\n    </form>\n    <div class=\"hero-trust\" style=\"justify-content:center\">\n      <span>2,417 families protected</span><span class=\"dot\"></span><span>Free plan · no card required</span>\n    </div>\n  </div>\n</section>\n\n<!-- FOOTER -->\n<footer>\n  <div class=\"wrap\">\n    <div class=\"foot-top\">\n      <div class=\"foot-brand\">\n        <a class=\"brand\" href=\"#\"><span class=\"brand-mark\"></span><span class=\"brand-name\">Transfer Legacy</span></a>\n        <p class=\"foot-tag\">Digital estate planning for everyone with a bank account and a family they love.</p>\n      </div>\n      <div class=\"foot-col\"><h4>Product</h4><a href=\"#how\">How it works</a><a href=\"#security\">Security</a><a href=\"#pricing\">Pricing</a><a href=\"#faq\">FAQ</a></div>\n      <div class=\"foot-col\"><h4>Company</h4><a href=\"#\">About</a><a href=\"#\">Blog</a><a href=\"#\">Careers</a><a href=\"#\">Contact</a></div>\n      <div class=\"foot-col\"><h4>Legal</h4><a href=\"#\">Privacy</a><a href=\"#\">Terms</a><a href=\"#\">Security</a></div>\n    </div>\n    <div class=\"foot-bot\">\n      <span class=\"foot-copy\">© 2025 Transfer Legacy Technologies Pvt. Ltd.</span>\n      <div class=\"foot-badges\"><span class=\"foot-badge\">AES-256</span><span class=\"foot-badge\">Zero-knowledge</span><span class=\"foot-badge\">SSL</span></div>\n    </div>\n  </div>\n</footer>\n\n\n";
 
   return (
-    <div className="bg-page text-primary min-h-screen font-sans">
-      
-      {/* Hero Section */}
-      <section className="relative min-h-screen overflow-hidden">
-        <div className="absolute inset-0 bg-aurora opacity-30 pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_42%,rgba(249,115,22,0.15),transparent_34%),radial-gradient(circle_at_18%_70%,rgba(168,85,247,0.1),transparent_28%)] pointer-events-none" />
-
-        <div className="relative z-10 grid min-h-screen items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-12 xl:px-20">
-          <div className="relative z-20 mx-auto flex max-w-3xl flex-col items-center text-center lg:items-start lg:text-left">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
-              {words.map((word, i) => (
-                <span
-                  key={i}
-                  className="inline-block mr-3"
-                >
-                  {word === "Legacy," || word === "Protected" ? (
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-brand-primary to-gradient-purple">{word}</span>
-                  ) : (
-                    word
-                  )}
-                </span>
-              ))}
-            </h1>
-            <p
-              className="text-lg md:text-xl text-secondary max-w-2xl mb-10 leading-relaxed font-sans"
-            >
-              Transfer Legacy uses AI and zero-knowledge cryptography to secure your crypto, NFTs, and digital assets for the people you love.
-            </p>
-            
-            <div
-              className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
-            >
-              <Link to="/onboarding">
-                <Button size="lg" className="w-full sm:w-auto text-lg py-4 px-8 group bg-brand-primary hover:bg-brand-primary-hover text-white shadow-brand transition-all">
-                  Start Free — No Card Needed
-                  <Shield className="ml-2 inline group-hover:scale-110 transition-transform" size={20} />
-                </Button>
-              </Link>
-              <Button variant="ghost" size="lg" className="w-full sm:w-auto text-lg py-4 px-8 border border-base">
-                Watch 90s Demo
-              </Button>
-            </div>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.92, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.9, ease: "easeOut" }}
-            className="relative z-10 mx-auto h-[360px] w-full max-w-[560px] sm:h-[440px] lg:h-[620px] lg:max-w-none pointer-events-auto"
-          >
-            <div className="absolute inset-8 rounded-full bg-brand-primary/10 blur-3xl pointer-events-none" />
-            <Canvas dpr={[1, 1.3]} camera={{ position: [0, 0, 8.8], fov: 38 }}>
-              <ambientLight intensity={0.55} />
-              <LandingVaultObject />
-              <Environment preset="city" />
-            </Canvas>
-          </motion.div>
-        </div>
-
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-muted"
-        >
-          <ChevronDown size={32} />
-        </motion.div>
-      </section>
-
-      {/* Problem Section */}
-      <section className="py-24 relative overflow-hidden bg-surface/30 border-y border-base" id="problem">
-        <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(var(--color-brand-primary) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-12">
-          <div className="lg:w-1/2">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">Billions Lost. <br/><span className="text-error glow-brand">Every Year.</span></h2>
-            <div className="space-y-6">
-              <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="glassmorphism p-6 rounded-2xl border-l-4 border-l-error">
-                <h3 className="text-2xl font-bold text-primary mb-2">$140B+</h3>
-                <p className="text-secondary">in crypto permanently lost due to forgotten keys and sudden deaths.</p>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="glassmorphism p-6 rounded-2xl border-l-4 border-l-brand-gold">
-                <h3 className="text-2xl font-bold text-primary mb-2">73%</h3>
-                <p className="text-secondary">of holders have no digital inheritance plan whatsoever.</p>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="glassmorphism p-6 rounded-2xl border-l-4 border-l-gradient-purple">
-                <h3 className="text-xl font-bold text-primary mb-2">Families Locked Out</h3>
-                <p className="text-secondary">No key, no recovery. Your legacy vanishes into the blockchain in an instant.</p>
-              </motion.div>
-            </div>
-          </div>
-          <div className="lg:w-1/2 w-full">
-            <div className="relative mx-auto max-w-lg overflow-hidden rounded-[2rem] border border-base bg-surface p-6 shadow-xl">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_15%,rgba(244,63,94,0.1),transparent_32%),radial-gradient(circle_at_20%_90%,rgba(249,115,22,0.08),transparent_28%)] pointer-events-none" />
-              <div className="relative rounded-3xl border border-base bg-page/50 p-6">
-                <div className="mb-6 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-error">Recovery risk</p>
-                    <p className="mt-2 text-3xl font-bold text-primary">$140B+</p>
-                  </div>
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-error/10 text-error border border-error/20">
-                    <Lock size={30} />
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  {[
-                    ['Seed phrase missing', 'Critical'],
-                    ['No guardian assigned', 'High'],
-                    ['Heirs cannot recover wallet', 'High'],
-                  ].map(([label, status]) => (
-                    <div key={label} className="flex items-center justify-between rounded-2xl border border-base bg-surface/30 px-4 py-3">
-                      <span className="text-sm font-medium text-secondary">{label}</span>
-                      <span className="rounded-full bg-error/10 px-3 py-1 text-xs font-semibold text-error">{status}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 rounded-2xl border border-brand-gold/20 bg-brand-gold/10 px-4 py-3 text-sm text-brand-gold">
-                  Without a transfer plan, access can disappear permanently.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative" id="how">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Vault. Guard. Inherit.</h2>
-          <p className="text-xl text-secondary max-w-2xl mx-auto">Three simple steps to ensure your digital wealth outlives you.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-          <div className="hidden md:block absolute top-[120px] left-[15%] right-[15%] h-0.5 bg-gradient-to-r from-brand-primary/10 via-brand-primary/40 to-brand-primary/10 z-0"></div>
-          
-          {[
-            { step: 1, title: 'Create Vault', icon: Lock, desc: 'Add your crypto wallets, NFTs, accounts, and documents into your encrypted vault.' },
-            { step: 2, title: 'Assign Guardians', icon: Users, desc: 'Designate trusted people who each hold a fragment — no single point of failure.' },
-            { step: 3, title: 'Heirs Recover', icon: KeyRound, desc: 'When triggered, AI guides your heirs step by step in plain language.' }
-          ].map((item, i) => (
-            <motion.div 
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.2 }}
-              className="relative z-10"
-            >
-              <Card hoverEffect className="h-full flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-surface border border-brand-primary/30 flex items-center justify-center text-brand-primary mb-6 glow-brand relative">
-                  <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-brand-primary text-white text-xs flex items-center justify-center font-bold">
-                    {item.step}
-                  </span>
-                  <item.icon size={28} />
-                </div>
-                <h3 className="text-2xl font-bold text-primary mb-3">{item.title}</h3>
-                <p className="text-secondary leading-relaxed font-sans">{item.desc}</p>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section className="py-24 bg-surface/10" id="features">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Enterprise Grade Security</h2>
-            <p className="text-xl text-secondary max-w-2xl mx-auto">Built for the paranoid. Designed for the family.</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { title: 'Zero-Knowledge Privacy', icon: Fingerprint, desc: 'Not even Transfer Legacy can see your keys or data. We mathematically cannot access your vault.' },
-              { title: 'Multi-Guardian Recovery', icon: ShieldCheck, desc: 'Shamir\'s Secret Sharing ensures distributed trust. No single person can access your assets alone.' },
-              { title: 'Family-Friendly Heirs', icon: Users, desc: 'AI guides non-technical heirs step by step, shielding them from blockchain complexity.' },
-              { title: 'Multi-Asset Support', icon: Database, desc: 'Protect Crypto, NFTs, Seed Phrases, Email accounts, Socials, and Legal Documents.' },
-              { title: 'Legal Compliance', icon: CheckCircle2, desc: 'SOC 2 Type II, GDPR, CCPA, and ISO 27001 ready platform architecture.' },
-              { title: 'AI Legacy Planner', icon: Bot, desc: 'Gemini-powered gap analysis proactively identifies risks in your inheritance plan.' }
-            ].map((f, i) => (
-              <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                <Card hoverEffect className="group">
-                  <div className="p-3 bg-brand-primary/10 rounded-xl w-fit text-brand-primary mb-4 group-hover:bg-brand-primary group-hover:text-white transition-colors duration-300">
-                    <f.icon size={24} />
-                  </div>
-                  <h3 className="text-xl font-bold text-primary mb-2">{f.title}</h3>
-                  <p className="text-secondary font-sans">{f.desc}</p>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="pricing">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Transparent Pricing</h2>
-          <p className="text-xl text-secondary max-w-2xl mx-auto">Invest in peace of mind today. Secure generations tomorrow.</p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-          <Card className="h-full">
-            <h3 className="text-2xl font-bold text-primary mb-2 font-display">Personal</h3>
-            <div className="text-4xl font-bold mb-6 text-primary">$19<span className="text-lg text-secondary font-normal">/mo</span></div>
-            <ul className="space-y-4 mb-8 text-secondary">
-              <li className="flex items-center"><CheckCircle2 className="text-brand-primary mr-2" size={18}/> Up to 10 assets</li>
-              <li className="flex items-center"><CheckCircle2 className="text-brand-primary mr-2" size={18}/> 3 Guardians max</li>
-              <li className="flex items-center"><CheckCircle2 className="text-brand-primary mr-2" size={18}/> 1 Heir</li>
-            </ul>
-            <Button variant="secondary" fullWidth>Get Started</Button>
-          </Card>
-          
-          <Card className="h-[105%] border-brand-primary glow-brand relative z-10 bg-surface/90">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-primary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wide">
-              MOST POPULAR
-            </div>
-            <h3 className="text-2xl font-bold text-primary mb-2 font-display">Family</h3>
-            <div className="text-4xl font-bold mb-6 text-primary">$49<span className="text-lg text-secondary font-normal">/mo</span></div>
-            <ul className="space-y-4 mb-8 text-secondary">
-              <li className="flex items-center"><CheckCircle2 className="text-brand-primary mr-2" size={18}/> Unlimited assets</li>
-              <li className="flex items-center"><CheckCircle2 className="text-brand-primary mr-2" size={18}/> 10 Guardians max</li>
-              <li className="flex items-center"><CheckCircle2 className="text-brand-primary mr-2" size={18}/> 5 Heirs</li>
-              <li className="flex items-center"><CheckCircle2 className="text-brand-primary mr-2" size={18}/> AI Pro Planner</li>
-            </ul>
-            <Button variant="primary" fullWidth className="bg-brand-primary hover:bg-brand-primary-hover text-white shadow-brand">Start Free Trial</Button>
-          </Card>
-          
-          <Card className="h-full">
-            <h3 className="text-2xl font-bold text-primary mb-2 font-display">Advisor</h3>
-            <div className="text-4xl font-bold mb-6 text-primary">$149<span className="text-lg text-secondary font-normal">/mo</span></div>
-            <ul className="space-y-4 mb-8 text-secondary">
-              <li className="flex items-center"><CheckCircle2 className="text-brand-primary mr-2" size={18}/> Unlimited everything</li>
-              <li className="flex items-center"><CheckCircle2 className="text-brand-primary mr-2" size={18}/> White-label options</li>
-              <li className="flex items-center"><CheckCircle2 className="text-brand-primary mr-2" size={18}/> Multi-client portal</li>
-              <li className="flex items-center"><CheckCircle2 className="text-brand-primary mr-2" size={18}/> Dedicated support</li>
-            </ul>
-            <Button variant="secondary" fullWidth>Contact Sales</Button>
-          </Card>
-        </div>
-      </section>
-
-      {/* Social Proof */}
-      <section className="py-20 border-y border-base bg-surface/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-muted">
-          <div className="flex justify-center space-x-6 lg:space-x-16 opacity-50 flex-wrap gap-y-4">
-             <div className="text-2xl font-bold tracking-widest uppercase">SOC 2 Type II</div>
-             <div className="text-2xl font-bold tracking-widest uppercase">GDPR</div>
-             <div className="text-2xl font-bold tracking-widest uppercase">ISO 27001</div>
-             <div className="text-2xl font-bold tracking-widest uppercase">CCSS</div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer CTA */}
-      <section className="relative overflow-hidden bg-page border-t border-base py-24 lg:py-32">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_45%,rgba(249,115,22,0.12),transparent_32%)] pointer-events-none" />
-        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
-          <div className="max-w-2xl text-center lg:text-left">
-            <h2 className="text-5xl md:text-6xl font-bold text-primary mb-6">Don't Let Your Legacy Disappear.</h2>
-            <p className="text-2xl text-secondary mb-10">Set up your vault in 5 minutes. Free forever.</p>
-            <Link to="/onboarding">
-              <Button size="lg" className="inline-flex items-center justify-center gap-3 text-xl py-6 px-12 glow-brand rounded-full bg-brand-primary hover:bg-brand-primary-hover text-white shadow-brand transition-all">
-                Protect My Legacy <ChevronDown className="h-6 w-6 -rotate-90" />
-              </Button>
-            </Link>
-          </div>
-
-          <div className="pointer-events-none hidden h-[420px] lg:block">
-            <Canvas dpr={[1, 1.35]} camera={{ position: [0, 0, 6.8], fov: 40 }}>
-              <ambientLight intensity={0.5} />
-              <LegacyTransferObject />
-              <Environment preset="city" />
-            </Canvas>
-          </div>
-        </div>
-      </section>
-    </div>
+    <div ref={containerRef} className="landing-root" dangerouslySetInnerHTML={{ __html: rawHtml }} />
   );
 }

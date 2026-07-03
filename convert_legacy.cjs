@@ -17,7 +17,19 @@ const content = fs.readFileSync(htmlFile, 'utf-8');
 const cssMatch = content.match(/<style>([\s\S]*?)<\/style>/);
 if (cssMatch) {
   let css = cssMatch[1];
-  fs.writeFileSync(cssFile, css);
+  
+  // Scope CSS under .landing-root container to prevent polluting global HTML tags like nav, footer, button, etc.
+  const rootRules = [];
+  let otherRules = css.replace(/:root\[data-theme="[^"]*"\]\s*\{[\s\S]*?\}/g, (match) => {
+    rootRules.push(match);
+    return '';
+  });
+  
+  otherRules = otherRules.replace(/\bbody\s*\{/g, '.landing-root {');
+  otherRules = otherRules.replace(/\bhtml\s*\{/g, '.landing-root {');
+  
+  const scopedCss = `${rootRules.join('\n')}\n\n.landing-root {\n${otherRules}\n}`;
+  fs.writeFileSync(cssFile, scopedCss);
 }
 
 // Extract body HTML
@@ -74,79 +86,76 @@ if (bodyMatch) {
   
   // Special logic for interactivity (FAQ, Features)
   // Let's just use raw html injection via dangerouslySetInnerHTML to ensure 100% fidelity without breaking JSX
+  bodyHtml = bodyHtml.replace(/className="brand" href="#"/g, 'className="brand" href="/"');
+  bodyHtml = bodyHtml.replace(/className="nav-signin" href="#"/g, 'className="nav-signin" href="/login"');
+
   const reactComponent = `import React, { useEffect, useRef } from 'react';
+import { useTheme } from 'next-themes';
 import '../landing.css';
 
 export default function Landing() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { theme, setTheme } = useTheme();
+
+  // Sync next-themes state with the data-theme attribute on document root
+  useEffect(() => {
+    if (theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  }, [theme]);
 
   useEffect(() => {
     if (!containerRef.current) return;
-    
-    // ── CURSOR ──
-    const dot = document.getElementById('cur-dot');
-    const ring = document.getElementById('cur-ring');
-    const handleMouseMove = (e: MouseEvent) => {
-      if (dot && ring) {
-        dot.style.left = e.clientX + 'px';
-        dot.style.top  = e.clientY + 'px';
-        ring.style.left = e.clientX + 'px';
-        ring.style.top  = e.clientY + 'px';
-      }
-    };
-    document.addEventListener('mousemove', handleMouseMove);
-
-    const handleMouseEnter = () => ring?.classList.add('hover');
-    const handleMouseLeave = () => ring?.classList.remove('hover');
-    document.querySelectorAll('button,a,[onclick],.faq-q').forEach(el => {
-      el.addEventListener('mouseenter', handleMouseEnter);
-      el.addEventListener('mouseleave', handleMouseLeave);
-    });
 
     // ── NAV SCROLL ──
     const handleScroll = () => {
-      document.getElementById('navbar')?.classList.toggle('scrolled', window.scrollY > 40);
+      document.getElementById('nav')?.classList.toggle('scrolled', window.scrollY > 10);
     };
     window.addEventListener('scroll', handleScroll);
 
+    // ── THEME TOGGLE ──
+    const themeBtn = document.getElementById('themeBtn');
+    const handleThemeClick = () => {
+      setTheme(theme === 'dark' ? 'light' : 'dark');
+    };
+    themeBtn?.addEventListener('click', handleThemeClick);
+
     // ── SCROLL REVEAL ──
     const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    // ── FAQ ──
-    window.toggleFaq = (el: HTMLElement) => {
-      const isOpen = el.classList.contains('open');
-      document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
-      if (!isOpen) el.classList.add('open');
-    };
-
-    // ── FEATURE SWITCHER ──
-    window.activateFeature = (n: number) => {
-      [1,2,3,4].forEach(i => {
-        const item = document.getElementById('f'+i);
-        if (item) {
-          if (i === n) item.classList.add('active');
-          else item.classList.remove('active');
+      entries.forEach(e => { 
+        if (e.isIntersecting) {
+          e.target.classList.add('in'); 
+          observer.unobserve(e.target);
         }
-        const p = document.getElementById('preview-'+i);
-        if (p) p.style.display = i === n ? 'block' : 'none';
       });
-    };
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.rv').forEach(el => observer.observe(el));
 
-    // ── CTA ──
-    window.handleCTA = () => {
-      const emailInput = document.getElementById('cta-email') as HTMLInputElement;
-      if (emailInput) {
-        const email = emailInput.value;
-        if (!email) { emailInput.style.borderColor = 'rgba(249,115,22,.6)'; return; }
+    // ── FAQ ACCORDION ──
+    const faqQuestions = document.querySelectorAll('.faq-q');
+    const handleFaqClick = (e: Event) => {
+      const q = e.currentTarget as HTMLElement;
+      if (q && q.parentElement) {
+        q.parentElement.classList.toggle('open');
+      }
+    };
+    faqQuestions.forEach(q => q.addEventListener('click', handleFaqClick));
+
+    // ── WAITLIST FORM CTA ──
+    const heroForms = document.querySelectorAll('.hero-form');
+    const handleFormSubmit = (e: Event) => {
+      e.preventDefault();
+      const form = e.currentTarget as HTMLFormElement;
+      const input = form.querySelector('input') as HTMLInputElement;
+      const email = input?.value;
+      if (email) {
         alert('Welcome to Transfer Legacy! We\\'ll be in touch at ' + email);
       }
     };
+    heroForms.forEach(form => form.addEventListener('submit', handleFormSubmit));
 
-    // ── SMOOTH HOVER EFFECTS ──
-    const cards = document.querySelectorAll('.price-card,.step-card,.test-card') as NodeListOf<HTMLElement>;
+    // ── SMOOTH HOVER CARD TILT ──
+    const cards = document.querySelectorAll('.plan,.prob,.tcard') as NodeListOf<HTMLElement>;
     cards.forEach(card => {
       card.addEventListener('mousemove', (e: Event) => {
         const mouseEvent = e as MouseEvent;
@@ -165,29 +174,18 @@ export default function Landing() {
     });
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('scroll', handleScroll);
-      document.querySelectorAll('button,a,[onclick],.faq-q').forEach(el => {
-        el.removeEventListener('mouseenter', handleMouseEnter);
-        el.removeEventListener('mouseleave', handleMouseLeave);
-      });
+      themeBtn?.removeEventListener('click', handleThemeClick);
+      faqQuestions.forEach(q => q.removeEventListener('click', handleFaqClick));
+      heroForms.forEach(form => form.removeEventListener('submit', handleFormSubmit));
     };
-  }, []);
+  }, [theme, setTheme]);
 
   const rawHtml = ${JSON.stringify(bodyMatch[1].replace(/<script>[\s\S]*?<\/script>/, ''))};
 
   return (
-    <div ref={containerRef} dangerouslySetInnerHTML={{ __html: rawHtml }} />
+    <div ref={containerRef} className="landing-root" dangerouslySetInnerHTML={{ __html: rawHtml }} />
   );
-}
-
-// Add these to window for the onclick handlers in raw HTML to work
-declare global {
-  interface Window {
-    toggleFaq: (el: HTMLElement) => void;
-    activateFeature: (n: number) => void;
-    handleCTA: () => void;
-  }
 }
 `;
   

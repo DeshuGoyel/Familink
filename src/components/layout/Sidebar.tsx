@@ -46,7 +46,7 @@ const sections = [
 
 /* ── Sidebar ──────────────────────────────────────────────── */
 export default function Sidebar() {
-  const { isMobileSidebarOpen, toggleMobileSidebar, user, logout } = useStore();
+  const { isMobileSidebarOpen, toggleMobileSidebar, user, logout, isSidebarCollapsed, toggleNotifications, unreadCount } = useStore();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -75,7 +75,11 @@ export default function Sidebar() {
           'fixed left-0 top-0 h-screen w-[240px] z-40 flex flex-col select-none',
           'border-r border-[rgba(255,255,255,0.07)]',
           'transition-transform duration-200',
-          isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+          isMobileSidebarOpen 
+            ? 'translate-x-0' 
+            : isSidebarCollapsed 
+              ? '-translate-x-full' 
+              : '-translate-x-full lg:translate-x-0',
         )}
         style={{ background: 'var(--color-bg-sidebar, #0A0910)' }}
       >
