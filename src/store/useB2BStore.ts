@@ -30,7 +30,7 @@ interface B2BState {
   webhooks: { url: string; events: string[] }[];
   connectedNodes: B2BNode[];
   lastPing: Record<string, string>;
-  createKey: (name: string, tier: B2BApiKey["tier"]) => void;
+  createKey: (name: string, tier: B2BApiKey["tier"]) => string;
   revokeKey: (id: string) => void;
   simulateCall: () => void;
   addWebhook: (url: string, events: string[]) => void;
@@ -57,18 +57,23 @@ export const useB2BStore = create<B2BState>()(
       lastPing: {},
       
       createKey: (name, tier) => {
-        const randomKey = Array.from({length: 12}, () => Math.floor(Math.random()*36).toString(36)).join('').toUpperCase();
+        const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const randomBytes = new Uint8Array(12);
+        crypto.getRandomValues(randomBytes);
+        const randomKey = Array.from(randomBytes, (byte) => charset[byte % charset.length]).join('');
         const fullKey = `lk_live_${randomKey}`;
+        const maskedKey = `lk_live_••••••••${randomKey.slice(-4)}`;
         const newKey: B2BApiKey = {
           id: Date.now().toString(),
           name,
-          key: fullKey,
+          key: maskedKey,
           tier,
           status: "active",
           createdAt: new Date().toISOString(),
           lastUsedAt: null
         };
         set((state) => ({ apiKeys: [...state.apiKeys, newKey] }));
+        return fullKey;
       },
       
       revokeKey: (id) => set((state) => ({

@@ -7,13 +7,14 @@ import { cn } from '../../utils/cn';
 import ThemeToggle from './ThemeToggle';
 
 const navLinks = [
-  { label: 'How It Works', href: '#how-it-works' },
+  { label: 'How It Works', href: '#how' },
   { label: 'Security', href: '#security' },
   { label: 'Pricing', href: '#pricing' },
   { label: 'FAQ', href: '#faq' },
 ];
 
 export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketing' }) {
+  const branding = useStore((state) => state.branding);
   // ── Marketing variant state ──
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -108,12 +109,14 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
             {/* Actions */}
             <div className="hidden md:flex items-center gap-4">
               <ThemeToggle />
-              <Link
-                to="/login"
-                className="px-5 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] text-secondary border border-base hover:border-strong hover:bg-surface/50 transition-all duration-300 flex items-center justify-center"
-              >
-                Sign in
-              </Link>
+              {!branding.waitlist_enabled && (
+                <Link
+                  to="/login"
+                  className="px-5 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] text-secondary border border-base hover:border-strong hover:bg-surface/50 transition-all duration-300 flex items-center justify-center"
+                >
+                  Sign in
+                </Link>
+              )}
               <button
                 onClick={() => scrollTo('#waitlist')}
                 className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_0_25px_rgba(249,115,22,0.2)] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)]"

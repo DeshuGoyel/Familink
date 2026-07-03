@@ -73,6 +73,7 @@ export interface RawItem {
     title_hash?: string;
     type?: string;
   };
+  ciphertext?: string;
 }
 
 interface User {
@@ -125,6 +126,10 @@ interface AppState {
   isAuthenticated: boolean;
   checkSession: () => Promise<void>;
   logout: () => void;
+  masterKey: Uint8Array | null;
+  setMasterKey: (key: Uint8Array | null) => void;
+  branding: { waitlist_enabled: boolean };
+  setBranding: (branding: { waitlist_enabled: boolean }) => void;
 }
 
 const calculateNewScore = (state: Pick<AppState, 'guardians' | 'assets' | 'heirs'>) => {
@@ -154,6 +159,72 @@ const calculateNewScore = (state: Pick<AppState, 'guardians' | 'assets' | 'heirs
 
   return score;
 };
+
+async function decryptItem(item: RawItem, masterKey: Uint8Array | null): Promise<Asset> {
+  const baseAsset: Asset = {
+    id: item.item_id || item.id || '',
+    name: item.item_meta?.title || item.item_meta?.title_hash || 'Encrypted Asset',
+    type: item.item_meta?.type || 'password',
+    status: 'Secured',
+    value: 120000,
+    date: new Date(item.created_at || Date.now()).toLocaleDateString(),
+    instructions: 'Client decrypted instructions placeholder',
+  };
+
+  if (!item.ciphertext) {
+    return baseAsset;
+  }
+
+  try {
+    const { fromBase64Url } = await import('../lib/aeadClient');
+    const sodium = (await import('libsodium-wrappers-sumo')).default;
+    await sodium.ready;
+
+    if (masterKey) {
+      const combined = fromBase64Url(item.ciphertext);
+      if (combined.length > 24) {
+        const nonce = combined.slice(0, 24);
+        const ciphertext = combined.slice(24);
+        const decryptedBytes = sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(
+          null,
+          ciphertext,
+          null,
+          nonce,
+          masterKey
+        );
+        const decryptedStr = new TextDecoder().decode(decryptedBytes);
+        const decryptedObj = JSON.parse(decryptedStr);
+        return {
+          ...baseAsset,
+          ...decryptedObj,
+          id: item.item_id || item.id || '', // preserve ID
+          date: new Date(item.created_at || Date.now()).toLocaleDateString(),
+        };
+      }
+    }
+  } catch (decErr) {
+    console.error('Failed to decrypt asset:', decErr);
+  }
+
+  // In DEV mode, if decryption fails or masterKey is missing, we try to parse it as plain base64url JSON (fallback)
+  if (import.meta.env.DEV) {
+    try {
+      const { fromBase64Url } = await import('../lib/aeadClient');
+      const decodedStr = new TextDecoder().decode(fromBase64Url(item.ciphertext));
+      const parsed = JSON.parse(decodedStr);
+      return {
+        ...baseAsset,
+        ...parsed,
+        id: item.item_id || item.id || '',
+        date: new Date(item.created_at || Date.now()).toLocaleDateString(),
+      };
+    } catch {
+      // ignore
+    }
+  }
+
+  return baseAsset;
+}
 const getInitialState = () => {
   const isAuth = !!localStorage.getItem('tl_session_token');
   if (!isAuth) {
@@ -227,6 +298,10 @@ export const useStore = create<AppState>((set) => ({
   isSidebarCollapsed: false,
   isMobileSidebarOpen: false,
   isAuthenticated: !!localStorage.getItem('tl_session_token'),
+  masterKey: null,
+  setMasterKey: (key) => set({ masterKey: key }),
+  branding: { waitlist_enabled: import.meta.env.VITE_WAITLIST_ENABLED === 'true' },
+  setBranding: (branding) => set({ branding }),
 
   checkSession: async () => {
     const token = localStorage.getItem('tl_session_token');
@@ -269,6 +344,7 @@ export const useStore = create<AppState>((set) => ({
         assets: [],
         guardians: [],
         heirs: [],
+        masterKey: null,
         user: {
           name: "Secured User",
           email: "",
@@ -299,6 +375,7 @@ export const useStore = create<AppState>((set) => ({
         assets: [],
         guardians: [],
         heirs: [],
+        masterKey: null,
         user: {
           name: "Secured User",
           email: "",
@@ -318,15 +395,8 @@ export const useStore = create<AppState>((set) => ({
       if (!userId) return;
       const response = await api.post<{ items: RawItem[] }>('/vault/items/list', { user_id: userId });
       const items = response?.items || [];
-      const formattedAssets: Asset[] = items.map((item) => ({
-        id: item.item_id || item.id || '',
-        name: item.item_meta?.title || item.item_meta?.title_hash || 'Encrypted Asset',
-        type: item.item_meta?.type || 'password',
-        status: 'Secured',
-        value: 120000,
-        date: new Date(item.created_at || Date.now()).toLocaleDateString(),
-        instructions: 'Client decrypted instructions placeholder',
-      }));
+      const masterKey = useStore.getState().masterKey;
+      const formattedAssets = await Promise.all(items.map((item) => decryptItem(item, masterKey)));
       set({ assets: formattedAssets });
     } catch (err) {
       console.error('Failed to fetch assets:', err);
@@ -345,9 +415,38 @@ export const useStore = create<AppState>((set) => ({
     try {
       const userId = localStorage.getItem('tl_user_id');
       if (!userId) return;
+
+      let ciphertextStr = '';
+      const masterKey = useStore.getState().masterKey;
+      if (masterKey) {
+        const { toBase64Url } = await import('../lib/aeadClient');
+        const sodium = (await import('libsodium-wrappers-sumo')).default;
+        await sodium.ready;
+        const nonce = sodium.randombytes_buf(24);
+        const assetBytes = new TextEncoder().encode(JSON.stringify(asset));
+        const encrypted = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
+          assetBytes,
+          null,
+          null,
+          nonce,
+          masterKey
+        );
+        const combined = new Uint8Array(nonce.length + encrypted.length);
+        combined.set(nonce);
+        combined.set(encrypted, nonce.length);
+        ciphertextStr = toBase64Url(combined);
+      } else {
+        if (import.meta.env.DEV) {
+          const { toBase64Url } = await import('../lib/aeadClient');
+          ciphertextStr = toBase64Url(new TextEncoder().encode(JSON.stringify(asset)));
+        } else {
+          throw new Error('Master key is not loaded. Cannot encrypt asset.');
+        }
+      }
+
       const payload = {
         user_id: userId,
-        ciphertext: toBase64Url(new TextEncoder().encode(JSON.stringify(asset))),
+        ciphertext: ciphertextStr,
         item_meta: { title: asset.name, type: asset.type },
         crypto_version: 'v1'
       };
@@ -356,15 +455,7 @@ export const useStore = create<AppState>((set) => ({
       // Refresh assets
       const response = await api.post<{ items: RawItem[] }>('/vault/items/list', { user_id: userId });
       const items = response?.items || [];
-      const formattedAssets: Asset[] = items.map((item) => ({
-        id: item.item_id || item.id || '',
-        name: item.item_meta?.title || item.item_meta?.title_hash || 'Encrypted Asset',
-        type: item.item_meta?.type || 'password',
-        status: 'Secured',
-        value: 120000,
-        date: new Date(item.created_at || Date.now()).toLocaleDateString(),
-        instructions: 'Client decrypted instructions placeholder',
-      }));
+      const formattedAssets = await Promise.all(items.map((item) => decryptItem(item, masterKey)));
       
       set((state) => {
         const newState = { ...state, assets: formattedAssets };
@@ -399,15 +490,8 @@ export const useStore = create<AppState>((set) => ({
       // Refresh assets
       const response = await api.post<{ items: RawItem[] }>('/vault/items/list', { user_id: userId });
       const items = response?.items || [];
-      const formattedAssets: Asset[] = items.map((item) => ({
-        id: item.item_id || item.id || '',
-        name: item.item_meta?.title || item.item_meta?.title_hash || 'Encrypted Asset',
-        type: item.item_meta?.type || 'password',
-        status: 'Secured',
-        value: 120000,
-        date: new Date(item.created_at || Date.now()).toLocaleDateString(),
-        instructions: 'Client decrypted instructions placeholder',
-      }));
+      const masterKey = useStore.getState().masterKey;
+      const formattedAssets = await Promise.all(items.map((item) => decryptItem(item, masterKey)));
       
       set((state) => {
         const newState = { ...state, assets: formattedAssets };

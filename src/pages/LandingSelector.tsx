@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import { api } from '../lib/api';
-import Landing from './Landing';
 import LandingPage from './LandingPage';
+import { useStore } from '../store/useStore';
 
 export default function LandingSelector() {
-  const [branding, setBranding] = useState({
-    waitlist_enabled: false,
-  });
+  const { branding, setBranding } = useStore();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,7 +13,7 @@ export default function LandingSelector() {
         const res = await api.get<any>('/app/branding', { skipAead: true });
         const data = res.data ? res.data : res;
         if (data && typeof data.waitlist_enabled === 'boolean') {
-          setBranding(data);
+          setBranding({ waitlist_enabled: data.waitlist_enabled });
         }
       } catch (err) {
         console.warn('Failed to load branding in LandingSelector, using defaults:', err);
@@ -24,7 +22,7 @@ export default function LandingSelector() {
       }
     }
     loadBranding();
-  }, []);
+  }, [setBranding]);
 
   if (loading) {
     return (
@@ -34,9 +32,5 @@ export default function LandingSelector() {
     );
   }
 
-  if (branding.waitlist_enabled) {
-    return <LandingPage />;
-  } else {
-    return <Landing />;
-  }
+  return <LandingPage />;
 }

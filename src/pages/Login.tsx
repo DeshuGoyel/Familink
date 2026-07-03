@@ -96,6 +96,8 @@ export default function Login() {
               kek
             );
 
+            useStore.getState().setMasterKey(mk);
+
             // Decrypt profile legal name using Master Key and prepended nonce
             const combined = fromBase64Url(finishResponse.enc_legal_name);
             const nameNonce = combined.slice(0, 24);

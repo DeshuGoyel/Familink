@@ -58,6 +58,7 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
     ...rest,
     headers,
     body: finalBody,
+    credentials: 'include',
   });
 
   if (!response.ok) {

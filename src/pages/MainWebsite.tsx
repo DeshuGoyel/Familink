@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import CustomCursor from '../components/layout/CustomCursor';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
@@ -91,8 +91,8 @@ import CompareTraditionalWills from './seo/CompareTraditionalWills';
 import WhitepaperSEO from './seo/Whitepaper';
 import LegalTemplates from './seo/LegalTemplates';
 import CryptoCalculator from './tools/CryptoCalculator';
-import OpsLogin from './ops/Login';
-import OpsPortal from './ops/OpsPortal';
+const OpsLogin = lazy(() => import('./ops/Login'));
+const OpsPortal = lazy(() => import('./ops/OpsPortal'));
 
 // Regional SEO
 import CryptoInheritanceIndia from './seo/regions/CryptoInheritanceIndia';
@@ -210,8 +210,22 @@ function AppLayout() {
           <Route path="/reports"                          element={<Reports />} />
           
           {/* Administrative Ops Routes */}
-          <Route path="/ops/login"                        element={<OpsLogin />} />
-          <Route path="/ops/*"                            element={<OpsPortal />} />
+          <Route 
+            path="/ops/login" 
+            element={
+              <Suspense fallback={<div className="min-h-screen bg-page flex items-center justify-center text-muted text-xs font-mono tracking-widest">LOADING OPS SYSTEM...</div>}>
+                <OpsLogin />
+              </Suspense>
+            } 
+          />
+          <Route 
+            path="/ops/*" 
+            element={
+              <Suspense fallback={<div className="min-h-screen bg-page flex items-center justify-center text-muted text-xs font-mono tracking-widest">LOADING SECURE ENVIRONMENT...</div>}>
+                <OpsPortal />
+              </Suspense>
+            } 
+          />
           
           <Route path="*"            element={<Navigate to="/" />} />
         </Routes>

@@ -105,8 +105,8 @@ export async function finishOpaqueRegistration(
     kyber768Pubkey: toBase64Url(kyberKeyPair),
     emkBlob: toBase64Url(new TextEncoder().encode(emkBlob)),
     argon2Params: {
-      m: sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,
-      t: sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,
+      m: sodium.crypto_pwhash_MEMLIMIT_MODERATE,
+      t: sodium.crypto_pwhash_OPSLIMIT_MODERATE,
       p: 1
     },
     encLegalName: toBase64Url(combinedLegalName),

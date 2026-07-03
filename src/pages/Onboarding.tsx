@@ -10,6 +10,7 @@ import { useStore } from '../store/useStore';
 import { api } from '../lib/api';
 import { initOpaqueRegistration, finishOpaqueRegistration, initOpaqueLogin, finishOpaqueLogin } from '../lib/opaqueClient';
 import toast from 'react-hot-toast';
+import { fromBase64Url } from '../lib/aeadClient';
 
 
 const steps = [
@@ -171,10 +172,38 @@ export default function Onboarding() {
           (loginInitResponse.credential_response || loginInitResponse.registration_response) as string
         );
 
-        const loginFinishResponse = await api.post<{ session_token?: string; token?: string }>('/auth/login/finish', {
+        const loginFinishResponse = await api.post<{ 
+          session_token?: string; 
+          token?: string;
+          enc_legal_name?: string;
+          emk_blob?: string;
+        }>('/auth/login/finish', {
           session_id: loginInitResponse.session_id,
           credential_finalization: loginFinishData.registrationUpload,
         });
+
+        let masterKey: Uint8Array | null = null;
+        if (loginFinishResponse.emk_blob) {
+          try {
+            const sodium = (await import('libsodium-wrappers-sumo')).default;
+            await sodium.ready;
+            const exportKey = loginFinishData.exportKey;
+            const kek = sodium.crypto_generichash(32, fromBase64Url(exportKey), null);
+            const emkBlobString = new TextDecoder().decode(fromBase64Url(loginFinishResponse.emk_blob));
+            const emk = JSON.parse(emkBlobString);
+            const emkNonce = fromBase64Url(emk.nonce);
+            const emkCiphertext = fromBase64Url(emk.ciphertext);
+            masterKey = sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(
+              null,
+              emkCiphertext,
+              new Uint8Array(),
+              emkNonce,
+              kek
+            );
+          } catch (decErr) {
+            console.warn('Failed to decrypt master key during automatic login:', decErr);
+          }
+        }
 
         const loginToken = loginFinishResponse.session_token || loginFinishResponse.token;
         if (!loginToken) {
@@ -190,6 +219,7 @@ export default function Onboarding() {
         localStorage.removeItem('tl_heirs');
         useStore.setState({ 
           isAuthenticated: true,
+          masterKey,
           assets: [],
           guardians: [],
           heirs: [],
