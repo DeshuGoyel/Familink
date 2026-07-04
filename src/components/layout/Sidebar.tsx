@@ -31,7 +31,7 @@ const sections = [
     items: [
       { icon: Users,     label: 'Guardians',    path: '/guardians' },
       { icon: GitBranch, label: 'Instructions',  path: '/trust' },
-      { icon: Shield,    label: "Dead Man's Switch", path: '/trust' },
+      { icon: Shield,    label: "Dead Man's Switch", path: '/check-in' },
       { icon: Cpu,       label: 'AI Planner',   path: '/ai-planner' },
     ],
   },
@@ -200,7 +200,7 @@ export default function Sidebar() {
             <button
               onClick={handleLogout}
               title="Log out"
-              className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-[rgba(239,68,68,0.12)]"
+              className="opacity-70 hover:opacity-100 transition-opacity p-1 rounded hover:bg-[rgba(239,68,68,0.12)] hover:text-red-400"
               style={{ color: '#5C596A' }}
             >
               <LogOut size={13} />
