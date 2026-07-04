@@ -13,8 +13,8 @@ import { useStore } from '../store/useStore';
 
 export default function Login() {
   useBodyClass('allow-cursor');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('test@familink.com');
+  const [password, setPassword] = useState('TestPassword123!');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
