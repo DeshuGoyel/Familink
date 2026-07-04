@@ -230,7 +230,7 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-slate-950/50 border-slate-800/80 focus:border-brand-primary/50 pl-10"
+                className="bg-slate-950/50 border-slate-800/80 focus:border-brand-primary/50 pl-10 text-white"
               />
               <Mail className="absolute left-3.5 bottom-3.5 w-4 h-4 text-slate-500" />
             </div>
@@ -243,7 +243,7 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-slate-950/50 border-slate-800/80 focus:border-brand-primary/50 pl-10 pr-10"
+                className="bg-slate-950/50 border-slate-800/80 focus:border-brand-primary/50 pl-10 pr-10 text-white"
               />
               <Lock className="absolute left-3.5 bottom-3.5 w-4 h-4 text-slate-500" />
               <button

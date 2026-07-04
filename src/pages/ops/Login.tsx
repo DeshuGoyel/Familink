@@ -83,7 +83,7 @@ export default function OpsLogin() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="bg-slate-950/50 border-slate-800"
+              className="bg-slate-950/50 border-slate-800 text-white"
             />
 
             <Input
@@ -93,7 +93,7 @@ export default function OpsLogin() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="bg-slate-950/50 border-slate-800"
+              className="bg-slate-950/50 border-slate-800 text-white"
             />
 
             <AnimatePresence>
