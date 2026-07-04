@@ -6,3 +6,8 @@ dist/
 *.log
 
 tl-temp-backend/
+
+# E2E Test Reports (auto-generated)
+e2e/reports/
+e2e/reports/screenshots/
+e2e/reports/videos/

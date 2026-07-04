@@ -19,6 +19,9 @@ ALTER TABLE waitlist ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow public inserts" ON waitlist
   FOR INSERT TO anon WITH CHECK (true);
 
--- Allow reads (for live counter)
-CREATE POLICY "Allow public reads" ON waitlist
-  FOR SELECT TO anon USING (true);
+-- Create a public view to expose only the count of waitlist signups (for live counter)
+CREATE OR REPLACE VIEW waitlist_count AS
+  SELECT count(*) AS count FROM waitlist;
+
+-- Grant select access on the view to anon
+GRANT SELECT ON waitlist_count TO anon;

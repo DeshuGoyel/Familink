@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface OpsAdmin {
   id: string;
@@ -32,6 +32,7 @@ export const useOpsStore = create<OpsState>()(
     }),
     {
       name: 'tl_ops_storage',
+      storage: createJSONStorage(() => sessionStorage),
       onRehydrateStorage: () => (state) => {
         state?.setHydrated();
       },

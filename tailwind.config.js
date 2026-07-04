@@ -20,6 +20,8 @@ export default {
         'primary0':  'var(--color-text-secondary)', // Legacy compat
 
         'brand-primary': 'var(--color-brand-primary)',
+        'brand-primary-hover': 'var(--color-brand-primary-hover)',
+        'brand-primary-dim': 'var(--color-brand-primary-dim)',
         'brand-gold':    'var(--color-brand-gold)',
         'brand-success': 'var(--color-brand-success)',
 
@@ -105,8 +107,9 @@ export default {
       },
 
       fontFamily: {
-        sans:    ['DM Sans', 'Inter', 'SF Pro Text', 'system-ui', 'sans-serif'],
-        display: ['Cormorant Garamond', 'Instrument Serif', 'Georgia', 'serif'],
+        sans:    ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Fraunces', 'Cormorant Garamond', 'Instrument Serif', 'Georgia', 'serif'],
+        script:  ['Caveat', 'cursive'],
         mono:    ['DM Mono', 'IBM Plex Mono', 'Cascadia Code', 'Courier New', 'monospace'],
         digits:  ['DM Mono', 'IBM Plex Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
         // backward compat
@@ -157,9 +160,9 @@ export default {
         'lg':      '0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)',
         'xl':      '0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)',
         '2xl':     '0 25px 50px -12px rgba(0,0,0,0.25)',
-        'brand':   '0 10px 15px -3px rgba(249,115,22,0.1), 0 4px 6px -2px rgba(249,115,22,0.05)',
+        'brand':   'var(--shadow-brand)',
         'inner':   'inset 0 2px 4px 0 rgba(0,0,0,0.06)',
-        'glow':    '0 0 15px rgba(249,115,22,0.5)',
+        'glow':    '0 0 15px var(--color-brand-primary)',
       },
 
       transitionTimingFunction: {

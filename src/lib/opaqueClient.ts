@@ -73,22 +73,30 @@ export async function finishOpaqueRegistration(
     ciphertext: toBase64Url(emkCiphertext)
   });
   
-  // 5. Encrypt legal name and email with MK
+  // 5. Encrypt legal name and email with MK and prepend the 24-byte nonce
   const profileNonce = sodium.randombytes_buf(24);
-  const encLegalName = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
+  const rawEncLegalName = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
     new TextEncoder().encode(legalName),
     null,
     null,
     profileNonce,
     mk
   );
-  const encEmail = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
+  const rawEncEmail = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
     new TextEncoder().encode(email),
     null,
     null,
     profileNonce,
     mk
   );
+
+  const combinedLegalName = new Uint8Array(profileNonce.length + rawEncLegalName.length);
+  combinedLegalName.set(profileNonce);
+  combinedLegalName.set(rawEncLegalName, profileNonce.length);
+
+  const combinedEmail = new Uint8Array(profileNonce.length + rawEncEmail.length);
+  combinedEmail.set(profileNonce);
+  combinedEmail.set(rawEncEmail, profileNonce.length);
   
   return {
     registrationUpload: registrationRecord,
@@ -97,12 +105,12 @@ export async function finishOpaqueRegistration(
     kyber768Pubkey: toBase64Url(kyberKeyPair),
     emkBlob: toBase64Url(new TextEncoder().encode(emkBlob)),
     argon2Params: {
-      m: sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,
-      t: sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,
+      m: sodium.crypto_pwhash_MEMLIMIT_MODERATE,
+      t: sodium.crypto_pwhash_OPSLIMIT_MODERATE,
       p: 1
     },
-    encLegalName: toBase64Url(encLegalName),
-    encEmail: toBase64Url(encEmail)
+    encLegalName: toBase64Url(combinedLegalName),
+    encEmail: toBase64Url(combinedEmail)
   };
 }
 
@@ -124,6 +132,7 @@ export async function initOpaqueLogin(password: string): Promise<OpaqueLoginInit
 export interface OpaqueLoginFinishData {
   registrationUpload: string; // mapped to finalization field
   sessionKey: string;
+  exportKey: string;
 }
 
 export async function finishOpaqueLogin(
@@ -143,10 +152,11 @@ export async function finishOpaqueLogin(
     throw new Error('OPAQUE login finalization failed');
   }
   
-  const { finishLoginRequest, sessionKey } = result;
+  const { finishLoginRequest, sessionKey, exportKey } = result;
   
   return {
     registrationUpload: finishLoginRequest,
-    sessionKey
+    sessionKey,
+    exportKey
   };
 }

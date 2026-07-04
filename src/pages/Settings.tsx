@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useStore } from '../store/useStore';
+import { useCheckinStore } from '../store/useCheckinStore';
 import { User, Shield, Bell, Palette, AlertTriangle, Activity, ChevronRight, HardDrive, Fingerprint, Globe, ShieldAlert } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
@@ -22,6 +23,7 @@ const fadeUp = (delay = 0) => ({
 
 export default function Settings() {
   const { user } = useStore();
+  const { checkinSettings, updateSettings } = useCheckinStore();
   const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('Profile');
   const [deleteConfirm, setDeleteConfirm] = useState('');
@@ -581,12 +583,48 @@ export default function Settings() {
                         </div>
                         <p className="text-sm text-muted font-medium leading-relaxed italic max-w-lg">The system initiates a recovery sequence if an institutional handshake is not detected within the following duration:</p>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                           {['7 Days', '14 Days', '30 Days', '90 Days'].map((d, i) => (
-                             <button key={d} className={`p-6 rounded-2xl border flex flex-col items-center gap-3 transition-all ${i === 2 ? 'bg-brand-primary/10 border-brand-primary text-primary shadow-xl' : 'bg-surface border-base text-secondary hover:border-base'}`}>
-                                <span className="text-xl font-display font-bold">{d.split(' ')[0]}</span>
-                                <span className="text-[9px] font-bold uppercase tracking-widest opacity-60">Days</span>
-                             </button>
-                           ))}
+                           {['7 Days', '14 Days', '30 Days', '90 Days'].map((d) => {
+                             const daysVal = d.split(' ')[0];
+                             const freq = checkinSettings.frequency;
+                             const isActive = 
+                               freq === daysVal ||
+                               (daysVal === '7' && freq === 'weekly') ||
+                               (daysVal === '14' && freq === 'biweekly') ||
+                               (daysVal === '30' && freq === 'monthly');
+
+                             return (
+                               <button 
+                                 key={d} 
+                                 onClick={() => {
+                                   let val = daysVal;
+                                   if (daysVal === '7') val = 'weekly';
+                                   if (daysVal === '14') val = 'biweekly';
+                                   if (daysVal === '30') val = 'monthly';
+                                   updateSettings({ frequency: val });
+                                 }}
+                                 className={`p-6 rounded-2xl border flex flex-col items-center gap-3 transition-all ${isActive ? 'bg-brand-primary/10 border-brand-primary text-primary shadow-xl' : 'bg-surface border-base text-secondary hover:border-base'}`}
+                               >
+                                  <span className="text-xl font-display font-bold">{daysVal}</span>
+                                  <span className="text-[9px] font-bold uppercase tracking-widest opacity-60">Days</span>
+                               </button>
+                             );
+                           })}
+                        </div>
+                        <div className="mt-4 p-5 bg-surface rounded-2xl border border-base max-w-xs space-y-2">
+                           <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary block mb-1">Custom Interval (Days)</label>
+                           <Input 
+                             type="number" 
+                             min="1" 
+                             placeholder="Enter custom days..." 
+                             value={!['weekly', 'biweekly', 'monthly', '7', '14', '30', '90'].includes(checkinSettings.frequency) ? checkinSettings.frequency : ''}
+                             onChange={(e) => {
+                               const val = e.target.value;
+                               if (val) {
+                                 updateSettings({ frequency: val });
+                               }
+                             }}
+                             className="bg-slate-950/50 border-slate-800 text-white"
+                           />
                         </div>
                         <p className="text-[10px] font-bold text-secondary uppercase tracking-widest text-center mt-6">Recommended: 30-Day Protocol Cycle</p>
                       </div>

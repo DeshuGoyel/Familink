@@ -1,12 +1,10 @@
 import { useEffect } from 'react';
-import LandingFooter from '../components/landing/LandingFooter';
+import Footer from '../components/layout/Footer';
 import Hero from '../components/sections/Hero';
 import SocialProof from '../components/sections/SocialProof';
 import Problem from '../components/sections/Problem';
-import HowItWorks from '../components/sections/HowItWorks';
 import Features from '../components/sections/Features';
 import Security from '../components/sections/Security';
-import Founders from '../components/sections/Founders';
 import Pricing from '../components/sections/Pricing';
 import Testimonials from '../components/sections/Testimonials';
 import FAQ from '../components/sections/FAQ';
@@ -21,36 +19,37 @@ export default function LandingPage() {
 
   return (
     <div className="bg-page text-primary min-h-screen font-sans selection:bg-brand-primary/30 overflow-x-hidden relative">
-      <div className="absolute inset-0 z-0 pointer-events-none bg-aurora opacity-40" />
-
       <main>
-        {/* ... */}
+        {/* 1. Hero — YC-grade layout */}
         <Hero />
+        
+        {/* 2. Logo / trust bar */}
         <SocialProof />
+        
+        {/* 3. Problem — big Cormorant stat + 4-card grid */}
         <Problem />
-        <HowItWorks />
+        
+        {/* 4. Feature 1, 2, 3 — alternating rows */}
         <Features />
         
-        {/* 6. Security — points + legacy score gauge */}
+        {/* 5. Security — inverted theme drama */}
         <Security />
 
-        {/* 7. Founders — Deshu and Vikas */}
-        <Founders />
-
-        {/* 8. Pricing — monthly/yearly toggle + 3 tiers */}
+        {/* 6. Pricing — monthly/yearly toggle */}
         <Pricing />
 
-        {/* 8. Testimonials — infinite scroll carousel */}
+        {/* 7. Testimonials — 3 minimal cards */}
         <Testimonials />
 
-        {/* 9. FAQ — spring accordion */}
+        {/* 8. FAQ — accordion */}
         <FAQ />
 
-        {/* 10. Final CTA — big headline + waitlist form repeat */}
+        {/* 9. Final CTA — headline + Waitlist */}
         <FinalCTA />
       </main>
 
-      <LandingFooter />
+      {/* 10. Footer */}
+      <Footer variant="marketing" />
     </div>
   );
 }

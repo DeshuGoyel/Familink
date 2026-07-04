@@ -53,9 +53,14 @@ let cachedKey: Uint8Array | null = null;
 
 export function getAeadKey(): Uint8Array {
   if (cachedKey) return cachedKey;
-  const keyB64 = import.meta.env.VITE_SERVER_AEAD_KEY || 'IY7rssrYCCjx92L0S0Yl1M_Un_JktyajiirhVSGeswc';
+  let keyB64 = import.meta.env.VITE_SERVER_AEAD_KEY;
   if (!keyB64) {
-    throw new Error('VITE_SERVER_AEAD_KEY is not defined in environment variables');
+    if (import.meta.env.DEV) {
+      console.warn('VITE_SERVER_AEAD_KEY is not defined, falling back to development transport key.');
+      keyB64 = 'IY7rssrYCCjx92L0S0Yl1M_Un_JktyajiirhVSGeswc';
+    } else {
+      throw new Error('VITE_SERVER_AEAD_KEY is not defined in environment variables');
+    }
   }
   cachedKey = fromBase64Url(keyB64);
   return cachedKey;

@@ -5,12 +5,12 @@ import { ArrowRight, ArrowLeft, Shield, Users, KeyRound, Wallet, CheckCircle2, G
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Select from '../components/ui/Select';
-import ReactConfetti from 'react-confetti';
+import confetti from 'canvas-confetti';
 import { useStore } from '../store/useStore';
-import { api, ApiError } from '../lib/api';
+import { api } from '../lib/api';
 import { initOpaqueRegistration, finishOpaqueRegistration, initOpaqueLogin, finishOpaqueLogin } from '../lib/opaqueClient';
 import toast from 'react-hot-toast';
-import { registerDevice } from '../lib/deviceClient';
+import { fromBase64Url } from '../lib/aeadClient';
 
 
 const steps = [
@@ -50,6 +50,16 @@ export default function Onboarding() {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    if (step === 6) {
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+    }
+  }, [step]);
+
   const [jurisdiction, setLocalJurisdiction] = useState('global');
   const [assetName, setAssetName] = useState('');
   const [guardianEmail, setGuardianEmail] = useState('');
@@ -70,19 +80,10 @@ export default function Onboarding() {
       await api.post('/auth/register/send-otp', { email }, { skipAead: true });
       toast.success('Verification code resent to your email!');
     } catch (err: unknown) {
-      let errorMessage = 'Failed to send OTP code.';
-      if (err instanceof ApiError && err.status === 409) {
-        errorMessage = 'An account with this email already exists.';
-      } else if (err instanceof Error) {
-        if (err.message.toLowerCase().includes('conflict')) {
-          errorMessage = 'An account with this email already exists.';
-        } else {
-          errorMessage = err.message;
-          console.error('Failed to resend OTP:', err);
-        }
-      }
+      console.error('Failed to resend OTP:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to send OTP code.';
       setError(errorMessage);
-      toast.error(errorMessage);
+      toast.error('Resend failed');
     } finally {
       setIsSendingOtp(false);
     }
@@ -103,19 +104,10 @@ export default function Onboarding() {
           toast.success('Verification code sent to your email!');
           setShowOtpEntry(true);
         } catch (err: unknown) {
-          let errorMessage = 'Failed to send OTP code.';
-          if (err instanceof ApiError && err.status === 409) {
-            errorMessage = 'An account with this email already exists.';
-          } else if (err instanceof Error) {
-            if (err.message.toLowerCase().includes('conflict')) {
-              errorMessage = 'An account with this email already exists.';
-            } else {
-              errorMessage = err.message;
-              console.error('Failed to send OTP:', err);
-            }
-          }
+          console.error('Failed to send OTP:', err);
+          const errorMessage = err instanceof Error ? err.message : 'Failed to send OTP code.';
           setError(errorMessage);
-          toast.error(errorMessage);
+          toast.error('Failed to send OTP');
         } finally {
           setIsSendingOtp(false);
         }
@@ -129,14 +121,13 @@ export default function Onboarding() {
 
       setIsInitializing(true);
       setError(null);
-      let token: string | undefined;
       try {
         // 1. Verify OTP with backend to get registration verification token
         const verifyRes = await api.post<VerifyOtpResponseEnvelope>('/auth/register/verify-otp', {
           email,
           code: otpCode,
         }, { skipAead: true });
-        token = verifyRes.data.verification_token;
+        const token = verifyRes.data.verification_token;
 
         // 2. Run real OPAQUE Registration Handshake against live backend
         const { userId, registrationRequest, blindFactor } = await initOpaqueRegistration(password);
@@ -156,7 +147,7 @@ export default function Onboarding() {
           email
         );
 
-        const regFinishRes = await api.post<{ user_id: string; person_id?: string }>('/auth/register/finish', {
+        await api.post<unknown>('/auth/register/finish', {
           session_id: initResponse.session_id,
           registration_upload: finishData.registrationUpload,
           ed25519_pubkey: finishData.ed25519Pubkey,
@@ -167,9 +158,6 @@ export default function Onboarding() {
           enc_legal_name: finishData.encLegalName,
           enc_email: finishData.encEmail,
         });
-        if (regFinishRes.person_id) {
-          localStorage.setItem('tl_person_id', regFinishRes.person_id);
-        }
 
         // 3. Perform Automatic OPAQUE Login immediately
         const loginInit = await initOpaqueLogin(password);
@@ -184,10 +172,38 @@ export default function Onboarding() {
           (loginInitResponse.credential_response || loginInitResponse.registration_response) as string
         );
 
-        const loginFinishResponse = await api.post<{ session_token?: string; token?: string; person_id?: string }>('/auth/login/finish', {
+        const loginFinishResponse = await api.post<{ 
+          session_token?: string; 
+          token?: string;
+          enc_legal_name?: string;
+          emk_blob?: string;
+        }>('/auth/login/finish', {
           session_id: loginInitResponse.session_id,
           credential_finalization: loginFinishData.registrationUpload,
         });
+
+        let masterKey: Uint8Array | null = null;
+        if (loginFinishResponse.emk_blob) {
+          try {
+            const sodium = (await import('libsodium-wrappers-sumo')).default;
+            await sodium.ready;
+            const exportKey = loginFinishData.exportKey;
+            const kek = sodium.crypto_generichash(32, fromBase64Url(exportKey), null);
+            const emkBlobString = new TextDecoder().decode(fromBase64Url(loginFinishResponse.emk_blob));
+            const emk = JSON.parse(emkBlobString);
+            const emkNonce = fromBase64Url(emk.nonce);
+            const emkCiphertext = fromBase64Url(emk.ciphertext);
+            masterKey = sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(
+              null,
+              emkCiphertext,
+              new Uint8Array(),
+              emkNonce,
+              kek
+            );
+          } catch (decErr) {
+            console.warn('Failed to decrypt master key during automatic login:', decErr);
+          }
+        }
 
         const loginToken = loginFinishResponse.session_token || loginFinishResponse.token;
         if (!loginToken) {
@@ -197,23 +213,13 @@ export default function Onboarding() {
         // Set session token, user ID, and update authentication state
         localStorage.setItem('tl_session_token', loginToken);
         localStorage.setItem('tl_user_id', userId);
-        if (loginFinishResponse.person_id) {
-          localStorage.setItem('tl_person_id', loginFinishResponse.person_id);
-        }
-
-        // Automatically register the device on onboarding completion
-        try {
-          await registerDevice(userId);
-        } catch (devErr) {
-          console.error('Device registration failed:', devErr);
-        }
-
         localStorage.setItem('tl_user_name', fullName);
         localStorage.setItem('tl_user_email', email);
         localStorage.removeItem('tl_guardians');
         localStorage.removeItem('tl_heirs');
         useStore.setState({ 
           isAuthenticated: true,
+          masterKey,
           assets: [],
           guardians: [],
           heirs: [],
@@ -232,37 +238,9 @@ export default function Onboarding() {
         setStep(2);
       } catch (err: unknown) {
         console.error('Registration/Auto-Login failed:', err);
-        let errorMessage = 'Registration failed. Please check connection.';
-        if (!token) {
-          if (err instanceof ApiError) {
-            if (err.status === 401) {
-              errorMessage = 'Incorrect verification code. Please try again.';
-            } else if (err.status === 404) {
-              errorMessage = 'Verification code has expired or is invalid. Please request a new code.';
-            } else if (err.status === 429) {
-              errorMessage = 'Too many verification attempts. Please try again later.';
-            } else {
-              errorMessage = err.message;
-            }
-          } else if (err instanceof Error) {
-            const msg = err.message.toLowerCase();
-            if (msg.includes('authentication required') || msg.includes('unauthorized') || msg.includes('status 401')) {
-              errorMessage = 'Incorrect verification code. Please try again.';
-            } else if (msg.includes('resource not found') || msg.includes('not found') || msg.includes('status 404')) {
-              errorMessage = 'Verification code has expired or is invalid. Please request a new code.';
-            } else if (msg.includes('too many requests') || msg.includes('status 429')) {
-              errorMessage = 'Too many verification attempts. Please try again later.';
-            } else {
-              errorMessage = err.message;
-            }
-          }
-        } else {
-          if (err instanceof Error) {
-            errorMessage = err.message;
-          }
-        }
+        const errorMessage = err instanceof Error ? err.message : 'Registration failed. Please check connection.';
         setError(errorMessage);
-        toast.error(errorMessage);
+        toast.error('Registration failed');
       } finally {
         setIsInitializing(false);
       }
@@ -557,8 +535,8 @@ export default function Onboarding() {
               className="w-full max-w-md"
             >
               <div className="p-8 bg-surface/40 border border-base/60 rounded-[32px] backdrop-blur-md shadow-2xl">
-                <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-6">
-                  <Wallet size={26} className="text-orange-400" />
+                <div className="w-14 h-14 rounded-2xl bg-brand-primary-dim border border-brand-primary/20 flex items-center justify-center mb-6">
+                  <Wallet size={26} className="text-brand-primary" />
                 </div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-primary mb-2">Step 3 of 5</p>
                 <h2 className="text-3xl font-display font-bold text-primary tracking-tight mb-2">First Asset</h2>
@@ -662,7 +640,7 @@ export default function Onboarding() {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="w-full max-w-md text-center"
             >
-              <ReactConfetti width={window.innerWidth} height={window.innerHeight} recycle={false} numberOfPieces={300} colors={['#4F5CFF', '#D4AF37', '#10B981', '#F97316']} />
+              {/* Confetti triggered via useEffect */}
 
               <div className="w-20 h-20 rounded-[28px] bg-trust-500/10 border border-trust-500/30 flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(16,185,129,0.15)]">
                 <ShieldCheck size={36} className="text-trust-500" />
