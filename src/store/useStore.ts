@@ -401,13 +401,14 @@ export const useStore = create<AppState>((set) => ({
     } catch (err) {
       console.error('Failed to fetch assets:', err);
       if (import.meta.env.DEV) {
-        const { mockAssets } = await import('../data/mockData');
-        set((state) => {
-          if (state.assets.length === 0) {
-            return { assets: mockAssets };
-          }
-          return {};
-        });
+        const localAssets = localStorage.getItem('tl_assets');
+        if (localAssets) {
+          set({ assets: JSON.parse(localAssets) });
+        } else {
+          const { mockAssets } = await import('../data/mockData');
+          set({ assets: mockAssets });
+          localStorage.setItem('tl_assets', JSON.stringify(mockAssets));
+        }
       }
     }
   },
@@ -471,14 +472,20 @@ export const useStore = create<AppState>((set) => ({
             status: 'Protected',
             date: new Date().toISOString().split('T')[0]
           };
-          const newState = { ...state, assets: [...state.assets, newAsset] };
+          const updated = [...state.assets, newAsset];
+          localStorage.setItem('tl_assets', JSON.stringify(updated));
+          const newState = { ...state, assets: updated };
           return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
         });
       }
     }
   },
   updateAsset: (id, data) => set((state) => {
-    const newState = { ...state, assets: state.assets.map(a => a.id === id ? { ...a, ...data } : a) };
+    const updated = state.assets.map(a => a.id === id ? { ...a, ...data } : a);
+    if (import.meta.env.DEV) {
+      localStorage.setItem('tl_assets', JSON.stringify(updated));
+    }
+    const newState = { ...state, assets: updated };
     return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
   }),
   deleteAsset: async (id) => {
@@ -501,7 +508,9 @@ export const useStore = create<AppState>((set) => ({
       console.error('Failed to delete asset:', err);
       if (import.meta.env.DEV) {
         set((state) => {
-          const newState = { ...state, assets: state.assets.filter(a => a.id !== id) };
+          const updated = state.assets.filter(a => a.id !== id);
+          localStorage.setItem('tl_assets', JSON.stringify(updated));
+          const newState = { ...state, assets: updated };
           return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
         });
       }

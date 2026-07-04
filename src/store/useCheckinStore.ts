@@ -11,7 +11,7 @@ export interface Checkin {
 }
 
 export interface CheckinSettings {
-  frequency: "weekly" | "biweekly" | "monthly";
+  frequency: "weekly" | "biweekly" | "monthly" | string;
   consecutiveMissesAllowed: number;
   currentStreak: number;
   totalMissed: number;
