@@ -8,7 +8,7 @@ import Select from '../components/ui/Select';
 import confetti from 'canvas-confetti';
 import { useStore } from '../store/useStore';
 import { api } from '../lib/api';
-import { initOpaqueRegistration, finishOpaqueRegistration, initOpaqueLogin, finishOpaqueLogin } from '../lib/opaqueClient';
+import { initOpaqueRegistration, finishOpaqueRegistration, initOpaqueLogin, finishOpaqueLogin, deriveUserKeys } from '../lib/opaqueClient';
 import toast from 'react-hot-toast';
 import { fromBase64Url } from '../lib/aeadClient';
 
@@ -200,6 +200,9 @@ export default function Onboarding() {
               emkNonce,
               kek
             );
+            // Derive deterministic user keys and set them in store
+            const userKeys = await deriveUserKeys(exportKey);
+            useStore.setState({ userKeys });
           } catch (decErr) {
             console.warn('Failed to decrypt master key during automatic login:', decErr);
           }

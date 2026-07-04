@@ -1,5 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { waitlistSchema } from '../lib/validations';
+import { describe, it, expect, vi } from 'vitest';
 import { useStore } from '../store/useStore';
 import { useCheckinStore } from '../store/useCheckinStore';
 

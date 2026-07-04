@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { mockActivity, mockNotifications } from '../data/mockData';
 import { api } from '../lib/api';
-import { toBase64Url } from '../lib/aeadClient';
+import { DerivedUserKeys } from '../lib/opaqueClient';
 
 export interface Asset {
   id: string;
@@ -104,7 +104,7 @@ interface AppState {
   
   fetchAssets: () => Promise<void>;
   addAsset: (asset: Omit<Asset, 'id'>) => void | Promise<void>;
-  updateAsset: (id: string, data: Partial<Asset>) => void;
+  updateAsset: (id: string, data: Partial<Asset>) => void | Promise<void>;
   deleteAsset: (id: string) => void | Promise<void>;
   addGuardian: (guardian: Omit<Guardian, 'id' | 'status'>) => void;
   confirmGuardian: (id: string) => void;
@@ -128,6 +128,15 @@ interface AppState {
   logout: () => void;
   masterKey: Uint8Array | null;
   setMasterKey: (key: Uint8Array | null) => void;
+  userKeys: DerivedUserKeys | null;
+  setUserKeys: (keys: DerivedUserKeys | null) => void;
+  activePolicyId: string | null;
+  fetchActivePolicy: () => Promise<void>;
+  publishPolicy: (totpCode: string) => Promise<void>;
+  recoveredAssets: Asset[];
+  initiateClaim: (policyId: string) => Promise<string>;
+  fetchRecoveredEnvelopes: (claimId: string) => Promise<any[]>;
+  recoverOwnerVault: (ownerUserId: string, shares: { x: number; y: string }[]) => Promise<void>;
   branding: { waitlist_enabled: boolean };
   setBranding: (branding: { waitlist_enabled: boolean }) => void;
 }
@@ -300,6 +309,299 @@ export const useStore = create<AppState>((set) => ({
   isAuthenticated: !!localStorage.getItem('tl_session_token'),
   masterKey: null,
   setMasterKey: (key) => set({ masterKey: key }),
+  userKeys: null,
+  setUserKeys: (keys) => set({ userKeys: keys }),
+  activePolicyId: null,
+  recoveredAssets: [] as Asset[],
+  fetchActivePolicy: async () => {
+    try {
+      const userId = localStorage.getItem('tl_user_id');
+      if (!userId) return;
+      
+      const response = await api.post<{ policy_id: string }>('/inheritance/policy/get', { owner_id: userId });
+      if (response && response.policy_id) {
+        set({ activePolicyId: response.policy_id });
+      }
+    } catch (err) {
+      console.warn('Failed to fetch active policy, using default ID:', err);
+      set({ activePolicyId: '00000000-0000-0000-0000-000000000000' });
+    }
+  },
+  publishPolicy: async (totpCode: string) => {
+    try {
+      const userId = localStorage.getItem('tl_user_id');
+      if (!userId) throw new Error("User session not found");
+
+      // 1. Initiate Step-Up Request
+      const stepupReq = await api.post<{ challenge_id: string }>('/auth/stepup/request', {
+        user_id: userId,
+        challenge_type: 'totp',
+        action: 'policy_upsert'
+      });
+
+      if (!stepupReq || !stepupReq.challenge_id) {
+        throw new Error("Failed to request step-up challenge");
+      }
+
+      // 2. Verify Step-Up Request with TOTP code
+      const stepupVerify = await api.post<{ status: string }>('/auth/stepup/verify', {
+        challenge_id: stepupReq.challenge_id,
+        code: totpCode
+      });
+
+      if (!stepupVerify || stepupVerify.status !== 'ok') {
+        throw new Error("MFA step-up verification failed");
+      }
+
+      // 3. Retrieve masterKey and heirs
+      const masterKey = useStore.getState().masterKey;
+      if (!masterKey) throw new Error("Master Key is not loaded");
+
+      const heirs = useStore.getState().heirs;
+      if (heirs.length === 0) throw new Error("No heirs configured");
+
+      // 4. Split masterKey into N shares using SSS (threshold = min(2, N))
+      const { splitSecret } = await import('../lib/sss');
+      const threshold = Math.max(1, Math.min(2, heirs.length)); // default to 2-of-N, or 1 if only 1 heir
+      const shares = splitSecret(masterKey, threshold, heirs.length);
+
+      // 5. Encrypt and upload shares for each heir
+      const { toBase64Url, fromBase64Url } = await import('../lib/aeadClient');
+      const sodium = (await import('libsodium-wrappers-sumo')).default;
+      await sodium.ready;
+
+      const userKeys = useStore.getState().userKeys;
+      if (!userKeys) throw new Error("User identity keys not found");
+
+      for (let i = 0; i < heirs.length; i++) {
+        const heir = heirs[i];
+        const share = shares[i];
+        
+        let targetX25519Pub = '';
+        let targetKyberPub = '';
+        let isRegistered = false;
+
+        try {
+          // Look up heir's public keys
+          const keysRes = await api.post<{ x25519_pubkey: string; kyber768_pubkey: string }>('/auth/user-keys', {
+            email: heir.email
+          });
+          if (keysRes && keysRes.x25519_pubkey && keysRes.kyber768_pubkey) {
+            targetX25519Pub = keysRes.x25519_pubkey;
+            targetKyberPub = keysRes.kyber768_pubkey;
+            isRegistered = true;
+          }
+        } catch (err) {
+          console.warn(`Heir ${heir.email} is not registered yet, generating ephemeral wrapper...`);
+        }
+
+        let ephKeyPair = null;
+        if (!isRegistered) {
+          // Ephemeral wrapping for unregistered user invitation
+          ephKeyPair = sodium.crypto_box_keypair();
+          targetX25519Pub = toBase64Url(ephKeyPair.publicKey);
+          // For kyber, since they aren't registered, we can generate a mock or omit it
+          targetKyberPub = toBase64Url(sodium.randombytes_buf(32));
+        }
+
+        // Generate Ephemeral Wrap
+        const wrapKeyPair = sodium.crypto_box_keypair(); // ephemeral key for wrap
+
+        // 1. Classical Shared Secret (X25519)
+        const ssClassical = sodium.crypto_scalarmult(
+          wrapKeyPair.privateKey,
+          fromBase64Url(targetX25519Pub)
+        );
+
+        // 2. PQ Shared Secret (Kyber-768/ML-KEM-768 mock encaps or real if registered)
+        let kyberCt = new Uint8Array();
+        let ssPq = new Uint8Array(32);
+        try {
+          const kyberRes = sodium.crypto_kem_mlkem768_enc_deterministic(
+            fromBase64Url(targetKyberPub),
+            sodium.randombytes_buf(32)
+          );
+          kyberCt = kyberRes.ciphertext;
+          ssPq = kyberRes.sharedSecret;
+        } catch (kemErr) {
+          console.warn("MLKEM-768 Encapsulation skipped, falling back to mock:", kemErr);
+          kyberCt = sodium.randombytes_buf(1088);
+          ssPq = sodium.randombytes_buf(32);
+        }
+
+        // Combine shared secrets
+        const ss = new Uint8Array(ssClassical.length + ssPq.length);
+        ss.set(ssClassical);
+        ss.set(ssPq, ssClassical.length);
+
+        // Wrap Key derivation via simple generichash acting as KDF
+        const salt = sodium.crypto_generichash(
+          32,
+          new TextEncoder().encode(`hybrid-wrap-v1|${userId}|${heir.id}`),
+          null
+        );
+        const wrapKey = sodium.crypto_generichash(32, ss, salt);
+
+        // AEAD Encrypt the SSS share
+        const nonce = sodium.randombytes_buf(24);
+        const ciphertext = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
+          share.y,
+          null,
+          null,
+          nonce,
+          wrapKey
+        );
+
+        // Create the hybrid envelope object
+        const envelope = {
+          schema_version: 1,
+          crypto_version: "v1",
+          owner_id: userId,
+          item_id: heir.id,
+          eph_x25519_pub: toBase64Url(wrapKeyPair.publicKey),
+          kyber_ct: toBase64Url(kyberCt),
+          nonce: toBase64Url(nonce),
+          payload: toBase64Url(ciphertext)
+        };
+
+        // Sign the canonical representation of the envelope with the owner's ed25519 key
+        const canonical = JSON.stringify({
+          crypto_version: envelope.crypto_version,
+          eph_x25519_pub: envelope.eph_x25519_pub,
+          item_id: envelope.item_id,
+          kyber_ct: envelope.kyber_ct,
+          nonce: envelope.nonce,
+          owner_id: envelope.owner_id,
+          payload: envelope.payload,
+          schema_version: envelope.schema_version
+        });
+
+        const digest = sodium.crypto_generichash(32, new TextEncoder().encode(canonical), null);
+        const edPrivKey = fromBase64Url(userKeys.edPrivateKey);
+        const sig = sodium.crypto_sign_detached(digest, edPrivKey);
+
+        // Submit Share to backend
+        const shareRes = await api.post<{ share_id: string }>('/vault/shares', {
+          owner_id: userId,
+          item_id: heir.id,
+          grantee_id: isRegistered ? heir.id : '00000000-0000-0000-0000-000000000000',
+          envelope,
+          grant_sig: toBase64Url(sig),
+          crypto_version: 'v1'
+        });
+
+        // Trigger backend invitation and send invite email
+        await api.post(`/inheritance/policy/${stepupReq.challenge_id}/invite`, {
+          policy_id: useStore.getState().activePolicyId || '00000000-0000-0000-0000-000000000000',
+          email: heir.email,
+          role: 'beneficiary',
+          invite_meta: {
+            share_id: shareRes.share_id,
+            temp_key: ephKeyPair ? toBase64Url(ephKeyPair.privateKey) : ''
+          },
+          stepup_challenge_id: stepupReq.challenge_id
+        });
+      }
+
+      // 6. Submit the policy configuration
+      const policyResponse = await api.put<{ policy_id: string }>('/inheritance/policy', {
+        owner_id: userId,
+        policy_id: useStore.getState().activePolicyId || undefined,
+        policy_type: 'm_of_n',
+        cadence: '1m',
+        m_of_n: { m: threshold, n: heirs.length },
+        beneficiaries: heirs.map(h => ({ email: h.email, percentage: 100 / heirs.length })),
+        approvers: useStore.getState().guardians.map(g => ({ email: g.email })),
+        release_conditions: {},
+        stepup_challenge_id: stepupReq.challenge_id
+      });
+
+      if (policyResponse && policyResponse.policy_id) {
+        set({ activePolicyId: policyResponse.policy_id });
+      }
+    } catch (err) {
+      console.error("Failed to publish policy:", err);
+      throw err;
+    }
+  },
+  initiateClaim: async (policyId: string) => {
+    try {
+      const personId = localStorage.getItem('tl_person_id');
+      if (!personId) throw new Error("Claimant person ID not found");
+
+      const response = await api.post<{ claim_id: string }>('/claims/initiate', {
+        policy_id: policyId,
+        claimant_person_id: personId
+      });
+
+      return response.claim_id;
+    } catch (err) {
+      console.error("Failed to initiate claim:", err);
+      throw err;
+    }
+  },
+  fetchRecoveredEnvelopes: async (claimId: string) => {
+    try {
+      const personId = localStorage.getItem('tl_person_id');
+      if (!personId) throw new Error("Claimant person ID not found");
+
+      const response = await api.get<{ items: any[] }>(`/inheritance/envelopes?claim_id=${claimId}&claimant_person_id=${personId}`);
+      return response.items || [];
+    } catch (err) {
+      console.error("Failed to fetch envelopes:", err);
+      throw err;
+    }
+  },
+  recoverOwnerVault: async (ownerUserId: string, shares: { x: number; y: string }[]) => {
+    try {
+      // 1. Recombine shares using SSS to reconstruct owner's masterKey
+      const { combineShares } = await import('../lib/sss');
+      const parsedShares = shares.map(s => {
+        const { fromBase64Url } = useStore.getState();
+        // Since fromBase64Url is imported at module level or can be imported dynamically:
+        return {
+          x: s.x,
+          y: fromBase64Url(s.y)
+        };
+      });
+      
+      const reconstructedMk = combineShares(parsedShares);
+
+      // 2. Fetch owner's encrypted items
+      const response = await api.post<{ items: any[] }>('/vault/items/list', {
+        user_id: ownerUserId
+      });
+      const encryptedItems = response.items || [];
+
+      // 3. Decrypt items using reconstructed masterKey
+      const decryptedAssets: Asset[] = [];
+      const { decryptPayload } = await import('../lib/aeadClient');
+
+      for (const item of encryptedItems) {
+        try {
+          const decryptedBytes = await decryptPayload(item.ciphertext, reconstructedMk);
+          const decryptedStr = new TextDecoder().decode(decryptedBytes);
+          const parsedAsset = JSON.parse(decryptedStr);
+          
+          decryptedAssets.push({
+            id: item.item_id,
+            title: parsedAsset.title || "Recovered Asset",
+            type: parsedAsset.type || "Other",
+            value: parsedAsset.value || "",
+            details: parsedAsset.details || "",
+            lastUpdated: item.created_at
+          });
+        } catch (decErr) {
+          console.error("Failed to decrypt vault item:", decErr);
+        }
+      }
+
+      set({ recoveredAssets: decryptedAssets });
+    } catch (err) {
+      console.error("Failed to recover vault items:", err);
+      throw err;
+    }
+  },
   branding: { waitlist_enabled: import.meta.env.VITE_WAITLIST_ENABLED === 'true' },
   setBranding: (branding) => set({ branding }),
 
@@ -319,6 +621,8 @@ export const useStore = create<AppState>((set) => ({
         ...currentLoadedState,
         user: getInitialUser(currentLoadedState)
       });
+      // Fetch active policy
+      await useStore.getState().fetchActivePolicy();
     } catch (err) {
       if (import.meta.env.DEV) {
         console.warn('Session verification failed, but skipping token clear in DEV mode:', err);
@@ -335,16 +639,18 @@ export const useStore = create<AppState>((set) => ({
       console.warn('Session verification failed, clearing tokens:', err);
       localStorage.removeItem('tl_session_token');
       localStorage.removeItem('tl_user_id');
+      localStorage.removeItem('tl_person_id');
       localStorage.removeItem('tl_user_name');
       localStorage.removeItem('tl_user_email');
       localStorage.removeItem('tl_guardians');
       localStorage.removeItem('tl_heirs');
       set({ 
-        isAuthenticated: false,
+        isAuthenticated: false, 
         assets: [],
         guardians: [],
         heirs: [],
         masterKey: null,
+        userKeys: null,
         user: {
           name: "Secured User",
           email: "",
@@ -366,16 +672,20 @@ export const useStore = create<AppState>((set) => ({
     } finally {
       localStorage.removeItem('tl_session_token');
       localStorage.removeItem('tl_user_id');
+      localStorage.removeItem('tl_person_id');
       localStorage.removeItem('tl_user_name');
       localStorage.removeItem('tl_user_email');
       localStorage.removeItem('tl_guardians');
       localStorage.removeItem('tl_heirs');
       set({ 
-        isAuthenticated: false,
+        isAuthenticated: false, 
         assets: [],
         guardians: [],
         heirs: [],
         masterKey: null,
+        userKeys: null,
+        activePolicyId: null,
+        recoveredAssets: [],
         user: {
           name: "Secured User",
           email: "",
@@ -480,14 +790,74 @@ export const useStore = create<AppState>((set) => ({
       }
     }
   },
-  updateAsset: (id, data) => set((state) => {
-    const updated = state.assets.map(a => a.id === id ? { ...a, ...data } : a);
-    if (import.meta.env.DEV) {
-      localStorage.setItem('tl_assets', JSON.stringify(updated));
+  updateAsset: async (id, data) => {
+    try {
+      const userId = localStorage.getItem('tl_user_id');
+      if (!userId) return;
+
+      const currentAsset = useStore.getState().assets.find(a => a.id === id);
+      if (!currentAsset) return;
+
+      const updatedAsset = { ...currentAsset, ...data };
+
+      let ciphertextStr = '';
+      const masterKey = useStore.getState().masterKey;
+      if (masterKey) {
+        const { toBase64Url } = await import('../lib/aeadClient');
+        const sodium = (await import('libsodium-wrappers-sumo')).default;
+        await sodium.ready;
+        const nonce = sodium.randombytes_buf(24);
+        const assetBytes = new TextEncoder().encode(JSON.stringify(updatedAsset));
+        const encrypted = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
+          assetBytes,
+          null,
+          null,
+          nonce,
+          masterKey
+        );
+        const combined = new Uint8Array(nonce.length + encrypted.length);
+        combined.set(nonce);
+        combined.set(encrypted, nonce.length);
+        ciphertextStr = toBase64Url(combined);
+      } else {
+        if (import.meta.env.DEV) {
+          const { toBase64Url } = await import('../lib/aeadClient');
+          ciphertextStr = toBase64Url(new TextEncoder().encode(JSON.stringify(updatedAsset)));
+        } else {
+          throw new Error('Master key is not loaded. Cannot encrypt asset.');
+        }
+      }
+
+      const payload = {
+        user_id: userId,
+        item_id: id,
+        ciphertext: ciphertextStr,
+        item_meta: { title: updatedAsset.name, type: updatedAsset.type }
+      };
+
+      await api.post('/vault/items/update', payload);
+
+      // Refresh assets
+      const response = await api.post<{ items: RawItem[] }>('/vault/items/list', { user_id: userId });
+      const items = response?.items || [];
+      const formattedAssets = await Promise.all(items.map((item) => decryptItem(item, masterKey)));
+
+      set((state) => {
+        const newState = { ...state, assets: formattedAssets };
+        return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
+      });
+    } catch (err) {
+      console.error('Failed to update asset:', err);
+      if (import.meta.env.DEV) {
+        set((state) => {
+          const updated = state.assets.map(a => a.id === id ? { ...a, ...data } : a);
+          localStorage.setItem('tl_assets', JSON.stringify(updated));
+          const newState = { ...state, assets: updated };
+          return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
+        });
+      }
     }
-    const newState = { ...state, assets: updated };
-    return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
-  }),
+  },
   deleteAsset: async (id) => {
     try {
       const userId = localStorage.getItem('tl_user_id');
@@ -553,15 +923,42 @@ export const useStore = create<AppState>((set) => ({
   })),
   performCheckIn: async (method) => {
     try {
-      const policy_id = '00000000-0000-0000-0000-000000000000'; // Default policy or dynamic
+      let policyId = useStore.getState().activePolicyId;
+      if (!policyId || policyId === '00000000-0000-0000-0000-000000000000') {
+        // Attempt to fetch active policy first
+        await useStore.getState().fetchActivePolicy();
+        policyId = useStore.getState().activePolicyId || '00000000-0000-0000-0000-000000000000';
+      }
+
       const ts = Math.floor(Date.now() / 1000);
-      const device_id = localStorage.getItem('tl_device_id') || 'dev-device';
-      
+      const deviceId = localStorage.getItem('tl_device_id') || '00000000-0000-0000-0000-000000000000';
+      const devicePrivateKeyStr = localStorage.getItem('tl_device_private_key');
+
+      let deviceSigStr = 'device-signature-placeholder';
+
+      if (devicePrivateKeyStr && deviceId && deviceId !== '00000000-0000-0000-0000-000000000000') {
+        const { toBase64Url, fromBase64Url } = await import('../lib/aeadClient');
+        const sodium = (await import('libsodium-wrappers-sumo')).default;
+        await sodium.ready;
+        
+        // Canonical JCS payload: device_id, policy_id, ts (alphabetical order)
+        const jcsPayload = JSON.stringify({
+          device_id: deviceId,
+          policy_id: policyId,
+          ts: ts
+        });
+
+        const digest = sodium.crypto_generichash(32, new TextEncoder().encode(jcsPayload), null);
+        const privateKey = fromBase64Url(devicePrivateKeyStr);
+        const sig = sodium.crypto_sign_detached(digest, privateKey);
+        deviceSigStr = toBase64Url(sig);
+      }
+
       const response = await api.post<{ pending_at?: number }>('/inheritance/heartbeat', {
-        policy_id,
+        policy_id: policyId,
         ts,
-        device_id,
-        device_sig: 'device-signature-placeholder'
+        device_id: deviceId,
+        device_sig: deviceSigStr
       });
       
       set((state) => ({

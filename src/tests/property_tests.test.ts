@@ -133,7 +133,7 @@ describe('Property-Based Mathematical Invariant Tests', () => {
           })
         ),
         (newAssets) => {
-          let lastScore = 0;
+          const lastScore = 0;
           useStore.setState(initialState);
           
           for (const asset of newAssets) {

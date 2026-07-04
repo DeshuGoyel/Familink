@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { calculateProjection, calculateProjectionSequence } from '../utils/mathUtils';
 import { generateHash } from '../utils/cryptoUtils';
 import { waitlistSchema } from '../lib/validations';
 import { useStore } from '../store/useStore';
 import { useCheckinStore } from '../store/useCheckinStore';
-import { AssetBuilder, GuardianBuilder, HeirBuilder } from './builders';
+import { AssetBuilder, GuardianBuilder } from './builders';
 
 // Mock Web Crypto API digest since Node environment requires subtle mocks in older versions
 if (!global.crypto) {

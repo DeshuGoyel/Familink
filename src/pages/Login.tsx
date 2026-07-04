@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, Loader2, ArrowRight, Lock, Mail, Eye, EyeOff } from 'lucide-react';
 import { api } from '../lib/api';
-import { initOpaqueLogin, finishOpaqueLogin } from '../lib/opaqueClient';
+import { initOpaqueLogin, finishOpaqueLogin, deriveUserKeys } from '../lib/opaqueClient';
 import { fromBase64Url } from '../lib/aeadClient';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
@@ -97,6 +97,10 @@ export default function Login() {
             );
 
             useStore.getState().setMasterKey(mk);
+
+            // Derive deterministic user keys and set them in store
+            const userKeys = await deriveUserKeys(exportKey);
+            useStore.getState().setUserKeys(userKeys);
 
             // Decrypt profile legal name using Master Key and prepended nonce
             const combined = fromBase64Url(finishResponse.enc_legal_name);

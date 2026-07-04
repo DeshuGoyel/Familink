@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useStore, Asset } from '../store/useStore';
 import {
-  Wallet, Plus, Edit2, Trash2, Box, TrendingUp, Briefcase,
-  FileText, Globe, Search, Shield, ChevronRight, Lock, Key,
-  X, Check, AlertTriangle, HelpCircle
+  Wallet, Plus, Edit2, Trash2, Box, Briefcase,
+  FileText, Search, Shield, Lock, Key, Check
 } from 'lucide-react';
-import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

@@ -52,10 +52,8 @@ export async function finishOpaqueRegistration(
   // 2. Decode and hash the exportKey (64 bytes) to derive a 32-byte KEK
   const kek = sodium.crypto_generichash(32, fromBase64Url(exportKey), null);
   
-  // 3. Generate randomized client keys (Zero-Knowledge)
-  const edKeyPair = sodium.crypto_sign_keypair();
-  const xKeyPair = sodium.crypto_box_keypair();
-  const kyberKeyPair = sodium.randombytes_buf(32); // Mock placeholder for Kyber-768
+  // 3. Generate deterministic client keys (Zero-Knowledge)
+  const keys = await deriveUserKeys(exportKey);
   
   // 4. Encrypt master key (MK) with derived KEK
   const mk = sodium.randombytes_buf(32);
@@ -100,9 +98,9 @@ export async function finishOpaqueRegistration(
   
   return {
     registrationUpload: registrationRecord,
-    ed25519Pubkey: toBase64Url(edKeyPair.publicKey),
-    x25519Pubkey: toBase64Url(xKeyPair.publicKey),
-    kyber768Pubkey: toBase64Url(kyberKeyPair),
+    ed25519Pubkey: keys.edPublicKey,
+    x25519Pubkey: keys.xPublicKey,
+    kyber768Pubkey: keys.kyberPublicKey,
     emkBlob: toBase64Url(new TextEncoder().encode(emkBlob)),
     argon2Params: {
       m: sodium.crypto_pwhash_MEMLIMIT_MODERATE,
@@ -113,6 +111,38 @@ export async function finishOpaqueRegistration(
     encEmail: toBase64Url(combinedEmail)
   };
 }
+
+export interface DerivedUserKeys {
+  edPublicKey: string;
+  edPrivateKey: string;
+  xPublicKey: string;
+  xPrivateKey: string;
+  kyberPublicKey: string;
+  kyberPrivateKey: string;
+}
+
+export async function deriveUserKeys(exportKey: string): Promise<DerivedUserKeys> {
+  await sodium.ready;
+  const rawExportKey = fromBase64Url(exportKey);
+  
+  const edSeed = sodium.crypto_generichash(32, rawExportKey, new TextEncoder().encode("ed25519-seed"));
+  const xSeed = sodium.crypto_generichash(32, rawExportKey, new TextEncoder().encode("x25519-seed"));
+  const kyberSeed = sodium.crypto_generichash(64, rawExportKey, new TextEncoder().encode("kyber768-seed"));
+  
+  const edKeyPair = sodium.crypto_sign_seed_keypair(edSeed);
+  const xKeyPair = sodium.crypto_box_seed_keypair(xSeed);
+  const kyberKeyPair = sodium.crypto_kem_mlkem768_seed_keypair(kyberSeed);
+  
+  return {
+    edPublicKey: toBase64Url(edKeyPair.publicKey),
+    edPrivateKey: toBase64Url(edKeyPair.privateKey),
+    xPublicKey: toBase64Url(xKeyPair.publicKey),
+    xPrivateKey: toBase64Url(xKeyPair.privateKey),
+    kyberPublicKey: toBase64Url(kyberKeyPair.publicKey),
+    kyberPrivateKey: toBase64Url(kyberKeyPair.privateKey),
+  };
+}
+
 
 export interface OpaqueLoginInitResult {
   credentialRequest: string;

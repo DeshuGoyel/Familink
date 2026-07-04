@@ -6,7 +6,6 @@ import {
   CheckCircle2, Clock, AlertCircle,
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import LegacyScoreGauge from '../components/dashboard/LegacyScoreGauge';
 import ProofOfLifeCard from '../components/dashboard/ProofOfLifeCard';
 import ActivityFeed from '../components/dashboard/ActivityFeed';
 

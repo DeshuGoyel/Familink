@@ -29,7 +29,6 @@ import { Toaster } from 'react-hot-toast';
 import { useStore } from '../store/useStore';
 import { useLocation } from 'react-router-dom';
 import { cn } from '../utils/cn';
-import { Menu, X } from 'lucide-react';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useStore();

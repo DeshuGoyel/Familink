@@ -8,7 +8,6 @@ import {
   Settings,
   HelpCircle,
   LogOut,
-  Lock,
   GitBranch,
   Cpu,
   ChevronRight,

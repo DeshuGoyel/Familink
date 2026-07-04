@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, ShieldCheck, Lock, Building2, Mail, TrendingUp, CheckCircle2, Shield } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { api } from '../../lib/api';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
