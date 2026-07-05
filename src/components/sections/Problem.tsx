@@ -1,161 +1,68 @@
-import { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
-const stats = [
-  { prefix: '$', value: 189, suffix: 'B+', desc: 'in crypto lost permanently each year', color: '#f87171', glow: 'rgba(248,113,113,0.15)' },
-  { prefix: '', value: 89, suffix: '%',  desc: 'of families locked out of digital assets after a death', color: '#fb923c', glow: 'rgba(251,146,60,0.15)', showBar: true },
-  { prefix: '', value: 15, suffix: ' min', desc: 'to protect your entire legacy with Transfer Legacy', color: '#34d399', glow: 'rgba(52,211,153,0.15)' },
+const cards = [
+  {
+    icon: "🏦",
+    title: "Banks freeze on day one",
+    desc: "Even a listed nominee waits 4–7 months through succession certificates, NOCs and indemnity bonds."
+  },
+  {
+    icon: "✉️",
+    title: "Gmail is the master key",
+    desc: "Every reset and statement runs through email. Google deletes inactive accounts — and everything linked locks with it."
+  },
+  {
+    icon: "📈",
+    title: "A nominee can't just log in",
+    desc: "Being named isn't access. Your family still needs a court certificate and months before a single rupee moves."
+  },
+  {
+    icon: "📸",
+    title: "Memories vanish for good",
+    desc: "Apple's process to reach a lost iCloud runs 18+ months. Most accounts close first. The photos never come back."
+  }
 ];
-
-function AnimatedCounter({ target, delay }: { target: number; delay: number }) {
-  const [count, setCount] = useState(0);
-  const [started, setStarted] = useState(false);
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([e]) => { if (e.isIntersecting) setStarted(true); }, { threshold: 0.5 });
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!started) return;
-    const timer = setTimeout(() => {
-      let cur = 0;
-      const step = setInterval(() => {
-        cur += Math.ceil(target / 50);
-        if (cur >= target) { setCount(target); clearInterval(step); }
-        else setCount(cur);
-      }, 30);
-      return () => clearInterval(step);
-    }, delay * 1000);
-    return () => clearTimeout(timer);
-  }, [started, target, delay]);
-
-  return <span ref={ref}>{count}</span>;
-}
 
 export default function Problem() {
   return (
-    <section id="problem" className="relative py-28 overflow-hidden bg-raised">
-      {/* Gradient accent top */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-primary/40 to-transparent" />
+    <section id="problem" className="py-24 bg-page border-y border-base relative overflow-hidden">
+      <div className="max-w-[1100px] mx-auto px-6 relative z-10">
+        
+        {/* Section kicker */}
+        <div className="mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-base bg-surface/40 text-secondary text-[11px] font-bold uppercase tracking-wider">
+            The problem
+          </div>
+        </div>
 
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="mb-20 max-w-3xl"
-        >
-          <p className="text-xs font-bold tracking-[0.22em] uppercase mb-5 gradient-text-brand">
-            The Problem
-          </p>
-          <h2 className="text-4xl md:text-5xl lg:text-5xl font-bold text-primary leading-[1.08] tracking-tight">
-            $189 Billion in crypto vanishes every year.{' '}
-            <span className="text-secondary/30 font-light">No one told their family.</span>
-          </h2>
-        </motion.div>
+        {/* Big Claim */}
+        <p className="font-display font-light text-primary leading-[1.14] tracking-tight text-[clamp(1.9rem,3.4vw,2.9rem)] max-w-[900px] mb-14">
+          When someone passes, families don't lose the money. They lose <span className="relative z-10 font-medium inline-block text-brand-primary after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-[0.02em] after:h-[0.15em] after:bg-brand-primary/10 after:-z-10">access to it</span> — accounts freeze, passwords vanish, and $140 billion disappears every year.
+        </p>
 
-        {/* Stat cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20">
-          {stats.map((stat, i) => (
+        {/* Grid cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {cards.map((card, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.14, duration: 0.65 }}
-              className="relative rounded-3xl p-8 border border-border-base overflow-hidden group hover:-translate-y-1 transition-all duration-300 bg-surface"
+              transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              className="border-t-2 border-primary pt-5 space-y-3"
             >
-              {/* Glow */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: `radial-gradient(circle at 30% 30%, ${stat.glow}, transparent 70%)` }}
-              />
-              <div className="text-5xl md:text-5xl font-bold leading-none mb-3" style={{ color: stat.color }}>
-                {stat.prefix}<AnimatedCounter target={stat.value} delay={i * 0.15} />{stat.suffix}
-              </div>
-              {stat.showBar && (
-                <motion.div className="w-full h-1 rounded-full mb-3 overflow-hidden bg-muted/10">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${stat.value}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 2, ease: 'easeOut', delay: 0.4 }}
-                    className="h-full rounded-full"
-                    style={{ background: stat.color }}
-                  />
-                </motion.div>
-              )}
-              <p className="text-secondary text-sm leading-relaxed relative z-10">{stat.desc}</p>
+              <span className="text-[1.3rem] block">{card.icon}</span>
+              <h3 className="text-[0.98rem] font-bold text-primary leading-snug">
+                {card.title}
+              </h3>
+              <p className="text-secondary text-[0.86rem] leading-relaxed font-light">
+                {card.desc}
+              </p>
             </motion.div>
           ))}
         </div>
 
-        {/* Narrative split */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-3xl overflow-hidden border border-border-base bg-surface shadow-sm"
-        >
-          {/* Without */}
-          <div className="relative p-10 md:p-14 border-r border-border-base group overflow-hidden bg-rose-500/[0.02] dark:bg-rose-500/[0.01]">
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-              style={{ background: 'radial-gradient(circle at 20% 20%, rgba(239,68,68,0.06), transparent 60%)' }}
-            />
-            <span className="inline-block text-xs font-bold tracking-widest uppercase text-rose-500 bg-rose-500/10 border border-rose-500/15 px-3 py-1.5 rounded-full mb-7">
-              Without Transfer Legacy
-            </span>
-            <div className="space-y-5">
-              {[
-                'Family discovers wallets but has no seed phrase',
-                'Exchange accounts frozen — no death certificate accepted',
-                'Years of lawyers. Thousands in fees. Access denied.',
-                'Your life\'s work: gone.',
-              ].map((step, i) => (
-                <div key={i} className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-5 h-5 rounded-full border border-rose-500/40 flex items-center justify-center mt-0.5">
-                    <div className="w-2 h-2 rounded-full bg-rose-500" />
-                  </div>
-                  <p className="text-secondary text-sm leading-relaxed">{step}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* With */}
-          <div className="relative p-10 md:p-14 group overflow-hidden bg-emerald-500/[0.02] dark:bg-emerald-500/[0.01]">
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-              style={{ background: 'radial-gradient(circle at 80% 20%, rgba(52,211,153,0.06), transparent 60%)' }}
-            />
-            <span className="inline-block text-xs font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/15 px-3 py-1.5 rounded-full mb-7">
-              With Transfer Legacy
-            </span>
-            <div className="space-y-5">
-              {[
-                'Your vault is set up in 15 minutes',
-                'Trusted guardians receive their key fragments securely',
-                'When you\'re inactive, your family gets guided access',
-                'Your legacy transfers exactly as you intended.',
-              ].map((step, i) => (
-                <div key={i} className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-5 h-5 rounded-full border border-emerald-500/40 flex items-center justify-center mt-0.5">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400" />
-                  </div>
-                  <p className="text-primary text-sm leading-relaxed">{step}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
       </div>
-
-      {/* Bottom gradient line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-primary/30 to-transparent" />
     </section>
   );
 }

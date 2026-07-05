@@ -39,6 +39,7 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
   const response = await fetch(url, {
     ...rest,
     headers,
+    credentials: 'include',
   });
 
   if (!response.ok) {

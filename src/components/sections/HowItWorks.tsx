@@ -8,9 +8,9 @@ const steps = [
     title: 'Encrypt everything in 3 minutes',
     desc: 'Add your seed phrases, wallet passwords, exchange accounts, and documents. Everything is encrypted locally — it never leaves your device in plaintext.',
     detail: 'Works with BTC, ETH, SOL, hardware wallets, password managers, and any text secret.',
-    accentColor: '#f97316',
-    glowColor: 'rgba(249,115,22,0.12)',
-    borderColor: 'rgba(249,115,22,0.2)',
+    accentColor: '#C9A050',
+    glowColor: 'rgba(201,160,80,0.08)',
+    borderColor: 'rgba(201,160,80,0.20)',
   },
   {
     number: '02',
@@ -18,9 +18,9 @@ const steps = [
     title: 'Choose people you trust',
     desc: 'Assign guardians — close friends or family — who each hold a unique fragment. No single person holds everything. No single point of failure.',
     detail: "Based on Shamir's Secret Sharing. Even if one guardian is compromised, your vault stays safe.",
-    accentColor: '#c084fc',
-    glowColor: 'rgba(192,132,252,0.12)',
-    borderColor: 'rgba(192,132,252,0.2)',
+    accentColor: '#C9A050',
+    glowColor: 'rgba(201,160,80,0.08)',
+    borderColor: 'rgba(201,160,80,0.20)',
   },
   {
     number: '03',
@@ -28,9 +28,9 @@ const steps = [
     title: 'Your family inherits — automatically',
     desc: 'If you stop checking in, your vault enters transfer mode. Guardians receive guided instructions in plain English. No blockchain knowledge required.',
     detail: 'Multiple fail-safes and escalation delays ensure false triggers are impossible.',
-    accentColor: '#34d399',
-    glowColor: 'rgba(52,211,153,0.12)',
-    borderColor: 'rgba(52,211,153,0.2)',
+    accentColor: '#C9A050',
+    glowColor: 'rgba(201,160,80,0.08)',
+    borderColor: 'rgba(201,160,80,0.20)',
   },
 ];
 

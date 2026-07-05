@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import CustomCursor from '../components/layout/CustomCursor';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
-import LandingNavbar from '../components/layout/LandingNavbar';
 import Footer from '../components/layout/Footer';
 import LandingSelector from '../pages/LandingSelector';
 import Dashboard from '../pages/Dashboard';
@@ -24,7 +23,6 @@ import LegacyAnalytics from '../pages/LegacyAnalytics';
 import ContactUs from '../pages/ContactUs';
 import ForgotPassword from './ForgotPassword';
 import ResetPassword from './ResetPassword';
-import ParticleBackground from '../components/3d/ParticleBackground';
 import NotificationDrawer from '../components/layout/NotificationDrawer';
 import Sidebar from '../components/layout/Sidebar';
 import { Toaster } from 'react-hot-toast';
@@ -90,8 +88,8 @@ import CompareTraditionalWills from './seo/CompareTraditionalWills';
 import WhitepaperSEO from './seo/Whitepaper';
 import LegalTemplates from './seo/LegalTemplates';
 import CryptoCalculator from './tools/CryptoCalculator';
-import OpsLogin from './ops/Login';
-import OpsPortal from './ops/OpsPortal';
+const OpsLogin = lazy(() => import('./ops/Login'));
+const OpsPortal = lazy(() => import('./ops/OpsPortal'));
 
 // Regional SEO
 import CryptoInheritanceIndia from './seo/regions/CryptoInheritanceIndia';
@@ -108,28 +106,24 @@ const PUBLIC_ROUTES = new Set(['/', '/login', '/onboarding', '/contact', '/conta
 const APP_ROUTE_PREFIXES = ['/dashboard', '/assets', '/allocations', '/guardians', '/heirs', '/ai-planner', '/trust', '/settings', '/checkin', '/check-in', '/capsules', '/obituary', '/passport', '/identity', '/developer', '/activity', '/analytics', '/reports'];
 
 function AppLayout() {
-  const { isSidebarCollapsed, isNotificationOpen } = useStore();
+  const { isNotificationOpen, isSidebarCollapsed } = useStore();
   const location = useLocation();
   const isPublicPage = PUBLIC_ROUTES.has(location.pathname);
   const isAppPage = APP_ROUTE_PREFIXES.some(p => location.pathname.startsWith(p));
   const isOpsPage = location.pathname.startsWith('/ops');
   const showLandingNavbar = !isAppPage && !isOpsPage && location.pathname !== '/login' && location.pathname !== '/onboarding';
 
-  // Shared offset class for Sidebar parity
-  const offsetClass = isAppPage
-    ? isSidebarCollapsed
-      ? 'lg:pl-20' // 80px (matches w-20)
-      : 'lg:pl-64' // 256px (matches w-64)
-    : '';
+  // Sidebar is always 240px — collapsed changes offset to 0
+  const offsetClass = (isAppPage && !isSidebarCollapsed) ? 'lg:pl-[240px]' : '';
 
   return (
-    <div className={cn("relative z-10 min-h-screen flex flex-col transition-all duration-300", isAppPage ? "pt-16" : "")}>
+    <div className={cn("relative z-10 min-h-screen flex flex-col", isAppPage ? "pt-14" : "")}>
       {isAppPage && <Navbar />}
       {isAppPage && <Sidebar />}
-      {showLandingNavbar && <LandingNavbar />}
+      {showLandingNavbar && <Navbar variant="marketing" />}
 
       {/* Page content — offset for sidebar */}
-      <main className={cn("flex-grow transition-all duration-300", offsetClass)}>
+      <main className={cn("flex-grow", offsetClass)}>
         <Routes>
           <Route path="/"            element={<LandingSelector />} />
           <Route path="/dashboard"   element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
@@ -213,8 +207,22 @@ function AppLayout() {
           <Route path="/reports"                          element={<Reports />} />
           
           {/* Administrative Ops Routes */}
-          <Route path="/ops/login"                        element={<OpsLogin />} />
-          <Route path="/ops/*"                            element={<OpsPortal />} />
+          <Route 
+            path="/ops/login" 
+            element={
+              <Suspense fallback={<div className="min-h-screen bg-page flex items-center justify-center text-muted text-xs font-mono tracking-widest">LOADING OPS SYSTEM...</div>}>
+                <OpsLogin />
+              </Suspense>
+            } 
+          />
+          <Route 
+            path="/ops/*" 
+            element={
+              <Suspense fallback={<div className="min-h-screen bg-page flex items-center justify-center text-muted text-xs font-mono tracking-widest">LOADING SECURE ENVIRONMENT...</div>}>
+                <OpsPortal />
+              </Suspense>
+            } 
+          />
           
           <Route path="*"            element={<Navigate to="/" />} />
         </Routes>
@@ -222,7 +230,7 @@ function AppLayout() {
 
       {/* Footer — also offset to prevent Sidebar overlap */}
       <div className={cn("transition-all duration-300", offsetClass)}>
-        {!isPublicPage && !isAppPage && !isOpsPage && <Footer />}
+        {!isPublicPage && !isOpsPage && <Footer />}
       </div>
 
       {isNotificationOpen && <NotificationDrawer />}
@@ -257,17 +265,7 @@ export default function MainWebsite() {
 
   return (
     <>
-      {/* Institutional Obsidian Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none bg-page">
-        <div className="absolute inset-0 bg-aurora opacity-60" />
-        <div 
-          className="absolute inset-0 bg-dot-matrix opacity-30"
-          style={{ backgroundSize: '32px 32px' }}
-        />
-      </div>
-
       <AppCursor />
-      <ParticleBackground />
       <AppLayout />
 
       <Toaster

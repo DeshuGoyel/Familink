@@ -1,116 +1,328 @@
-import { Link, useLocation } from 'react-router-dom';
-import { motion, useScroll } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { useStore } from '../../store/useStore';
 import { Bell, Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../../utils/cn';
 import ThemeToggle from './ThemeToggle';
-import { useEffect, useState } from 'react';
-import { Logo } from '../ui/Logo';
 
 const navLinks = [
-  { label: 'Dashboard', to: '/dashboard' },
-  { label: 'Assets', to: '/assets' },
-  { label: 'Guardians', to: '/guardians' },
-  { label: 'Trust', to: '/trust' },
+  { label: 'How It Works', href: '#how' },
+  { label: 'Security', href: '#security' },
+  { label: 'Pricing', href: '#pricing' },
+  { label: 'FAQ', href: '#faq' },
 ];
 
-export default function Navbar() {
-  const { user, toggleNotifications, notifications, isMobileSidebarOpen, toggleMobileSidebar, toggleSidebar } = useStore();
-  const { scrollY } = useScroll();
+export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketing' }) {
+  const branding = useStore((state) => state.branding);
+  // ── Marketing variant state ──
   const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
 
   useEffect(() => {
-    const unsub = scrollY.on('change', v => setScrolled(v > 20));
-    return unsub;
-  }, [scrollY]);
+    if (variant !== 'marketing') return;
+    const onScroll = () => {
+      setScrolled(window.scrollY > 10);
+      const sections = navLinks.map(l => document.querySelector(l.href)).filter(Boolean) as HTMLElement[];
+      let current = '';
+      for (const section of sections) {
+        if (window.scrollY >= section.offsetTop - 300) current = '#' + section.id;
+      }
+      setActiveSection(current);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [variant]);
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const scrollTo = (href: string) => {
+    setMobileOpen(false);
+    const el = document.querySelector(href);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
 
-  return (
-    <motion.nav
-      className={cn(
-        'fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-300 flex items-center',
-        scrolled ? 'bg-surface/85 backdrop-blur-xl border-b border-base' : 'bg-transparent border-b border-transparent'
-      )}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex items-center justify-between h-full">
+  // ── App variant state ──
+  const {
+    user,
+    toggleNotifications,
+    notifications,
+    isMobileSidebarOpen,
+    toggleMobileSidebar,
+    isSidebarCollapsed,
+    toggleSidebar,
+  } = useStore();
 
-          {/* Left: hamburger + brand */}
-          <div className="flex items-center gap-4">
-            <button
-              onClick={toggleSidebar}
-              className="hidden lg:flex p-2 rounded-xl text-secondary hover:text-primary bg-surface/50 border border-base hover:border-brand-primary/20 transition-all shadow-sm"
-              title="Toggle Sidebar"
-            >
-              <Menu size={18} strokeWidth={2} />
-            </button>
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
-            <Link to="/" className="group">
-              <Logo size={36} showTagline={false} />
+  if (variant === 'marketing') {
+    return (
+      <>
+        <nav
+          className={cn(
+            'fixed top-0 left-0 right-0 z-50 transition-all duration-500 h-[72px] flex items-center',
+            scrolled
+              ? 'bg-surface/80 backdrop-blur-2xl border-b border-base shadow-2xl'
+              : 'bg-transparent'
+          )}
+        >
+          <div className="max-w-7xl mx-auto px-6 w-full flex items-center justify-between">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="w-9 h-9 overflow-hidden flex items-center justify-center">
+                <img src="/logo-dark.png" alt="Transfer Legacy" className="w-full h-full object-contain dark:block hidden" />
+                <img src="/logo-light.png" alt="Transfer Legacy" className="w-full h-full object-contain dark:hidden block" />
+              </div>
+              <span className="font-bold text-[18px] tracking-tight text-primary uppercase letter-spacing-[0.05em]">
+                Transfer{' '}
+                <span
+                  className="font-bold"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--color-brand-primary), var(--color-gradient-purple))',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  }}
+                >
+                  Legacy
+                </span>
+              </span>
             </Link>
-          </div>
 
-          {/* Centre – Navigation links */}
-          <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map(({ label, to }) => {
-              const isActive = location.pathname === to;
-              return (
-                <Link
-                  key={to}
-                  to={to}
+            {/* Desktop Links */}
+            <div className="hidden lg:flex items-center gap-2">
+              {navLinks.map((link) => (
+                <button
+                  key={link.label}
+                  onClick={() => scrollTo(link.href)}
                   className={cn(
-                    'px-4 py-2 rounded-xl text-[11px] font-medium uppercase tracking-[0.25em] transition-all',
-                    isActive
-                      ? 'text-brand-primary bg-brand-primary/5 border border-brand-primary/10'
+                    'px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300',
+                    activeSection === link.href
+                      ? 'text-brand-primary bg-brand-primary/10 shadow-[inset_0_0_12px_rgba(212,167,44,0.1)]'
                       : 'text-secondary hover:text-primary hover:bg-surface/50'
                   )}
                 >
-                  {label}
-                </Link>
-              );
-            })}
-          </div>
+                  {link.label}
+                </button>
+              ))}
+            </div>
 
-          {/* Right: Actions */}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={toggleNotifications}
-                className="hidden sm:flex relative p-2 text-secondary hover:text-primary rounded-xl hover:bg-surface transition"
-                aria-label="Toggle notifications"
-                title="Notifications"
-              >
-                <Bell size={19} strokeWidth={1.8} />
-                {unreadCount > 0 && (
-                  <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-brand-primary rounded-full" />
-                )}
-              </button>
+            {/* Actions */}
+            <div className="hidden md:flex items-center gap-4">
               <ThemeToggle />
-            </div>
-
-            <Link
-              to="/dashboard"
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface border border-base hover:border-brand-primary/30 transition-all shadow-sm"
-            >
-              <div
-                className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[11px] font-bold bg-gradient-to-br from-brand-primary to-brand-primary/80"
+              {!branding.waitlist_enabled && (
+                <Link
+                  to="/login"
+                  className="px-5 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] text-secondary border border-base hover:border-strong hover:bg-surface/50 transition-all duration-300 flex items-center justify-center"
+                >
+                  Sign in
+                </Link>
+              )}
+              <button
+                onClick={() => scrollTo('#waitlist')}
+                className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_0_25px_rgba(249,115,22,0.2)] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)]"
+                style={{
+                  background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
+                  color: 'white',
+                }}
               >
-                {user.name.charAt(0)}
-              </div>
-              <span className="hidden lg:inline text-[11px] font-bold uppercase tracking-wider text-primary">{user.name.split(' ')[0]}</span>
-            </Link>
-
-            {/* Mobile Actions */}
-            <div className="flex lg:hidden items-center">
-              <button onClick={toggleMobileSidebar} className="p-2 text-secondary hover:text-primary rounded-xl transition" aria-label="Toggle Menu">
-                {isMobileSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+                Join Waitlist
               </button>
             </div>
+
+            {/* Hamburger */}
+            <button
+              className="md:hidden text-primary p-2 rounded-xl hover:bg-surface/50 transition-colors"
+              onClick={() => setMobileOpen(true)}
+              aria-label="Open menu"
+            >
+              <Menu size={22} />
+            </button>
+          </div>
+        </nav>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              initial={{ opacity: 0, x: '100%' }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: '100%' }}
+              transition={{ type: 'tween', duration: 0.28 }}
+              className="fixed inset-0 z-[100] bg-page flex flex-col px-8 pt-24 pb-12"
+            >
+              <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none opacity-20"
+                style={{ background: 'radial-gradient(circle at top right, var(--color-brand-primary), transparent 60%)' }}
+              />
+              <button
+                className="absolute top-5 right-6 text-secondary hover:text-primary transition-colors"
+                onClick={() => setMobileOpen(false)}
+                aria-label="Close menu"
+              >
+                <X size={26} />
+              </button>
+
+              <nav className="flex flex-col gap-5">
+                {navLinks.map((link, i) => (
+                  <motion.button
+                    key={link.label}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.06 }}
+                    onClick={() => scrollTo(link.href)}
+                    className="text-3xl font-bold text-primary hover:text-brand-primary text-left transition-colors"
+                  >
+                    {link.label}
+                  </motion.button>
+                ))}
+              </nav>
+
+              <div className="mt-auto">
+                <button
+                  onClick={() => scrollTo('#waitlist')}
+                  className="w-full py-4 rounded-2xl text-base font-bold text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
+                  }}
+                >
+                  Claim Your Spot
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </>
+    );
+  }
+
+  const handleSidebarToggle = () => {
+    if (window.innerWidth < 1024) {
+      toggleMobileSidebar();
+    } else {
+      toggleSidebar();
+    }
+  };
+
+  // App Layout
+  return (
+    <header
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 h-14 flex items-center border-b border-[rgba(255,255,255,0.07)] transition-all duration-200",
+        isSidebarCollapsed ? "lg:pl-0" : "lg:pl-[240px]"
+      )}
+      style={{ background: 'var(--color-bg-page)' }}
+    >
+      <div className="flex items-center justify-between w-full px-5">
+        <div className="flex items-center gap-3">
+          {/* Toggle sidebar button */}
+          <button
+            onClick={handleSidebarToggle}
+            className="p-1.5 rounded-md transition-colors hover:bg-[rgba(255,255,255,0.05)]"
+            style={{ color: '#9B97A3' }}
+            aria-label="Toggle menu"
+          >
+            {isMobileSidebarOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+
+          {/* Logo and name */}
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div
+              className="w-[22px] h-[22px] rounded-full relative flex items-center justify-center shrink-0"
+              style={{
+                background: 'conic-gradient(from 220deg, var(--color-brand-primary), var(--color-brand-primary-hover), var(--color-brand-gold), var(--color-brand-primary))'
+              }}
+            >
+              <div className="w-[9px] h-[9px] rounded-full bg-page transition-colors duration-400" />
+            </div>
+            <span
+              className="font-display text-[13px] font-medium tracking-wide text-[#E9E6DF] transition-opacity group-hover:opacity-75"
+              style={{ letterSpacing: '-0.01em' }}
+            >
+              Transfer Legacy
+            </span>
+          </Link>
+
+          {/* Home etc. Links in Title Bar */}
+          <div className="hidden lg:flex items-center gap-6 ml-8 border-l border-[rgba(255,255,255,0.08)] pl-8">
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                cn(
+                  "text-[12px] font-medium transition-colors hover:text-white",
+                  isActive ? "text-brand-primary" : "text-[#9B97A3]"
+                )
+              }
+            >
+              Home
+            </NavLink>
+            <NavLink
+              to="/assets"
+              className={({ isActive }) =>
+                cn(
+                  "text-[12px] font-medium transition-colors hover:text-white",
+                  isActive ? "text-brand-primary" : "text-[#9B97A3]"
+                )
+              }
+            >
+              Vault
+            </NavLink>
+            <NavLink
+              to="/guardians"
+              className={({ isActive }) =>
+                cn(
+                  "text-[12px] font-medium transition-colors hover:text-white",
+                  isActive ? "text-brand-primary" : "text-[#9B97A3]"
+                )
+              }
+            >
+              Guardians
+            </NavLink>
+            <NavLink
+              to="/settings"
+              className={({ isActive }) =>
+                cn(
+                  "text-[12px] font-medium transition-colors hover:text-white",
+                  isActive ? "text-brand-primary" : "text-[#9B97A3]"
+                )
+              }
+            >
+              Settings
+            </NavLink>
           </div>
         </div>
+
+        <div className="flex items-center gap-1 ml-auto">
+          <button
+            onClick={toggleNotifications}
+            className="relative p-2 rounded-md transition-colors hover:bg-[rgba(255,255,255,0.05)]"
+            style={{ color: '#9B97A3' }}
+            aria-label="Notifications"
+          >
+            <Bell size={17} strokeWidth={1.75} />
+            {unreadCount > 0 && (
+              <span
+                className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-brand-primary"
+              />
+            )}
+          </button>
+
+          <ThemeToggle />
+
+          <Link
+            to="/settings"
+            className="ml-1 flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-[8px] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.13)] transition-colors"
+            style={{ background: 'var(--color-bg-surface)' }}
+          >
+            <div
+              className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0 bg-brand-primary"
+            >
+              {user.name.charAt(0).toUpperCase()}
+            </div>
+            <span className="hidden sm:inline text-[12px] font-medium" style={{ color: '#E9E6DF' }}>
+              {user.name.split(' ')[0]}
+            </span>
+          </Link>
+        </div>
       </div>
-    </motion.nav>
+    </header>
   );
 }

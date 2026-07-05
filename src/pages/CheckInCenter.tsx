@@ -29,9 +29,21 @@ export default function CheckInCenter() {
     const updateTime = () => {
       const last = checkinSettings.lastCheckinAt ? new Date(checkinSettings.lastCheckinAt) : new Date(Date.now() - 86400000);
       const nextDue = new Date(last);
-      if (checkinSettings.frequency === 'weekly') nextDue.setDate(nextDue.getDate() + 7);
-      if (checkinSettings.frequency === 'biweekly') nextDue.setDate(nextDue.getDate() + 14);
-      if (checkinSettings.frequency === 'monthly') nextDue.setMonth(nextDue.getMonth() + 1);
+      const freq = checkinSettings.frequency;
+      if (freq === 'weekly') {
+        nextDue.setDate(nextDue.getDate() + 7);
+      } else if (freq === 'biweekly') {
+        nextDue.setDate(nextDue.getDate() + 14);
+      } else if (freq === 'monthly') {
+        nextDue.setMonth(nextDue.getMonth() + 1);
+      } else {
+        const days = parseInt(freq as string);
+        if (!isNaN(days)) {
+          nextDue.setDate(nextDue.getDate() + days);
+        } else {
+          nextDue.setDate(nextDue.getDate() + 30); // Default fallback
+        }
+      }
 
       const diff = nextDue.getTime() - Date.now();
       if (diff <= 0) {

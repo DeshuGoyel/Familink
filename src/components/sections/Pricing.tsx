@@ -1,237 +1,167 @@
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Check } from 'lucide-react';
 
 const plans = [
   {
-    name: 'Guardian',
-    monthlyPrice: 0,
-    yearlyPrice: 0,
-    desc: 'Try it free. No credit card.',
-    features: ['1 encrypted vault', '2 guardians', 'Up to 10 items', 'Email delivery'],
-    cta: 'Join Waitlist Free',
-    highlighted: false,
-    accent: '#818cf8',
-  },
-  {
-    name: 'Legacy',
-    monthlyPrice: 24,
+    name: 'Personal',
+    monthlyPrice: 19,
     yearlyPrice: 12,
-    desc: 'For serious asset protection.',
-    features: ['Unlimited vault items', '5 guardians', 'Crypto & hardware wallets', 'AI Legacy Planner', 'Priority support'],
-    cta: 'Claim Founding Price',
-    highlighted: true,
-    badge: 'Most Popular — Founding Rate',
-    accent: '#f97316',
+    desc: 'Secure your individual digital wealth.',
+    features: ['10 protected assets', '3 active guardians', '1 primary heir', 'Standard encryption key'],
+    cta: 'Protect My Legacy',
+    highlighted: false,
   },
   {
-    name: 'Dynasty',
+    name: 'Family',
     monthlyPrice: 49,
     yearlyPrice: 29,
-    desc: 'For families and estates.',
-    features: ['Everything in Legacy', 'Family accounts', 'Attorney delivery', 'API access', 'White-glove onboarding'],
-    cta: 'Contact Us',
+    desc: 'Full protection for your heirs and estates.',
+    features: ['Unlimited vault assets', '10 active guardians', '5 assigned heirs', 'AI Legacy Planner check-in', 'Premium support'],
+    cta: 'Secure My Family',
+    highlighted: true,
+  },
+  {
+    name: 'Advisor',
+    monthlyPrice: 149,
+    yearlyPrice: 89,
+    desc: 'For attorneys, executors, and planners.',
+    features: ['Unlimited assets & heirs', 'Unlimited guardians', 'White-labeled customer portal', 'Multi-client management', 'Dedicated support'],
+    cta: 'Contact Sales',
     highlighted: false,
-    accent: '#c084fc',
   },
 ];
 
-const TOTAL = 5000;
-const CLAIMED = 2417;
-
 export default function Pricing() {
   const [yearly, setYearly] = useState(true);
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const ob = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.2 });
-    if (ref.current) ob.observe(ref.current);
-    return () => ob.disconnect();
-  }, []);
-
-  const progress = Math.round((CLAIMED / TOTAL) * 100);
 
   return (
-    <section id="pricing" ref={ref} className="relative py-28 overflow-hidden bg-page">
-      <div
-        className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, var(--color-brand-primary), transparent)', opacity: 0.3 }}
-      />
-
-      {/* Ambient gradient */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[120px] pointer-events-none"
-        style={{ background: 'radial-gradient(circle, var(--color-brand-primary-transparent), transparent 70%)', opacity: 0.1 }}
-      />
-
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Founding spots bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-md mb-14"
-        >
-          <div className="flex items-center justify-between text-sm mb-3">
-            <span className="text-secondary/60">Founding spots claimed</span>
-            <span className="font-bold text-brand-primary">{CLAIMED.toLocaleString()} / {TOTAL.toLocaleString()}</span>
-          </div>
-          <div className="w-full h-1.5 rounded-full overflow-hidden bg-muted/10">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: visible ? `${progress}%` : 0 }}
-              transition={{ duration: 2, ease: 'easeOut', delay: 0.3 }}
-              className="h-full rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary"
-            />
-          </div>
-          <p className="text-xs text-secondary/40 mt-2">{TOTAL - CLAIMED} founding spots remaining at this price.</p>
-        </motion.div>
-
-        {/* Header + toggle */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="mb-12"
-        >
-          <p className="text-xs font-bold tracking-[0.22em] uppercase mb-5 gradient-text-brand">
+    <section id="pricing" className="py-24 bg-page border-y border-base relative overflow-hidden">
+      <div className="max-w-[1100px] mx-auto px-6">
+        
+        {/* Section Header */}
+        <div className="text-center mb-16 space-y-4">
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-primary">
             Pricing
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4 tracking-tight">
-            Founding Member Pricing
+          <h2 className="font-display font-light text-primary leading-[1.08] tracking-tight text-[clamp(2.2rem,5vw,3.8rem)]">
+            Invest in peace of mind
           </h2>
-          <p className="text-secondary/60 text-lg mb-8">Lock in your rate forever before public launch.</p>
+          <p className="text-secondary text-[14px] leading-relaxed max-w-xl mx-auto font-light">
+            Lock in your rate at our founding member tier. Cancel at any time.
+          </p>
 
-          {/* Toggle */}
-          <div className="inline-flex items-center rounded-full p-1.5 border border-border-base bg-surface">
-            {['Monthly', 'Yearly'].map((label) => {
-              const active = yearly ? label === 'Yearly' : label === 'Monthly';
-              return (
-                <button
-                  key={label}
-                  onClick={() => setYearly(label === 'Yearly')}
-                  className="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-all duration-250"
-                  style={active
-                    ? { background: 'var(--color-brand-gradient)', color: 'white' }
-                    : { color: 'var(--color-text-secondary)', opacity: 0.6 }
-                  }
-                >
-                  {label}
-                  {label === 'Yearly' && (
-                    <span
-                      className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                      style={active ? { background: 'rgba(255,255,255,0.2)' } : { background: 'var(--color-brand-primary-transparent)', color: 'var(--color-brand-primary)' }}
-                    >
-                      SAVE 40%
-                    </span>
-                  )}
-                </button>
-              );
-            })}
+          {/* Monthly / Yearly Toggle */}
+          <div className="pt-6 flex justify-center">
+            <div className="inline-flex items-center rounded-full p-1 border border-border-base bg-surface">
+              <button
+                onClick={() => setYearly(false)}
+                className={`px-4 py-1.5 rounded-full text-[12px] font-semibold transition-all ${
+                  !yearly 
+                    ? 'bg-page text-primary shadow-sm border border-border-base' 
+                    : 'text-secondary hover:text-primary'
+                }`}
+              >
+                Monthly
+              </button>
+              <button
+                onClick={() => setYearly(true)}
+                className={`px-4 py-1.5 rounded-full text-[12px] font-semibold flex items-center gap-1.5 transition-all ${
+                  yearly 
+                    ? 'bg-page text-primary shadow-sm border border-border-base' 
+                    : 'text-secondary hover:text-primary'
+                }`}
+              >
+                Yearly
+                <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-brand-primary/10 text-brand-primary font-bold">
+                  SAVE 40%
+                </span>
+              </button>
+            </div>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
-          {plans.map((plan, i) => (
-            <motion.div
-              key={plan.name}
-              initial={{ opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.13, duration: 0.65 }}
-              className={`relative rounded-3xl border flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 bg-surface ${
-                plan.highlighted ? 'border-brand-primary/50 shadow-brand-glow' : 'border-border-base'
-              }`}
-              style={{
-                background: plan.highlighted && !document.documentElement.classList.contains('dark')
-                  ? 'linear-gradient(160deg, rgba(249,115,22,0.05) 0%, var(--color-bg-surface) 100%)'
-                  : undefined
-              }}
-            >
-              {/* Popular badge */}
-              {plan.highlighted && (
-                <div
-                  className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-[10px] font-bold px-4 py-1.5 rounded-full whitespace-nowrap tracking-wide text-white shadow-lg"
-                  style={{
-                    background: 'var(--color-brand-gradient)',
-                  }}
-                >
-                  {plan.badge}
-                </div>
-              )}
-
-              {/* Top accent bar */}
-              <div className="h-0.5 w-full" style={{ background: `linear-gradient(90deg, transparent, ${plan.accent}, transparent)` }} />
-
-              <div className="p-8 flex flex-col flex-1">
-                <div className="mb-6">
-                  <h3
-                    className="text-xl font-bold tracking-tight"
-                    style={{ color: plan.highlighted ? plan.accent : 'var(--color-text-primary)' }}
+        {/* 3 Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+          {plans.map((plan, i) => {
+            const price = yearly ? plan.yearlyPrice : plan.monthlyPrice;
+            return (
+              <motion.div
+                key={plan.name}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                className="relative rounded-[16px] p-8 bg-surface/50 transition-all duration-300 hover:translate-y-[-2px] flex flex-col justify-between"
+                style={{
+                  border: plan.highlighted ? '2px solid transparent' : '1px solid var(--color-border-base)',
+                  backgroundImage: plan.highlighted 
+                    ? 'linear-gradient(var(--color-bg-surface), var(--color-bg-surface)), var(--color-brand-gradient)'
+                    : undefined,
+                  backgroundClip: plan.highlighted ? 'content-box, border-box' : undefined,
+                  backgroundOrigin: plan.highlighted ? 'content-box, border-box' : undefined,
+                  boxShadow: plan.highlighted ? 'var(--shadow-brand)' : 'none',
+                }}
+              >
+                {/* Popular Badge */}
+                {plan.highlighted && (
+                  <span 
+                    className="absolute -top-3.5 left-6 text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-full text-white"
+                    style={{ background: 'var(--color-brand-gradient)' }}
                   >
+                    Recommended
+                  </span>
+                )}
+
+                <div>
+                  {/* Plan Name */}
+                  <h3 className="text-[18px] font-semibold text-primary mb-1">
                     {plan.name}
                   </h3>
-                  <p className="text-xs text-secondary/60 mt-1">{plan.desc}</p>
+                  <p className="text-secondary text-[12px] font-light mb-6">
+                    {plan.desc}
+                  </p>
+
+                  {/* Price */}
+                  <div className="mb-6 flex items-baseline">
+                    <span className="text-[36px] font-light text-primary font-display">${price}</span>
+                    <span className="text-secondary text-[14px] font-light ml-1">/mo</span>
+                  </div>
+
+                  {/* Features */}
+                  <ul className="space-y-3.5 mb-8">
+                    {plan.features.map((feat, idx) => (
+                      <li key={idx} className="flex items-center gap-3 text-[13px] text-secondary font-light">
+                        <Check size={14} className="text-brand-primary shrink-0" />
+                        <span>{feat}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                {/* Price */}
-                <div className="mb-8">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={yearly ? 'y' : 'm'}
-                      initial={{ opacity: 0, y: -6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 6 }}
-                      transition={{ duration: 0.2 }}
-                      className="flex items-end gap-1"
-                    >
-                      <span className="text-5xl font-bold text-primary">
-                        ${yearly ? plan.yearlyPrice : plan.monthlyPrice}
-                      </span>
-                      <span className="text-secondary/40 mb-2 text-sm">/mo</span>
-                    </motion.div>
-                  </AnimatePresence>
-                  {yearly && plan.monthlyPrice > plan.yearlyPrice && (
-                    <p className="text-xs text-emerald-500 dark:text-emerald-400 mt-1 font-medium">
-                      Billed annually — was ${plan.monthlyPrice}/mo
-                    </p>
-                  )}
-                </div>
-
-                {/* Features */}
-                <ul className="space-y-3.5 mb-8 flex-1">
-                  {plan.features.map((feat, idx) => (
-                    <li key={idx} className="flex items-center gap-3 text-sm text-secondary/70">
-                      <span className="text-base leading-none" style={{ color: plan.accent }}>✓</span>
-                      {feat}
-                    </li>
-                  ))}
-                </ul>
-
+                {/* Button */}
                 <button
-                  className={`w-full py-3.5 rounded-xl text-sm font-bold transition-all duration-300 ${
-                    plan.highlighted ? 'text-white' : 'bg-muted/10 text-secondary border border-border-base hover:bg-muted/20'
+                  className={`w-full py-2.5 rounded-[6px] text-[13px] font-semibold transition-all cursor-pointer ${
+                    plan.highlighted 
+                      ? 'text-white hover:opacity-90' 
+                      : 'bg-surface border border-border-base text-secondary hover:text-primary hover:bg-raised'
                   }`}
-                  style={plan.highlighted
-                    ? {
-                        background: 'var(--color-brand-gradient)',
-                        boxShadow: '0 0 20px rgba(249,115,22,0.35)',
-                      }
-                    : undefined
-                  }
+                  style={{
+                    background: plan.highlighted ? 'var(--color-brand-primary)' : undefined,
+                  }}
                 >
                   {plan.cta}
                 </button>
-              </div>
-            </motion.div>
-          ))}
+
+              </motion.div>
+            );
+          })}
         </div>
 
-        <p className="text-center text-xs text-secondary/40 mt-8 font-medium">
-          Cancel any time. Price locks in at founding rate. No auto-upgrades.
+        <p className="text-center text-[11px] text-secondary/40 mt-8 font-medium tracking-wide">
+          All plans include client-side encryption. Price is locked at founding member rate forever.
         </p>
+
       </div>
     </section>
   );

@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { ExternalLink } from 'lucide-react';
 
 const founders = [
   {
@@ -9,9 +8,9 @@ const founders = [
     quote: `"The hardest part isn't building the vault. It's explaining to a grieving family why they can't access what was left for them."`,
     image: '/images/founder_deshu.png',
     initials: 'DG',
-    accent: '#818cf8',
-    gradientFrom: '#3730a3',
-    gradientTo: '#6366f1',
+    accent: '#C9A050',
+    gradientFrom: '#1C1A22',
+    gradientTo: '#141318',
   },
   {
     name: 'Vikash Kumar Singh',
@@ -20,18 +19,18 @@ const founders = [
     quote: `"We built a system where 'trust' is replaced by 'proof'. Math doesn't lie."`,
     image: '/images/founder_vikash.png',
     initials: 'VK',
-    accent: '#fb923c',
-    gradientFrom: '#7c2d12',
-    gradientTo: '#f97316',
+    accent: '#C9A050',
+    gradientFrom: '#1C1A22',
+    gradientTo: '#141318',
   },
 ];
 
 export default function Founders() {
   return (
-    <section id="founders" className="relative py-28 overflow-hidden" style={{ background: '#0C0E18' }}>
+    <section id="founders" className="relative py-28 overflow-hidden" style={{ background: '#0C0B10' }}>
       <div
         className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(251,146,60,0.4), transparent)' }}
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(201,160,80,0.25), transparent)' }}
       />
 
       <div className="max-w-7xl mx-auto px-6">
@@ -42,20 +41,15 @@ export default function Founders() {
           className="mb-16"
         >
           <p
-            className="text-xs font-bold tracking-[0.22em] uppercase mb-5"
-            style={{
-              background: 'linear-gradient(135deg, #f9a8d4, #f97316)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
+            className="text-[11px] font-semibold uppercase tracking-[0.18em] mb-4"
+            style={{ color: '#C9A050' }}
           >
             The Team
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             Built by people who've felt this problem.
           </h2>
-          <p className="text-white/40 text-lg max-w-2xl">
+          <p className="text-white/40 text-lg max-w-2xl font-light">
             Not a team of generalists chasing a trend — two founders who got tired of waiting for someone else to solve this.
           </p>
         </motion.div>
@@ -68,8 +62,8 @@ export default function Founders() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15, duration: 0.7 }}
-              className="group rounded-3xl overflow-hidden border transition-all duration-300 hover:-translate-y-1"
-              style={{ background: '#131722', borderColor: `${f.accent}25` }}
+              className="group rounded-[16px] overflow-hidden border transition-all duration-300 hover:border-[rgba(255,255,255,0.12)]"
+              style={{ background: '#141318', borderColor: 'rgba(255,255,255,0.07)' }}
             >
               {/* Photo / gradient banner */}
               <div
@@ -88,7 +82,7 @@ export default function Founders() {
                   }}
                 />
                 {/* Bottom fade */}
-                <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#131722] to-transparent z-20" />
+                <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#141318] to-transparent z-20" />
 
                 {/* Real photo (falls back gracefully) */}
                 <img
@@ -125,21 +119,7 @@ export default function Founders() {
                   {f.quote}
                 </blockquote>
 
-                <div
-                  className="flex items-center gap-4 pt-4 border-t"
-                  style={{ borderColor: 'rgba(255,255,255,0.05)' }}
-                >
-                  {['Twitter', 'LinkedIn'].map((link) => (
-                    <a
-                      key={link}
-                      href="#"
-                      className="flex items-center gap-1.5 text-xs font-medium text-white/30 hover:text-white transition-colors"
-                    >
-                      <ExternalLink size={12} />
-                      {link}
-                    </a>
-                  ))}
-                </div>
+
               </div>
             </motion.div>
           ))}
