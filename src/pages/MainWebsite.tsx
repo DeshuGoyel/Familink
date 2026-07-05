@@ -32,8 +32,6 @@ import { cn } from '../utils/cn';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useStore();
-  // In dev mode, skip auth so dashboard is viewable without logging in
-  if (import.meta.env.DEV) return <>{children}</>;
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
 }
 

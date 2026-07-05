@@ -13,8 +13,8 @@ import { useStore } from '../store/useStore';
 
 export default function Login() {
   useBodyClass('allow-cursor');
-  const [email, setEmail] = useState('test@familink.com');
-  const [password, setPassword] = useState('TestPassword123!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,8 +31,7 @@ export default function Login() {
       let token = '';
       let displayName = '';
 
-      try {
-        // 1. Resolve email to user_id (unencrypted route)
+      // 1. Resolve email to user_id (unencrypted route)
         const lookupResponse = await api.post<{ data: { user_id: string } }>(
           '/auth/user-id',
           { email },
@@ -118,15 +117,6 @@ export default function Login() {
             console.warn('Failed to decrypt profile name, falling back to email-derived name:', decErr);
           }
         }
-      } catch (apiErr) {
-        if (import.meta.env.DEV) {
-          console.warn('Backend API not available, falling back to local mock authentication:', apiErr);
-          token = 'mock_session_token';
-          resolvedUserId = 'mock_user_id';
-        } else {
-          throw apiErr;
-        }
-      }
 
       localStorage.setItem('tl_session_token', token);
       localStorage.setItem('tl_user_id', resolvedUserId);
@@ -156,12 +146,7 @@ export default function Login() {
         // Ignore error
       }
 
-      // Prepopulate with some mock assets if in DEV mode and we logged in with mock
       let initialAssets: any[] = [];
-      if (import.meta.env.DEV && token === 'mock_session_token') {
-        const { mockAssets } = await import('../data/mockData');
-        initialAssets = [...mockAssets];
-      }
 
       useStore.setState({ 
         isAuthenticated: true,

@@ -7,7 +7,7 @@ import Input from '../components/ui/Input';
 import Select from '../components/ui/Select';
 import confetti from 'canvas-confetti';
 import { useStore } from '../store/useStore';
-import { api } from '../lib/api';
+import { api, ApiError } from '../lib/api';
 import { initOpaqueRegistration, finishOpaqueRegistration, initOpaqueLogin, finishOpaqueLogin, deriveUserKeys } from '../lib/opaqueClient';
 import toast from 'react-hot-toast';
 import { fromBase64Url } from '../lib/aeadClient';
@@ -81,9 +81,14 @@ export default function Onboarding() {
       toast.success('Verification code resent to your email!');
     } catch (err: unknown) {
       console.error('Failed to resend OTP:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to send OTP code.';
+      let errorMessage = 'Failed to send OTP code.';
+      if (err instanceof ApiError && err.status === 409) {
+        errorMessage = 'This email is already registered. Please go to the Login page to log in.';
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
       setError(errorMessage);
-      toast.error('Resend failed');
+      toast.error(err instanceof ApiError && err.status === 409 ? 'Email already registered' : 'Resend failed');
     } finally {
       setIsSendingOtp(false);
     }
@@ -105,9 +110,14 @@ export default function Onboarding() {
           setShowOtpEntry(true);
         } catch (err: unknown) {
           console.error('Failed to send OTP:', err);
-          const errorMessage = err instanceof Error ? err.message : 'Failed to send OTP code.';
+          let errorMessage = 'Failed to send OTP code.';
+          if (err instanceof ApiError && err.status === 409) {
+            errorMessage = 'This email is already registered. Please go to the Login page to log in.';
+          } else if (err instanceof Error) {
+            errorMessage = err.message;
+          }
           setError(errorMessage);
-          toast.error('Failed to send OTP');
+          toast.error(err instanceof ApiError && err.status === 409 ? 'Email already registered' : 'Failed to send OTP');
         } finally {
           setIsSendingOtp(false);
         }
@@ -241,9 +251,14 @@ export default function Onboarding() {
         setStep(2);
       } catch (err: unknown) {
         console.error('Registration/Auto-Login failed:', err);
-        const errorMessage = err instanceof Error ? err.message : 'Registration failed. Please check connection.';
+        let errorMessage = 'Registration failed. Please check connection.';
+        if (err instanceof ApiError && err.status === 409) {
+          errorMessage = 'This email is already registered. Please go to the Login page to log in.';
+        } else if (err instanceof Error) {
+          errorMessage = err.message;
+        }
         setError(errorMessage);
-        toast.error('Registration failed');
+        toast.error(err instanceof ApiError && err.status === 409 ? 'Email already registered' : 'Registration failed');
       } finally {
         setIsInitializing(false);
       }

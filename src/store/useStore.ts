@@ -414,8 +414,8 @@ export const useStore = create<AppState>((set) => ({
         );
 
         // 2. PQ Shared Secret (Kyber-768/ML-KEM-768 mock encaps or real if registered)
-        let kyberCt = new Uint8Array();
-        let ssPq = new Uint8Array(32);
+        let kyberCt: any = new Uint8Array();
+        let ssPq: any = new Uint8Array(32);
         try {
           const kyberRes = sodium.crypto_kem_mlkem768_enc_deterministic(
             fromBase64Url(targetKyberPub),
@@ -556,9 +556,8 @@ export const useStore = create<AppState>((set) => ({
     try {
       // 1. Recombine shares using SSS to reconstruct owner's masterKey
       const { combineShares } = await import('../lib/sss');
+      const { fromBase64Url } = await import('../lib/aeadClient');
       const parsedShares = shares.map(s => {
-        const { fromBase64Url } = useStore.getState();
-        // Since fromBase64Url is imported at module level or can be imported dynamically:
         return {
           x: s.x,
           y: fromBase64Url(s.y)
@@ -575,22 +574,11 @@ export const useStore = create<AppState>((set) => ({
 
       // 3. Decrypt items using reconstructed masterKey
       const decryptedAssets: Asset[] = [];
-      const { decryptPayload } = await import('../lib/aeadClient');
 
       for (const item of encryptedItems) {
         try {
-          const decryptedBytes = await decryptPayload(item.ciphertext, reconstructedMk);
-          const decryptedStr = new TextDecoder().decode(decryptedBytes);
-          const parsedAsset = JSON.parse(decryptedStr);
-          
-          decryptedAssets.push({
-            id: item.item_id,
-            title: parsedAsset.title || "Recovered Asset",
-            type: parsedAsset.type || "Other",
-            value: parsedAsset.value || "",
-            details: parsedAsset.details || "",
-            lastUpdated: item.created_at
-          });
+          const decryptedAsset = await decryptItem(item, reconstructedMk);
+          decryptedAssets.push(decryptedAsset);
         } catch (decErr) {
           console.error("Failed to decrypt vault item:", decErr);
         }
@@ -624,18 +612,6 @@ export const useStore = create<AppState>((set) => ({
       // Fetch active policy
       await useStore.getState().fetchActivePolicy();
     } catch (err) {
-      if (import.meta.env.DEV) {
-        console.warn('Session verification failed, but skipping token clear in DEV mode:', err);
-        const currentLoadedState = getInitialState();
-        const { mockAssets } = await import('../data/mockData');
-        set({ 
-          isAuthenticated: true,
-          assets: mockAssets,
-          ...currentLoadedState,
-          user: getInitialUser(currentLoadedState)
-        });
-        return;
-      }
       console.warn('Session verification failed, clearing tokens:', err);
       localStorage.removeItem('tl_session_token');
       localStorage.removeItem('tl_user_id');
@@ -710,16 +686,7 @@ export const useStore = create<AppState>((set) => ({
       set({ assets: formattedAssets });
     } catch (err) {
       console.error('Failed to fetch assets:', err);
-      if (import.meta.env.DEV) {
-        const localAssets = localStorage.getItem('tl_assets');
-        if (localAssets) {
-          set({ assets: JSON.parse(localAssets) });
-        } else {
-          const { mockAssets } = await import('../data/mockData');
-          set({ assets: mockAssets });
-          localStorage.setItem('tl_assets', JSON.stringify(mockAssets));
-        }
-      }
+      set({ assets: [] });
     }
   },
   addAsset: async (asset) => {
