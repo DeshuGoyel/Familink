@@ -1,6 +1,11 @@
 import { encryptPayload, decryptPayload, getDeviceId, getNextSequenceNumber } from './aeadClient';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/v1';
+// Ensure the API base URL ends with /v1
+let rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/v1';
+if (rawApiUrl && !rawApiUrl.endsWith('/v1') && !rawApiUrl.endsWith('/v1/')) {
+  rawApiUrl = rawApiUrl.replace(/\/$/, '') + '/v1';
+}
+const API_BASE_URL = rawApiUrl;
 
 interface RequestOptions extends RequestInit {
   params?: Record<string, string>;
