@@ -55,7 +55,7 @@ export default function FinalCTA() {
   };
 
   return (
-    <section className="py-32 bg-page relative overflow-hidden border-t border-border-base select-none">
+    <section id="waitlist" className="py-32 bg-page relative overflow-hidden border-t border-border-base select-none">
       {/* Background radial glow */}
       <div 
         className="absolute inset-0 z-0 pointer-events-none opacity-50"

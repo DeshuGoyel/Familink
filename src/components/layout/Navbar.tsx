@@ -117,16 +117,29 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
                   Sign in
                 </Link>
               )}
-              <button
-                onClick={() => scrollTo('#waitlist')}
-                className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_0_25px_rgba(249,115,22,0.2)] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)]"
-                style={{
-                  background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
-                  color: 'white',
-                }}
-              >
-                Join Waitlist
-              </button>
+              {branding.waitlist_enabled ? (
+                <button
+                  onClick={() => scrollTo('#waitlist')}
+                  className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_0_25px_rgba(249,115,22,0.2)] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)]"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
+                    color: 'white',
+                  }}
+                >
+                  Join Waitlist
+                </button>
+              ) : (
+                <Link
+                  to="/onboarding"
+                  className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_0_25px_rgba(249,115,22,0.2)] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)] flex items-center justify-center"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
+                    color: 'white',
+                  }}
+                >
+                  Get Started
+                </Link>
+              )}
             </div>
 
             {/* Hamburger */}
@@ -176,16 +189,38 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
                 ))}
               </nav>
 
-              <div className="mt-auto">
-                <button
-                  onClick={() => scrollTo('#waitlist')}
-                  className="w-full py-4 rounded-2xl text-base font-bold text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]"
-                  style={{
-                    background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
-                  }}
-                >
-                  Claim Your Spot
-                </button>
+              <div className="mt-auto flex flex-col gap-3">
+                {branding.waitlist_enabled ? (
+                  <button
+                    onClick={() => scrollTo('#waitlist')}
+                    className="w-full py-4 rounded-2xl text-base font-bold text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]"
+                    style={{
+                      background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
+                    }}
+                  >
+                    Claim Your Spot
+                  </button>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileOpen(false)}
+                      className="w-full py-4 rounded-2xl text-base font-bold text-secondary border border-base bg-surface/50 hover:border-strong transition-all duration-300 flex items-center justify-center"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      to="/onboarding"
+                      onClick={() => setMobileOpen(false)}
+                      className="w-full py-4 rounded-2xl text-base font-bold text-white shadow-[0_0_30px_rgba(249,115,22,0.3)] flex items-center justify-center"
+                      style={{
+                        background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
+                      }}
+                    >
+                      Get Started
+                    </Link>
+                  </>
+                )}
               </div>
             </motion.div>
           )}
