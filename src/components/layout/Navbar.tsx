@@ -5,6 +5,7 @@ import { Bell, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../../utils/cn';
 import ThemeToggle from './ThemeToggle';
+import { LogoMark } from '../ui/Logo';
 
 const navLinks = [
   { label: 'How It Works', href: '#how' },
@@ -70,7 +71,7 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
             <Link to="/" className="flex items-center gap-3 group">
               <div className="w-9 h-9 overflow-hidden flex items-center justify-center">
                 <img src="/logo-dark.png" alt="Transfer Legacy" className="w-full h-full object-contain dark:block hidden" />
-                <img src="/logo-light.png" alt="Transfer Legacy" className="w-full h-full object-contain dark:hidden block" />
+                <img src="/logo-light.jpeg" alt="Transfer Legacy" className="w-full h-full object-contain dark:hidden block" />
               </div>
               <span className="font-bold text-[18px] tracking-tight text-primary uppercase letter-spacing-[0.05em]">
                 Transfer{' '}
@@ -260,14 +261,7 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
 
           {/* Logo and name */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div
-              className="w-[22px] h-[22px] rounded-full relative flex items-center justify-center shrink-0"
-              style={{
-                background: 'conic-gradient(from 220deg, var(--color-brand-primary), var(--color-brand-primary-hover), var(--color-brand-gold), var(--color-brand-primary))'
-              }}
-            >
-              <div className="w-[9px] h-[9px] rounded-full bg-page transition-colors duration-400" />
-            </div>
+            <LogoMark size={22} />
             <span
               className="font-display text-[13px] font-medium tracking-wide text-[#E9E6DF] transition-opacity group-hover:opacity-75"
               style={{ letterSpacing: '-0.01em' }}
