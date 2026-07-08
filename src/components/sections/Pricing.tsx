@@ -98,8 +98,8 @@ export default function Pricing() {
                   backgroundImage: plan.highlighted 
                     ? 'linear-gradient(var(--color-bg-surface), var(--color-bg-surface)), var(--color-brand-gradient)'
                     : undefined,
-                  backgroundClip: plan.highlighted ? 'content-box, border-box' : undefined,
-                  backgroundOrigin: plan.highlighted ? 'content-box, border-box' : undefined,
+                  backgroundClip: plan.highlighted ? 'padding-box, border-box' : undefined,
+                  backgroundOrigin: plan.highlighted ? 'padding-box, border-box' : undefined,
                   boxShadow: plan.highlighted ? 'var(--shadow-brand)' : 'none',
                 }}
               >
