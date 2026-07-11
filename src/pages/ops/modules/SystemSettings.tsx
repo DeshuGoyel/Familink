@@ -21,7 +21,7 @@ import Input from '../../../components/ui/Input';
 import toast from 'react-hot-toast';
 import { cn } from '../../../utils/cn';
 
-type Tab = 'identity' | 'theme' | 'controls';
+type Tab = 'identity' | 'theme' | 'controls' | 'security';
 
 interface SystemConfigData {
   brand_name: string;
@@ -56,6 +56,38 @@ export default function SystemSettings() {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const logoInputRef = useRef<HTMLInputElement>(null);
+
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      toast.error('All password fields are required');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+    setIsChangingPassword(true);
+    try {
+      await opsApi.post('/ops/change-password', {
+        current_password: currentPassword,
+        new_password: newPassword,
+      });
+      toast.success('Password updated successfully');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (err) {
+      toast.error((err as Error).message || 'Failed to change password');
+    } finally {
+      setIsChangingPassword(false);
+    }
+  };
 
   useEffect(() => {
     fetchSettings();
@@ -120,6 +152,7 @@ export default function SystemSettings() {
     { id: 'identity', label: 'Site Identity', icon: Globe },
     { id: 'controls', label: 'System Controls', icon: Settings },
     { id: 'theme', label: 'Theme & UI', icon: Palette },
+    { id: 'security', label: 'Security & Auth', icon: ShieldAlert },
   ];
 
   return (
@@ -345,6 +378,55 @@ export default function SystemSettings() {
                     </div>
                   </div>
                 </Card>
+            )}
+
+            {activeTab === 'security' && (
+              <motion.div
+                key="security"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                className="space-y-6"
+              >
+                <form onSubmit={handlePasswordChange}>
+                  <Card className="bg-slate-900/40 border-slate-800 p-6 space-y-6">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">Administrator Security</h3>
+                    
+                    <Input
+                      label="Current Password"
+                      type="password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="bg-slate-950 border-slate-800"
+                    />
+
+                    <Input
+                      label="New Password"
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="bg-slate-950 border-slate-800"
+                    />
+
+                    <Input
+                      label="Confirm New Password"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="bg-slate-950 border-slate-800"
+                    />
+
+                    <div className="flex justify-end pt-2">
+                      <Button variant="primary" type="submit" disabled={isChangingPassword} className="px-8 shadow-lg shadow-indigo-500/20">
+                        {isChangingPassword ? <RefreshCw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                        Update Password
+                      </Button>
+                    </div>
+                  </Card>
+                </form>
               </motion.div>
             )}
           </AnimatePresence>

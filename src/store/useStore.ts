@@ -139,6 +139,9 @@ interface AppState {
   recoverOwnerVault: (ownerUserId: string, shares: { x: number; y: string }[]) => Promise<void>;
   branding: { waitlist_enabled: boolean };
   setBranding: (branding: { waitlist_enabled: boolean }) => void;
+  shares: any[];
+  fetchShares: () => Promise<void>;
+  revokeShare: (shareId: string) => Promise<void>;
 }
 
 const calculateNewScore = (state: Pick<AppState, 'guardians' | 'assets' | 'heirs'>) => {
@@ -292,6 +295,7 @@ const loadedState = getInitialState();
 export const useStore = create<AppState>((set) => ({
   user: getInitialUser(loadedState),
   ...loadedState,
+  shares: [],
   charities: [
     { id: 'c1', name: 'GiveWell', description: 'Maximum impact, evidence-based charities.', category: 'Global Health' },
     { id: 'c2', name: 'Electronic Frontier Foundation', description: 'Defending digital privacy and free speech.', category: 'Digital Rights' },
@@ -952,5 +956,26 @@ export const useStore = create<AppState>((set) => ({
   })),
 
   calculateScore: () => set((state) => ({ user: { ...state.user, score: calculateNewScore(state) } })),
-  setJurisdiction: (jurisdiction) => set((state) => ({ user: { ...state.user, jurisdiction } }))
+  setJurisdiction: (jurisdiction) => set((state) => ({ user: { ...state.user, jurisdiction } })),
+  fetchShares: async () => {
+    try {
+      const userId = localStorage.getItem('tl_user_id');
+      if (!userId) return;
+      const res = await api.post<{ shares: any[] }>('/vault/shares/list', { owner_id: userId });
+      set({ shares: res.shares || [] });
+    } catch (err) {
+      console.error('Failed to fetch shares:', err);
+    }
+  },
+  revokeShare: async (shareId) => {
+    try {
+      const userId = localStorage.getItem('tl_user_id');
+      if (!userId) return;
+      await api.post('/vault/shares/revoke', { owner_id: userId, share_id: shareId });
+      const res = await api.post<{ shares: any[] }>('/vault/shares/list', { owner_id: userId });
+      set({ shares: res.shares || [] });
+    } catch (err) {
+      console.error('Failed to revoke share:', err);
+    }
+  }
 }));

@@ -14,7 +14,8 @@ import {
   Settings as SettingsIcon,
   Palette,
   Phone,
-  Menu
+  Menu,
+  ClipboardList
 } from 'lucide-react';
 import { useOpsStore } from '../../store/useOpsStore';
 import { cn } from '../../utils/cn';
@@ -29,6 +30,7 @@ import LeanCMS from './modules/LeanCMS';
 import AuditLogs from './modules/AuditLogs';
 import BrandingStudio from './modules/Branding';
 import ContactSettings from './modules/ContactSettings';
+import ReviewsManager from './modules/Reviews';
 
 const NAV_GROUPS = [
   {
@@ -42,6 +44,7 @@ const NAV_GROUPS = [
     name: 'Staff',
     items: [
       { name: 'Administrators', path: '/ops/admins', icon: ShieldCheck },
+      { name: 'Claim Reviews', path: '/ops/reviews', icon: ClipboardList },
     ]
   },
   {
@@ -247,6 +250,7 @@ export default function OpsPortal() {
               <Route path="contact" element={<ContactSettings />} />
               <Route path="cms" element={<LeanCMS />} />
               <Route path="audit" element={<AuditLogs />} />
+              <Route path="reviews" element={<ReviewsManager />} />
               <Route path="*" element={<Navigate to="/ops/dashboard" replace />} />
             </Routes>
           </AnimatePresence>
