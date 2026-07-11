@@ -378,6 +378,7 @@ export default function SystemSettings() {
                     </div>
                   </div>
                 </Card>
+              </motion.div>
             )}
 
             {activeTab === 'security' && (

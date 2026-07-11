@@ -580,6 +580,8 @@ export default function Settings() {
                               </div>
                             );
                           })}
+                        </div>
+                      )}
                     </div>
 
                     <div className="space-y-8 pt-8 border-t border-base/40">
