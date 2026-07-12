@@ -5,6 +5,7 @@ import { Bell, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../../utils/cn';
 import ThemeToggle from './ThemeToggle';
+import { LogoMark } from '../ui/Logo';
 
 const navLinks = [
   { label: 'How It Works', href: '#how' },
@@ -70,7 +71,7 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
             <Link to="/" className="flex items-center gap-3 group">
               <div className="w-9 h-9 overflow-hidden flex items-center justify-center">
                 <img src="/logo-dark.png" alt="Transfer Legacy" className="w-full h-full object-contain dark:block hidden" />
-                <img src="/logo-light.png" alt="Transfer Legacy" className="w-full h-full object-contain dark:hidden block" />
+                <img src="/logo-light.jpeg" alt="Transfer Legacy" className="w-full h-full object-contain dark:hidden block" />
               </div>
               <span className="font-bold text-[18px] tracking-tight text-primary uppercase letter-spacing-[0.05em]">
                 Transfer{' '}
@@ -117,16 +118,29 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
                   Sign in
                 </Link>
               )}
-              <button
-                onClick={() => scrollTo('#waitlist')}
-                className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_0_25px_rgba(249,115,22,0.2)] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)]"
-                style={{
-                  background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
-                  color: 'white',
-                }}
-              >
-                Join Waitlist
-              </button>
+              {branding.waitlist_enabled ? (
+                <button
+                  onClick={() => scrollTo('#waitlist')}
+                  className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_0_25px_rgba(249,115,22,0.2)] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)]"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
+                    color: 'white',
+                  }}
+                >
+                  Join Waitlist
+                </button>
+              ) : (
+                <Link
+                  to="/onboarding"
+                  className="px-6 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_0_25px_rgba(249,115,22,0.2)] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)] flex items-center justify-center"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
+                    color: 'white',
+                  }}
+                >
+                  Get Started
+                </Link>
+              )}
             </div>
 
             {/* Hamburger */}
@@ -176,16 +190,38 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
                 ))}
               </nav>
 
-              <div className="mt-auto">
-                <button
-                  onClick={() => scrollTo('#waitlist')}
-                  className="w-full py-4 rounded-2xl text-base font-bold text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]"
-                  style={{
-                    background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
-                  }}
-                >
-                  Claim Your Spot
-                </button>
+              <div className="mt-auto flex flex-col gap-3">
+                {branding.waitlist_enabled ? (
+                  <button
+                    onClick={() => scrollTo('#waitlist')}
+                    className="w-full py-4 rounded-2xl text-base font-bold text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]"
+                    style={{
+                      background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
+                    }}
+                  >
+                    Claim Your Spot
+                  </button>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileOpen(false)}
+                      className="w-full py-4 rounded-2xl text-base font-bold text-secondary border border-base bg-surface/50 hover:border-strong transition-all duration-300 flex items-center justify-center"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      to="/onboarding"
+                      onClick={() => setMobileOpen(false)}
+                      className="w-full py-4 rounded-2xl text-base font-bold text-white shadow-[0_0_30px_rgba(249,115,22,0.3)] flex items-center justify-center"
+                      style={{
+                        background: 'linear-gradient(135deg, var(--color-gradient-pink) 0%, var(--color-brand-primary) 50%, var(--color-gradient-purple) 100%)',
+                      }}
+                    >
+                      Get Started
+                    </Link>
+                  </>
+                )}
               </div>
             </motion.div>
           )}
@@ -225,14 +261,7 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
 
           {/* Logo and name */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div
-              className="w-[22px] h-[22px] rounded-full relative flex items-center justify-center shrink-0"
-              style={{
-                background: 'conic-gradient(from 220deg, var(--color-brand-primary), var(--color-brand-primary-hover), var(--color-brand-gold), var(--color-brand-primary))'
-              }}
-            >
-              <div className="w-[9px] h-[9px] rounded-full bg-page transition-colors duration-400" />
-            </div>
+            <LogoMark size={22} />
             <span
               className="font-display text-[13px] font-medium tracking-wide text-[#E9E6DF] transition-opacity group-hover:opacity-75"
               style={{ letterSpacing: '-0.01em' }}

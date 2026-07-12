@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { cn } from '../../utils/cn';
+import { LogoMark } from '../ui/Logo';
 
 /* ── Nav sections ─────────────────────────────────────────── */
 const sections = [
@@ -84,14 +85,7 @@ export default function Sidebar() {
       >
         {/* ── Brand ─────────────────────────────────────── */}
         <div className="h-14 flex items-center gap-3 px-5 border-b border-[rgba(255,255,255,0.07)] shrink-0">
-          <div
-            className="w-7 h-7 rounded-full relative flex items-center justify-center shrink-0"
-            style={{
-              background: 'conic-gradient(from 220deg, var(--color-brand-primary), var(--color-brand-primary-hover), var(--color-brand-gold), var(--color-brand-primary))'
-            }}
-          >
-            <div className="w-[11px] h-[11px] rounded-full bg-page transition-colors duration-400" />
-          </div>
+          <LogoMark size={28} />
           <span
             className="font-display font-medium tracking-wide text-[16px]"
             style={{ color: '#E9E6DF', letterSpacing: '-0.01em' }}

@@ -230,7 +230,7 @@ function AppLayout() {
 
       {/* Footer — also offset to prevent Sidebar overlap */}
       <div className={cn("transition-all duration-300", offsetClass)}>
-        {!isPublicPage && !isOpsPage && <Footer />}
+        {!isPublicPage && !isOpsPage && !isAppPage && <Footer />}
       </div>
 
       {isNotificationOpen && <NotificationDrawer />}

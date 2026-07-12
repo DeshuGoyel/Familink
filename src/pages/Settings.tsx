@@ -22,7 +22,7 @@ const fadeUp = (delay = 0) => ({
 });
 
 export default function Settings() {
-  const { user } = useStore();
+  const { user, heirs, guardians, shares, fetchShares, revokeShare } = useStore();
   const { checkinSettings, updateSettings } = useCheckinStore();
   const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('Profile');
@@ -48,6 +48,7 @@ export default function Settings() {
   // GDPR States
   const [isExporting, setIsExporting] = useState(false);
   const [isErasing, setIsErasing] = useState(false);
+  const [isLoadingShares, setIsLoadingShares] = useState(false);
 
   // Helper: UUID to raw 16 bytes for GDPR export AAD
   const uuidToBytes = (uuidStr: string): Uint8Array => {
@@ -255,9 +256,34 @@ export default function Settings() {
     }
   };
 
+  const loadShares = async () => {
+    setIsLoadingShares(true);
+    try {
+      await fetchShares();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoadingShares(false);
+    }
+  };
+
+  const handleRevokeShare = async (shareId: string) => {
+    setIsLoadingShares(true);
+    try {
+      await revokeShare(shareId);
+      toast.success('Access grant revoked successfully');
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message || 'Failed to revoke share');
+    } finally {
+      setIsLoadingShares(false);
+    }
+  };
+
   useEffect(() => {
     if (activeTab === 'Security') {
       fetchDevices();
+      loadShares();
     }
   }, [activeTab]);
 
@@ -550,6 +576,55 @@ export default function Settings() {
                                   className="text-[10px] font-bold text-red-500 hover:text-red-400 uppercase tracking-widest px-4 py-2 bg-red-500/10 rounded-xl border border-red-500/20 disabled:opacity-40"
                                 >
                                   {isCurrent ? 'Revoke & Logout' : 'Revoke Token'}
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-8 pt-8 border-t border-base/40">
+                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary flex items-center gap-3">
+                         <ShieldAlert size={14} className="text-brand-primary"/> Active Vault Share Grants
+                      </h3>
+                      {isLoadingShares ? (
+                        <p className="text-xs text-muted">Retrieving active shares...</p>
+                      ) : shares.length === 0 ? (
+                        <div className="p-6 bg-page/20 rounded-[24px] border border-base/60 text-center">
+                          <p className="text-xs text-muted">No active cryptographic share grants found.</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          {shares.map((s: any) => {
+                            const beneficiary = heirs.find(h => h.id === s.grantee_id) || guardians.find(g => g.id === s.grantee_id);
+                            const beneficiaryName = beneficiary?.name || `Grantee (ID: ${s.grantee_id.substring(0, 8)}...)`;
+                            const beneficiaryEmail = beneficiary?.email || 'External Protocol Node';
+                            
+                            return (
+                              <div key={s.share_id} className="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-page/40 rounded-[24px] border border-base/60 gap-6 group hover:bg-page/60 transition-all">
+                                <div className="flex items-center gap-6">
+                                   <div className="w-12 h-12 rounded-xl bg-surface border border-base flex items-center justify-center text-secondary group-hover:text-brand-primary transition-colors shadow-inner">
+                                      <Shield size={20} />
+                                   </div>
+                                   <div>
+                                    <p className="font-display font-bold text-primary text-lg flex items-center gap-4 tracking-tight">
+                                      {beneficiaryName}
+                                    </p>
+                                    <p className="text-[10px] font-bold text-secondary mt-1 uppercase tracking-widest">
+                                      {beneficiaryEmail} · Share ID: {s.share_id.substring(0, 8)}...
+                                    </p>
+                                    <p className="text-[9px] text-muted mt-0.5">
+                                      Granted at: {new Date(s.created_at).toLocaleString()}
+                                    </p>
+                                  </div>
+                                </div>
+                                <button 
+                                  onClick={() => handleRevokeShare(s.share_id)}
+                                  disabled={isLoadingShares}
+                                  className="text-[10px] font-bold text-red-500 hover:text-red-400 uppercase tracking-widest px-4 py-2 bg-red-500/10 rounded-xl border border-red-500/20 disabled:opacity-40"
+                                >
+                                  Revoke Grant
                                 </button>
                               </div>
                             );
