@@ -122,7 +122,7 @@ export default function AIPlanner() {
                     <div className={`max-w-[85%] p-6 rounded-3xl font-medium leading-relaxed ${
                       msg.role === 'user' 
                         ? 'bg-brand-primary text-obsidian-950 rounded-br-none shadow-lg shadow-brand-primary/10' 
-                        : 'bg-page/60 border border-base text-obsidian-100 rounded-bl-none'
+                        : 'bg-page/60 border border-base text-primary rounded-bl-none'
                     }`}>
                       <p className="text-sm">
                         {msg.role === 'ai' ? <TypewriterText text={msg.content} /> : msg.content}

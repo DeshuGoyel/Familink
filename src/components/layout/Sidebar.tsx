@@ -11,9 +11,11 @@ import {
   GitBranch,
   Cpu,
   ChevronRight,
+  Clock,
 } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { cn } from '../../utils/cn';
+import { LogoMark } from '../ui/Logo';
 
 /* ── Nav sections ─────────────────────────────────────────── */
 const sections = [
@@ -22,6 +24,7 @@ const sections = [
     items: [
       { icon: LayoutDashboard, label: 'Overview',     path: '/dashboard' },
       { icon: Package,         label: 'Accounts',     path: '/assets' },
+      { icon: Shield,          label: 'Security Center', path: '/security-center' },
       { icon: History,         label: 'Activity',     path: '/activity' },
     ],
   },
@@ -30,7 +33,7 @@ const sections = [
     items: [
       { icon: Users,     label: 'Guardians',    path: '/guardians' },
       { icon: GitBranch, label: 'Instructions',  path: '/trust' },
-      { icon: Shield,    label: "Dead Man's Switch", path: '/check-in' },
+      { icon: Clock,     label: "Dead Man's Switch", path: '/check-in' },
       { icon: Cpu,       label: 'AI Planner',   path: '/ai-planner' },
     ],
   },
@@ -72,7 +75,7 @@ export default function Sidebar() {
       <aside
         className={cn(
           'fixed left-0 top-0 h-screen w-[240px] z-40 flex flex-col select-none',
-          'border-r border-[rgba(255,255,255,0.07)]',
+          'border-r border-base/40',
           'transition-transform duration-200',
           isMobileSidebarOpen 
             ? 'translate-x-0' 
@@ -83,18 +86,11 @@ export default function Sidebar() {
         style={{ background: 'var(--color-bg-sidebar, #0A0910)' }}
       >
         {/* ── Brand ─────────────────────────────────────── */}
-        <div className="h-14 flex items-center gap-3 px-5 border-b border-[rgba(255,255,255,0.07)] shrink-0">
-          <div
-            className="w-7 h-7 rounded-full relative flex items-center justify-center shrink-0"
-            style={{
-              background: 'conic-gradient(from 220deg, var(--color-brand-primary), var(--color-brand-primary-hover), var(--color-brand-gold), var(--color-brand-primary))'
-            }}
-          >
-            <div className="w-[11px] h-[11px] rounded-full bg-page transition-colors duration-400" />
-          </div>
+        <div className="h-14 flex items-center gap-3 px-5 border-b border-base/40 shrink-0">
+          <LogoMark size={28} />
           <span
             className="font-display font-medium tracking-wide text-[16px]"
-            style={{ color: '#E9E6DF', letterSpacing: '-0.01em' }}
+            style={{ color: 'var(--color-text-primary)', letterSpacing: '-0.01em' }}
           >
             Transfer Legacy
           </span>
@@ -107,7 +103,7 @@ export default function Sidebar() {
               {/* Section label */}
               <p
                 className="px-3 mb-1.5 text-[10px] font-semibold tracking-[0.14em] uppercase"
-                style={{ color: '#5C596A' }}
+                style={{ color: 'var(--color-text-muted)' }}
               >
                 {section.label}
               </p>
@@ -122,14 +118,14 @@ export default function Sidebar() {
                     cn(
                       'group relative flex items-center gap-3 px-3 py-2 rounded-[6px] mb-0.5 transition-colors duration-150',
                       isActive
-                        ? 'text-white'
-                        : 'hover:bg-[rgba(255,255,255,0.04)]',
+                        ? ''
+                        : 'hover:bg-base/40',
                     )
                   }
                   style={({ isActive }) =>
                     isActive
-                      ? { background: 'var(--color-brand-primary-dim)', color: '#E9E6DF' }
-                      : { color: '#9B97A3' }
+                      ? { background: 'var(--color-brand-primary-dim)', color: 'var(--color-text-primary)' }
+                      : { color: 'var(--color-text-secondary)' }
                   }
                 >
                   {({ isActive }) => (
@@ -160,7 +156,7 @@ export default function Sidebar() {
           style={{ background: 'var(--color-brand-primary-dim)' }}
         >
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: '#5C596A' }}>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: 'var(--color-text-muted)' }}>
               Legacy Score
             </p>
             <p className="text-[22px] font-display font-light leading-none mt-0.5 text-brand-primary">
@@ -177,9 +173,9 @@ export default function Sidebar() {
 
         {/* ── User profile ──────────────────────────────── */}
         <div
-          className="p-3 border-t border-[rgba(255,255,255,0.07)] shrink-0"
+          className="p-3 border-t border-base/40 shrink-0"
         >
-          <div className="flex items-center gap-3 px-2 py-2 rounded-[8px] hover:bg-[rgba(255,255,255,0.04)] transition-colors group">
+          <div className="flex items-center gap-3 px-2 py-2 rounded-[8px] hover:bg-base/40 transition-colors group">
             {/* Avatar */}
             <div
               className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-[11px] font-bold text-white bg-brand-primary"
@@ -188,10 +184,10 @@ export default function Sidebar() {
             </div>
 
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-medium leading-tight truncate" style={{ color: '#E9E6DF' }}>
+              <p className="text-[13px] font-medium leading-tight truncate" style={{ color: 'var(--color-text-primary)' }}>
                 {user.name}
               </p>
-              <p className="text-[10px] leading-tight truncate mt-0.5" style={{ color: '#5C596A' }}>
+              <p className="text-[10px] leading-tight truncate mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
                 {planLabel} plan
               </p>
             </div>
@@ -200,7 +196,7 @@ export default function Sidebar() {
               onClick={handleLogout}
               title="Log out"
               className="opacity-70 hover:opacity-100 transition-opacity p-1 rounded hover:bg-[rgba(239,68,68,0.12)] hover:text-red-400"
-              style={{ color: '#5C596A' }}
+              style={{ color: 'var(--color-text-muted)' }}
             >
               <LogOut size={13} />
             </button>

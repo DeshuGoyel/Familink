@@ -1,6 +1,6 @@
 import { Globe, Mail, MessageSquare, Shield, Lock, Fingerprint } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Logo } from '../ui/Logo';
+import { Logo, LogoMark } from '../ui/Logo';
 import ThemeToggle from './ThemeToggle';
 
 export default function Footer({ variant = 'app' }: { variant?: 'app' | 'marketing' }) {
@@ -13,14 +13,7 @@ export default function Footer({ variant = 'app' }: { variant?: 'app' | 'marketi
             {/* Col 1: Brand & Security Badges */}
             <div className="md:col-span-2 space-y-6">
               <Link to="/" className="flex items-center gap-2.5 group">
-                <div
-                  className="w-7 h-7 rounded-full relative flex items-center justify-center"
-                  style={{
-                    background: 'conic-gradient(from 220deg, var(--color-brand-primary), var(--color-brand-primary-hover), var(--color-brand-gold), var(--color-brand-primary))'
-                  }}
-                >
-                  <div className="w-[11px] h-[11px] rounded-full bg-page transition-colors duration-400" />
-                </div>
+                <LogoMark size={28} />
                 <span className="font-display font-medium text-[1.18rem] text-primary transition-opacity group-hover:opacity-75">
                   Transfer Legacy
                 </span>
@@ -121,8 +114,16 @@ export default function Footer({ variant = 'app' }: { variant?: 'app' | 'marketi
               Transfer Legacy is the global standard for sovereign digital asset succession. We provide institutional-grade infrastructure to secure your crypto, identities, and memories for generations to come.
             </p>
             <div className="flex space-x-6">
-              <Link to="/" className="text-muted/40 hover:text-brand-primary transition-all duration-300 transform hover:scale-110" aria-label="Visit our Global Website"><Globe size={20} /></Link>
-              <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="text-muted/40 hover:text-brand-primary transition-all duration-300 transform hover:scale-110" aria-label="Social Link"><MessageSquare size={20} /></a>
+              <a href="https://linkedin.com/company/transferlegacy" target="_blank" rel="noopener noreferrer" className="text-muted/40 hover:text-brand-primary transition-all duration-300 transform hover:scale-110" aria-label="LinkedIn Page">
+                <svg viewBox="0 0 24 24" width={20} height={20} fill="currentColor" className="w-5 h-5">
+                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                </svg>
+              </a>
+              <a href="https://x.com/transferlegacy" target="_blank" rel="noopener noreferrer" className="text-muted/40 hover:text-brand-primary transition-all duration-300 transform hover:scale-110" aria-label="X Profile">
+                <svg viewBox="0 0 24 24" width={20} height={20} fill="currentColor" className="w-5 h-5">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
               <a href="mailto:support@transferlegacy.global" className="text-muted/40 hover:text-brand-primary transition-all duration-300 transform hover:scale-110" aria-label="Email Link"><Mail size={20} /></a>
             </div>
           </div>

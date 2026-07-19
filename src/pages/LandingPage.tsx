@@ -9,6 +9,7 @@ import Pricing from '../components/sections/Pricing';
 import Testimonials from '../components/sections/Testimonials';
 import FAQ from '../components/sections/FAQ';
 import FinalCTA from '../components/sections/FinalCTA';
+import SEO from '../components/seo/SEO';
 
 export default function LandingPage() {
   // Restore normal cursor for landing page
@@ -19,6 +20,11 @@ export default function LandingPage() {
 
   return (
     <div className="bg-page text-primary min-h-screen font-sans selection:bg-brand-primary/30 overflow-x-hidden relative">
+      <SEO 
+        title="Transfer Legacy | Secure Crypto Inheritance Vault"
+        description="Transfer the access. Protect the legacy. The only platform that securely and automatically transfers your crypto and digital assets to your family."
+        canonicalUrl="https://transferlegacy.com/"
+      />
       <main>
         {/* 1. Hero — YC-grade layout */}
         <Hero />

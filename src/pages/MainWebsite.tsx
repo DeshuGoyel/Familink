@@ -20,6 +20,8 @@ import DigitalObituary from '../pages/DigitalObituary';
 import IdentityPassport from '../pages/IdentityPassport';
 import DeveloperPortal from '../pages/DeveloperPortal';
 import LegacyAnalytics from '../pages/LegacyAnalytics';
+import SecurityCenter from '../pages/SecurityCenter';
+import Activity from '../pages/Activity';
 import ContactUs from '../pages/ContactUs';
 import ForgotPassword from './ForgotPassword';
 import ResetPassword from './ResetPassword';
@@ -103,7 +105,7 @@ import CryptoInheritanceUAE from './seo/regions/CryptoInheritanceUAE';
 const PUBLIC_ROUTES = new Set(['/', '/login', '/onboarding', '/contact', '/contact-us', '/forgot-password', '/reset-password']);
 
 // Dashboard/app routes — use normal system cursor
-const APP_ROUTE_PREFIXES = ['/dashboard', '/assets', '/allocations', '/guardians', '/heirs', '/ai-planner', '/trust', '/settings', '/checkin', '/check-in', '/capsules', '/obituary', '/passport', '/identity', '/developer', '/activity', '/analytics', '/reports'];
+const APP_ROUTE_PREFIXES = ['/dashboard', '/assets', '/allocations', '/guardians', '/heirs', '/ai-planner', '/trust', '/settings', '/checkin', '/check-in', '/capsules', '/obituary', '/passport', '/identity', '/developer', '/activity', '/analytics', '/reports', '/security-center'];
 
 function AppLayout() {
   const { isNotificationOpen, isSidebarCollapsed } = useStore();
@@ -148,7 +150,8 @@ function AppLayout() {
           <Route path="/passport"    element={<ProtectedRoute><IdentityPassport /></ProtectedRoute>} />
           <Route path="/identity"    element={<ProtectedRoute><IdentityPassport /></ProtectedRoute>} />
           <Route path="/developer"   element={<ProtectedRoute><DeveloperPortal /></ProtectedRoute>} />
-          <Route path="/activity"    element={<ProtectedRoute><LegacyAnalytics /></ProtectedRoute>} />
+          <Route path="/activity"    element={<ProtectedRoute><Activity /></ProtectedRoute>} />
+          <Route path="/security-center" element={<ProtectedRoute><SecurityCenter /></ProtectedRoute>} />
 
           {/* New Functional Feature Routes */}
           <Route path="/features/vault-security"          element={<VaultSecurity />} />

@@ -16,6 +16,37 @@ export interface Asset {
   beneficiaryId?: string;
   encryptionLevel?: 'Standard' | 'Military' | 'Quantum-Resistant';
   growthRate?: number;
+
+  // Category-specific fields
+  // Crypto
+  cryptoWalletType?: string;
+  cryptoAddress?: string;
+  cryptoNetwork?: string;
+  cryptoBackupMethod?: string;
+
+  // NFT
+  nftCollection?: string;
+  nftTokenId?: string;
+  nftContractAddress?: string;
+  nftNetwork?: string;
+
+  // Document
+  docType?: string;
+  docPhysicalLocation?: string;
+  docCloudUrl?: string;
+  docAccessKeys?: string;
+
+  // Account
+  accountService?: string;
+  accountUsername?: string;
+  accountPasswordRef?: string;
+  accountMfaBackup?: string;
+
+  // Retirement
+  retirementInstitution?: string;
+  retirementAccountNumber?: string;
+  retirementAccountType?: string;
+  retirementBeneficiary?: string;
 }
 
 export interface Guardian {
@@ -139,6 +170,7 @@ interface AppState {
   recoverOwnerVault: (ownerUserId: string, shares: { x: number; y: string }[]) => Promise<void>;
   branding: { waitlist_enabled: boolean };
   setBranding: (branding: { waitlist_enabled: boolean }) => void;
+  logActivity: (message: string, icon?: string) => void;
 }
 
 const calculateNewScore = (state: Pick<AppState, 'guardians' | 'assets' | 'heirs'>) => {
@@ -241,6 +273,7 @@ const getInitialState = () => {
       assets: [] as Asset[],
       guardians: [] as Guardian[],
       heirs: [] as Heir[],
+      activity: [] as Activity[],
     };
   }
 
@@ -264,10 +297,24 @@ const getInitialState = () => {
     console.error('Failed to parse tl_heirs from localStorage', e);
   }
 
+  let activity: Activity[] = [];
+  try {
+    const savedActivity = localStorage.getItem('tl_activity');
+    if (savedActivity) {
+      activity = JSON.parse(savedActivity);
+    } else {
+      activity = [...mockActivity];
+    }
+  } catch (e) {
+    console.error('Failed to parse tl_activity from localStorage', e);
+    activity = [...mockActivity];
+  }
+
   return {
     assets: [] as Asset[],
     guardians,
     heirs,
+    activity,
   };
 };
 
@@ -299,9 +346,9 @@ export const useStore = create<AppState>((set) => ({
     { id: 'c4', name: 'Red Cross', description: 'Emergency assistance and disaster relief.', category: 'Humanitarian' }
   ],
   allocations: [],
-  activity: [...mockActivity],
+  activity: loadedState.activity || [...mockActivity],
   notifications: [...mockNotifications],
-  theme: "dark",
+  theme: typeof window !== 'undefined' ? localStorage.getItem('theme') || "dark" : "dark",
   accentColor: "#4F5CFF",
   isNotificationOpen: false,
   isSidebarCollapsed: false,
@@ -592,6 +639,17 @@ export const useStore = create<AppState>((set) => ({
   },
   branding: { waitlist_enabled: import.meta.env.VITE_WAITLIST_ENABLED === 'true' },
   setBranding: (branding) => set({ branding }),
+  logActivity: (message, icon = 'Activity') => set((state) => {
+    const newActivity = {
+      id: Date.now().toString(),
+      message,
+      time: 'Just now',
+      icon
+    };
+    const updated = [newActivity, ...state.activity];
+    localStorage.setItem('tl_activity', JSON.stringify(updated));
+    return { activity: updated };
+  }),
 
   checkSession: async () => {
     const token = localStorage.getItem('tl_session_token');
@@ -653,6 +711,7 @@ export const useStore = create<AppState>((set) => ({
       localStorage.removeItem('tl_user_email');
       localStorage.removeItem('tl_guardians');
       localStorage.removeItem('tl_heirs');
+      localStorage.removeItem('tl_activity');
       set({ 
         isAuthenticated: false, 
         assets: [],
@@ -662,6 +721,7 @@ export const useStore = create<AppState>((set) => ({
         userKeys: null,
         activePolicyId: null,
         recoveredAssets: [],
+        activity: [...mockActivity],
         user: {
           name: "Secured User",
           email: "",
@@ -739,6 +799,7 @@ export const useStore = create<AppState>((set) => ({
         const newState = { ...state, assets: formattedAssets };
         return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
       });
+      get().logActivity(`Asset "${asset.name}" secured in vault`, 'Lock');
     } catch (err) {
       console.error('Failed to add asset:', err);
       if (import.meta.env.DEV) {
@@ -754,6 +815,7 @@ export const useStore = create<AppState>((set) => ({
           const newState = { ...state, assets: updated };
           return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
         });
+        get().logActivity(`Asset "${asset.name}" secured in vault (Local)`, 'Lock');
       }
     }
   },
@@ -813,6 +875,7 @@ export const useStore = create<AppState>((set) => ({
         const newState = { ...state, assets: formattedAssets };
         return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
       });
+      get().logActivity(`Asset "${updatedAsset.name}" record updated`, 'FileText');
     } catch (err) {
       console.error('Failed to update asset:', err);
       if (import.meta.env.DEV) {
@@ -822,6 +885,7 @@ export const useStore = create<AppState>((set) => ({
           const newState = { ...state, assets: updated };
           return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
         });
+        get().logActivity(`Asset "${data.name || currentAsset.name || 'Unnamed'}" record updated (Local)`, 'FileText');
       }
     }
   },
@@ -829,6 +893,8 @@ export const useStore = create<AppState>((set) => ({
     try {
       const userId = localStorage.getItem('tl_user_id');
       if (!userId) return;
+      
+      const assetName = useStore.getState().assets.find(a => a.id === id)?.name || 'Unnamed';
       await api.post('/vault/items/delete', { user_id: userId, item_id: id });
       
       // Refresh assets
@@ -841,13 +907,16 @@ export const useStore = create<AppState>((set) => ({
         const newState = { ...state, assets: formattedAssets };
         return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
       });
+      get().logActivity(`Asset "${assetName}" removed from vault`, 'Trash2');
     } catch (err) {
       console.error('Failed to delete asset:', err);
       if (import.meta.env.DEV) {
         set((state) => {
+          const assetName = state.assets.find(a => a.id === id)?.name || 'Unnamed';
           const updated = state.assets.filter(a => a.id !== id);
           localStorage.setItem('tl_assets', JSON.stringify(updated));
           const newState = { ...state, assets: updated };
+          get().logActivity(`Asset "${assetName}" removed from vault (Local)`, 'Trash2');
           return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
         });
       }
@@ -856,30 +925,38 @@ export const useStore = create<AppState>((set) => ({
   addGuardian: (guardian) => set((state) => {
     const updated = [...state.guardians, { ...guardian, id: Date.now().toString(), status: 'Pending' }];
     localStorage.setItem('tl_guardians', JSON.stringify(updated));
+    get().logActivity(`Guardian invite sent to ${guardian.name} (${guardian.email || 'no email'})`, 'User');
     const newState = { ...state, guardians: updated };
     return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
   }),
   confirmGuardian: (id) => set((state) => {
+    const gName = state.guardians.find(g => g.id === id)?.name || 'Guardian';
     const updated = state.guardians.map(g => g.id === id ? { ...g, status: 'Confirmed' } : g);
     localStorage.setItem('tl_guardians', JSON.stringify(updated));
+    get().logActivity(`Guardian "${gName}" confirmed ID verification`, 'CheckCircle');
     const newState = { ...state, guardians: updated };
     return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
   }),
   removeGuardian: (id) => set((state) => {
+    const gName = state.guardians.find(g => g.id === id)?.name || 'Guardian';
     const updated = state.guardians.filter(g => g.id !== id);
     localStorage.setItem('tl_guardians', JSON.stringify(updated));
+    get().logActivity(`Guardian "${gName}" removed from network`, 'Trash2');
     const newState = { ...state, guardians: updated };
     return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
   }),
   addHeir: (heir) => set((state) => {
     const updated = [...state.heirs, { ...heir, id: Date.now().toString(), status: 'Not Notified', progress: 0 }];
     localStorage.setItem('tl_heirs', JSON.stringify(updated));
+    get().logActivity(`Heir "${heir.name}" registered for digital succession`, 'Users');
     const newState = { ...state, heirs: updated };
     return { ...newState, user: { ...state.user, score: calculateNewScore(newState) } };
   }),
   updateHeirStatus: (id, status) => set((state) => {
+    const heirName = state.heirs.find(h => h.id === id)?.name || 'Heir';
     const updated = state.heirs.map(h => h.id === id ? { ...h, status } : h);
     localStorage.setItem('tl_heirs', JSON.stringify(updated));
+    get().logActivity(`Heir "${heirName}" status updated to ${status}`, 'FileText');
     return { heirs: updated };
   }),
   updateScore: (score) => set((state) => ({ user: { ...state.user, score } })),
@@ -928,13 +1005,16 @@ export const useStore = create<AppState>((set) => ({
         device_sig: deviceSigStr
       });
       
-      set((state) => ({
-        user: {
-          ...state.user,
-          nextCheckInDate: new Date((response.pending_at || ts + 7 * 24 * 60 * 60) * 1000).toISOString(),
-          checkInHistory: [{ date: new Date().toISOString(), method }, ...state.user.checkInHistory]
-        }
-      }));
+      set((state) => {
+        get().logActivity(`Heartbeat check-in completed via ${method}`, 'Shield');
+        return {
+          user: {
+            ...state.user,
+            nextCheckInDate: new Date((response.pending_at || ts + 7 * 24 * 60 * 60) * 1000).toISOString(),
+            checkInHistory: [{ date: new Date().toISOString(), method }, ...state.user.checkInHistory]
+          }
+        };
+      });
     } catch (err) {
       console.error('Failed to perform check-in:', err);
     }

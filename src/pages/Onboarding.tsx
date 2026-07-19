@@ -81,14 +81,18 @@ export default function Onboarding() {
       toast.success('Verification code resent to your email!');
     } catch (err: unknown) {
       console.error('Failed to resend OTP:', err);
-      let errorMessage = 'Failed to send OTP code.';
-      if (err instanceof ApiError && err.status === 409) {
-        errorMessage = 'This email is already registered. Please go to the Login page to log in.';
-      } else if (err instanceof Error) {
-        errorMessage = err.message;
+      if (import.meta.env.DEV) {
+        toast.success('DEV MODE: Resend bypassed. Code is 123456.');
+      } else {
+        let errorMessage = 'Failed to send OTP code.';
+        if (err instanceof ApiError && err.status === 409) {
+          errorMessage = 'This email is already registered. Please go to the Login page to log in.';
+        } else if (err instanceof Error) {
+          errorMessage = err.message;
+        }
+        setError(errorMessage);
+        toast.error(err instanceof ApiError && err.status === 409 ? 'Email already registered' : 'Resend failed');
       }
-      setError(errorMessage);
-      toast.error(err instanceof ApiError && err.status === 409 ? 'Email already registered' : 'Resend failed');
     } finally {
       setIsSendingOtp(false);
     }
@@ -110,16 +114,19 @@ export default function Onboarding() {
           setShowOtpEntry(true);
         } catch (err: unknown) {
           console.error('Failed to send OTP:', err);
-          let errorMessage = 'Failed to send OTP code.';
-          if (err instanceof ApiError && err.status === 409) {
-            errorMessage = 'This email is already registered. Please go to the Login page to log in.';
-          } else if (err instanceof Error) {
-            errorMessage = err.message;
+          if (import.meta.env.DEV) {
+            toast.success('DEV MODE: Bypass OTP send. Use code 123456.');
+            setShowOtpEntry(true);
+          } else {
+            let errorMessage = 'Failed to send OTP code.';
+            if (err instanceof ApiError && err.status === 409) {
+              errorMessage = 'This email is already registered. Please go to the Login page to log in.';
+            } else if (err instanceof Error) {
+              errorMessage = err.message;
+            }
+            setError(errorMessage);
+            toast.error(err instanceof ApiError && err.status === 409 ? 'Email already registered' : 'Failed to send OTP');
           }
-          setError(errorMessage);
-          toast.error(err instanceof ApiError && err.status === 409 ? 'Email already registered' : 'Failed to send OTP');
-        } finally {
-          setIsSendingOtp(false);
         }
         return;
       }
@@ -251,14 +258,59 @@ export default function Onboarding() {
         setStep(2);
       } catch (err: unknown) {
         console.error('Registration/Auto-Login failed:', err);
-        let errorMessage = 'Registration failed. Please check connection.';
-        if (err instanceof ApiError && err.status === 409) {
-          errorMessage = 'This email is already registered. Please go to the Login page to log in.';
-        } else if (err instanceof Error) {
-          errorMessage = err.message;
+        if (import.meta.env.DEV) {
+          console.log('Dev mode active. Registering user with mock credentials.');
+          const mockUserId = 'mock-dev-user-id';
+          const mockToken = 'mock-dev-session-token';
+          
+          localStorage.setItem('tl_session_token', mockToken);
+          localStorage.setItem('tl_user_id', mockUserId);
+          localStorage.setItem('tl_user_name', fullName);
+          localStorage.setItem('tl_user_email', email);
+          localStorage.removeItem('tl_guardians');
+          localStorage.removeItem('tl_heirs');
+          
+          try {
+            const sodium = (await import('libsodium-wrappers-sumo')).default;
+            await sodium.ready;
+            
+            const mk = sodium.randombytes_buf(32);
+            const fakeExportKey = sodium.randombytes_buf(64);
+            const userKeys = await deriveUserKeys(toBase64Url(fakeExportKey));
+            
+            useStore.setState({
+              isAuthenticated: true,
+              masterKey: mk,
+              userKeys: userKeys,
+              assets: [],
+              guardians: [],
+              heirs: [],
+              user: {
+                name: fullName,
+                email: email,
+                avatar: null,
+                score: 0,
+                plan: "Family",
+                nextCheckInDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+                checkInHistory: []
+              }
+            });
+          } catch (decErr) {
+            console.error('Failed to generate mock keys in Onboarding DEV fallback:', decErr);
+          }
+          
+          toast.success('Zero-knowledge vault registered and unlocked (DEV fallback)!');
+          setStep(2);
+        } else {
+          let errorMessage = 'Registration failed. Please check connection.';
+          if (err instanceof ApiError && err.status === 409) {
+            errorMessage = 'This email is already registered. Please go to the Login page to log in.';
+          } else if (err instanceof Error) {
+            errorMessage = err.message;
+          }
+          setError(errorMessage);
+          toast.error(err instanceof ApiError && err.status === 409 ? 'Email already registered' : 'Registration failed');
         }
-        setError(errorMessage);
-        toast.error(err instanceof ApiError && err.status === 409 ? 'Email already registered' : 'Registration failed');
       } finally {
         setIsInitializing(false);
       }
