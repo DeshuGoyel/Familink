@@ -691,15 +691,6 @@ export default function Settings() {
                         </button>
                       </div>
                     </div>
-
-                    <div className="space-y-8 pt-4">
-                      <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary">Protocol Accent</h3>
-                      <div className="flex gap-8">
-                        {['#4F5CFF', '#D4AF37', '#06B6D4', '#10B981'].map((c, i) => (
-                          <button key={c} className={`w-16 h-16 rounded-[20px] transition-all duration-500 border-4 border-base shadow-2xl ${i === 0 ? 'scale-110 ring-4 ring-brand-primary/20 ring-offset-8 ring-offset-base' : 'opacity-40 hover:opacity-100 hover:scale-105'}`} style={{ backgroundColor: c }} />
-                        ))}
-                      </div>
-                    </div>
                   </motion.div>
                 )}
 

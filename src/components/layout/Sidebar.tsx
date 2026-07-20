@@ -12,6 +12,7 @@ import {
   Cpu,
   ChevronRight,
   Clock,
+  FileText,
 } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { cn } from '../../utils/cn';
@@ -32,7 +33,7 @@ const sections = [
     label: 'MANAGE',
     items: [
       { icon: Users,     label: 'Guardians',    path: '/guardians' },
-      { icon: GitBranch, label: 'Instructions',  path: '/trust' },
+      { icon: FileText,  label: 'Instructions', path: '/instructions' },
       { icon: Clock,     label: "Dead Man's Switch", path: '/check-in' },
       { icon: Cpu,       label: 'AI Planner',   path: '/ai-planner' },
     ],

@@ -21,6 +21,8 @@ import IdentityPassport from '../pages/IdentityPassport';
 import DeveloperPortal from '../pages/DeveloperPortal';
 import LegacyAnalytics from '../pages/LegacyAnalytics';
 import SecurityCenter from '../pages/SecurityCenter';
+import InstructionsCenter from '../pages/InstructionsCenter';
+import Careers from '../pages/Careers';
 import Activity from '../pages/Activity';
 import ContactUs from '../pages/ContactUs';
 import ForgotPassword from './ForgotPassword';
@@ -102,10 +104,10 @@ import CryptoInheritanceUK from './seo/regions/CryptoInheritanceUK';
 import CryptoInheritanceUAE from './seo/regions/CryptoInheritanceUAE';
 
 // Routes that are public/pre-login — no sidebar, navbar, or footer
-const PUBLIC_ROUTES = new Set(['/', '/login', '/onboarding', '/contact', '/contact-us', '/forgot-password', '/reset-password']);
+const PUBLIC_ROUTES = new Set(['/', '/login', '/onboarding', '/contact', '/contact-us', '/forgot-password', '/reset-password', '/careers']);
 
 // Dashboard/app routes — use normal system cursor
-const APP_ROUTE_PREFIXES = ['/dashboard', '/assets', '/allocations', '/guardians', '/heirs', '/ai-planner', '/trust', '/settings', '/checkin', '/check-in', '/capsules', '/obituary', '/passport', '/identity', '/developer', '/activity', '/analytics', '/reports', '/security-center'];
+const APP_ROUTE_PREFIXES = ['/dashboard', '/assets', '/allocations', '/guardians', '/heirs', '/ai-planner', '/trust', '/instructions', '/settings', '/checkin', '/check-in', '/capsules', '/obituary', '/passport', '/identity', '/developer', '/activity', '/analytics', '/reports', '/security-center'];
 
 function AppLayout() {
   const { isNotificationOpen, isSidebarCollapsed } = useStore();
@@ -152,6 +154,8 @@ function AppLayout() {
           <Route path="/developer"   element={<ProtectedRoute><DeveloperPortal /></ProtectedRoute>} />
           <Route path="/activity"    element={<ProtectedRoute><Activity /></ProtectedRoute>} />
           <Route path="/security-center" element={<ProtectedRoute><SecurityCenter /></ProtectedRoute>} />
+          <Route path="/instructions"    element={<ProtectedRoute><InstructionsCenter /></ProtectedRoute>} />
+          <Route path="/careers"         element={<Careers />} />
 
           {/* New Functional Feature Routes */}
           <Route path="/features/vault-security"          element={<VaultSecurity />} />
