@@ -8,11 +8,13 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test:smoke": "cucumber-js --config cucumber.config.cjs --tags @smoke",
-    "test:e2e": "cucumber-js --config cucumber.config.cjs",
-    "test:auth": "cucumber-js --config cucumber.config.cjs --tags @auth",
-    "test:headed": "cross-env HEADLESS=false cucumber-js --config cucumber.config.cjs",
-    "test:report": "cucumber-js --config cucumber.config.cjs && echo 'Report generated at e2e/reports/report.html'"
+    "test:smoke": "cross-env NODE_OPTIONS=\"--import tsx\" cucumber-js --config cucumber.config.cjs --tags @smoke",
+    "test:e2e": "cross-env NODE_OPTIONS=\"--import tsx\" cucumber-js --config cucumber.config.cjs",
+    "test:auth": "cross-env NODE_OPTIONS=\"--import tsx\" cucumber-js --config cucumber.config.cjs --tags @auth",
+    "test:headed": "cross-env HEADLESS=false NODE_OPTIONS=\"--import tsx\" cucumber-js --config cucumber.config.cjs",
+    "test:chrome": "cross-env BROWSER=chrome NODE_OPTIONS=\"--import tsx\" cucumber-js --config cucumber.config.cjs",
+    "test:chrome:headed": "cross-env HEADLESS=false BROWSER=chrome NODE_OPTIONS=\"--import tsx\" cucumber-js --config cucumber.config.cjs",
+    "test:report": "cross-env NODE_OPTIONS=\"--import tsx\" cucumber-js --config cucumber.config.cjs && echo 'Report generated at e2e/reports/report.html'"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { ArrowRight, ArrowLeft, Shield, Users, KeyRound, Wallet, CheckCircle2, Globe, Fingerprint, ShieldCheck } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
@@ -491,6 +491,15 @@ export default function Onboarding() {
                   >
                     {isSendingOtp ? 'Sending...' : 'Begin Protocol'} <ArrowRight className="ml-2 inline" size={18} />
                   </Button>
+
+                  <div className="mt-6 pt-4 border-t border-base/40 text-center">
+                    <p className="text-xs text-muted">
+                      Already have a vault?{' '}
+                      <Link to="/login" className="text-brand-primary hover:underline font-bold transition-colors">
+                        Log In Here
+                      </Link>
+                    </p>
+                  </div>
                 </>
               ) : (
                 <>

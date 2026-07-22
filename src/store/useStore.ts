@@ -336,7 +336,7 @@ const getInitialUser = (state: ReturnType<typeof getInitialState>) => {
 
 const loadedState = getInitialState();
 
-export const useStore = create<AppState>((set) => ({
+export const useStore = create<AppState>((set, get) => ({
   user: getInitialUser(loadedState),
   ...loadedState,
   charities: [
