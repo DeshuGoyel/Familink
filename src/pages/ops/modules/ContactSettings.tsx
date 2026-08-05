@@ -61,6 +61,16 @@ export default function ContactSettings() {
     }
   };
 
+  const handleDeleteMessage = async (id: string) => {
+    try {
+      await opsApi.delete(`/ops/contact/messages/${id}`);
+      setMessages(prev => prev.filter(m => m.id !== id));
+      toast.success('Message deleted');
+    } catch (err) {
+      toast.error((err as Error).message || 'Failed to delete message');
+    }
+  };
+
   const addEmail = () => setConfig(prev => prev ? ({ ...prev, emails: [...prev.emails, { label: '', email: '' }] }) : null);
   const removeEmail = (index: number) => setConfig(prev => prev ? ({ ...prev, emails: prev.emails.filter((_, i) => i !== index) }) : null);
   
@@ -324,7 +334,10 @@ export default function ContactSettings() {
                         <span className="text-slate-500">{new Date(msg.created_at).toLocaleString()}</span>
                       </div>
                     </div>
-                    <button className="p-2 text-slate-500 hover:text-white transition-colors">
+                    <button 
+                      onClick={() => handleDeleteMessage(msg.id)}
+                      className="p-2 text-slate-500 hover:text-red-400 transition-colors"
+                    >
                       <Trash2 size={20} />
                     </button>
                   </div>

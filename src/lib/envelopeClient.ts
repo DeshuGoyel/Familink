@@ -18,16 +18,15 @@ export async function decryptShareEnvelope(params: DecryptEnvelopeParams): Promi
   );
 
   // 2. PQ Shared Secret (ML-KEM-768/Kyber decapsulation)
-  let ssPq = new Uint8Array(32);
+  let ssPq: Uint8Array;
   try {
-    const decaps = sodium.crypto_kem_mlkem768_dec(
+    ssPq = sodium.crypto_kem_mlkem768_dec(
       fromBase64Url(env.kyber_ct),
       fromBase64Url(params.kyberPrivateKey)
     );
-    ssPq = decaps;
   } catch (kemErr) {
-    console.warn("MLKEM-768 Decapsulation failed, falling back to mock:", kemErr);
-    ssPq = sodium.randombytes_buf(32);
+    console.error("MLKEM-768 Decapsulation failed:", kemErr);
+    throw new Error("ML-KEM-768 decapsulation failed: invalid ciphertext or private key");
   }
 
   // Combine shared secrets
