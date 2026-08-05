@@ -242,7 +242,7 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 h-14 flex items-center border-b border-[rgba(255,255,255,0.07)] transition-all duration-200",
+        "fixed top-0 left-0 right-0 z-50 h-14 flex items-center border-b border-base/40 transition-all duration-200",
         isSidebarCollapsed ? "lg:pl-0" : "lg:pl-[240px]"
       )}
       style={{ background: 'var(--color-bg-page)' }}
@@ -252,8 +252,8 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
           {/* Toggle sidebar button */}
           <button
             onClick={handleSidebarToggle}
-            className="p-1.5 rounded-md transition-colors hover:bg-[rgba(255,255,255,0.05)]"
-            style={{ color: '#9B97A3' }}
+            className="p-1.5 rounded-md transition-colors hover:bg-base/40"
+            style={{ color: 'var(--color-text-secondary)' }}
             aria-label="Toggle menu"
           >
             {isMobileSidebarOpen ? <X size={18} /> : <Menu size={18} />}
@@ -263,7 +263,7 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
           <Link to="/" className="flex items-center gap-2.5 group">
             <LogoMark size={22} />
             <span
-              className="font-display text-[13px] font-medium tracking-wide text-[#E9E6DF] transition-opacity group-hover:opacity-75"
+              className="font-display text-[13px] font-medium tracking-wide text-primary transition-opacity group-hover:opacity-75"
               style={{ letterSpacing: '-0.01em' }}
             >
               Transfer Legacy
@@ -271,13 +271,13 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
           </Link>
 
           {/* Home etc. Links in Title Bar */}
-          <div className="hidden lg:flex items-center gap-6 ml-8 border-l border-[rgba(255,255,255,0.08)] pl-8">
+          <div className="hidden lg:flex items-center gap-6 ml-8 border-l border-base/40 pl-8">
             <NavLink
               to="/dashboard"
               className={({ isActive }) =>
                 cn(
-                  "text-[12px] font-medium transition-colors hover:text-white",
-                  isActive ? "text-brand-primary" : "text-[#9B97A3]"
+                  "text-[12px] font-medium transition-colors hover:text-primary",
+                  isActive ? "text-brand-primary" : "text-secondary"
                 )
               }
             >
@@ -287,8 +287,8 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
               to="/assets"
               className={({ isActive }) =>
                 cn(
-                  "text-[12px] font-medium transition-colors hover:text-white",
-                  isActive ? "text-brand-primary" : "text-[#9B97A3]"
+                  "text-[12px] font-medium transition-colors hover:text-primary",
+                  isActive ? "text-brand-primary" : "text-secondary"
                 )
               }
             >
@@ -298,8 +298,8 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
               to="/guardians"
               className={({ isActive }) =>
                 cn(
-                  "text-[12px] font-medium transition-colors hover:text-white",
-                  isActive ? "text-brand-primary" : "text-[#9B97A3]"
+                  "text-[12px] font-medium transition-colors hover:text-primary",
+                  isActive ? "text-brand-primary" : "text-secondary"
                 )
               }
             >
@@ -309,8 +309,8 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
               to="/settings"
               className={({ isActive }) =>
                 cn(
-                  "text-[12px] font-medium transition-colors hover:text-white",
-                  isActive ? "text-brand-primary" : "text-[#9B97A3]"
+                  "text-[12px] font-medium transition-colors hover:text-primary",
+                  isActive ? "text-brand-primary" : "text-secondary"
                 )
               }
             >
@@ -322,8 +322,8 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
         <div className="flex items-center gap-1 ml-auto">
           <button
             onClick={toggleNotifications}
-            className="relative p-2 rounded-md transition-colors hover:bg-[rgba(255,255,255,0.05)]"
-            style={{ color: '#9B97A3' }}
+            className="relative p-2 rounded-md transition-colors hover:bg-base/40"
+            style={{ color: 'var(--color-text-secondary)' }}
             aria-label="Notifications"
           >
             <Bell size={17} strokeWidth={1.75} />
@@ -338,7 +338,7 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
 
           <Link
             to="/settings"
-            className="ml-1 flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-[8px] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.13)] transition-colors"
+            className="ml-1 flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-[8px] border border-base/40 hover:border-base/80 transition-colors"
             style={{ background: 'var(--color-bg-surface)' }}
           >
             <div
@@ -346,7 +346,7 @@ export default function Navbar({ variant = 'app' }: { variant?: 'app' | 'marketi
             >
               {user.name.charAt(0).toUpperCase()}
             </div>
-            <span className="hidden sm:inline text-[12px] font-medium" style={{ color: '#E9E6DF' }}>
+            <span className="hidden sm:inline text-[12px] font-medium" style={{ color: 'var(--color-text-primary)' }}>
               {user.name.split(' ')[0]}
             </span>
           </Link>

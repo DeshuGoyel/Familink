@@ -226,7 +226,7 @@ export default function Allocations() {
                                   </div>
                                   
                                   <div className="mt-4 flex justify-end">
-                                    <span className="text-[10px] font-bold text-obsidian-600 uppercase tracking-widest">Est. Value: <span className="text-obsidian-200">${valueAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span></span>
+                                    <span className="text-[10px] font-bold text-obsidian-600 uppercase tracking-widest">Est. Value: <span className="text-primary">${valueAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span></span>
                                   </div>
                                 </motion.div>
                               );

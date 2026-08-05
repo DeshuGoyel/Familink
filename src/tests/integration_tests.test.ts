@@ -34,6 +34,7 @@ describe('API Client Integration Tests', () => {
     (global.fetch as any).mockResolvedValueOnce({
       ok: false,
       status: 400,
+      headers: { get: () => null },
       json: async () => ({ message: 'Invalid payload signature' })
     });
 
@@ -46,6 +47,7 @@ describe('API Client Integration Tests', () => {
     (global.fetch as any).mockResolvedValueOnce({
       ok: false,
       status: 401,
+      headers: { get: () => null },
       json: async () => ({ error: { message: 'Unauthorized session' } })
     });
 
