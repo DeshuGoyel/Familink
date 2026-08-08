@@ -1,4 +1,4 @@
-name = "transfer-legacy-frontend"
+name = "transfer-legacy"
 compatibility_date = "2024-04-03"
 main = "src/entrypoint.ts"
 
